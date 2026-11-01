@@ -1,0 +1,65 @@
+{
+  "origin": "https://nearlyhuman.netlify.app",
+  "js": "/assets/index-C-zCEsnz.js",
+  "sizes": [
+    {
+      "width": 390,
+      "titleBelowHUD": true,
+      "highlights": [
+        {
+          "text": "Built a chair.",
+          "inside": true
+        },
+        {
+          "text": "Jitters cleared.",
+          "inside": true
+        },
+        {
+          "text": "Drank some milk.",
+          "inside": true
+        }
+      ],
+      "horizontal": true
+    },
+    {
+      "width": 320,
+      "titleBelowHUD": true,
+      "highlights": [
+        {
+          "text": "Built a chair.",
+          "inside": true
+        },
+        {
+          "text": "Jitters cleared.",
+          "inside": true
+        },
+        {
+          "text": "Drank some milk.",
+          "inside": true
+        }
+      ],
+      "horizontal": true
+    },
+    {
+      "width": 430,
+      "titleBelowHUD": true,
+      "highlights": [
+        {
+          "text": "Built a chair.",
+          "inside": true
+        },
+        {
+          "text": "Jitters cleared.",
+          "inside": true
+        },
+        {
+          "text": "Drank some milk.",
+          "inside": true
+        }
+      ],
+      "horizontal": true
+    }
+  ],
+  "errors": [],
+  "writes": []
+}

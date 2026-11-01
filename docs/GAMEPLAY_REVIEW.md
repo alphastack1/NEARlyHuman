@@ -43,4 +43,10 @@ This pass made **no new model calls or owner transactions** and changed no domai
 
 The public baseline had two interrupted non-JSON reads and one later JSON 503, followed by successful read-only recovery. These were recorded without inventing a new gameplay cause. Physical phone keyboards, every headgear/outcome combination, mainnet and population balance remain outside this pass. Mainnet stays deferred by the owner.
 
-The final published verification is appended after the single release for this pass; retaining post-release evidence locally does not require another production push.
+## Published verification
+
+One production push published source `4bda9d1e321eb8d4f612e4b5a58520a28fc5fb9a`, Netlify deployment `6ae73c3d6fe27a0b24af0583`, at **20:19:23 Bangkok time (13:19:23 UTC)**. The public page loaded the exact final `index-C-zCEsnz.js` build.
+
+With workstation QA servers stopped, a read-only public check opened PEEP's saved day two, played its beginning and skipped to the actual saved recap. At **320/390/430px**, the heading stays below the HUD, all three literal highlights are visible and there is no horizontal overflow. The check reported **zero page errors and zero API writes**. The [published browser evidence](gameplay-review/published-browser-proof.json) records each measurement; the three final recap images in the gallery are the published captures.
+
+The independent full-film review and exact quiet-entry/restart checks above exercised the same gameplay code before publication. The final live check confirms its published artifact and corrected portrait layout. No new paid preparation was needed for this presentation pass. Owned browser tabs and temporary servers are closed, and the working evidence is committed locally without another production push. Mainnet remains deferred.
