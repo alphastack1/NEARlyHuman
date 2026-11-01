@@ -244,8 +244,21 @@ export default function App() {
         const intent=freshDay.current;if(!intent?.readyDay||screen!=='ready'||!result||result.day!==intent.readyDay)return;
         if(document.hidden||account?.toLowerCase()!==intent.account||selected?.id!==intent.tokenId||network!==config?.chainId){freshDay.current=undefined;return;}
         if(modal){if(modal.kind!=='birth')freshDay.current=undefined;return;}
-        if(busy)return;freshDay.current=undefined;startPlayback(0);
-    },[screen,result,modal,busy,selected?.id,account,network]);
+        if(busy)return;
+        const packet=result,generation=navigationGeneration.current,revision=selected?.revision,chain=config?.chainId,collection=config?.collection;
+        // Let this Ready commit's saved-house effects finish before starting its film.
+        const frame=requestAnimationFrame(()=>{
+            const c=context.current;if(freshDay.current!==intent)return;
+            const valid=!document.hidden&&navigationGeneration.current===generation&&c.screen==='ready'&&!c.modal
+                &&c.account?.toLowerCase()===intent.account&&c.selected?.id===intent.tokenId&&c.selected.owner.toLowerCase()===intent.account
+                &&c.selected.revision===revision&&c.selected.latestDay===intent.readyDay&&!c.selected.pending
+                &&c.job?.requestId===intent.requestId&&c.job.phase==='ready'&&c.result===packet&&packet.day===intent.readyDay
+                &&c.network===chain&&c.config?.chainId===chain&&c.config?.collection===collection;
+            if(!valid){freshDay.current=undefined;return;}
+            freshDay.current=undefined;startPlayback(0);
+        });
+        return()=>cancelAnimationFrame(frame);
+    },[screen,result,modal,busy,selected?.id,selected?.revision,account,network,config?.chainId,config?.collection]);
     useEffect(()=>{const hidden=()=>{if(document.hidden)freshDay.current=undefined;};document.addEventListener('visibilitychange',hidden);return()=>document.removeEventListener('visibilitychange',hidden);},[]);
     useEffect(()=>{if(!housePeek)return;const timer=window.setTimeout(()=>setHousePeek(undefined),9000);return()=>window.clearTimeout(timer);},[housePeek]);
     useEffect(()=>{if(!meterCue)return;const timer=window.setTimeout(()=>setMeterCue(undefined),900);return()=>window.clearTimeout(timer);},[meterCue]);
