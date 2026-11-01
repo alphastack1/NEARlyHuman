@@ -36,6 +36,8 @@ The [service guide](docs/service.md), [contract guide](docs/chain.md), [domain n
 
 ## Design references
 
+The [individuality and first-use review](docs/VARIETY_AND_FIRST_USE_REVIEW.md) and [comparison gallery](docs/variety-review/index.html) cover persistent preferences, genuine model timing comparisons, recorded-event clarity and the wallet-free first visit.
+
 The [NPC and house presence review](docs/HOUSE_PRESENCE_REVIEW.md) and [interactive-house evidence gallery](docs/house-review/index.html) cover the later care exploration, physical mannerisms, object responses and useful stock/plot readers.
 
 The [master guide](NEARlyHuman.md), [scene map](design/SCENE_MAP.md), [approved Moss & Cream reference](design/references/VR-01-approved-house-and-care.png) and [99-board mockup gallery](design/mockups/index.html) preserve the agreed vision. [Reference mapping](design/mockups/REFERENCE_MAP.md) assigns every planned screen and storyboard; construction references are in `design/reference-pack/`. Current implementation notes record intentional changes such as a larger portrait supply dock and shorter quiet-film beats.

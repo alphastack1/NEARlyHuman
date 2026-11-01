@@ -1167,15 +1167,15 @@ input::placeholder {
 }
 
 .catalog-item.selected .item-tile {
-  border-color: var(--yellow);
+  border-color: #829d98;
   background: #203b45;
-  box-shadow: inset 0 0 0 1px #b3a34e;
+  box-shadow: inset 0 0 0 1px #4c6c68;
 }
 
 .item-tile i {
   position: absolute;
   font-size: 2.4cqw;
-  color: #ffe264;
+  color: #a8c897;
   right: 0;
   top: -5px;
   font-style: normal;
@@ -2707,3 +2707,26 @@ input::placeholder {
 
 .home-visit-links { display: flex; justify-content: space-around; gap: 10px; }
 .home-visit-links>.text-button { min-height: 44px; margin: 0; font-size: clamp(9px, 2.2cqw, 13px); }
+
+/* A real recorded life is the welcome screen; wallet actions sit below it. */
+.game-composition.with-welcome { width: min(100%, 600px, max(240px, calc(var(--visible-height, 100dvh) - 230px))); }
+.welcome-wrap { position: relative; container-type: inline-size; }
+.welcome-wrap[inert] { filter: brightness(.6); }
+.welcome-dock { padding: 16px; border: 3px solid #102331; background: linear-gradient(110deg,#1b3444,#102431); box-shadow: 0 0 0 2px #7895a5,inset 0 0 0 2px #8fa6ad,inset 0 0 0 5px #253f50; text-align: center; }
+.welcome-dock h1 { margin: 0 0 15px; color: #eeeacb; font-size: clamp(16px, 4.4cqw, 25px); line-height: 1.5; }
+.welcome-dock>.main-action { width: 100%; min-height: 46px; margin: 0; font-size: clamp(12px, 3.2cqw, 19px); }
+.welcome-dock>.text-button { display: block; min-height: 44px; margin: 6px auto 0; padding: 10px; font-size: clamp(9px, 2.3cqw, 13px); }
+.identity-guest { display: flex; min-width: 0; flex: 1; align-items: center; gap: 7px; font-size: clamp(10px, 2.7cqw, 20px); white-space: nowrap; }
+.identity-guest strong { font-weight: normal; }
+.identity-guest small { align-self: center; font-size: clamp(6px, 1.45cqw, 9px); color: #a9c5bf; border: 1px solid #5c7b7c; padding: 3px; }
+.screen-discover .event-lines { transition: opacity 180ms linear; }
+.screen-discover.is-traveling .event-lines { opacity: .65; }
+.trait-disclosure { margin-top: 16px; border-top: 1px solid #536f76; padding-top: 7px; }
+.trait-disclosure>summary { cursor: pointer; min-height: 44px; padding: 14px 5px; color: #c6d4bc; font-size: clamp(9px, 2.4cqw, 14px); line-height: 1.5; }
+.trait-disclosure .stat-allocation { margin-top: 8px; }
+.house-view-controls .house-watch { width: 40px; min-width: 40px; padding: 8px; }
+.history-copy { display: flex; flex-direction: column; gap: 5px; min-width: 0; }
+.history-copy>small { color: #a9c5bb; font-size: .85em; line-height: 1.5; }
+.recorded-event-line { display: flex; align-items: flex-start; gap: 8px; margin: 12px 0; padding-left: 9px; border-left: 2px solid #94b39b; color: #c7d7af; font-size: clamp(9px, 2.3cqw, 13px); line-height: 1.7; }
+.recorded-event-line>svg { flex: none; margin-top: 2px; }
+.supply-flight { position: fixed; z-index: 40; pointer-events: none; object-fit: contain; image-rendering: pixelated; filter: drop-shadow(1px 2px #102331); }

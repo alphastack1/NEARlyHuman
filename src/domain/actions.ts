@@ -82,6 +82,8 @@ function valueFor(c:Candidate,need:'nutrition'|'hydration'|'energy'|'morale'):nu
   const effects:Record<string,Partial<Record<typeof need,number>>>={K01:{nutrition:3500,morale:800},K02:{nutrition:6500,morale:600},K03:{nutrition:5000,hydration:2000,morale:2000},K04:{nutrition:8000,morale:2000},K05:{energy:1000,morale:1500},K06:{energy:2000,hydration:1500,morale:1500},K07:{nutrition:4500},water:{hydration:5000},milk:{nutrition:2500,hydration:3000},bread:{nutrition:4000},quickCoffee:{energy:2000,morale:500},H03:{energy:1200},H04:{morale:c.variant==='chair'?1500:1000},rose:{morale:3500},apple:{nutrition:8000}};
   return(effects[c.action==='H01'||c.action==='G05'?c.variant:c.action]?.[need]||0);
 }
+/** Nominal successful recovery, shared by the existing shortlist and AI facts. */
+export { valueFor as candidateRecovery };
 export function shortlistCandidates(ctx:DayContext,all=legalCandidates(ctx)):Candidate[] {
   if(all.length<=1)return all;const mandatory:Candidate[]=[];const add=(c:Candidate|undefined,dueDay?:number,dueSlot?:number)=>{if(c&&!mandatory.some(x=>x.key===c.key))mandatory.push({...c,urgent:true,...(dueDay?{dueDay}:{}),...(dueSlot?{dueSlot}:{})});};
   const responseBoundary=Math.min(...[ctx.primary,ctx.taskFire].filter(e=>e&&!e.resolved&&e.kind==='fire').map(e=>e!.boundary));

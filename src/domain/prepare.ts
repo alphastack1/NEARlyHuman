@@ -31,7 +31,8 @@ export async function prepareDay(base:GameState,delivery:readonly ItemId[],provi
       const candidates=shortlistCandidates(ctx,legalCandidates(ctx));if(!candidates.length)throw Error('No legal safe-idle candidate.');
       if(candidates.length===1)chosen=candidates[0]!;
       else{
-        const raw=await provider({state:cloneState(ctx.state),day:ctx.day,slot,phase:PHASES[Math.floor((slot-1)/10)]!,candidates:cloneState(candidates),recent:cloneState(ctx.state.recent),situation:cloneState(situation)});
+        const earlierToday=receipts.filter(receipt=>receipt.action!=='T01').slice(-8).map(({action,target,variant,success})=>({action,target,variant,success}));
+        const raw=await provider({state:cloneState(ctx.state),day:ctx.day,slot,phase:PHASES[Math.floor((slot-1)/10)]!,candidates:cloneState(candidates),recent:cloneState(ctx.state.recent),situation:cloneState(situation),earlierToday});
         const reply:ModelChoice=typeof raw==='string'?{key:raw}:raw;
         if(!reply||typeof reply.key!=='string')throw new InvalidChoiceError();chosen=candidates.find(c=>c.key===reply.key);if(!chosen)throw new InvalidChoiceError();
         ctx.modelChoices++;recorded={selected:chosen.key,candidates:cloneState(candidates),probabilities:validTelemetry(reply,candidates),provider:reply.provider,model:reply.model,requestId:reply.requestId,situation:cloneState(situation)};

@@ -10,9 +10,11 @@ import { storage, update } from './storage';
 import { estimateError } from './estimate-error';
 import { recoverMissingAcceptance } from './acceptance';
 import type { JobControl } from './jobs';
+import { INDIVIDUALITY_VERSION } from '../src/domain/individuality';
+import { DECISION_POLICY_VERSION } from './jev';
 
 export const DECISION_PARAMETERS={incidentRate:.45,blackSwanRate:.00025} as const;
-export const DECISION_CONFIG = keccak256(toHex('NEARlyHuman:rules1:typesafe/jev-1.13:shortlist1:8nominal:24maxUrgent:ambient-v1:14000bytes:72sends:3perstep:incident.45:blackSwan.00025'));
+export const DECISION_CONFIG = keccak256(toHex(`NEARlyHuman:rules1:typesafe/jev-1.13:shortlist1:8nominal:24maxUrgent:ambient-v1:${INDIVIDUALITY_VERSION}:${DECISION_POLICY_VERSION}:14000bytes:72sends:3perstep:incident.45:blackSwan.00025`));
 export interface QuoteInput { operation:'mint'|'day'; name?:string; stats?:Stats; tokenId?:string; delivery?:string[] }
 export interface Reservation {
   id:Hex; player:Address; scope:string; expiresAt:number; createdAt:number; chainId?:number; collection?:Address;

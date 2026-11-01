@@ -11,9 +11,16 @@ import { describeCompactAction } from './compactHistory';
 import { SavedDaysPanel } from './SavedDaysPanel';
 import { HouseDetails } from './HouseDetails';
 import { HouseExplorer } from './HouseExplorer';
+import { WelcomeDock } from './WelcomeDock';
+import { PREVIEW_DAY_URL } from './previewData';
+import { showSupplyTransfer } from './supplyTransfer';
 import { quietSpanAt } from '../game/quiet-spans';
+import { beforeActionBeat, afterActionBeat } from '../game/recorded-events';
 import { NEED_ICONS, NEED_KEYS, dayHighlights, recordedChanges, receiptMark, signedNeed, type Need } from './receiptFeedback';
-type Screen = 'entry' | 'mint' | 'care' | 'processing' | 'ready' | 'replay' | 'summary' | 'memorial' | 'trial' | 'firstRetry';
+type Screen = 'entry' | 'discover' | 'visit' | 'mint' | 'care' | 'processing' | 'ready' | 'replay' | 'summary' | 'memorial' | 'trial' | 'firstRetry';
+interface GuestDay { rooster:Rooster; result:DayResult;source?:{chainId:number;collection:string} }
+interface FreshDayIntent { account:string;tokenId:string;requestId:string;readyDay?:number }
+const isFilm=(mode:Screen)=>mode==='replay'||mode==='discover';
 type ModalContent = {
     kind: 'options' | 'help' | 'selector' | 'status' | 'fee' | 'details' | 'wallet' | 'birth' | 'history' | 'owner' | 'supplies' | 'savedDays';
 } | {
@@ -125,6 +132,13 @@ function RecordedEffect({receipt}:{receipt:Receipt}) {
     const changes=recordedChanges(receipt);
     return <div className="recorded-result"><p className="recorded-target">{TARGET_LABELS[receipt.target]||'Home'}</p>{changes.length>0&&<div className="recorded-changes">{changes.map(change=><span className={'recorded-change '+change.tone} key={change.key} aria-label={change.label} title={change.label}>{change.item?<img src={itemImageUrl(change.item)} alt=""/>:change.icon?<Icon name={change.icon}/>:null}<span>{change.text}</span></span>)}</div>}</div>;
 }
+function RecordedEventLine({message,kind}:{message:string;kind:string}){
+    return <p className="recorded-event-line"><Icon name={kind==='weather'?'water':kind==='growth'||kind==='garden'?'leaf':'book'} size={14}/><span>{message}</span></p>;
+}
+function RecordedStory({receipt}:{receipt:Receipt}){
+    const before=beforeActionBeat(receipt),after=afterActionBeat(receipt);
+    return <>{before&&<RecordedEventLine message={before.event.message} kind={before.event.kind}/>}<p className="recorded-effect">{receipt.lines.join(' ')}</p>{after&&<RecordedEventLine message={after.event.message} kind={after.event.kind}/>}<RecordedEffect receipt={receipt}/></>;
+}
 export default function App() {
     const host = useRef<HTMLDivElement>(null), world = useRef<WorldController | undefined>(undefined);
     const [config, setConfig] = useState<PublicConfig>(), [screen, setScreen] = useState<Screen>('entry'), [modal, setModal] = useState<Modal | null>(null);
@@ -149,6 +163,10 @@ export default function App() {
     const [roomsOpen,setRoomsOpen]=useState(false);
     const [housePeek,setHousePeek]=useState<TargetId>();
     const [traveling,setTraveling]=useState(false);
+    const [guest,setGuest]=useState<GuestDay>();
+    const guestRef=useRef<GuestDay|undefined>(undefined),guestRequest=useRef(0),guestPlaybackTicket=useRef(0),connectionIntent=useRef<'mint'|'home'>('home'),freshDay=useRef<FreshDayIntent|undefined>(undefined);
+    const [traitsOpen,setTraitsOpen]=useState(false);
+    const supplyFlight=useRef<(()=>void)|undefined>(undefined);
     const playbackPacket=useRef<DayResult|undefined>(undefined),snapshotCursor=useRef<{packet:DayResult|undefined;index:number;state:GameState}|undefined>(undefined),cueSequence=useRef(0);
     const catalogSizeRef=useRef(catalogSize);
     const [choiceNotice, setChoiceNotice] = useState(false), [ownedLoading, setOwnedLoading] = useState(false);
@@ -169,7 +187,7 @@ export default function App() {
         readTickets.current[channel]=ticket;setError('');
         return()=>readTickets.current[channel]===ticket&&navigationGeneration.current===navigation&&context.current.account===player&&(!tokenId||context.current.selected?.id===tokenId);
     };
-    const canInspect=(mode:Screen)=>['care','replay','summary','memorial','trial','ready','firstRetry'].includes(mode);
+    const canInspect=(mode:Screen)=>['care','replay','discover','visit','summary','memorial','trial','ready','firstRetry'].includes(mode);
     const cfg: CollectionConfig | undefined = config ? { chainId: config.chainId as 46630 | 4663, address: config.collection as Address, rpcUrl: config.rpcUrl } : undefined;
     const active = !!selected && !ownerLost && !!account && selected.owner.toLowerCase() === account.toLowerCase();
     const eligible = active && selected.state.alive && !selected.pending && !(config?.testnet && selected.state.day >= 3);
@@ -185,14 +203,16 @@ export default function App() {
     const focusName=(element:Element|null)=>element?.getAttribute('aria-label')||element?.textContent?.trim()||undefined;
     const open=(m:Modal)=>{
         const c=context.current;
+        supplyFlight.current?.();
+        if(m.kind!=='birth')freshDay.current=undefined;
         setMeterCue(undefined);
         modalInputBlocked.current=true;
         world.current?.setInputEnabled(false);
         if(c.modal)menuTrail.current.push({modal:c.modal,invoker:focusName(document.activeElement),scroll:panelScroll.current?.scrollTop||0});
         else{menuTrail.current=[];returnFocus.current=document.activeElement as HTMLElement;menuOrigin.current={tokenId:c.selected?.id,invoker:focusName(document.activeElement)};}
-        const state=c.screen==='replay'?c.hud:c.selected?.state;
-        const view=m.view||c.modal?.view||{tokenId:c.selected?.id,revision:c.selected?.revision,state:state?cloneState(state):undefined,readingDay:c.screen==='replay'?c.result?.day:state?.day,delivery:c.screen==='care'?[...delivery]:[],screen:c.screen};
-        world.current?.pause();if(c.screen==='replay')setPaused(true);setModal({...m,view});setError('');
+        const visiting=c.screen==='discover'||c.screen==='visit',state=isFilm(c.screen)?c.hud:visiting?guestRef.current?.rooster.state:c.selected?.state;
+        const view=m.view||c.modal?.view||{tokenId:visiting?guestRef.current?.rooster.id:c.selected?.id,revision:visiting?undefined:c.selected?.revision,state:state?cloneState(state):undefined,readingDay:isFilm(c.screen)?c.result?.day:state?.day,delivery:c.screen==='care'?[...delivery]:[],screen:c.screen};
+        world.current?.pause();if(isFilm(c.screen))setPaused(true);setModal({...m,view});setError('');
     };
     openRef.current=open;
     const close=()=>{
@@ -217,8 +237,16 @@ export default function App() {
         document.addEventListener('keydown',keyboard);return()=>{cancelAnimationFrame(id);document.removeEventListener('keydown',keyboard);};
     },[modal]);
     useEffect(()=>{const enabled=!modal&&canInspect(screen);modalInputBlocked.current=!enabled;world.current?.setInputEnabled(enabled);},[modal,screen,selected?.id]);
-    useEffect(()=>{if(modal||screen!=='replay')setMeterCue(undefined);},[modal,screen]);
-    useEffect(()=>{world.current?.setExploreEnabled(screen==='care'&&!!selected?.state.alive);setHousePeek(undefined);setRoomsOpen(false);if(screen!=='replay')setTraveling(false);},[screen,selected?.id,selected?.revision]);
+    useEffect(()=>{if(modal||!isFilm(screen))setMeterCue(undefined);},[modal,screen]);
+    useEffect(()=>{supplyFlight.current?.();world.current?.setExploreEnabled(screen==='care'&&!!selected?.state.alive||screen==='visit'&&!!guest?.rooster.state.alive);setHousePeek(undefined);setRoomsOpen(false);if(!isFilm(screen))setTraveling(false);},[screen,selected?.id,selected?.revision,guest?.rooster.id]);
+    useEffect(()=>()=>supplyFlight.current?.(),[]);
+    useEffect(()=>{
+        const intent=freshDay.current;if(!intent?.readyDay||screen!=='ready'||!result||result.day!==intent.readyDay)return;
+        if(document.hidden||account?.toLowerCase()!==intent.account||selected?.id!==intent.tokenId||network!==config?.chainId){freshDay.current=undefined;return;}
+        if(modal){if(modal.kind!=='birth')freshDay.current=undefined;return;}
+        if(busy)return;freshDay.current=undefined;startPlayback(0);
+    },[screen,result,modal,busy,selected?.id,account,network]);
+    useEffect(()=>{const hidden=()=>{if(document.hidden)freshDay.current=undefined;};document.addEventListener('visibilitychange',hidden);return()=>document.removeEventListener('visibilitychange',hidden);},[]);
     useEffect(()=>{if(!housePeek)return;const timer=window.setTimeout(()=>setHousePeek(undefined),9000);return()=>window.clearTimeout(timer);},[housePeek]);
     useEffect(()=>{if(!meterCue)return;const timer=window.setTimeout(()=>setMeterCue(undefined),900);return()=>window.clearTimeout(timer);},[meterCue]);
     const clearQuote = () => setQuote(undefined);
@@ -234,6 +262,17 @@ export default function App() {
         setConfig(cached);
     else
         setError(humanError(e)); }); return () => { alive = false; }; }, []);
+    useEffect(()=>{
+        if(screen!=='entry'||selected||guestRef.current)return;
+        const ticket=++guestRequest.current;
+        void fetch(PREVIEW_DAY_URL).then(async response=>{if(!response.ok)throw Error('Visit unavailable');return await response.json() as GuestDay;}).then(packet=>{
+            if(ticket!==guestRequest.current)return;
+            if(!packet.rooster?.id||!packet.result?.receipts?.length)throw Error('Visit unavailable');
+            const visit={...packet,rooster:{...packet.rooster,state:packet.result.finalState,latestDay:packet.result.day}};guestRef.current=visit;setGuest(visit);
+        }).catch(()=>{/* The ownership and hatch paths remain available while the public film rests. */});
+        return()=>{guestRequest.current++;};
+    },[screen,selected?.id]);
+    useEffect(()=>{if(screen==='entry'&&guest&&!selected&&!modal&&!busy&&ownershipRead!=='loading')startGuestDay();},[screen,guest,selected?.id,modal,busy,ownershipRead]);
     useEffect(() => {
         const injected = (window as any).ethereum as WalletProvider | undefined;
         if (injected)
@@ -247,22 +286,22 @@ export default function App() {
     useEffect(() => {
         if (!host.current)
             return;
-        const renderer = createWorldRenderer(host.current, { onReceipt: (r, i) => { setReceipt(r); setReplayIndex(i); const c = context.current; if (c.selected)
+        const renderer = createWorldRenderer(host.current, { onReceipt: (r, i) => { setReceipt(r); setReplayIndex(i); const c = context.current; if (c.selected&&c.screen==='replay')
                 store.set(`nh:${c.config?.chainId}:${c.account?.toLowerCase()}:${c.selected.id}:play:${r.day}`, i); }, onSnapshot: (s,index) => {
                 const c=context.current,packet=playbackPacket.current,previous=snapshotCursor.current,impact=packet?.receipts[index]?.snapshot===s;
-                if(c.screen==='replay'&&!c.modal&&impact&&previous?.packet===packet&&previous.index===index&&previous.state!==s){
+                if(isFilm(c.screen)&&!c.modal&&impact&&previous?.packet===packet&&previous.index===index&&previous.state!==s){
                     const changes:Partial<Record<Need,number>>={};for(const need of NEED_KEYS){const delta=s.needs[need]-previous.state.needs[need];if(delta)changes[need]=delta;}
                     if(Object.keys(changes).length)setMeterCue({sequence:++cueSequence.current,changes});
                 }
                 snapshotCursor.current={packet,index,state:s};setHud(s);
-            }, onMessage: setLines, onComplete: () => { if(archiveReturn.current){returnFromArchive();return;}setPaused(false); const c = context.current; const r = c.selected; if (r) {
+            }, onMessage: setLines, onComplete: () => { const c=context.current;if(c.screen==='discover'){setPaused(false);setScreen('visit');return;}if(archiveReturn.current){returnFromArchive();return;}setPaused(false); const r = c.selected; if (r) {
                 store.set(`nh:${c.config?.chainId}:${c.account?.toLowerCase()}:${r.id}:watched`, r.latestDay);
                 store.set(`nh:${c.config?.chainId}:${c.account?.toLowerCase()}:${r.id}:play:${c.result?.day || r.latestDay}`, null);
                 setHud(r.state);
                 setScreen(!r.state.alive ? 'memorial' : c.config?.testnet && r.state.day >= 3 ? 'trial' : 'summary');
-            } }, onViewChange: view=>setHouseView(previous=>previous.exploring===view.exploring&&previous.room===view.room?previous:view),onMotion: motion=>setTraveling(motion.traveling),onInspect: (target) => { const c = context.current; if(c.modal||modalInputBlocked.current||!canInspect(c.screen))return;const state = c.screen === 'replay' ? c.hud : c.selected?.state; if (state) {
-                if(c.screen==='care'){setHousePeek(target);return;}
-                setPaused(c.screen === 'replay');
+            } }, onViewChange: view=>setHouseView(previous=>previous.exploring===view.exploring&&previous.room===view.room?previous:view),onMotion: motion=>setTraveling(motion.traveling),onInspect: (target) => { const c = context.current; if(c.modal||modalInputBlocked.current||!canInspect(c.screen))return;const state = isFilm(c.screen)?c.hud:c.screen==='visit'?guestRef.current?.rooster.state:c.selected?.state; if (state) {
+                if(c.screen==='care'||c.screen==='visit'){setHousePeek(target);return;}
+                setPaused(isFilm(c.screen));
                 openRef.current?.({ kind: 'object', target, state: cloneState(state) });
             } } });
         world.current = renderer;
@@ -270,17 +309,17 @@ export default function App() {
         return () => { renderer.dispose(); world.current = undefined; };
     }, []);
     // Renderer stays mounted. Saved-state changes are never pushed into an active film.
-    useEffect(() => { if (screen === 'replay')
-        return; world.current?.showSave(selected?.state, { sleep: true }); setHud(selected?.state); }, [selected?.id, selected?.revision, screen]);
+    useEffect(() => { if (isFilm(screen))
+        return;const state=screen==='visit'?guestRef.current?.rooster.state:selected?.state;world.current?.showSave(state, { sleep: true }); setHud(state); }, [selected?.id, selected?.revision, screen]);
     useEffect(() => { world.current?.setMuted(muted); store.set('nh:sound', muted); }, [muted]);
     useEffect(() => { if (!provider)
-        return; const changed = (addresses: string[]) => { operationToken.current++;setBusy(false);setBusyLabel('');walletGeneration.current++;navigationGeneration.current++;setOwnershipRead('unknown');setSession(''); session.current = undefined; setOwnerLost(false); setSelected(undefined); setOwned([]); setJobId(undefined); setResult(undefined); setSubmitted(undefined); setJob(undefined); setDelivery([]); setError('');if(!context.current.modal?.view){menuTrail.current=[];setModal(null);}setScreen('entry'); setQuote(undefined); if (addresses?.[0]) {
+        return; const changed = (addresses: string[]) => { freshDay.current=undefined;operationToken.current++;setBusy(false);setBusyLabel('');walletGeneration.current++;navigationGeneration.current++;setOwnershipRead('unknown');setSession(''); session.current = undefined; setOwnerLost(false); setSelected(undefined); setOwned([]); setJobId(undefined); setResult(undefined); setSubmitted(undefined); setJob(undefined); setDelivery([]); setError('');if(!context.current.modal?.view){menuTrail.current=[];setModal(null);}setScreen('entry'); setQuote(undefined); if (addresses?.[0]) {
         const a = getAddress(addresses[0]);
         setAccount(a);
         void loadOwned(a);
     }
     else
-        setAccount(undefined); }; const chainChanged = (chain: string) => { setNetwork(parseInt(chain, 16)); setSession(''); session.current = undefined; setQuote(undefined); world.current?.pause(); if (context.current.screen === 'replay')
+        setAccount(undefined); }; const chainChanged = (chain: string) => { setNetwork(parseInt(chain, 16)); setSession(''); session.current = undefined; setQuote(undefined); world.current?.pause(); if (isFilm(context.current.screen))
         setPaused(true); }; provider.on?.('accountsChanged', changed); provider.on?.('chainChanged', chainChanged); return () => { provider.removeListener?.('accountsChanged', changed); provider.removeListener?.('chainChanged', chainChanged); }; }, [provider, config]);
     useEffect(()=>{
         const viewport=window.visualViewport;
@@ -318,13 +357,14 @@ export default function App() {
             else setScreen('processing');
         }
         else if (j.phase === 'ready' || j.phase === 'failed' || j.phase === 'expired') {
+            if(j.phase!=='ready')freshDay.current=undefined;
             const r = (await api.rooster(j.tokenId)).rooster;
             if (disposed||!relevant())
                 return;
             setSelected(r);
             setOwned(all => all.map(x => x.id === r.id ? r : x));
             if (j.phase === 'ready') {
-                await loadReplay(r, true);
+                await loadReplay(r, true,j.requestId);
                 setJobId(undefined);
             }
             else if (!r.pending) {
@@ -363,16 +403,17 @@ export default function App() {
         try{
             const all=(await api.roosters(address)).roosters,query=new URLSearchParams(location.search).get('rooster');
             if(query&&/^[1-9]\d{0,19}$/.test(query)&&!all.some(r=>r.id===query)){try{const linked=(await api.rooster(query)).rooster;if(linked.owner.toLowerCase()===address.toLowerCase())all.push(linked);}catch{}}
-            if(!relevant())return;setOwned(all);setOwnershipRead('ready');
+            if(!relevant())return;setResult(undefined);setReceipt(undefined);setOwned(all);setOwnershipRead('ready');
             const currentConfig=context.current.config;
             const r=all.find(r=>r.id===(preferred||query))||all.find(r=>r.id===store.get('nh:selected:'+currentConfig?.chainId,''))||all[0];
             const pending=store.get<Submitted|undefined>('nh:submitted:'+currentConfig?.chainId+':'+address.toLowerCase(),undefined);
             if(pending?.hash||pending?.permitId){setSelected(pending.tokenId?all.find(r=>r.id===pending.tokenId):undefined);setSubmitted(pending);setScreen('processing');void trackTransaction(pending);}
+            else if(connectionIntent.current==='mint'){connectionIntent.current='home';setSelected(r);beginMint();}
             else if(r)await chooseRooster(r);else{setSelected(undefined);setScreen('entry');}
         }catch(e){if(relevant()){setOwnershipRead('error');setError(humanError(e));}}
         finally{if(generation===walletGeneration.current&&context.current.account?.toLowerCase()===address.toLowerCase())setOwnedLoading(false);}
     }
-    async function chooseRooster(r: Rooster) { archiveReturn.current=undefined;setHistoricalDay(undefined);setCanonicalStale(false);operationToken.current++;setBusy(false);setBusyLabel('');setCompactOutcome(undefined);navigationGeneration.current++;menuTrail.current=[];setJobId(undefined); setSelected(r); setOwnerLost(false); setResult(undefined); setPacketMissing(false); setJob(undefined); setModal(null); setQuote(undefined); setReceipt(undefined); setReplayIndex(0); setDelivery(r.state.day ? store.get<ItemId[]>(scope(r.id) + ':kit', []).filter((id, i, a) => ITEM_IDS.includes(id) && a.indexOf(id) === i && r.state.inventory[id] < 65535).slice(0, 3) : []); setPage(0); store.set('nh:selected:' + config?.chainId, r.id); if (r.pending) {
+    async function chooseRooster(r: Rooster) { freshDay.current=undefined;archiveReturn.current=undefined;setHistoricalDay(undefined);setCanonicalStale(false);operationToken.current++;setBusy(false);setBusyLabel('');setCompactOutcome(undefined);navigationGeneration.current++;menuTrail.current=[];setJobId(undefined); setSelected(r); setOwnerLost(false); setResult(undefined); setPacketMissing(false); setJob(undefined); setModal(null); setQuote(undefined); setReceipt(undefined); setReplayIndex(0); setDelivery(r.state.day ? store.get<ItemId[]>(scope(r.id) + ':kit', []).filter((id, i, a) => ITEM_IDS.includes(id) && a.indexOf(id) === i && r.state.inventory[id] < 65535).slice(0, 3) : []); setPage(0); store.set('nh:selected:' + config?.chainId, r.id); if (r.pending) {
         setJobId(r.pending.id);
         setScreen('processing');
     }
@@ -396,10 +437,13 @@ export default function App() {
             if(fresh.owner.toLowerCase()!==player?.toLowerCase()){setOwned(all=>all.filter(r=>r.id!==fresh.id));setOwnerLost(true);setJobId(undefined);}
         }catch{if(generation===navigationGeneration.current&&context.current.account===player)setError('The saved day needs checking. Please refresh.');}
     }
-    async function loadReplay(r: Rooster, forceReady: boolean) { const generation=navigationGeneration.current,player=context.current.account,readValid=beginReadScope('replay',r.id);const relevant=()=>navigationGeneration.current===generation&&context.current.account===player&&context.current.selected?.id===r.id&&readValid();setReplayLoading(true);try {
+    async function loadReplay(r: Rooster, forceReady: boolean,completedRequest?:string) { const generation=navigationGeneration.current,player=context.current.account,readValid=beginReadScope('replay',r.id);const relevant=()=>navigationGeneration.current===generation&&context.current.account===player&&context.current.selected?.id===r.id&&readValid();setReplayLoading(true);try {
         const packet = await api.replay(r.id, r.latestDay);if(!relevant())return;
         setResult(packet.result);
         setPacketMissing(false);
+        const intent=freshDay.current,c=context.current;
+        if(forceReady&&intent&&intent.tokenId===r.id&&intent.requestId===completedRequest&&intent.account===c.account?.toLowerCase()&&c.screen==='processing'&&!document.hidden&&(!c.modal||c.modal.kind==='birth'))intent.readyDay=packet.result.day;
+        else if(intent)freshDay.current=undefined;
         setScreen(forceReady || !watched(r) ? 'ready' : terminalScreen(r));
     }
     catch {
@@ -437,6 +481,19 @@ export default function App() {
         setBusy(false);
         setBusyLabel('');
     } }
+    function startGuestDay(){
+        const visit=guestRef.current,renderer=world.current;if(!visit||!renderer)return;const ticket=++guestPlaybackTicket.current;
+        void renderer.ready.then(()=>{const c=context.current;if(ticket!==guestPlaybackTicket.current||c.selected||c.modal||!['entry','discover','visit'].includes(c.screen))return;
+            freshDay.current=undefined;archiveReturn.current=undefined;setHistoricalDay(undefined);playbackPacket.current=visit.result;snapshotCursor.current=undefined;setMeterCue(undefined);setResult(visit.result);setReceipt(undefined);setReplayIndex(0);setHud(visit.result.receipts[0]?.decisionSnapshot||visit.result.receipts[0]?.before||visit.result.finalState);setPaused(false);setModal(null);setScreen('discover');renderer.playDay(visit.result,{startIndex:0,skipDelivery:true});
+        });
+    }
+    function enterHome(intent:'mint'|'home'){
+        guestPlaybackTicket.current++;connectionIntent.current=intent;freshDay.current=undefined;world.current?.pause();if(isFilm(context.current.screen))setPaused(true);
+        if(account&&ownershipRead==='ready'){
+            connectionIntent.current='home';if(intent==='mint')beginMint();else void loadOwned(account);return;
+        }
+        if(wallets.length>1)open({kind:'wallet'});else void connect();
+    }
     async function switchNetwork() { if (!provider || !cfg || !account)
         return; setBusy(true); try {
         await createOwnerWallet(provider, cfg, account).switchNetwork();
@@ -519,7 +576,7 @@ export default function App() {
                 return;
             setSubmitted(tx);
             if(operationToken.current===op&&navigationGeneration.current===startingGeneration){setScreen('processing');setBusyLabel('Waiting for confirmation');}
-            await trackTransaction(tx, mint,startingGeneration);
+            await trackTransaction(tx, mint,startingGeneration,true);
         }
         catch(e){
             const causes=[e,(e as any)?.cause,(e as any)?.cause?.cause],declined=causes.some(x=>(x as any)?.code===4001||(x as any)?.name==='UserRejectedRequestError');
@@ -534,7 +591,7 @@ export default function App() {
             if(operationToken.current===op){setBusy(false);setBusyLabel('');}
         }
     }
-    async function trackTransaction(tx: Submitted, mint = tx.operation === 'mint',viewGeneration=navigationGeneration.current):Promise<void> {
+    async function trackTransaction(tx: Submitted, mint = tx.operation === 'mint',viewGeneration=navigationGeneration.current,autoStart=false):Promise<void> {
  const visible=()=>viewGeneration===navigationGeneration.current&&(!tx.account||tx.account.toLowerCase()===context.current.account?.toLowerCase());
         if (!cfg || tx.account && tx.account.toLowerCase() !== context.current.account?.toLowerCase())
             return;
@@ -547,7 +604,7 @@ export default function App() {
                     const recovered = { ...tx, hash: resolution.hash };
                     if(visible())setSubmitted(recovered);
                     store.set(submittedKey(recovered), recovered);
-                    return await trackTransaction(recovered, mint,viewGeneration);
+                    return await trackTransaction(recovered, mint,viewGeneration,autoStart);
                 }
                 if (resolution.expiredUnused) {
                     forgetTransaction(tx);
@@ -594,9 +651,9 @@ export default function App() {
             if (tx.account && tx.account.toLowerCase() !== context.current.account?.toLowerCase())
                 return;
             setOwned(all => all.some(x => x.id === r.id) ? all.map(x => x.id === r.id ? r : x) : [...all, r]);
-            setSelected(current=>current?.id===r.id?r:current);
+            if(visible())setResult(undefined);setSelected(current=>current?.id===r.id?r:current);
             forgetTransaction(tx);
-            if(visible()&&(mint||context.current.selected?.id===accepted.tokenId)){setSelected(r);setJobId(accepted.requestId);setScreen('processing');if(mint)openRef.current?.({kind:'birth'});}
+            if(visible()&&(mint||context.current.selected?.id===accepted.tokenId)){if(autoStart)freshDay.current={account:context.current.account!.toLowerCase(),tokenId:r.id,requestId:accepted.requestId};setSelected(r);setJobId(accepted.requestId);setScreen('processing');if(mint)openRef.current?.({kind:'birth'});}
         }
         catch (e) {
             if (visible()) {
@@ -605,8 +662,10 @@ export default function App() {
             }
         }
     }
-    function toggleItem(id: ItemId) { if (!eligible || selected?.state.day === 0)
-        return; setDelivery(all => all.includes(id) ? all.filter(x => x !== id) : all.length < 3 && selected!.state.inventory[id] < 65535 ? [...all, id] : all); clearQuote(); }
+    function toggleItem(id: ItemId,source?:HTMLElement) { if (!eligible || selected?.state.day === 0)
+        return;const adding=!context.current.delivery.includes(id)&&context.current.delivery.length<3&&selected!.state.inventory[id]<65535,origin=source?.querySelector('img')?.getBoundingClientRect(),token=selected!.id,generation=navigationGeneration.current;supplyFlight.current?.();setDelivery(all => all.includes(id) ? all.filter(x => x !== id) : all.length < 3 && selected!.state.inventory[id] < 65535 ? [...all, id] : all); clearQuote();
+        if(adding&&origin)requestAnimationFrame(()=>{const c=context.current;if(c.screen!=='care'||c.selected?.id!==token||c.modal||navigationGeneration.current!==generation||!c.delivery.includes(id))return;const image=[...document.querySelectorAll<HTMLButtonElement>('.delivery-slot.filled')].find(node=>node.getAttribute('aria-label')==='Remove '+catalog(id).name)?.querySelector('img');if(image)supplyFlight.current=showSupplyTransfer(origin,image,itemImageUrl(id));});
+    }
     async function checkStatus() { setError(''); setBusy(true); try {
         if (submitted)
             await trackTransaction(submitted);
@@ -717,16 +776,17 @@ export default function App() {
     const savedActions=()=>compactOutcome?.history.length?<button className="text-button" onClick={()=>open({kind:'compactHistory',entries:cloneState(compactOutcome.history),day:compactOutcome.savedDay?.day||compactOutcome.rooster.state.day})}>View saved actions</button>:null;
     function pause() { world.current?.pause(); setMeterCue(undefined);setPaused(true); }
     function resume() { menuTrail.current=[];setModal(null); world.current?.resume(); setPaused(false); }
-    function brain() { const c = context.current; open({ kind: 'brain', choice: (c.screen === 'replay' ? c.receipt?.choice : c.job?.latestChoice) ? cloneState(c.screen === 'replay' ? c.receipt!.choice : c.job!.latestChoice) : undefined, receipt: c.screen === 'replay' && c.receipt ? cloneState(c.receipt) : undefined, preparing: c.screen === 'processing' }); setChoiceNotice(false); }
-    function beginMint() { archiveReturn.current=undefined;setHistoricalDay(undefined);operationToken.current++;navigationGeneration.current++;setJobId(undefined);setJob(undefined);setBusy(false);setBusyLabel('');menuTrail.current=[];setError(''); setQuote(undefined); setScreen('mint'); setModal(null); setName(store.get('nh:name:' + account, '')); setStats(store.get('nh:stats:' + account, initialStats)); }
+    function brain() { const c = context.current; open({ kind: 'brain', choice: (isFilm(c.screen) ? c.receipt?.choice : c.job?.latestChoice) ? cloneState(isFilm(c.screen) ? c.receipt!.choice : c.job!.latestChoice) : undefined, receipt: isFilm(c.screen) && c.receipt ? cloneState(c.receipt) : undefined, preparing: c.screen === 'processing' }); setChoiceNotice(false); }
+    function beginMint() { freshDay.current=undefined;setTraitsOpen(false);setResult(undefined);setReceipt(undefined);setCompactOutcome(undefined);archiveReturn.current=undefined;setHistoricalDay(undefined);operationToken.current++;navigationGeneration.current++;setJobId(undefined);setJob(undefined);setBusy(false);setBusyLabel('');menuTrail.current=[];setError(''); setQuote(undefined); setScreen('mint'); setModal(null); setName(store.get('nh:name:' + context.current.account, '')); setStats(store.get('nh:stats:' + context.current.account, initialStats)); }
     const deadlineConditions=(selected?.state.conditions.filter(c=>!c.resolved&&c.dueDay>0)||[]).sort((a,b)=>a.dueDay-b.dueDay);
     const warnings:Array<{label:string;due?:number;item:ItemId}>=deadlineConditions.map(c=>({label:conditionLabel(c.kind,c.severity),due:c.dueDay,item:c.kind==='wound'?'bandage':c.kind==='illness'||c.kind==='infection'?'medicine':c.kind==='waterDeficit'?'water':'bread'}));
     if(selected?.state.needs.nutrition!==undefined&&selected.state.needs.nutrition<=3000&&!deadlineConditions.some(c=>c.kind==='foodDeficit'))warnings.push({label:'Low food',item:'bread'});
     if(selected?.state.needs.hydration!==undefined&&selected.state.needs.hydration<=3000&&!deadlineConditions.some(c=>c.kind==='waterDeficit'))warnings.push({label:'Low water',item:'water'});
     const remaining = 5 - stats.body - stats.wits - stats.spirit;
-    const displayState = hud || selected?.state;
+    const displayState = hud || selected?.state || guest?.rooster.state;
+    const visiting=screen==='discover'||screen==='visit',film=isFilm(screen);
  const mintIdentity=screen==='mint'||screen==='processing'&&submitted?.operation==='mint';
- const headerRooster=mintIdentity?undefined:selected;
+ const headerRooster=mintIdentity?undefined:selected||(visiting?guest?.rooster:undefined);
  const processTitle=submitted?(submitted.hash?'Checking transaction':busy?'Check your wallet':'Checking submission'):job?.phase==='queued'?'Waiting to begin':job?.phase==='checking'?'Checking saved day':job?.phase==='unaccepted'?'Checking request':job?.phase==='saving'?'Saving day':job?.phase==='recording_failure'?'Recording the attempt':'Preparing day '+((selected?.state.day||0)+1);
  const processCaption=submitted?(submitted.hash?'Waiting for confirmation':'Your request has not been confirmed'):job?.phase==='queued'?'Your request is saved':job?.phase==='checking'||job?.phase==='unaccepted'?'Checking the same request':job?.phase==='saving'?'Planning is complete':job?.phase==='recording_failure'?'Your last save is safe':job?.decisions?job.decisions+' choices made':'The day is taking shape';
     function primary(label: string, onClick: () => void, disabled = false) { return <button className="button primary main-action" disabled={disabled || busy} onClick={onClick}><FitText min={10}>{busy ? busyLabel || 'One moment…' : label}</FitText></button>; }
@@ -736,16 +796,15 @@ export default function App() {
  if(ownerLost)return <Panel title="A new owner" footer={primary('Choose rooster',()=>open({kind:'selector'}))}><p className="short-copy">This rooster has a new owner.</p></Panel>;
         if (network && config && network !== config.chainId)
             return <Panel title="Switch network" footer={<>{primary('Switch network', () => void switchNetwork())}<button className="text-button" onClick={() => open({ kind: 'wallet' })}>Choose wallet</button></>}><p className="short-copy">Your home is on<br /><strong>{config.chainName}</strong></p></Panel>;
-        if (screen === 'entry')
-            return <Panel title="NEARlyHuman" kind="entry" footer={<>{primary(account?ownershipRead==='ready'?'Hatch a rooster':ownershipRead==='loading'?'Finding roosters':'Retry connection':'Connect wallet',()=>account?ownershipRead==='ready'?beginMint():void loadOwned(account):wallets.length>1?open({kind:'wallet'}):void connect(),ownershipRead==='loading')}<button className="text-button" onClick={() => open({ kind: 'help' })}>How to play</button></>}><p className="tagline">A little life.<br />A mind of its own.</p>{config?.testnet && <p className="trial-note">A three-day visit · Testnet</p>}{ownedLoading && <span className="quiet-loading">Finding your roosters…</span>}</Panel>;
+        if (screen === 'entry'||screen==='discover'||screen==='visit')return null;
         if (screen === 'mint')
-            return <Panel title="Hatch a rooster" kind="mint" back={() => selected?void chooseRooster(selected):setScreen('entry')} footer={<><div className="mint-meta"><span>First day included</span><button className="fee-button" onClick={() => open({ kind: 'fee' })}>{quote ? fee(quote.totalEstimate) : config?.testnet ? 'Test ETH' : '≈ $1 + fee'} <Icon name="info" size={12}/></button></div>{primary('Hatch rooster', () => void requestDay(true), remaining !== 0 || !name.trim() || !/^[A-Z0-9 ]{1,8}$/.test(name.trim()))}</>}><label className="name-label" htmlFor="rooster-name">Name <small>8 max</small></label><input id="rooster-name" value={name} maxLength={8} placeholder="BOK" autoComplete="off" onFocus={e => setTimeout(() => e.target.scrollIntoView({ block: 'nearest', behavior: 'smooth' }), 180)} onChange={e => { const v = e.target.value.toUpperCase(); setName(v); store.set('nh:name:' + account, v); clearQuote(); }}/>{name && !/^[A-Z0-9 ]{1,8}$/.test(name.trim()) && <p className="field-error">Letters, numbers and spaces</p>}<div className="stat-allocation">{(['body', 'wits', 'spirit'] as const).map((k, i) => <div className="stat-row" key={k}><Icon name={(['heart', 'book', 'leaf'] as const)[i]} color={['#ed5652', '#d9e4cf', '#7fac58'][i]} size={20}/><div><strong>{k}</strong><small>{['Resist harm', 'Task skill', 'Keep spirits'][i]}</small></div><button className="step-button" disabled={!stats[k]} onClick={() => { setStats(s => { const n = { ...s, [k]: s[k] - 1 }; store.set('nh:stats:' + account, n); return n; }); clearQuote(); }}>−</button><b>{stats[k]}</b><button className="step-button" disabled={!remaining} onClick={() => { setStats(s => { const n = { ...s, [k]: s[k] + 1 }; store.set('nh:stats:' + account, n); return n; }); clearQuote(); }}>+</button></div>)}</div><p className="allocation-left">{remaining} point{remaining === 1 ? '' : 's'} left</p></Panel>;
+            return <Panel title="Hatch a rooster" kind="mint" back={() => selected?void chooseRooster(selected):setScreen('entry')} footer={<><div className="mint-meta"><span>First day included</span><button className="fee-button" onClick={() => open({ kind: 'fee' })}>{quote ? fee(quote.totalEstimate) : config?.testnet ? 'Test ETH' : '≈ $1 + fee'} <Icon name="info" size={12}/></button></div>{primary('Hatch rooster', () => void requestDay(true), remaining !== 0 || !name.trim() || !/^[A-Z0-9 ]{1,8}$/.test(name.trim()))}</>}><label className="name-label" htmlFor="rooster-name">Name <small>8 max</small></label><input id="rooster-name" value={name} maxLength={8} placeholder="BOK" autoComplete="off" onFocus={e => setTimeout(() => e.target.scrollIntoView({ block: 'nearest', behavior: 'smooth' }), 180)} onChange={e => { const v = e.target.value.toUpperCase(); setName(v); store.set('nh:name:' + account, v); clearQuote(); }}/>{name && !/^[A-Z0-9 ]{1,8}$/.test(name.trim()) && <p className="field-error">Letters, numbers and spaces</p>}<details className="trait-disclosure" open={traitsOpen} onToggle={e=>setTraitsOpen(e.currentTarget.open)}><summary>Traits</summary><div className="stat-allocation">{(['body', 'wits', 'spirit'] as const).map((k, i) => <div className="stat-row" key={k}><Icon name={(['heart', 'book', 'leaf'] as const)[i]} color={['#ed5652', '#d9e4cf', '#7fac58'][i]} size={20}/><div><strong>{k}</strong><small>{['Resist harm', 'Task skill', 'Keep spirits'][i]}</small></div><button className="step-button" disabled={!stats[k]} onClick={() => { setStats(s => { const n = { ...s, [k]: s[k] - 1 }; store.set('nh:stats:' + account, n); return n; }); clearQuote(); }}>−</button><b>{stats[k]}</b><button className="step-button" disabled={!remaining} onClick={() => { setStats(s => { const n = { ...s, [k]: s[k] + 1 }; store.set('nh:stats:' + account, n); return n; }); clearQuote(); }}>+</button></div>)}</div><p className="allocation-left">{remaining} point{remaining === 1 ? '' : 's'} left</p></details></Panel>;
         if(homeVisit)return <Panel title="Home" kind="care" accessory={<button className="care-stock" onClick={()=>open({kind:'status'})}>Stock ›</button>} footer={<>{primary('Explore house',()=>setRoomsOpen(true))}<div className="home-visit-links"><button className="text-button" onClick={()=>void watchLatest()}>Watch day {selected?.latestDay}</button>{savedDaysLink()}</div></>}/>;
         if (screen === 'care')
             return <Panel title="Prepare day" kind="care" accessory={<button className="care-stock" onClick={() => open({ kind: 'status' })}><FitText min={8}>Stock ›</FitText></button>} footer={<><div className="action-fee">{primary(canonicalStale?'Refresh saved day':'Prepare day',()=>canonicalStale?void reconcileToken(selected!.id,'Saved day refreshed.'):void requestDay(),!eligible||!canonicalStale&&delivery.some(id=>selected!.state.inventory[id]>=65535))}<button className="fee-button" onClick={() => open({ kind: 'fee' })}>{quote ? fee(quote.totalEstimate) : 'Estimate'} <Icon name="info" size={13}/></button></div>{savedDaysLink()}</>}>
    {warnings.length > 0 && <button className="priority-warning" onClick={() => open({ kind: 'status' })}>{warnings.slice(0, 1).map(w => <span key={w.label}><img src={itemImageUrl(w.item)} alt=""/>{w.label}{w.due?' · Day '+w.due:''}</span>)}{warnings.length>1&&<small>+{warnings.length-1} more ›</small>}</button>}
    <div className="care-rail"><div className="delivery-reference">{itemsRow(delivery)}<span className="selection-count"><FitText min={8}>{'Delivery ' + delivery.length + '/3'}</FitText></span></div>
-    <div className="catalog-row">{ITEM_CATALOG.slice(page * catalogSize, page * catalogSize + catalogSize).map(item => <div className={'catalog-item ' + (delivery.includes(item.id) ? 'selected' : '')} key={item.id}><button className="item-tile" disabled={!eligible || (!delivery.includes(item.id) && (delivery.length === 3 || selected!.state.inventory[item.id] === 65535))} aria-label={(delivery.includes(item.id) ? 'Remove ' : 'Add ') + item.name} onClick={() => toggleItem(item.id)}><img src={itemImageUrl(item.id)} alt=""/>{delivery.includes(item.id) && <i aria-hidden="true">✓</i>}{(selected?.state.inventory[item.id] || 0) > 0 && <b className="stock-count">{selected?.state.inventory[item.id]}</b>}</button><button className="item-detail-button" aria-label={'Details: ' + item.name} onClick={() => open({ kind: 'item', item: item.id })}>Info</button></div>)}<button className="catalog-next" onClick={() => setPage(p => (p + 1) % Math.ceil(ITEM_CATALOG.length/catalogSize))} aria-label="Next supply page"><span className="catalog-position">{page+1}/{Math.ceil(ITEM_CATALOG.length/catalogSize)}</span>›</button></div>
+    <div className="catalog-row">{ITEM_CATALOG.slice(page * catalogSize, page * catalogSize + catalogSize).map(item => <div className={'catalog-item ' + (delivery.includes(item.id) ? 'selected' : '')} key={item.id}><button className="item-tile" disabled={!eligible || (!delivery.includes(item.id) && (delivery.length === 3 || selected!.state.inventory[item.id] === 65535))} aria-label={(delivery.includes(item.id) ? 'Remove ' : 'Add ') + item.name} onClick={event => toggleItem(item.id,event.currentTarget)}><img src={itemImageUrl(item.id)} alt=""/>{delivery.includes(item.id) && <i aria-hidden="true">✓</i>}{(selected?.state.inventory[item.id] || 0) > 0 && <b className="stock-count">{selected?.state.inventory[item.id]}</b>}</button><button className="item-detail-button" aria-label={'Details: ' + item.name} onClick={() => open({ kind: 'item', item: item.id })}>Info</button></div>)}<button className="catalog-next" onClick={() => setPage(p => (p + 1) % Math.ceil(ITEM_CATALOG.length/catalogSize))} aria-label="Next supply page"><span className="catalog-position">{page+1}/{Math.ceil(ITEM_CATALOG.length/catalogSize)}</span>›</button></div>
    </div><div className="care-hint"><span>{delivery.some(id=>selected!.state.inventory[id]>=65535)?'Remove a full supply':delivery.length === 0 ? 'Stored supplies only' : delivery.length + '/3 supplies'}</span>{config?.testnet && <span>{Math.max(0, 3 - (selected?.state.day || 0))} day{selected?.state.day===2?'':'s'} left</span>}</div>
   </Panel>;
         if (screen === 'processing')
@@ -777,7 +836,7 @@ export default function App() {
             const editable=screen==='care'&&view?.screen==='care'&&eligible&&sameSave;
             const full=saved?.inventory[modal.item]===65535,canAdd=editable&&(chosen||delivery.length<3)&&(!full||chosen);
             return <Panel title={item.name} kind="detail" back={close} footer={editable?primary(chosen?'Remove':'Add',()=>{toggleItem(modal.item);close();},!canAdd):primary('Back',close)}>
-                {saved&&<p className="reading-context">{saved.name} · {view?.screen==='replay'?'Recorded':'Saved'} day {view?.readingDay??saved.day}</p>}
+                {saved&&<p className="reading-context">{saved.name} · {view&&isFilm(view.screen)?'Recorded':'Saved'} day {view?.readingDay??saved.day}</p>}
                 <div className="item-hero"><img src={itemImageUrl(modal.item)} alt=""/><span>Stored {saved?.inventory[modal.item]||0}{view?.screen==='care'&&!(config?.testnet&&(saved?.day||0)>=3)&&<><br/>Delivery +{chosen?'1':'0'}</>}</span></div>
                 <p className="single-use">Single use</p><ul className="item-uses">{item.uses.split(' · ').map(x=><li key={x}>{x}</li>)}</ul>
                 {!canAdd&&editable&&!chosen&&<p className="field-error">{full?'This supply is full':'Remove a supply first'}</p>}
@@ -808,19 +867,19 @@ export default function App() {
             } }}><input value={tokenSearch} inputMode="numeric" placeholder="Token number" aria-label="Find token number" onChange={e => setTokenSearch(e.target.value.replace(/\D/g, ''))}/><button className="icon-button" aria-label="Find rooster" type="submit">›</button></form><div className="owned-list">{list.map(r => <button key={r.id} className={'owned-row ' + (r.id === selected?.id ? 'selected' : '')} onClick={() => void chooseRooster(r)}><img src={roosterImageUrl(r.state.seed)} alt=""/><span><strong>{r.state.name}</strong><small>#{r.id} · LV{String(r.state.level).padStart(2, '0')}</small></span><b className={'life-badge ' + (!r.state.alive ? 'dead' : r.pending ? 'pending' : 'alive')}>{!r.state.alive ? 'Memorial' : r.pending ? 'Preparing' : config?.testnet && r.state.day >= 3 ? 'Trial complete' : 'Alive'}</b></button>)}{!list.length && <p className="short-copy">{ownedLoading ? 'Finding your roosters…' : 'No matching rooster.'}</p>}</div></Panel>;
         }
         if (modal.kind === 'status') {
-            const state=modal.view?.state||(screen==='replay'?hud:selected?.state);
+            const state=modal.view?.state||(film?hud:screen==='visit'?guest?.rooster.state:selected?.state);
             if(!state)return <Panel title="Status" footer={primary('Close',close)}/>;
-            const replay=modal.view?.screen==='replay';
+            const replay=modal.view?.screen==='replay'||modal.view?.screen==='discover';
             return <Panel title={(replay?'Recorded':'Saved')+' day '+state.day} kind="status" back={close} footer={primary('Back',close)}>
                 <p className="reading-context">{state.name}</p>
                 <SavedStatus state={state} onItem={item=>open({kind:'item',item,view:modal.view})} onObject={target=>open({kind:'object',target,state,view:modal.view})}/>
             </Panel>;
         }
         if (modal.kind === 'brain') {
-            const choice=modal.choice,canResume=modal.view?.screen==='replay'&&screen==='replay';
-            return <Panel title={modal.preparing?'Jev is choosing':'Recorded choice'} kind="brain" back={close} footer={primary(canResume?'Resume':menuTrail.current.length?'Back':'Close',canResume?resume:close)}>
-                {choice?<><p className="brain-caption">{modal.preparing?'Day spoilers':'Paused'}</p><small className="probability-label">Model choice probability</small><div className="choice-list">{choice.candidates.map(candidate=><div className={'choice-row '+(choice.selected===candidate.key?'picked':'')} key={candidate.key}><Icon name={choice.selected===candidate.key?'check':'play'} size={12}/><span>{candidate.label}</span><b>{choice.probabilities?.[candidate.key]!==undefined?Math.round(choice.probabilities[candidate.key]*100)+'%':'—'}</b></div>)}</div>{modal.preparing&&<p className="newer-choice">{choiceNotice?'Newer choices available':'Preparation continues'}</p>}</>:<p className="short-copy">{modal.receipt?'This step needed no model choice.':'No recorded choice yet.'}</p>}
-                {modal.receipt&&<><p className="recorded-effect">{modal.receipt.lines.join(' ')}</p><RecordedEffect receipt={modal.receipt}/></>}
+            const choice=modal.choice,canResume=!!modal.view&&isFilm(modal.view.screen)&&isFilm(screen);
+            return <Panel title={modal.preparing?'Jev is choosing':choice?'Recorded choice':modal.receipt?'Recorded moment':'Recorded choice'} kind="brain" back={close} footer={primary(canResume?'Resume':menuTrail.current.length?'Back':'Close',canResume?resume:close)}>
+                {choice?<><p className="brain-caption">{modal.preparing?'Day spoilers':'Paused'}</p><small className="probability-label">Model choice probability</small><div className="choice-list">{choice.candidates.map(candidate=><div className={'choice-row '+(choice.selected===candidate.key?'picked':'')} key={candidate.key}><Icon name={choice.selected===candidate.key?'check':'play'} size={12}/><span>{candidate.label}</span><b>{choice.probabilities?.[candidate.key]!==undefined?Math.round(choice.probabilities[candidate.key]*100)+'%':'—'}</b></div>)}</div>{modal.preparing&&<p className="newer-choice">{choiceNotice?'Newer choices available':'Preparation continues'}</p>}</>:!modal.receipt?<p className="short-copy">No recorded choice yet.</p>:null}
+                {modal.receipt&&<RecordedStory receipt={modal.receipt}/>}
             </Panel>;
         }
         if (modal.kind === 'birth') {
@@ -831,7 +890,7 @@ export default function App() {
             return <Panel title="Connect wallet" back={close} footer={wallets.length ? undefined : <a className="button primary main-action" href={'https://link.metamask.io/dapp/' + location.host + location.pathname + location.search}>Open in wallet</a>}><div className="wallet-list">{wallets.map(w => <button className="button secondary" key={w.id} onClick={() => void connect(w)}><Icon name="wallet"/>{w.name}<span>›</span></button>)}</div>{!wallets.length && <p className="short-copy">Open this page in your wallet.</p>}</Panel>;
         if (modal.kind === 'object') {
             const { state: s, target } = modal;
-            return <Panel title={TARGET_LABELS[target] || 'Your home'} back={close} footer={menuTrail.current.length?primary('Back',close):screen === 'replay' ? primary('Resume', resume) : primary('Close', close)}><HouseDetails state={s} target={target} onItem={item=>open({kind:'item',item,view:modal.view})}/></Panel>;
+            return <Panel title={TARGET_LABELS[target] || 'Your home'} back={close} footer={menuTrail.current.length?primary('Back',close):film ? primary('Resume', resume) : primary('Close', close)}><HouseDetails state={s} target={target} onItem={item=>open({kind:'item',item,view:modal.view})}/></Panel>;
         }
         if (modal.kind === 'fee')
             return <Panel title="Estimate details" back={close} footer={primary('Close', close)}>{quote ? <div className="fee-breakdown"><span>Network</span><b>{fee(quote.networkEstimate)}</b><span>Care</span><b>{fee(String(BigInt(quote.value) - BigInt(String(quote.permit.mintFee || 0))))}</b>{BigInt(String(quote.permit.mintFee||0))>0n&&<><span>Mint</span><b>{fee(String(quote.permit.mintFee))}</b></>}<span>Total</span><b>{fee(quote.totalEstimate)}</b></div> : <p className="short-copy">A fresh estimate is shown<br />before wallet approval.</p>}{config?.testnet && <p className="help-small">Test ETH has no real-world value.</p>}</Panel>;
@@ -839,7 +898,7 @@ export default function App() {
         if (modal.kind === 'history') {
             const quietEntries=new Set<number>(),entries=result?.receipts||[];
             for(let index=0;index<entries.length;){const span=quietSpanAt(entries,index);if(span){for(let i=span.start;i<=span.end;i++)quietEntries.add(i);index=span.end+1;}else index++;}
-            return <Panel title={'Day ' + result?.day} back={close} footer={primary('Resume', resume)}><div className="history-list">{entries.map((r, i) => {const mark=receiptMark(r),quiet=quietEntries.has(i);return <div className="history-entry" key={i}>{(!i||r.phase!==entries[i-1]?.phase)&&<h2 className="history-phase">{r.phase}</h2>}<button className={(i===replayIndex?'selected ':'')+(quiet?'quiet':'moment')} onClick={() => { world.current?.seek(i); setReceipt(r); open({ kind: 'brain', choice: r.choice ? cloneState(r.choice) : undefined, receipt: cloneState(r), preparing: false }); }}><small>{i + 1}</small><span className="history-mark" aria-hidden="true">{mark.item?<img src={itemImageUrl(mark.item)} alt=""/>:mark.icon?<Icon name={mark.icon}/>:<i/>}</span><span>{r.lines[0]}</span></button></div>;})}</div></Panel>;
+            return <Panel title={'Day ' + result?.day} back={close} footer={primary('Resume', resume)}><div className="history-list">{entries.map((r, i) => {const mark=receiptMark(r),quiet=quietEntries.has(i),event=beforeActionBeat(r)?.event||afterActionBeat(r)?.event,headline=event?.message||r.lines[0];return <div className="history-entry" key={i}>{(!i||r.phase!==entries[i-1]?.phase)&&<h2 className="history-phase">{r.phase}</h2>}<button className={(i===replayIndex?'selected ':'')+(quiet?'quiet':'moment')} onClick={() => { world.current?.seek(i); setReceipt(r); open({ kind: 'brain', choice: r.choice ? cloneState(r.choice) : undefined, receipt: cloneState(r), preparing: false }); }}><small>{i + 1}</small><span className="history-mark" aria-hidden="true">{mark.item?<img src={itemImageUrl(mark.item)} alt=""/>:mark.icon?<Icon name={mark.icon}/>:<i/>}</span><span className="history-copy"><span>{headline}</span>{event&&headline!==r.lines[0]&&<small>{r.lines[0]}</small>}</span></button></div>;})}</div></Panel>;
         }
         if (modal.kind === 'owner')
             return <Panel title="A new owner" footer={primary('Choose rooster', () => open({ kind: 'selector' }))}><p className="short-copy">This rooster has a new owner.</p></Panel>;
@@ -851,7 +910,40 @@ export default function App() {
         return <Panel title={detailDay?'Day '+detailDay.day+' details':'Day details'} back={close} footer={primary('Back',close)}><div className="detail-list"><p>{modal.view?.state?.name||selected?.state.name} {id?'#'+id:''}</p><p>{config?.chainName}</p>{pendingHash&&pendingHash!==requestHash&&<a href={explorerTransaction(config?.chainId||46630,pendingHash)} target="_blank" rel="noreferrer">Next day request ↗</a>}{requestHash&&<a href={explorerTransaction(config?.chainId||46630,requestHash)} target="_blank" rel="noreferrer">Request transaction ↗</a>}{saveHash&&<a href={explorerTransaction(config?.chainId||46630,saveHash)} target="_blank" rel="noreferrer">Saved day transaction ↗</a>}{config&&id&&<a href={config.explorerUrl+'/token/'+config.collection+'/instance/'+id} target="_blank" rel="noreferrer">NFT on explorer ↗</a>}{sameJob?.requestId&&<small>Request {short(sameJob.requestId)}</small>}{selected?.pending&&<button className="button secondary" onClick={()=>void checkRecovery()}>Check request recovery</button>}{expiryAvailable&&primary('Release expired request',()=>void release())}{id&&<button className="text-button" onClick={()=>open({kind:'savedDays'})}>Saved days</button>}{account&&<small>{short(account)}</small>}</div></Panel>;
 
     }
-    return <PanelContext.Provider value={{ error, body: panelScroll, onScroll: e => { scrollMemory.current[(modal ? 'modal:' + modal.kind : screen) + ':' + selected?.id] = e.currentTarget.scrollTop; } }}><main className={'app-root screen-' + screen+(traveling&&screen==='replay'?' is-traveling':'')}><div className={'game-composition ' + (screen === 'care' ? 'with-care' : screen === 'mint' ? 'with-form' : '')}><div className={'game-frame ' + (screen === 'replay' ? 'is-replaying' : '')} inert={!!modal}><div className="world-mount" ref={host}/><header className={'game-hud ' + (!headerRooster ? 'unowned' : '')}><div className="identity-line">{headerRooster ? <button className="identity-button" onClick={() => open({ kind: 'selector' })}>{headerRooster.state.name}<span>LV{String(displayState?.level || 0).padStart(2, '0')}</span><span className="selector-caret" aria-hidden="true">▼</span></button> : <span className="entry-brand">{mintIdentity?screen==='processing'?'Hatching '+(name.trim()||'rooster'):'New rooster':'NEARlyHuman'}</span>}<div className="day-context">{headerRooster ? <span>{screen === 'replay' ? 'DAY' : (screen === 'care'&&!homeVisit) || screen === 'processing' || screen === 'firstRetry' ? 'NEXT' : 'SAVED'}{String(screen === 'replay' ? receipt?.day || result?.day : (screen === 'care'&&!homeVisit) || screen === 'processing' || screen === 'firstRetry' ? (headerRooster.state.day + 1) : headerRooster.state.day).padStart(2, '0')}</span> : config?.testnet ? <span className="network-badge">TESTNET</span> : null}<button className="icon-button options-button" aria-label="Options" onClick={() => open({ kind: 'options' })}><Icon name="gear"/></button></div></div>{headerRooster && displayState && <div className="meter-row"><button className="needs-button" aria-label="Open health and needs" onClick={() => { if (screen === 'replay')
-        pause(); open({ kind: 'status' }); }}>{needs.map(k => {const delta=meterCue?.changes[k];return <span className={'need-meter need-' + k+(delta?' has-change':'')} key={k}><Icon name={needIcons[k]}/><span className="meter-pips">{[1, 2, 3, 4, 5].map(i => <i key={i} className={displayState.needs[k] >= i * 2000 ? 'on' : ''}/>)}</span>{delta&&<span className={'need-change '+(delta>0?'up':'down')} key={meterCue.sequence} aria-hidden="true">{signedNeed(delta)}</span>}</span>;})}</button><button className={'brain-button ' + (job?.phase === 'preparing' ? 'thinking' : '')} onClick={brain} aria-label="Inspect Jev choice"><Icon name="brain" size={19}/></button></div>}</header>{screen === 'replay' && !modal && <div className="event-box"><button className="day-log-button" onClick={()=>{pause();open({kind:'history'});}}>Day log</button><button className="event-lines" onClick={() => { pause(); open({ kind: 'history' }); }}><span>{lines[0]}</span><span>{lines[1]}</span></button><div className="replay-controls"><button className="icon-button" aria-label={paused ? 'Resume' : 'Pause'} onClick={paused ? resume : pause}><Icon name={paused ? 'play' : 'pause'}/></button><button className="icon-button" aria-label={historicalDay?'Back to saved days':'Skip to summary'} onClick={() => world.current?.skip()}><Icon name="skip"/></button></div>{paused && <button className="resume-label" onClick={resume}>Resume</button>}</div>}{screen==='care'&&selected&&<HouseExplorer key={selected.id} state={selected.state} view={houseView} peek={housePeek} roomsOpen={roomsOpen} onRoomsOpenChange={setRoomsOpen} lines={[warnings[0]?.label||'Settled in for the night.',warnings[0]?.due?expiryText(warnings[0].due):warnings[0]?'A supply may help.':'Nearly human.']} onRoom={room=>{setHousePeek(undefined);world.current?.focusRoom(room);}} onFollow={()=>{setHousePeek(undefined);world.current?.followActor();}} onDetails={target=>open({kind:'object',target,state:cloneState(selected.state)})}/>}<div className="screen-overlay">{!modal && screen !== 'replay' && screen !== 'care' && screen !== 'mint' ? renderScreen() : null}</div>{config?.testnet && selected && <span className="corner-network">TESTNET</span>}</div>{screen === 'care' && <div className="care-dock" inert={!!modal}>{renderScreen()}</div>}{screen === 'mint' && <div className="mint-dock" inert={!!modal}>{renderScreen()}</div>}{modal && createPortal(<div className="modal-backdrop" onClick={e => { if (e.target === e.currentTarget)close(); }}><div className="composition-modal" role="dialog" aria-modal="true" aria-label="Game details" onClick={e => { if (e.target === e.currentTarget)
-        close(); }}>{renderModal()}</div></div>,document.body)}</div></main></PanelContext.Provider>;
+    const welcome=screen==='entry'||visiting;
+    const sceneState=screen==='visit'?guest?.rooster.state:selected?.state;
+    const dayLabel=film?'DAY':(screen==='care'&&!homeVisit)||screen==='processing'||screen==='firstRetry'?'NEXT':'SAVED';
+    const dayNumber=film?receipt?.day||result?.day:(screen==='care'&&!homeVisit)||screen==='processing'||screen==='firstRetry'?(headerRooster?.state.day||0)+1:headerRooster?.state.day;
+    return <PanelContext.Provider value={{error,body:panelScroll,onScroll:e=>{scrollMemory.current[(modal?'modal:'+modal.kind:screen)+':'+selected?.id]=e.currentTarget.scrollTop;}}}>
+      <main className={'app-root screen-'+screen+(traveling&&film?' is-traveling':'')}>
+       <div className={'game-composition '+(screen==='care'?'with-care':screen==='mint'?'with-form':welcome?'with-welcome':'')}>
+        <div className={'game-frame '+(film?'is-replaying':'')} inert={!!modal}>
+         <div className="world-mount" ref={host}/>
+         <header className={'game-hud '+(!headerRooster?'unowned':'')}>
+          <div className="identity-line">
+           {headerRooster?visiting?<span className="identity-guest"><strong>{headerRooster.state.name}</strong><span>LV{String(displayState?.level||0).padStart(2,'0')}</span><small>VISIT</small></span>:<button className="identity-button" onClick={()=>open({kind:'selector'})}>{headerRooster.state.name}<span>LV{String(displayState?.level||0).padStart(2,'0')}</span><span className="selector-caret" aria-hidden="true">▼</span></button>:<span className="entry-brand">{mintIdentity?screen==='processing'?'Hatching '+(name.trim()||'rooster'):'New rooster':'NEARlyHuman'}</span>}
+           <div className="day-context">{headerRooster?<span>{dayLabel}{String(dayNumber||0).padStart(2,'0')}</span>:config?.testnet?<span className="network-badge">TESTNET</span>:null}<button className="icon-button options-button" aria-label="Options" onClick={()=>open({kind:'options'})}><Icon name="gear"/></button></div>
+          </div>
+          {headerRooster&&displayState&&<div className="meter-row">
+           <button className="needs-button" aria-label="Open health and needs" onClick={()=>{if(film)pause();open({kind:'status'});}}>{needs.map(k=>{const delta=meterCue?.changes[k];return <span className={'need-meter need-'+k+(delta?' has-change':'')} key={k}><Icon name={needIcons[k]}/><span className="meter-pips">{[1,2,3,4,5].map(i=><i key={i} className={displayState.needs[k]>=i*2000?'on':''}/>)}</span>{delta&&<span className={'need-change '+(delta>0?'up':'down')} key={meterCue.sequence} aria-hidden="true">{signedNeed(delta)}</span>}</span>;})}</button>
+           <button className={'brain-button '+(job?.phase==='preparing'?'thinking':'')} onClick={brain} aria-label="Inspect Jev choice"><Icon name="brain" size={19}/></button>
+          </div>}
+         </header>
+         {film&&!modal&&<div className="event-box">
+          <button className="day-log-button" onClick={()=>{pause();open({kind:'history'});}}>Day log</button>
+          <button className="event-lines" onClick={()=>{pause();open({kind:'history'});}}><span>{lines[0]}</span><span>{lines[1]}</span></button>
+          <div className="replay-controls"><button className="icon-button" aria-label={paused?'Resume':'Pause'} onClick={paused?resume:pause}><Icon name={paused?'play':'pause'}/></button><button className="icon-button" aria-label={screen==='discover'?'Finish visit':historicalDay?'Back to saved days':'Skip to summary'} onClick={()=>world.current?.skip()}><Icon name="skip"/></button></div>
+          {paused&&<button className="resume-label" onClick={resume}>Resume</button>}
+         </div>}
+         {(screen==='care'||screen==='visit')&&sceneState&&<HouseExplorer key={screen==='visit'?'guest':selected?.id} state={sceneState} view={houseView} peek={housePeek} roomsOpen={roomsOpen} onRoomsOpenChange={setRoomsOpen} onWatch={screen==='visit'?startGuestDay:!homeVisit&&selected?.latestDay?()=>void watchLatest():undefined} lines={[warnings[0]?.label||'Settled in for the night.',warnings[0]?.due?expiryText(warnings[0].due):warnings[0]?'A supply may help.':'Nearly human.']} onRoom={room=>{setHousePeek(undefined);world.current?.focusRoom(room);}} onFollow={()=>{setHousePeek(undefined);world.current?.followActor();}} onDetails={target=>open({kind:'object',target,state:cloneState(sceneState)})}/>}
+         <div className="screen-overlay">{!modal&&!film&&!['entry','visit','care','mint'].includes(screen)?renderScreen():null}</div>
+         {config?.testnet&&headerRooster&&<span className="corner-network">TESTNET</span>}
+        </div>
+        {welcome&&<div className="welcome-wrap" inert={!!modal}><WelcomeDock busy={busy||ownedLoading} label={busyLabel} error={error} onHatch={()=>enterHome('mint')} onHome={()=>enterHome('home')}/></div>}
+        {screen==='care'&&<div className="care-dock" inert={!!modal}>{renderScreen()}</div>}
+        {screen==='mint'&&<div className="mint-dock" inert={!!modal}>{renderScreen()}</div>}
+        {modal&&createPortal(<div className="modal-backdrop" onClick={e=>{if(e.target===e.currentTarget)close();}}><div className="composition-modal" role="dialog" aria-modal="true" aria-label="Game details" onClick={e=>{if(e.target===e.currentTarget)close();}}>{renderModal()}</div></div>,document.body)}
+       </div>
+      </main>
+    </PanelContext.Provider>;
 }

@@ -1,0 +1,14 @@
+{
+  "original": "[\"water\",\"milk\",\"bread\"]",
+  "flight": 1,
+  "filled": 3,
+  "distinct": 3,
+  "fourthDisabled": true,
+  "afterRemove": 2,
+  "borders": {
+    "delivery": "rgb(255, 220, 69)",
+    "shelf": "rgb(130, 157, 152)"
+  },
+  "errors": [],
+  "writes": []
+}

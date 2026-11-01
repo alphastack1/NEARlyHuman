@@ -41,7 +41,10 @@ export interface Candidate {
   possibleFailures:string[];
 }
 export interface DecisionSituation { episodes:Episode[]; restUses:number; leisureUses:number; lastRest:number; lastLeisure:number; chairMoved:boolean; minorUsed:boolean }
-export interface ChoiceContext { state:GameState; day:number; slot:number; phase:Phase; candidates:Candidate[]; recent:RecentAction[]; situation:DecisionSituation }
+export interface ChoiceContext { state:GameState; day:number; slot:number; phase:Phase; candidates:Candidate[]; recent:RecentAction[]; situation:DecisionSituation;
+  /** Exact completed nonquiet receipts earlier this day; presentation is not memory. */
+  earlierToday?:RecentAction[];
+}
 export interface ModelChoice { key:string; probabilities?:Record<string,number>; provider?:string; model?:string; requestId?:string; usage?:unknown }
 export type ChoiceProvider = (context:ChoiceContext) => Promise<ModelChoice|string>;
 export interface StateChange { field:string; before:number|string|boolean|null; after:number|string|boolean|null }

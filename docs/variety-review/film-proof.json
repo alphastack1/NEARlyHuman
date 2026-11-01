@@ -1,0 +1,559 @@
+{
+  "provenance": "Actual immutable full BOK2 and PEEP1 packets, controlled16ms renderer clock, current source. No model or API call.",
+  "checks": {
+    "completeOnce": true,
+    "sameSixty": true,
+    "packetUnchanged": true,
+    "finalExact": true,
+    "allSnapshotsCanonical": true,
+    "under180s": true
+  },
+  "rows": [
+    {
+      "name": "BOK",
+      "day": 2,
+      "elapsed": 75440,
+      "complete": 1,
+      "visible": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        18,
+        19,
+        20,
+        21,
+        28,
+        29,
+        30,
+        38,
+        39,
+        40,
+        41,
+        42,
+        48,
+        49,
+        50,
+        58,
+        59
+      ],
+      "retained": 60,
+      "packetUnchanged": true,
+      "finalExact": true,
+      "allSnapshotsCanonical": true,
+      "snapshotCount": 58,
+      "messages": [
+        {
+          "lines": [
+            "The delivery is here.",
+            "Into the cupboards."
+          ],
+          "at": 0
+        },
+        {
+          "lines": [
+            "Drank some water.",
+            "A sensible little sip."
+          ],
+          "at": 7712
+        },
+        {
+          "lines": [
+            "Ate some bread.",
+            "Bread understood."
+          ],
+          "at": 10624
+        },
+        {
+          "lines": [
+            "Planted rose seeds.",
+            "Something to look after."
+          ],
+          "at": 18272
+        },
+        {
+          "lines": [
+            "Fertilized the plot.",
+            "Bonus growth is queued."
+          ],
+          "at": 20352
+        },
+        {
+          "lines": [
+            "Covered one plot.",
+            "The other stays open."
+          ],
+          "at": 23264
+        },
+        {
+          "lines": [
+            "Had a little rest.",
+            "Rest is important."
+          ],
+          "at": 28400
+        },
+        {
+          "lines": [
+            "Sat like a human.",
+            "Nearly."
+          ],
+          "at": 34256
+        },
+        {
+          "lines": [
+            "Visited the garden.",
+            "Some things take their time."
+          ],
+          "at": 36112
+        },
+        {
+          "lines": [
+            "Wandered through the house.",
+            "The usual little creaks."
+          ],
+          "at": 37648
+        },
+        {
+          "lines": [
+            "Had a look in the cupboard.",
+            "A very ordinary cupboard."
+          ],
+          "at": 39184
+        },
+        {
+          "lines": [
+            "Visited the garden.",
+            "Some things take their time."
+          ],
+          "at": 40880
+        },
+        {
+          "lines": [
+            "Checked the supplies.",
+            "Still in their little places."
+          ],
+          "at": 42576
+        },
+        {
+          "lines": [
+            "Wandered through the house.",
+            "The usual little creaks."
+          ],
+          "at": 44112
+        },
+        {
+          "lines": [
+            "Sat like a human.",
+            "Nearly."
+          ],
+          "at": 47568
+        },
+        {
+          "lines": [
+            "Had a look in the cupboard.",
+            "A very ordinary cupboard."
+          ],
+          "at": 49584
+        },
+        {
+          "lines": [
+            "Watched the clouds.",
+            "No hurry."
+          ],
+          "at": 51280
+        },
+        {
+          "lines": [
+            "Had a look in the cupboard.",
+            "A very ordinary cupboard."
+          ],
+          "at": 52816
+        },
+        {
+          "lines": [
+            "Wandered through the house.",
+            "The usual little creaks."
+          ],
+          "at": 54512
+        },
+        {
+          "lines": [
+            "Checked the supplies.",
+            "Still in their little places."
+          ],
+          "at": 56208
+        },
+        {
+          "lines": [
+            "Wandered through the house.",
+            "The usual little creaks."
+          ],
+          "at": 57744
+        },
+        {
+          "lines": [
+            "Had a look in the cupboard.",
+            "A very ordinary cupboard."
+          ],
+          "at": 59280
+        },
+        {
+          "lines": [
+            "Had a little rest.",
+            "Rest is important."
+          ],
+          "at": 61440
+        },
+        {
+          "lines": [
+            "Watched the clouds.",
+            "No hurry."
+          ],
+          "at": 63888
+        },
+        {
+          "lines": [
+            "Had a look in the cupboard.",
+            "A very ordinary cupboard."
+          ],
+          "at": 66640
+        },
+        {
+          "lines": [
+            "Wandered through the house.",
+            "The usual little creaks."
+          ],
+          "at": 68336
+        },
+        {
+          "lines": [
+            "Visited the garden.",
+            "Some things take their time."
+          ],
+          "at": 70032
+        },
+        {
+          "lines": [
+            "Had a look in the cupboard.",
+            "A very ordinary cupboard."
+          ],
+          "at": 71568
+        },
+        {
+          "lines": [
+            "The planting grew.",
+            ""
+          ],
+          "at": 71600
+        },
+        {
+          "lines": [
+            "Another little day.",
+            "Nearly human."
+          ],
+          "at": 73840
+        }
+      ]
+    },
+    {
+      "name": "PEEP",
+      "day": 1,
+      "elapsed": 79024,
+      "complete": 1,
+      "visible": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        28,
+        29,
+        30,
+        38,
+        39,
+        40,
+        48,
+        49,
+        50,
+        58,
+        59
+      ],
+      "retained": 60,
+      "packetUnchanged": true,
+      "finalExact": true,
+      "allSnapshotsCanonical": true,
+      "snapshotCount": 65,
+      "messages": [
+        {
+          "lines": [
+            "",
+            ""
+          ],
+          "at": 0
+        },
+        {
+          "lines": [
+            "Ate some bread.",
+            "Bread understood."
+          ],
+          "at": 1440
+        },
+        {
+          "lines": [
+            "Made some toast.",
+            "Mostly toast."
+          ],
+          "at": 4752
+        },
+        {
+          "lines": [
+            "Drank some water.",
+            "A sensible little sip."
+          ],
+          "at": 7664
+        },
+        {
+          "lines": [
+            "Made some toast.",
+            "Mostly toast."
+          ],
+          "at": 10576
+        },
+        {
+          "lines": [
+            "Had a little rest.",
+            "Rest is important."
+          ],
+          "at": 16704
+        },
+        {
+          "lines": [
+            "Had a look in the cupboard.",
+            "A very ordinary cupboard."
+          ],
+          "at": 18832
+        },
+        {
+          "lines": [
+            "Visited the garden.",
+            "Some things take their time."
+          ],
+          "at": 20272
+        },
+        {
+          "lines": [
+            "Sat like a human.",
+            "Nearly."
+          ],
+          "at": 26496
+        },
+        {
+          "lines": [
+            "Wandered through the house.",
+            "The usual little creaks."
+          ],
+          "at": 28352
+        },
+        {
+          "lines": [
+            "Watched the clouds.",
+            "No hurry."
+          ],
+          "at": 29888
+        },
+        {
+          "lines": [
+            "Drank some water.",
+            "A sensible little sip."
+          ],
+          "at": 31920
+        },
+        {
+          "lines": [
+            "Visited the garden.",
+            "Some things take their time."
+          ],
+          "at": 34496
+        },
+        {
+          "lines": [
+            "Had a look in the cupboard.",
+            "A very ordinary cupboard."
+          ],
+          "at": 36192
+        },
+        {
+          "lines": [
+            "Had a little rest.",
+            "Rest is important."
+          ],
+          "at": 38352
+        },
+        {
+          "lines": [
+            "Visited the garden.",
+            "Some things take their time."
+          ],
+          "at": 40640
+        },
+        {
+          "lines": [
+            "Watched the clouds.",
+            "No hurry."
+          ],
+          "at": 42176
+        },
+        {
+          "lines": [
+            "Sat like a human.",
+            "Nearly."
+          ],
+          "at": 46320
+        },
+        {
+          "lines": [
+            "Had a look in the cupboard.",
+            "A very ordinary cupboard."
+          ],
+          "at": 48176
+        },
+        {
+          "lines": [
+            "Wandered through the house.",
+            "The usual little creaks."
+          ],
+          "at": 49712
+        },
+        {
+          "lines": [
+            "A disappointing",
+            "little moment."
+          ],
+          "at": 50048
+        },
+        {
+          "lines": [
+            "Drank some water.",
+            "A sensible little sip."
+          ],
+          "at": 53584
+        },
+        {
+          "lines": [
+            "Watched the clouds.",
+            "No hurry."
+          ],
+          "at": 55568
+        },
+        {
+          "lines": [
+            "Wandered through the house.",
+            "The usual little creaks."
+          ],
+          "at": 57296
+        },
+        {
+          "lines": [
+            "Checked the supplies.",
+            "Still in their little places."
+          ],
+          "at": 58832
+        },
+        {
+          "lines": [
+            "Had a look in the cupboard.",
+            "A very ordinary cupboard."
+          ],
+          "at": 60528
+        },
+        {
+          "lines": [
+            "Wandered through the house.",
+            "The usual little creaks."
+          ],
+          "at": 62224
+        },
+        {
+          "lines": [
+            "Had a look in the cupboard.",
+            "A very ordinary cupboard."
+          ],
+          "at": 63760
+        },
+        {
+          "lines": [
+            "Visited the garden.",
+            "Some things take their time."
+          ],
+          "at": 65456
+        },
+        {
+          "lines": [
+            "Had a look in the cupboard.",
+            "A very ordinary cupboard."
+          ],
+          "at": 67152
+        },
+        {
+          "lines": [
+            "Watched the clouds.",
+            "No hurry."
+          ],
+          "at": 68688
+        },
+        {
+          "lines": [
+            "Wandered through the house.",
+            "The usual little creaks."
+          ],
+          "at": 70384
+        },
+        {
+          "lines": [
+            "Watched the clouds.",
+            "No hurry."
+          ],
+          "at": 72080
+        },
+        {
+          "lines": [
+            "Visited the garden.",
+            "Some things take their time."
+          ],
+          "at": 73616
+        },
+        {
+          "lines": [
+            "Another little day.",
+            "Nearly human."
+          ],
+          "at": 77424
+        }
+      ]
+    }
+  ],
+  "errors": []
+}

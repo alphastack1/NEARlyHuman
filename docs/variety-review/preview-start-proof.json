@@ -1,0 +1,96 @@
+{
+  "provenance": "Actual immutable PEEP2 packet, current renderer. Guest presentation flag skips only delivery introduction; default owned film still begins there. No API/model/transaction.",
+  "checks": {
+    "ownedKeepsPrelude": true,
+    "guestStartsReceiptZero": true,
+    "initialSameCredit": true,
+    "oneInitialSnapshot": true,
+    "milkAt1500ms": true,
+    "milkConsumedOnce": true
+  },
+  "records": [
+    {
+      "skipDelivery": false,
+      "initial": {
+        "stage": "prelude",
+        "index": 0,
+        "foot": {
+          "x": 328,
+          "y": 393
+        },
+        "inventory": {
+          "water": 0,
+          "milk": 1,
+          "bread": 0,
+          "steak": 0,
+          "medicine": 0,
+          "coffee": 1,
+          "wood": 1,
+          "toolkit": 1,
+          "umbrella": 0,
+          "rose_seeds": 0,
+          "apple_seeds": 0,
+          "matches": 0,
+          "soap": 0,
+          "bandage": 1,
+          "compost": 1
+        },
+        "snapshotCallbacks": 1
+      }
+    },
+    {
+      "skipDelivery": true,
+      "initial": {
+        "stage": "receipts",
+        "index": 0,
+        "foot": {
+          "x": 72,
+          "y": 89
+        },
+        "inventory": {
+          "water": 0,
+          "milk": 1,
+          "bread": 0,
+          "steak": 0,
+          "medicine": 0,
+          "coffee": 1,
+          "wood": 1,
+          "toolkit": 1,
+          "umbrella": 0,
+          "rose_seeds": 0,
+          "apple_seeds": 0,
+          "matches": 0,
+          "soap": 0,
+          "bandage": 1,
+          "compost": 1
+        },
+        "snapshotCallbacks": 1
+      },
+      "impact": {
+        "index": 0,
+        "inventory": {
+          "water": 0,
+          "milk": 0,
+          "bread": 0,
+          "steak": 0,
+          "medicine": 0,
+          "coffee": 1,
+          "wood": 1,
+          "toolkit": 1,
+          "umbrella": 0,
+          "rose_seeds": 0,
+          "apple_seeds": 0,
+          "matches": 0,
+          "soap": 0,
+          "bandage": 1,
+          "compost": 1
+        },
+        "caption": [
+          "Drank some milk.",
+          "The carton won."
+        ]
+      }
+    }
+  ],
+  "errors": []
+}

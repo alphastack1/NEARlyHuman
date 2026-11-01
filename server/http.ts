@@ -3,7 +3,7 @@ import { roosterSvg, roosterTraits } from '../src/art/rooster';
 import { serverConfig } from './config';
 import { authenticate, challenge, session } from './auth';
 import { chainOutcome, checkedRequest, connection, readRooster, readRoosters, ServiceError } from './chain';
-import { issueQuote } from './admission';
+import { DECISION_CONFIG, issueQuote } from './admission';
 import { acceptTransaction, getJob, wakeJob, getReplay, getOutcome } from './jobs';
 import { StoreConflict } from './storage';
 import { BaseError, ContractFunctionRevertedError } from 'viem';
@@ -30,7 +30,7 @@ export async function handleApi(request: Request): Promise<Response> {
     if (!post && path === '/api/config') {
       const { cfg, chain, address, client } = connection();
       const multiplier = await client.readContract({ address, abi: nearlyHumanAbi, functionName: 'gasMultiplier' });
-      return json({ chainId: chain.id, chainName: chain.name, rpcUrl: cfg.rpcUrl, explorerUrl: chain.blockExplorers.default.url, collection: address, testnet: !!chain.testnet, model: cfg.model, multiplier });
+      return json({ chainId: chain.id, chainName: chain.name, rpcUrl: cfg.rpcUrl, explorerUrl: chain.blockExplorers.default.url, collection: address, testnet: !!chain.testnet, model: cfg.model, multiplier, decisionConfig:DECISION_CONFIG });
     }
     if (post && path === '/api/auth/challenge') return json(await challenge(body.address, request.headers.get('origin') || url.origin, request.headers.get('x-nf-client-connection-ip') || request.headers.get('x-forwarded-for')?.split(',')[0] || 'local'));
     if (post && path === '/api/auth/verify') return json(await authenticate(body.address, body.id, body.signature));

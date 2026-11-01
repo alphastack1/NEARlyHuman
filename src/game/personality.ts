@@ -1,5 +1,6 @@
 import type { GameState, TargetId } from '../domain/types';
 import type { RoosterPose } from '../art/rooster';
+import { deriveIndividuality, dayInclination } from '../domain/individuality';
 
 export type PersonalityMode = 'quiet' | 'seated' | 'awake' | 'sleep';
 export type Facing = 1 | -1;
@@ -13,6 +14,8 @@ export interface PersonalityContext {
  target?:TargetId;
  /** A recorded day/slot or another presentation identity, never a random draw. */
  activityKey?:string|number;
+ /** Time at this recorded contact. It does not advance the simulation. */
+ activityMs?:number;
 }
 export interface AttentionContext {
  elapsedMs:number;
@@ -32,27 +35,42 @@ function cosmeticHash(text:string):number {
  return value>>>0;
 }
 
+/** Physical cadence only: distance, routes and action impact times stay fixed. */
+export function physicalCadence(seed:string):{stepMs:number;workMs:number} {
+ const tempo=deriveIndividuality(seed).tempo;
+ return tempo==='unhurried'?{stepMs:134,workMs:292}:tempo==='brisk'?{stepMs:88,workMs:176}:{stepMs:110,workMs:230};
+}
+
+export function settlePose(state:GameState):RoosterPose {
+ if(!state.alive)return'dead';
+ if(state.needs.energy<3000||state.needs.health<3000)return'doze';
+ return deriveIndividuality(state.seed).signature;
+}
+
 /** Read-only physical mannerisms. The caller's frozen world clock freezes them. */
 export function samplePersonality(context:PersonalityContext):PersonalityFrame {
  const {state,mode}=context,baseFacing=face(context.facing);
  if(!state.alive)return {pose:'dead',facing:baseFacing};
  if(mode==='sleep')return {pose:'sleep',facing:baseFacing};
- const identity=cosmeticHash(context.seed),moment=cosmeticHash(`${context.seed}:${context.activityKey??''}:${context.target??''}`);
- const cycle=6200+identity%2300,at=positiveMod(Math.max(0,context.clockMs)+moment%cycle,cycle);
- const tired=state.needs.energy<3000;
+ const profile=deriveIndividuality(context.seed),daily=dayInclination(context.seed,state.day),identity=cosmeticHash(context.seed),moment=cosmeticHash(`${context.seed}:${context.activityKey??''}:${context.target??''}`);
+ const cycle=(profile.tempo==='unhurried'?8600:profile.tempo==='brisk'?5800:7200)+identity%1100,at=positiveMod(Math.max(0,context.clockMs)+moment%cycle,cycle);
+ const tired=state.needs.energy<3000||state.needs.health<3000;
  let pose:RoosterPose='idle',facing=baseFacing;
- // Several still beats separate movements; a new target/slot does not restart
- // the same globally synchronized four-frame performance for every rooster.
+ // A signature is a stable physical habit; the recorded day's soft inclination
+ // spaces its occasional contact beat without inventing another activity.
+ const contact=context.activityMs;
+ if(contact!==undefined&&moment%3===0&&contact>140&&contact<(profile.tempo==='unhurried'?660:470)){
+  pose=tired?'doze':profile.signature;
+  return {pose,facing:baseFacing};
+ }
  if(at<100||at>cycle-80)pose='blink';
- else if(at>620&&at<1020)pose=tired?'doze':'breathe';
- else if(at>1810&&at<2180){
-  pose=tired?'doze':identity%3===0?'preen':identity%3===1?'perk':'breathe';
-  // An absolute look direction also stays stable if the renderer feeds its
-  // previous frame's facing back into this pure sampler.
-  if(!tired&&identity%3===1)facing=identity%2?-1:1;
+ else if(at>620&&at<(profile.tempo==='unhurried'?1200:980))pose=tired?'doze':'breathe';
+ else if(at>1810&&at<(profile.tempo==='unhurried'?2460:2220)){
+  pose=tired?'doze':profile.signature;
+  if(!tired&&profile.curiosity==='inquisitive')facing=identity%2?-1:1;
  }else if(at>3500&&at<3610)pose='blink';
- else if(at>4620&&at<5000)pose=tired?'doze':mode==='seated'?'breathe':identity%2?'stretch':'preen';
- else if(at>5360&&at<5500&&identity%2===0)pose='blink';
+ else if(at>4620&&at<5030)pose=tired?'doze':mode==='seated'?'breathe':daily.interest==='comfort'?'breathe':profile.signature==='preen'?'stretch':'preen';
+ else if(at>5360&&at<5500&&profile.curiosity==='inquisitive')pose='blink';
  return {pose,facing};
 }
 
@@ -61,7 +79,9 @@ export function sampleAttention(context:AttentionContext):PersonalityFrame|undef
  const {elapsedMs,state}=context;
  if(!state.alive||elapsedMs<0||elapsedMs>=NPC_ATTENTION_MS)return;
  const baseFacing=face(context.facing);
- if(context.sleeping)return {pose:elapsedMs>=80&&elapsedMs<600?'peek':'sleep',facing:baseFacing};
+ const profile=deriveIndividuality(state.seed);
+ if(context.sleeping){const peeking=profile.curiosity==='inquisitive'?(elapsedMs>=80&&elapsedMs<340||elapsedMs>=430&&elapsedMs<740):elapsedMs>=120&&elapsedMs<580;return {pose:peeking?'peek':'sleep',facing:baseFacing};}
  const facing=context.toward===undefined?baseFacing:face(context.toward);
- return {pose:elapsedMs<160?'perk':elapsedMs<250?'blink':elapsedMs>650&&elapsedMs<800?'breathe':'idle',facing};
+ const quiet=state.needs.energy<3000||state.needs.health<3000;
+ return {pose:elapsedMs<160?quiet?'doze':'perk':elapsedMs<250?'blink':elapsedMs<620?quiet?'doze':profile.signature:elapsedMs<800?'breathe':'idle',facing};
 }

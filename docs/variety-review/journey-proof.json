@@ -1,0 +1,20 @@
+{
+  "welcome": {
+    "body": "PEEP\nLV01\nVISIT\nDAY02\n+25\n+27\n−1\nDay log\nDrank some milk.\nThe carton won.\nTESTNET\nNEARlyHuman\nHatch yours\nYour home",
+    "ownedUnchanged": true,
+    "previewRequest": {
+      "url": "/assets/preview/peep-day2-7c809055dc27.json",
+      "method": "GET"
+    }
+  },
+  "mint": {
+    "collapsed": {
+      "open": false,
+      "body": "New rooster\nTESTNET\nHATCH A ROOSTER\nName\n8 max\nTraits\nFirst day included\nTest ETH\nHatch rooster"
+    },
+    "expanded": true,
+    "ownedUnchanged": true
+  },
+  "errors": [],
+  "writes": []
+}

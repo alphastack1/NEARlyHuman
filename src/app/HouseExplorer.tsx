@@ -5,10 +5,11 @@ import { Icon, type IconName } from './Icons';
 
 const roomIcons:Record<HouseRoom,IconName>={kitchen:'food',bedroom:'energy',living:'morale',wash:'water',garden:'leaf'};
 
-export function HouseExplorer({state,view,peek,lines,roomsOpen,onRoomsOpenChange,onRoom,onFollow,onDetails}:{
+export function HouseExplorer({state,view,peek,lines,roomsOpen,onRoomsOpenChange,onRoom,onFollow,onDetails,onWatch}:{
  state:GameState;view:{exploring:boolean;room?:HouseRoom};peek?:TargetId;lines:[string,string];
  roomsOpen:boolean;onRoomsOpenChange:(open:boolean)=>void;
  onRoom:(room:HouseRoom)=>void;onFollow:()=>void;onDetails:(target:TargetId)=>void;
+ onWatch?:()=>void;
 }){
  const setRoomsOpen=onRoomsOpenChange;
  const info=peek?houseInfo(state,peek):undefined;
@@ -16,6 +17,7 @@ export function HouseExplorer({state,view,peek,lines,roomsOpen,onRoomsOpenChange
  const shown=(stock?.length?stock:info?.items)?.slice(0,3);
  return <div className="event-box care-sleep house-care">
   <div className="house-view-controls">
+   {onWatch&&<button className="house-watch" onClick={onWatch} aria-label={'Watch day '+state.day}><Icon name="play" size={13}/></button>}
    {view.exploring&&<button className="house-follow" onClick={()=>{setRoomsOpen(false);onFollow();}} aria-label={'Return to '+state.name}><Icon name="back" size={12}/>{state.name}</button>}
    <button className={'house-rooms-button '+(roomsOpen?'selected':'')} aria-label="Look around the house" aria-expanded={roomsOpen} onClick={()=>setRoomsOpen(!roomsOpen)}><Icon name="house" size={13}/>Rooms <span aria-hidden="true">{roomsOpen?'▴':'▾'}</span></button>
   </div>

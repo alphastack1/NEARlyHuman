@@ -1,0 +1,132 @@
+{
+  "provenance": "Actual immutable BOK1 and PEEP2 packets. Current renderer at controlled250ms/1500ms. Initial wording is the selected activity, never a completed outcome. No API/model/wallet calls.",
+  "checks": {
+    "ownedDeliveryUnchanged": true,
+    "newbornActivityVisible": true,
+    "guestActivityVisible": true,
+    "guestNoEarlyConsumption": true,
+    "guestRealResultAtImpact": true,
+    "guestConsumedExactlyOnce": true
+  },
+  "records": [
+    {
+      "id": "owned",
+      "label": "Drink milk",
+      "initial": {
+        "stage": "prelude",
+        "index": 0,
+        "effect": false,
+        "caption": [
+          "The delivery is here.",
+          "Into the cupboards."
+        ],
+        "inventory": {
+          "water": 0,
+          "milk": 1,
+          "bread": 0,
+          "steak": 0,
+          "medicine": 0,
+          "coffee": 1,
+          "wood": 1,
+          "toolkit": 1,
+          "umbrella": 0,
+          "rose_seeds": 0,
+          "apple_seeds": 0,
+          "matches": 0,
+          "soap": 0,
+          "bandage": 1,
+          "compost": 1
+        },
+        "snapshots": 1
+      }
+    },
+    {
+      "id": "newborn",
+      "label": "Eat bread",
+      "initial": {
+        "stage": "receipts",
+        "index": 0,
+        "effect": false,
+        "caption": [
+          "Eating bread",
+          ""
+        ],
+        "inventory": {
+          "water": 3,
+          "milk": 0,
+          "bread": 3,
+          "steak": 0,
+          "medicine": 0,
+          "coffee": 0,
+          "wood": 0,
+          "toolkit": 0,
+          "umbrella": 1,
+          "rose_seeds": 0,
+          "apple_seeds": 0,
+          "matches": 0,
+          "soap": 0,
+          "bandage": 1,
+          "compost": 1
+        },
+        "snapshots": 1
+      }
+    },
+    {
+      "id": "guest",
+      "label": "Drink milk",
+      "initial": {
+        "stage": "receipts",
+        "index": 0,
+        "effect": false,
+        "caption": [
+          "Drinking milk",
+          ""
+        ],
+        "inventory": {
+          "water": 0,
+          "milk": 1,
+          "bread": 0,
+          "steak": 0,
+          "medicine": 0,
+          "coffee": 1,
+          "wood": 1,
+          "toolkit": 1,
+          "umbrella": 0,
+          "rose_seeds": 0,
+          "apple_seeds": 0,
+          "matches": 0,
+          "soap": 0,
+          "bandage": 1,
+          "compost": 1
+        },
+        "snapshots": 1
+      },
+      "impact": {
+        "index": 0,
+        "effect": true,
+        "caption": [
+          "Drank some milk.",
+          "The carton won."
+        ],
+        "inventory": {
+          "water": 0,
+          "milk": 0,
+          "bread": 0,
+          "steak": 0,
+          "medicine": 0,
+          "coffee": 1,
+          "wood": 1,
+          "toolkit": 1,
+          "umbrella": 0,
+          "rose_seeds": 0,
+          "apple_seeds": 0,
+          "matches": 0,
+          "soap": 0,
+          "bandage": 1,
+          "compost": 1
+        }
+      }
+    }
+  ],
+  "errors": []
+}

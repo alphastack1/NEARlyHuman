@@ -1,0 +1,68 @@
+{
+  "provenance": "Controlled deterministic provider, real prepare/checkpoint/resume path; zero external inference or transactions.",
+  "checks": {
+    "truthfulCompletedMemory": true,
+    "nonquietMemorySurvivesSixQuietRecords": true,
+    "resumePaidInputHashesIdentical": true,
+    "historyIdentical": true,
+    "finalStateIdentical": true,
+    "baseUnchanged": true
+  },
+  "laterExample": {
+    "slot": 35,
+    "hash": "3df49734cd75ab07cb7696274019c3626d20788d229c518f685198cacf494c7a",
+    "memory": [
+      {
+        "action": "H01",
+        "target": "store",
+        "variant": "bread",
+        "success": true
+      },
+      {
+        "action": "K01",
+        "target": "stove",
+        "variant": "toast",
+        "success": true
+      }
+    ],
+    "recent": [
+      {
+        "action": "T01",
+        "target": "cupboard",
+        "variant": "idle",
+        "success": true
+      },
+      {
+        "action": "T01",
+        "target": "hall",
+        "variant": "idle",
+        "success": true
+      },
+      {
+        "action": "T01",
+        "target": "gardenView",
+        "variant": "idle",
+        "success": true
+      },
+      {
+        "action": "T01",
+        "target": "cupboard",
+        "variant": "idle",
+        "success": true
+      },
+      {
+        "action": "T01",
+        "target": "window",
+        "variant": "idle",
+        "success": true
+      },
+      {
+        "action": "T01",
+        "target": "gardenView",
+        "variant": "idle",
+        "success": true
+      }
+    ]
+  },
+  "providerCalls": 60
+}

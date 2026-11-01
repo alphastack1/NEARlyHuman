@@ -1,0 +1,19 @@
+{
+  "url": "/assets/preview/peep-day2-7c809055dc27.json",
+  "bytes": 330423,
+  "commitment": "0xa32e9752d7b9e6694defc33cfa9105d808814f9f24bfa6f272be9350ae9344af",
+  "source": {
+    "chainId": 46630,
+    "collection": "0x998551395f8a0c4ebd1f883b8c18a41d2cecabfb",
+    "tokenId": "2",
+    "day": 2,
+    "requestId": "0x37e70f146037c3682ae05922357d80640bffa85a425462abd7281b8b0d9021d6",
+    "saveTransaction": "0x6466018d898ddde62edc841a4edbcf8cf72f1835441465a712998cb3de9d23c0",
+    "recorded": true
+  },
+  "checks": {
+    "canonicalCommitment": true,
+    "packedStateHash": true,
+    "compactHistory": true
+  }
+}

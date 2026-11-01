@@ -1,0 +1,2726 @@
+{
+  "provenance": "Two standalone full-day counterfactual diagnostics using genuine final-policy Jev choices. Exact actual original initial states, delivery and accepted day RNG seeds; no chain or ledger writes, no canonical saved-day claim.",
+  "decisionConfig": "0x0c5befc18112324ff3de00a387297d198b6c8a183f5cfb8cda3bd1513aadf714",
+  "decisionPolicy": "individual-routines-memory1-clipped-gains-v1",
+  "parameters": {
+    "incidentRate": 0.45,
+    "blackSwanRate": 0.00025
+  },
+  "completedAt": "2026-11-01T15:08:45.879Z",
+  "sends": 120,
+  "successfulSends": 120,
+  "costMicroUSD": 10910,
+  "costIsConservative": false,
+  "budgetMicroUSD": 20000,
+  "maxSends": 144,
+  "maxPayloadBytes": 5359,
+  "comparisons": [
+    {
+      "token": 1,
+      "name": "BOK",
+      "daySeed": "0x386500ddc6ed8a65b519fb40078a9946f62a261f94308773e6cc79a6248a531b",
+      "profile": {
+        "interest": "cooking",
+        "secondaryInterest": "gardening",
+        "mealStyle": "ritual",
+        "rhythm": "early",
+        "signature": "stretch",
+        "tempo": "unhurried",
+        "curiosity": "inquisitive",
+        "resourceStyle": "experiment"
+      },
+      "inclination": {
+        "interest": "cooking",
+        "phase": "Morning"
+      },
+      "old": {
+        "decisions": 12,
+        "active": 10,
+        "quiet": 50,
+        "activeSequence": [
+          {
+            "slot": 1,
+            "phase": "Dawn",
+            "action": "H01",
+            "target": "store",
+            "variant": "bread",
+            "success": true,
+            "needsBefore": {
+              "health": 10000,
+              "nutrition": 8000,
+              "hydration": 8000,
+              "energy": 8000,
+              "morale": 8000
+            },
+            "inputs": {
+              "bread": 1
+            }
+          },
+          {
+            "slot": 2,
+            "phase": "Dawn",
+            "action": "K01",
+            "target": "stove",
+            "variant": "toast",
+            "success": true,
+            "needsBefore": {
+              "health": 10000,
+              "nutrition": 10000,
+              "hydration": 8000,
+              "energy": 7900,
+              "morale": 8000
+            },
+            "inputs": {
+              "bread": 1
+            }
+          },
+          {
+            "slot": 3,
+            "phase": "Dawn",
+            "action": "H01",
+            "target": "store",
+            "variant": "water",
+            "success": true,
+            "needsBefore": {
+              "health": 10000,
+              "nutrition": 10000,
+              "hydration": 8000,
+              "energy": 7800,
+              "morale": 8800
+            },
+            "inputs": {
+              "water": 1
+            }
+          },
+          {
+            "slot": 4,
+            "phase": "Dawn",
+            "action": "K01",
+            "target": "stove",
+            "variant": "toast",
+            "success": true,
+            "needsBefore": {
+              "health": 10000,
+              "nutrition": 10000,
+              "hydration": 10000,
+              "energy": 7700,
+              "morale": 8800
+            },
+            "inputs": {
+              "bread": 1
+            }
+          },
+          {
+            "slot": 5,
+            "phase": "Dawn",
+            "action": "H03",
+            "target": "bed",
+            "variant": "bed",
+            "success": true,
+            "needsBefore": {
+              "health": 10000,
+              "nutrition": 10000,
+              "hydration": 10000,
+              "energy": 7600,
+              "morale": 9600
+            },
+            "inputs": {}
+          },
+          {
+            "slot": 8,
+            "phase": "Dawn",
+            "action": "H04",
+            "target": "baseSeat",
+            "variant": "base",
+            "success": true,
+            "needsBefore": {
+              "health": 10000,
+              "nutrition": 10000,
+              "hydration": 10000,
+              "energy": 8800,
+              "morale": 9600
+            },
+            "inputs": {}
+          },
+          {
+            "slot": 11,
+            "phase": "Morning",
+            "action": "H01",
+            "target": "store",
+            "variant": "water",
+            "success": true,
+            "needsBefore": {
+              "health": 10000,
+              "nutrition": 9500,
+              "hydration": 9300,
+              "energy": 8700,
+              "morale": 9706
+            },
+            "inputs": {
+              "water": 1
+            }
+          },
+          {
+            "slot": 15,
+            "phase": "Morning",
+            "action": "H03",
+            "target": "bed",
+            "variant": "bed",
+            "success": true,
+            "needsBefore": {
+              "health": 10000,
+              "nutrition": 9500,
+              "hydration": 10000,
+              "energy": 8600,
+              "morale": 9706
+            },
+            "inputs": {}
+          },
+          {
+            "slot": 18,
+            "phase": "Morning",
+            "action": "H04",
+            "target": "baseSeat",
+            "variant": "base",
+            "success": true,
+            "needsBefore": {
+              "health": 10000,
+              "nutrition": 9500,
+              "hydration": 10000,
+              "energy": 9800,
+              "morale": 9706
+            },
+            "inputs": {}
+          },
+          {
+            "slot": 21,
+            "phase": "Midday",
+            "action": "H01",
+            "target": "store",
+            "variant": "water",
+            "success": true,
+            "needsBefore": {
+              "health": 10000,
+              "nutrition": 9000,
+              "hydration": 9400,
+              "energy": 9700,
+              "morale": 9706
+            },
+            "inputs": {
+              "water": 1
+            }
+          }
+        ],
+        "activePerPhase": {
+          "Dawn": 6,
+          "Morning": 3,
+          "Midday": 1,
+          "Afternoon": 0,
+          "Evening": 0,
+          "Bedtime": 0
+        },
+        "bread": [
+          {
+            "slot": 1,
+            "action": "H01",
+            "foodBefore": 8000,
+            "foodAfter": 10000,
+            "stockAfter": 2
+          },
+          {
+            "slot": 2,
+            "action": "K01",
+            "foodBefore": 10000,
+            "foodAfter": 10000,
+            "stockAfter": 1
+          },
+          {
+            "slot": 4,
+            "action": "K01",
+            "foodBefore": 10000,
+            "foodAfter": 10000,
+            "stockAfter": 0
+          }
+        ],
+        "water": [
+          {
+            "slot": 3,
+            "action": "H01",
+            "waterBefore": 8000,
+            "waterAfter": 10000,
+            "stockAfter": 2
+          },
+          {
+            "slot": 11,
+            "action": "H01",
+            "waterBefore": 9300,
+            "waterAfter": 10000,
+            "stockAfter": 1
+          },
+          {
+            "slot": 21,
+            "action": "H01",
+            "waterBefore": 9400,
+            "waterAfter": 10000,
+            "stockAfter": 0
+          }
+        ],
+        "lastActive": 21,
+        "endNeeds": {
+          "health": 10000,
+          "nutrition": 7000,
+          "hydration": 7300,
+          "energy": 10000,
+          "morale": 8530
+        },
+        "endStock": {
+          "water": 0,
+          "milk": 0,
+          "bread": 0,
+          "steak": 0,
+          "medicine": 0,
+          "coffee": 0,
+          "wood": 0,
+          "toolkit": 0,
+          "umbrella": 1,
+          "rose_seeds": 0,
+          "apple_seeds": 0,
+          "matches": 0,
+          "soap": 0,
+          "bandage": 1,
+          "compost": 1
+        },
+        "survived": true,
+        "events": [
+          {
+            "slot": 1,
+            "kind": "action",
+            "message": "Ate some bread.",
+            "target": "store",
+            "source": "H01"
+          },
+          {
+            "slot": 2,
+            "kind": "action",
+            "message": "Made some toast.",
+            "target": "stove",
+            "source": "K01"
+          },
+          {
+            "slot": 3,
+            "kind": "action",
+            "message": "Drank some water.",
+            "target": "store",
+            "source": "H01"
+          },
+          {
+            "slot": 4,
+            "kind": "action",
+            "message": "Made some toast.",
+            "target": "stove",
+            "source": "K01"
+          },
+          {
+            "slot": 5,
+            "kind": "action",
+            "message": "Had a little rest.",
+            "target": "bed",
+            "source": "H03"
+          },
+          {
+            "slot": 6,
+            "kind": "action",
+            "message": "A quiet little moment.",
+            "target": "hall",
+            "source": "T01"
+          },
+          {
+            "slot": 7,
+            "kind": "action",
+            "message": "A quiet little moment.",
+            "target": "hall",
+            "source": "T01"
+          },
+          {
+            "slot": 8,
+            "kind": "action",
+            "message": "Sat like a human.",
+            "target": "baseSeat",
+            "source": "H04"
+          },
+          {
+            "slot": 9,
+            "kind": "action",
+            "message": "A quiet little moment.",
+            "target": "hall",
+            "source": "T01"
+          },
+          {
+            "slot": 10,
+            "kind": "action",
+            "message": "A quiet little moment.",
+            "target": "hall",
+            "source": "T01"
+          },
+          {
+            "slot": 11,
+            "kind": "action",
+            "message": "Drank some water.",
+            "target": "store",
+            "source": "H01"
+          },
+          {
+            "slot": 12,
+            "kind": "action",
+            "message": "A quiet little moment.",
+            "target": "hall",
+            "source": "T01"
+          },
+          {
+            "slot": 13,
+            "kind": "action",
+            "message": "A quiet little moment.",
+            "target": "hall",
+            "source": "T01"
+          },
+          {
+            "slot": 14,
+            "kind": "action",
+            "message": "A quiet little moment.",
+            "target": "hall",
+            "source": "T01"
+          },
+          {
+            "slot": 15,
+            "kind": "action",
+            "message": "Had a little rest.",
+            "target": "bed",
+            "source": "H03"
+          },
+          {
+            "slot": 16,
+            "kind": "action",
+            "message": "A quiet little moment.",
+            "target": "hall",
+            "source": "T01"
+          },
+          {
+            "slot": 17,
+            "kind": "action",
+            "message": "A quiet little moment.",
+            "target": "hall",
+            "source": "T01"
+          },
+          {
+            "slot": 18,
+            "kind": "action",
+            "message": "Sat like a human.",
+            "target": "baseSeat",
+            "source": "H04"
+          },
+          {
+            "slot": 19,
+            "kind": "action",
+            "message": "A quiet little moment.",
+            "target": "hall",
+            "source": "T01"
+          },
+          {
+            "slot": 20,
+            "kind": "action",
+            "message": "A quiet little moment.",
+            "target": "hall",
+            "source": "T01"
+          },
+          {
+            "slot": 21,
+            "kind": "action",
+            "message": "Drank some water.",
+            "target": "store",
+            "source": "H01"
+          },
+          {
+            "slot": 22,
+            "kind": "action",
+            "message": "A quiet little moment.",
+            "target": "hall",
+            "source": "T01"
+          },
+          {
+            "slot": 23,
+            "kind": "action",
+            "message": "A quiet little moment.",
+            "target": "hall",
+            "source": "T01"
+          },
+          {
+            "slot": 24,
+            "kind": "action",
+            "message": "A quiet little moment.",
+            "target": "hall",
+            "source": "T01"
+          },
+          {
+            "slot": 25,
+            "kind": "action",
+            "message": "A quiet little moment.",
+            "target": "hall",
+            "source": "T01"
+          },
+          {
+            "slot": 26,
+            "kind": "action",
+            "message": "A quiet little moment.",
+            "target": "hall",
+            "source": "T01"
+          },
+          {
+            "slot": 27,
+            "kind": "action",
+            "message": "A quiet little moment.",
+            "target": "hall",
+            "source": "T01"
+          },
+          {
+            "slot": 28,
+            "kind": "action",
+            "message": "A quiet little moment.",
+            "target": "hall",
+            "source": "T01"
+          },
+          {
+            "slot": 29,
+            "kind": "action",
+            "message": "A quiet little moment.",
+            "target": "hall",
+            "source": "T01"
+          },
+          {
+            "slot": 30,
+            "kind": "action",
+            "message": "A quiet little moment.",
+            "target": "hall",
+            "source": "T01"
+          },
+          {
+            "slot": 31,
+            "kind": "action",
+            "message": "A quiet little moment.",
+            "target": "hall",
+            "source": "T01"
+          },
+          {
+            "slot": 32,
+            "kind": "action",
+            "message": "A quiet little moment.",
+            "target": "hall",
+            "source": "T01"
+          },
+          {
+            "slot": 33,
+            "kind": "action",
+            "message": "A quiet little moment.",
+            "target": "hall",
+            "source": "T01"
+          },
+          {
+            "slot": 34,
+            "kind": "action",
+            "message": "A quiet little moment.",
+            "target": "hall",
+            "source": "T01"
+          },
+          {
+            "slot": 35,
+            "kind": "action",
+            "message": "A quiet little moment.",
+            "target": "hall",
+            "source": "T01"
+          },
+          {
+            "slot": 36,
+            "kind": "action",
+            "message": "A quiet little moment.",
+            "target": "hall",
+            "source": "T01"
+          },
+          {
+            "slot": 37,
+            "kind": "action",
+            "message": "A quiet little moment.",
+            "target": "hall",
+            "source": "T01"
+          },
+          {
+            "slot": 38,
+            "kind": "action",
+            "message": "A quiet little moment.",
+            "target": "hall",
+            "source": "T01"
+          },
+          {
+            "slot": 39,
+            "kind": "action",
+            "message": "A quiet little moment.",
+            "target": "hall",
+            "source": "T01"
+          },
+          {
+            "slot": 40,
+            "kind": "action",
+            "message": "A quiet little moment.",
+            "target": "hall",
+            "source": "T01"
+          },
+          {
+            "slot": 41,
+            "kind": "weather",
+            "message": "Rain reached the little garden.",
+            "target": "window",
+            "source": "rain"
+          },
+          {
+            "slot": 41,
+            "kind": "action",
+            "message": "A quiet little moment.",
+            "target": "hall",
+            "source": "T01"
+          },
+          {
+            "slot": 42,
+            "kind": "action",
+            "message": "A quiet little moment.",
+            "target": "hall",
+            "source": "T01"
+          },
+          {
+            "slot": 43,
+            "kind": "action",
+            "message": "A quiet little moment.",
+            "target": "hall",
+            "source": "T01"
+          },
+          {
+            "slot": 44,
+            "kind": "action",
+            "message": "A quiet little moment.",
+            "target": "hall",
+            "source": "T01"
+          },
+          {
+            "slot": 45,
+            "kind": "action",
+            "message": "A quiet little moment.",
+            "target": "hall",
+            "source": "T01"
+          },
+          {
+            "slot": 46,
+            "kind": "action",
+            "message": "A quiet little moment.",
+            "target": "hall",
+            "source": "T01"
+          },
+          {
+            "slot": 47,
+            "kind": "action",
+            "message": "A quiet little moment.",
+            "target": "hall",
+            "source": "T01"
+          },
+          {
+            "slot": 48,
+            "kind": "action",
+            "message": "A quiet little moment.",
+            "target": "hall",
+            "source": "T01"
+          },
+          {
+            "slot": 49,
+            "kind": "action",
+            "message": "A quiet little moment.",
+            "target": "hall",
+            "source": "T01"
+          },
+          {
+            "slot": 50,
+            "kind": "action",
+            "message": "A quiet little moment.",
+            "target": "hall",
+            "source": "T01"
+          },
+          {
+            "slot": 51,
+            "kind": "action",
+            "message": "A quiet little moment.",
+            "target": "hall",
+            "source": "T01"
+          },
+          {
+            "slot": 52,
+            "kind": "action",
+            "message": "A quiet little moment.",
+            "target": "hall",
+            "source": "T01"
+          },
+          {
+            "slot": 53,
+            "kind": "action",
+            "message": "A quiet little moment.",
+            "target": "hall",
+            "source": "T01"
+          },
+          {
+            "slot": 54,
+            "kind": "action",
+            "message": "A quiet little moment.",
+            "target": "hall",
+            "source": "T01"
+          },
+          {
+            "slot": 55,
+            "kind": "action",
+            "message": "A quiet little moment.",
+            "target": "hall",
+            "source": "T01"
+          },
+          {
+            "slot": 56,
+            "kind": "action",
+            "message": "A quiet little moment.",
+            "target": "hall",
+            "source": "T01"
+          },
+          {
+            "slot": 57,
+            "kind": "action",
+            "message": "A quiet little moment.",
+            "target": "hall",
+            "source": "T01"
+          },
+          {
+            "slot": 58,
+            "kind": "action",
+            "message": "A quiet little moment.",
+            "target": "hall",
+            "source": "T01"
+          },
+          {
+            "slot": 59,
+            "kind": "action",
+            "message": "A quiet little moment.",
+            "target": "hall",
+            "source": "T01"
+          },
+          {
+            "slot": 60,
+            "kind": "action",
+            "message": "A quiet little moment.",
+            "target": "hall",
+            "source": "T01"
+          },
+          {
+            "slot": 60,
+            "kind": "bedtime",
+            "message": "Settled in for the night.",
+            "target": "bed"
+          }
+        ]
+      },
+      "current": {
+        "decisions": 60,
+        "active": 8,
+        "quiet": 52,
+        "activeSequence": [
+          {
+            "slot": 1,
+            "phase": "Dawn",
+            "action": "K01",
+            "target": "stove",
+            "variant": "toast",
+            "success": true,
+            "needsBefore": {
+              "health": 10000,
+              "nutrition": 8000,
+              "hydration": 8000,
+              "energy": 8000,
+              "morale": 8000
+            },
+            "inputs": {
+              "bread": 1
+            }
+          },
+          {
+            "slot": 9,
+            "phase": "Dawn",
+            "action": "H01",
+            "target": "store",
+            "variant": "water",
+            "success": true,
+            "needsBefore": {
+              "health": 10000,
+              "nutrition": 10000,
+              "hydration": 8000,
+              "energy": 7900,
+              "morale": 8800
+            },
+            "inputs": {
+              "water": 1
+            }
+          },
+          {
+            "slot": 11,
+            "phase": "Morning",
+            "action": "K01",
+            "target": "stove",
+            "variant": "toast",
+            "success": true,
+            "needsBefore": {
+              "health": 10000,
+              "nutrition": 9500,
+              "hydration": 9300,
+              "energy": 7800,
+              "morale": 8506
+            },
+            "inputs": {
+              "bread": 1
+            }
+          },
+          {
+            "slot": 21,
+            "phase": "Midday",
+            "action": "H01",
+            "target": "store",
+            "variant": "bread",
+            "success": true,
+            "needsBefore": {
+              "health": 10000,
+              "nutrition": 9500,
+              "hydration": 8700,
+              "energy": 7700,
+              "morale": 9012
+            },
+            "inputs": {
+              "bread": 1
+            }
+          },
+          {
+            "slot": 31,
+            "phase": "Afternoon",
+            "action": "H04",
+            "target": "baseSeat",
+            "variant": "base",
+            "success": true,
+            "needsBefore": {
+              "health": 10000,
+              "nutrition": 9500,
+              "hydration": 8000,
+              "energy": 7600,
+              "morale": 8718
+            },
+            "inputs": {}
+          },
+          {
+            "slot": 42,
+            "phase": "Evening",
+            "action": "H01",
+            "target": "store",
+            "variant": "water",
+            "success": true,
+            "needsBefore": {
+              "health": 10000,
+              "nutrition": 9000,
+              "hydration": 7300,
+              "energy": 7500,
+              "morale": 9424
+            },
+            "inputs": {
+              "water": 1
+            }
+          },
+          {
+            "slot": 43,
+            "phase": "Evening",
+            "action": "H04",
+            "target": "baseSeat",
+            "variant": "base",
+            "success": true,
+            "needsBefore": {
+              "health": 10000,
+              "nutrition": 9000,
+              "hydration": 10000,
+              "energy": 7400,
+              "morale": 9424
+            },
+            "inputs": {}
+          },
+          {
+            "slot": 51,
+            "phase": "Bedtime",
+            "action": "H03",
+            "target": "bed",
+            "variant": "bed",
+            "success": true,
+            "needsBefore": {
+              "health": 10000,
+              "nutrition": 8500,
+              "hydration": 9400,
+              "energy": 7300,
+              "morale": 9706
+            },
+            "inputs": {}
+          }
+        ],
+        "activePerPhase": {
+          "Dawn": 2,
+          "Morning": 1,
+          "Midday": 1,
+          "Afternoon": 1,
+          "Evening": 2,
+          "Bedtime": 1
+        },
+        "bread": [
+          {
+            "slot": 1,
+            "action": "K01",
+            "foodBefore": 8000,
+            "foodAfter": 10000,
+            "stockAfter": 2
+          },
+          {
+            "slot": 11,
+            "action": "K01",
+            "foodBefore": 9500,
+            "foodAfter": 10000,
+            "stockAfter": 1
+          },
+          {
+            "slot": 21,
+            "action": "H01",
+            "foodBefore": 9500,
+            "foodAfter": 10000,
+            "stockAfter": 0
+          }
+        ],
+        "water": [
+          {
+            "slot": 9,
+            "action": "H01",
+            "waterBefore": 8000,
+            "waterAfter": 10000,
+            "stockAfter": 2
+          },
+          {
+            "slot": 42,
+            "action": "H01",
+            "waterBefore": 7300,
+            "waterAfter": 10000,
+            "stockAfter": 1
+          }
+        ],
+        "lastActive": 51,
+        "endNeeds": {
+          "health": 10000,
+          "nutrition": 8000,
+          "hydration": 8700,
+          "energy": 10000,
+          "morale": 9412
+        },
+        "endStock": {
+          "water": 1,
+          "milk": 0,
+          "bread": 0,
+          "steak": 0,
+          "medicine": 0,
+          "coffee": 0,
+          "wood": 0,
+          "toolkit": 0,
+          "umbrella": 1,
+          "rose_seeds": 0,
+          "apple_seeds": 0,
+          "matches": 0,
+          "soap": 0,
+          "bandage": 1,
+          "compost": 1
+        },
+        "survived": true,
+        "events": [
+          {
+            "slot": 1,
+            "kind": "action",
+            "message": "Made some toast.",
+            "target": "stove",
+            "source": "K01"
+          },
+          {
+            "slot": 2,
+            "kind": "action",
+            "message": "Visited the garden.",
+            "target": "gardenView",
+            "source": "T01"
+          },
+          {
+            "slot": 3,
+            "kind": "action",
+            "message": "Had a look in the cupboard.",
+            "target": "cupboard",
+            "source": "T01"
+          },
+          {
+            "slot": 4,
+            "kind": "action",
+            "message": "Checked the supplies.",
+            "target": "store",
+            "source": "T01"
+          },
+          {
+            "slot": 5,
+            "kind": "action",
+            "message": "Wandered through the house.",
+            "target": "hall",
+            "source": "T01"
+          },
+          {
+            "slot": 6,
+            "kind": "action",
+            "message": "Watched the clouds.",
+            "target": "window",
+            "source": "T01"
+          },
+          {
+            "slot": 7,
+            "kind": "action",
+            "message": "Checked the supplies.",
+            "target": "store",
+            "source": "T01"
+          },
+          {
+            "slot": 8,
+            "kind": "action",
+            "message": "Wandered through the house.",
+            "target": "hall",
+            "source": "T01"
+          },
+          {
+            "slot": 9,
+            "kind": "action",
+            "message": "Drank some water.",
+            "target": "store",
+            "source": "H01"
+          },
+          {
+            "slot": 10,
+            "kind": "action",
+            "message": "Visited the garden.",
+            "target": "gardenView",
+            "source": "T01"
+          },
+          {
+            "slot": 11,
+            "kind": "action",
+            "message": "Made some toast.",
+            "target": "stove",
+            "source": "K01"
+          },
+          {
+            "slot": 12,
+            "kind": "action",
+            "message": "Watched the clouds.",
+            "target": "window",
+            "source": "T01"
+          },
+          {
+            "slot": 13,
+            "kind": "action",
+            "message": "Checked the supplies.",
+            "target": "store",
+            "source": "T01"
+          },
+          {
+            "slot": 14,
+            "kind": "action",
+            "message": "Wandered through the house.",
+            "target": "hall",
+            "source": "T01"
+          },
+          {
+            "slot": 15,
+            "kind": "action",
+            "message": "Visited the garden.",
+            "target": "gardenView",
+            "source": "T01"
+          },
+          {
+            "slot": 16,
+            "kind": "action",
+            "message": "Had a look in the cupboard.",
+            "target": "cupboard",
+            "source": "T01"
+          },
+          {
+            "slot": 17,
+            "kind": "action",
+            "message": "Wandered through the house.",
+            "target": "hall",
+            "source": "T01"
+          },
+          {
+            "slot": 18,
+            "kind": "action",
+            "message": "Visited the garden.",
+            "target": "gardenView",
+            "source": "T01"
+          },
+          {
+            "slot": 19,
+            "kind": "action",
+            "message": "Checked the supplies.",
+            "target": "store",
+            "source": "T01"
+          },
+          {
+            "slot": 20,
+            "kind": "action",
+            "message": "Watched the clouds.",
+            "target": "window",
+            "source": "T01"
+          },
+          {
+            "slot": 21,
+            "kind": "action",
+            "message": "Ate some bread.",
+            "target": "store",
+            "source": "H01"
+          },
+          {
+            "slot": 22,
+            "kind": "action",
+            "message": "Wandered through the house.",
+            "target": "hall",
+            "source": "T01"
+          },
+          {
+            "slot": 23,
+            "kind": "action",
+            "message": "Checked the supplies.",
+            "target": "store",
+            "source": "T01"
+          },
+          {
+            "slot": 24,
+            "kind": "action",
+            "message": "Had a look in the cupboard.",
+            "target": "cupboard",
+            "source": "T01"
+          },
+          {
+            "slot": 25,
+            "kind": "action",
+            "message": "Visited the garden.",
+            "target": "gardenView",
+            "source": "T01"
+          },
+          {
+            "slot": 26,
+            "kind": "action",
+            "message": "Checked the supplies.",
+            "target": "store",
+            "source": "T01"
+          },
+          {
+            "slot": 27,
+            "kind": "action",
+            "message": "Had a look in the cupboard.",
+            "target": "cupboard",
+            "source": "T01"
+          },
+          {
+            "slot": 28,
+            "kind": "action",
+            "message": "Wandered through the house.",
+            "target": "hall",
+            "source": "T01"
+          },
+          {
+            "slot": 29,
+            "kind": "action",
+            "message": "Checked the supplies.",
+            "target": "store",
+            "source": "T01"
+          },
+          {
+            "slot": 30,
+            "kind": "action",
+            "message": "Watched the clouds.",
+            "target": "window",
+            "source": "T01"
+          },
+          {
+            "slot": 31,
+            "kind": "action",
+            "message": "Sat like a human.",
+            "target": "baseSeat",
+            "source": "H04"
+          },
+          {
+            "slot": 32,
+            "kind": "action",
+            "message": "Visited the garden.",
+            "target": "gardenView",
+            "source": "T01"
+          },
+          {
+            "slot": 33,
+            "kind": "action",
+            "message": "Wandered through the house.",
+            "target": "hall",
+            "source": "T01"
+          },
+          {
+            "slot": 34,
+            "kind": "action",
+            "message": "Had a look in the cupboard.",
+            "target": "cupboard",
+            "source": "T01"
+          },
+          {
+            "slot": 35,
+            "kind": "action",
+            "message": "Visited the garden.",
+            "target": "gardenView",
+            "source": "T01"
+          },
+          {
+            "slot": 36,
+            "kind": "action",
+            "message": "Checked the supplies.",
+            "target": "store",
+            "source": "T01"
+          },
+          {
+            "slot": 37,
+            "kind": "action",
+            "message": "Wandered through the house.",
+            "target": "hall",
+            "source": "T01"
+          },
+          {
+            "slot": 38,
+            "kind": "action",
+            "message": "Visited the garden.",
+            "target": "gardenView",
+            "source": "T01"
+          },
+          {
+            "slot": 39,
+            "kind": "action",
+            "message": "Had a look in the cupboard.",
+            "target": "cupboard",
+            "source": "T01"
+          },
+          {
+            "slot": 40,
+            "kind": "action",
+            "message": "Checked the supplies.",
+            "target": "store",
+            "source": "T01"
+          },
+          {
+            "slot": 41,
+            "kind": "weather",
+            "message": "Rain reached the little garden.",
+            "target": "window",
+            "source": "rain"
+          },
+          {
+            "slot": 41,
+            "kind": "action",
+            "message": "Visited the garden.",
+            "target": "gardenView",
+            "source": "T01"
+          },
+          {
+            "slot": 42,
+            "kind": "action",
+            "message": "Drank some water.",
+            "target": "store",
+            "source": "H01"
+          },
+          {
+            "slot": 43,
+            "kind": "action",
+            "message": "Sat like a human.",
+            "target": "baseSeat",
+            "source": "H04"
+          },
+          {
+            "slot": 44,
+            "kind": "action",
+            "message": "Wandered through the house.",
+            "target": "hall",
+            "source": "T01"
+          },
+          {
+            "slot": 45,
+            "kind": "action",
+            "message": "Checked the supplies.",
+            "target": "store",
+            "source": "T01"
+          },
+          {
+            "slot": 46,
+            "kind": "action",
+            "message": "Visited the garden.",
+            "target": "gardenView",
+            "source": "T01"
+          },
+          {
+            "slot": 47,
+            "kind": "action",
+            "message": "Had a look in the cupboard.",
+            "target": "cupboard",
+            "source": "T01"
+          },
+          {
+            "slot": 48,
+            "kind": "action",
+            "message": "Watched the clouds.",
+            "target": "window",
+            "source": "T01"
+          },
+          {
+            "slot": 49,
+            "kind": "action",
+            "message": "Checked the supplies.",
+            "target": "store",
+            "source": "T01"
+          },
+          {
+            "slot": 50,
+            "kind": "action",
+            "message": "Wandered through the house.",
+            "target": "hall",
+            "source": "T01"
+          },
+          {
+            "slot": 51,
+            "kind": "action",
+            "message": "Had a little rest.",
+            "target": "bed",
+            "source": "H03"
+          },
+          {
+            "slot": 52,
+            "kind": "action",
+            "message": "Had a look in the cupboard.",
+            "target": "cupboard",
+            "source": "T01"
+          },
+          {
+            "slot": 53,
+            "kind": "action",
+            "message": "Checked the supplies.",
+            "target": "store",
+            "source": "T01"
+          },
+          {
+            "slot": 54,
+            "kind": "action",
+            "message": "Visited the garden.",
+            "target": "gardenView",
+            "source": "T01"
+          },
+          {
+            "slot": 55,
+            "kind": "action",
+            "message": "Wandered through the house.",
+            "target": "hall",
+            "source": "T01"
+          },
+          {
+            "slot": 56,
+            "kind": "action",
+            "message": "Watched the clouds.",
+            "target": "window",
+            "source": "T01"
+          },
+          {
+            "slot": 57,
+            "kind": "action",
+            "message": "Checked the supplies.",
+            "target": "store",
+            "source": "T01"
+          },
+          {
+            "slot": 58,
+            "kind": "action",
+            "message": "Had a look in the cupboard.",
+            "target": "cupboard",
+            "source": "T01"
+          },
+          {
+            "slot": 59,
+            "kind": "action",
+            "message": "Watched the clouds.",
+            "target": "window",
+            "source": "T01"
+          },
+          {
+            "slot": 60,
+            "kind": "action",
+            "message": "Wandered through the house.",
+            "target": "hall",
+            "source": "T01"
+          },
+          {
+            "slot": 60,
+            "kind": "bedtime",
+            "message": "Settled in for the night.",
+            "target": "bed"
+          }
+        ]
+      }
+    },
+    {
+      "token": 2,
+      "name": "PEEP",
+      "daySeed": "0x397bd8717dbfbfd85acdd0bdd2c872dd180b1632d41a089f0b7743f14ec1e561",
+      "profile": {
+        "interest": "gardening",
+        "secondaryInterest": "cooking",
+        "mealStyle": "simple",
+        "rhythm": "late",
+        "signature": "breathe",
+        "tempo": "measured",
+        "curiosity": "reserved",
+        "resourceStyle": "save-specials"
+      },
+      "inclination": {
+        "interest": "gardening",
+        "phase": "Afternoon"
+      },
+      "old": {
+        "decisions": 12,
+        "active": 10,
+        "quiet": 50,
+        "activeSequence": [
+          {
+            "slot": 1,
+            "phase": "Dawn",
+            "action": "H01",
+            "target": "store",
+            "variant": "bread",
+            "success": true,
+            "needsBefore": {
+              "health": 10000,
+              "nutrition": 8000,
+              "hydration": 8000,
+              "energy": 8000,
+              "morale": 8000
+            },
+            "inputs": {
+              "bread": 1
+            }
+          },
+          {
+            "slot": 2,
+            "phase": "Dawn",
+            "action": "K01",
+            "target": "stove",
+            "variant": "toast",
+            "success": true,
+            "needsBefore": {
+              "health": 10000,
+              "nutrition": 10000,
+              "hydration": 8000,
+              "energy": 7900,
+              "morale": 8000
+            },
+            "inputs": {
+              "bread": 1
+            }
+          },
+          {
+            "slot": 3,
+            "phase": "Dawn",
+            "action": "H01",
+            "target": "store",
+            "variant": "water",
+            "success": true,
+            "needsBefore": {
+              "health": 10000,
+              "nutrition": 10000,
+              "hydration": 8000,
+              "energy": 7800,
+              "morale": 8800
+            },
+            "inputs": {
+              "water": 1
+            }
+          },
+          {
+            "slot": 4,
+            "phase": "Dawn",
+            "action": "K01",
+            "target": "stove",
+            "variant": "toast",
+            "success": true,
+            "needsBefore": {
+              "health": 10000,
+              "nutrition": 10000,
+              "hydration": 10000,
+              "energy": 7700,
+              "morale": 8800
+            },
+            "inputs": {
+              "bread": 1
+            }
+          },
+          {
+            "slot": 5,
+            "phase": "Dawn",
+            "action": "H03",
+            "target": "bed",
+            "variant": "bed",
+            "success": true,
+            "needsBefore": {
+              "health": 10000,
+              "nutrition": 10000,
+              "hydration": 10000,
+              "energy": 7600,
+              "morale": 9600
+            },
+            "inputs": {}
+          },
+          {
+            "slot": 8,
+            "phase": "Dawn",
+            "action": "H04",
+            "target": "baseSeat",
+            "variant": "base",
+            "success": true,
+            "needsBefore": {
+              "health": 10000,
+              "nutrition": 10000,
+              "hydration": 10000,
+              "energy": 8800,
+              "morale": 9600
+            },
+            "inputs": {}
+          },
+          {
+            "slot": 11,
+            "phase": "Morning",
+            "action": "H01",
+            "target": "store",
+            "variant": "water",
+            "success": true,
+            "needsBefore": {
+              "health": 10000,
+              "nutrition": 9500,
+              "hydration": 9300,
+              "energy": 8700,
+              "morale": 9706
+            },
+            "inputs": {
+              "water": 1
+            }
+          },
+          {
+            "slot": 15,
+            "phase": "Morning",
+            "action": "H03",
+            "target": "bed",
+            "variant": "bed",
+            "success": true,
+            "needsBefore": {
+              "health": 10000,
+              "nutrition": 9500,
+              "hydration": 10000,
+              "energy": 8600,
+              "morale": 9706
+            },
+            "inputs": {}
+          },
+          {
+            "slot": 18,
+            "phase": "Morning",
+            "action": "H04",
+            "target": "baseSeat",
+            "variant": "base",
+            "success": true,
+            "needsBefore": {
+              "health": 10000,
+              "nutrition": 9500,
+              "hydration": 10000,
+              "energy": 9800,
+              "morale": 9706
+            },
+            "inputs": {}
+          },
+          {
+            "slot": 21,
+            "phase": "Midday",
+            "action": "H01",
+            "target": "store",
+            "variant": "water",
+            "success": true,
+            "needsBefore": {
+              "health": 10000,
+              "nutrition": 9000,
+              "hydration": 9400,
+              "energy": 9700,
+              "morale": 9706
+            },
+            "inputs": {
+              "water": 1
+            }
+          }
+        ],
+        "activePerPhase": {
+          "Dawn": 6,
+          "Morning": 3,
+          "Midday": 1,
+          "Afternoon": 0,
+          "Evening": 0,
+          "Bedtime": 0
+        },
+        "bread": [
+          {
+            "slot": 1,
+            "action": "H01",
+            "foodBefore": 8000,
+            "foodAfter": 10000,
+            "stockAfter": 2
+          },
+          {
+            "slot": 2,
+            "action": "K01",
+            "foodBefore": 10000,
+            "foodAfter": 10000,
+            "stockAfter": 1
+          },
+          {
+            "slot": 4,
+            "action": "K01",
+            "foodBefore": 10000,
+            "foodAfter": 10000,
+            "stockAfter": 0
+          }
+        ],
+        "water": [
+          {
+            "slot": 3,
+            "action": "H01",
+            "waterBefore": 8000,
+            "waterAfter": 10000,
+            "stockAfter": 2
+          },
+          {
+            "slot": 11,
+            "action": "H01",
+            "waterBefore": 9300,
+            "waterAfter": 10000,
+            "stockAfter": 1
+          },
+          {
+            "slot": 21,
+            "action": "H01",
+            "waterBefore": 9400,
+            "waterAfter": 10000,
+            "stockAfter": 0
+          }
+        ],
+        "lastActive": 21,
+        "endNeeds": {
+          "health": 10000,
+          "nutrition": 7000,
+          "hydration": 7300,
+          "energy": 10000,
+          "morale": 6570
+        },
+        "endStock": {
+          "water": 0,
+          "milk": 0,
+          "bread": 0,
+          "steak": 0,
+          "medicine": 0,
+          "coffee": 0,
+          "wood": 0,
+          "toolkit": 1,
+          "umbrella": 0,
+          "rose_seeds": 0,
+          "apple_seeds": 0,
+          "matches": 0,
+          "soap": 0,
+          "bandage": 1,
+          "compost": 1
+        },
+        "survived": true,
+        "events": [
+          {
+            "slot": 1,
+            "kind": "action",
+            "message": "Ate some bread.",
+            "target": "store",
+            "source": "H01"
+          },
+          {
+            "slot": 2,
+            "kind": "action",
+            "message": "Made some toast.",
+            "target": "stove",
+            "source": "K01"
+          },
+          {
+            "slot": 3,
+            "kind": "action",
+            "message": "Drank some water.",
+            "target": "store",
+            "source": "H01"
+          },
+          {
+            "slot": 4,
+            "kind": "action",
+            "message": "Made some toast.",
+            "target": "stove",
+            "source": "K01"
+          },
+          {
+            "slot": 5,
+            "kind": "action",
+            "message": "Had a little rest.",
+            "target": "bed",
+            "source": "H03"
+          },
+          {
+            "slot": 6,
+            "kind": "action",
+            "message": "Had a look in the cupboard.",
+            "target": "cupboard",
+            "source": "T01"
+          },
+          {
+            "slot": 7,
+            "kind": "action",
+            "message": "Visited the garden.",
+            "target": "gardenView",
+            "source": "T01"
+          },
+          {
+            "slot": 8,
+            "kind": "action",
+            "message": "Sat like a human.",
+            "target": "baseSeat",
+            "source": "H04"
+          },
+          {
+            "slot": 9,
+            "kind": "action",
+            "message": "Wandered through the house.",
+            "target": "hall",
+            "source": "T01"
+          },
+          {
+            "slot": 10,
+            "kind": "action",
+            "message": "Watched the clouds.",
+            "target": "window",
+            "source": "T01"
+          },
+          {
+            "slot": 11,
+            "kind": "action",
+            "message": "Drank some water.",
+            "target": "store",
+            "source": "H01"
+          },
+          {
+            "slot": 12,
+            "kind": "action",
+            "message": "Visited the garden.",
+            "target": "gardenView",
+            "source": "T01"
+          },
+          {
+            "slot": 13,
+            "kind": "action",
+            "message": "Wandered through the house.",
+            "target": "hall",
+            "source": "T01"
+          },
+          {
+            "slot": 14,
+            "kind": "action",
+            "message": "Had a look in the cupboard.",
+            "target": "cupboard",
+            "source": "T01"
+          },
+          {
+            "slot": 15,
+            "kind": "action",
+            "message": "Had a little rest.",
+            "target": "bed",
+            "source": "H03"
+          },
+          {
+            "slot": 16,
+            "kind": "action",
+            "message": "Visited the garden.",
+            "target": "gardenView",
+            "source": "T01"
+          },
+          {
+            "slot": 17,
+            "kind": "action",
+            "message": "Watched the clouds.",
+            "target": "window",
+            "source": "T01"
+          },
+          {
+            "slot": 18,
+            "kind": "action",
+            "message": "Sat like a human.",
+            "target": "baseSeat",
+            "source": "H04"
+          },
+          {
+            "slot": 19,
+            "kind": "action",
+            "message": "Had a look in the cupboard.",
+            "target": "cupboard",
+            "source": "T01"
+          },
+          {
+            "slot": 20,
+            "kind": "action",
+            "message": "Wandered through the house.",
+            "target": "hall",
+            "source": "T01"
+          },
+          {
+            "slot": 21,
+            "kind": "incident",
+            "message": "A disappointing little moment.",
+            "target": "body",
+            "source": "mood"
+          },
+          {
+            "slot": 21,
+            "kind": "action",
+            "message": "Drank some water.",
+            "target": "store",
+            "source": "H01"
+          },
+          {
+            "slot": 22,
+            "kind": "action",
+            "message": "Watched the clouds.",
+            "target": "window",
+            "source": "T01"
+          },
+          {
+            "slot": 23,
+            "kind": "action",
+            "message": "Visited the garden.",
+            "target": "gardenView",
+            "source": "T01"
+          },
+          {
+            "slot": 24,
+            "kind": "action",
+            "message": "Had a look in the cupboard.",
+            "target": "cupboard",
+            "source": "T01"
+          },
+          {
+            "slot": 25,
+            "kind": "action",
+            "message": "Wandered through the house.",
+            "target": "hall",
+            "source": "T01"
+          },
+          {
+            "slot": 26,
+            "kind": "action",
+            "message": "Watched the clouds.",
+            "target": "window",
+            "source": "T01"
+          },
+          {
+            "slot": 27,
+            "kind": "action",
+            "message": "Checked the supplies.",
+            "target": "store",
+            "source": "T01"
+          },
+          {
+            "slot": 28,
+            "kind": "action",
+            "message": "Had a look in the cupboard.",
+            "target": "cupboard",
+            "source": "T01"
+          },
+          {
+            "slot": 29,
+            "kind": "action",
+            "message": "Wandered through the house.",
+            "target": "hall",
+            "source": "T01"
+          },
+          {
+            "slot": 30,
+            "kind": "action",
+            "message": "Checked the supplies.",
+            "target": "store",
+            "source": "T01"
+          },
+          {
+            "slot": 31,
+            "kind": "action",
+            "message": "Had a look in the cupboard.",
+            "target": "cupboard",
+            "source": "T01"
+          },
+          {
+            "slot": 32,
+            "kind": "action",
+            "message": "Wandered through the house.",
+            "target": "hall",
+            "source": "T01"
+          },
+          {
+            "slot": 33,
+            "kind": "action",
+            "message": "Visited the garden.",
+            "target": "gardenView",
+            "source": "T01"
+          },
+          {
+            "slot": 34,
+            "kind": "action",
+            "message": "Had a look in the cupboard.",
+            "target": "cupboard",
+            "source": "T01"
+          },
+          {
+            "slot": 35,
+            "kind": "action",
+            "message": "Checked the supplies.",
+            "target": "store",
+            "source": "T01"
+          },
+          {
+            "slot": 36,
+            "kind": "action",
+            "message": "Wandered through the house.",
+            "target": "hall",
+            "source": "T01"
+          },
+          {
+            "slot": 37,
+            "kind": "action",
+            "message": "Visited the garden.",
+            "target": "gardenView",
+            "source": "T01"
+          },
+          {
+            "slot": 38,
+            "kind": "action",
+            "message": "Watched the clouds.",
+            "target": "window",
+            "source": "T01"
+          },
+          {
+            "slot": 39,
+            "kind": "action",
+            "message": "Wandered through the house.",
+            "target": "hall",
+            "source": "T01"
+          },
+          {
+            "slot": 40,
+            "kind": "action",
+            "message": "Had a look in the cupboard.",
+            "target": "cupboard",
+            "source": "T01"
+          },
+          {
+            "slot": 41,
+            "kind": "action",
+            "message": "Visited the garden.",
+            "target": "gardenView",
+            "source": "T01"
+          },
+          {
+            "slot": 42,
+            "kind": "action",
+            "message": "Wandered through the house.",
+            "target": "hall",
+            "source": "T01"
+          },
+          {
+            "slot": 43,
+            "kind": "action",
+            "message": "Had a look in the cupboard.",
+            "target": "cupboard",
+            "source": "T01"
+          },
+          {
+            "slot": 44,
+            "kind": "action",
+            "message": "Watched the clouds.",
+            "target": "window",
+            "source": "T01"
+          },
+          {
+            "slot": 45,
+            "kind": "action",
+            "message": "Checked the supplies.",
+            "target": "store",
+            "source": "T01"
+          },
+          {
+            "slot": 46,
+            "kind": "action",
+            "message": "Had a look in the cupboard.",
+            "target": "cupboard",
+            "source": "T01"
+          },
+          {
+            "slot": 47,
+            "kind": "action",
+            "message": "Wandered through the house.",
+            "target": "hall",
+            "source": "T01"
+          },
+          {
+            "slot": 48,
+            "kind": "action",
+            "message": "Checked the supplies.",
+            "target": "store",
+            "source": "T01"
+          },
+          {
+            "slot": 49,
+            "kind": "action",
+            "message": "Had a look in the cupboard.",
+            "target": "cupboard",
+            "source": "T01"
+          },
+          {
+            "slot": 50,
+            "kind": "action",
+            "message": "Watched the clouds.",
+            "target": "window",
+            "source": "T01"
+          },
+          {
+            "slot": 51,
+            "kind": "action",
+            "message": "Wandered through the house.",
+            "target": "hall",
+            "source": "T01"
+          },
+          {
+            "slot": 52,
+            "kind": "action",
+            "message": "Visited the garden.",
+            "target": "gardenView",
+            "source": "T01"
+          },
+          {
+            "slot": 53,
+            "kind": "action",
+            "message": "Had a look in the cupboard.",
+            "target": "cupboard",
+            "source": "T01"
+          },
+          {
+            "slot": 54,
+            "kind": "action",
+            "message": "Checked the supplies.",
+            "target": "store",
+            "source": "T01"
+          },
+          {
+            "slot": 55,
+            "kind": "action",
+            "message": "Watched the clouds.",
+            "target": "window",
+            "source": "T01"
+          },
+          {
+            "slot": 56,
+            "kind": "action",
+            "message": "Had a look in the cupboard.",
+            "target": "cupboard",
+            "source": "T01"
+          },
+          {
+            "slot": 57,
+            "kind": "action",
+            "message": "Wandered through the house.",
+            "target": "hall",
+            "source": "T01"
+          },
+          {
+            "slot": 58,
+            "kind": "action",
+            "message": "Checked the supplies.",
+            "target": "store",
+            "source": "T01"
+          },
+          {
+            "slot": 59,
+            "kind": "action",
+            "message": "Watched the clouds.",
+            "target": "window",
+            "source": "T01"
+          },
+          {
+            "slot": 60,
+            "kind": "action",
+            "message": "Visited the garden.",
+            "target": "gardenView",
+            "source": "T01"
+          },
+          {
+            "slot": 60,
+            "kind": "bedtime",
+            "message": "Settled in for the night.",
+            "target": "bed"
+          }
+        ]
+      },
+      "current": {
+        "decisions": 60,
+        "active": 7,
+        "quiet": 53,
+        "activeSequence": [
+          {
+            "slot": 3,
+            "phase": "Dawn",
+            "action": "H01",
+            "target": "store",
+            "variant": "bread",
+            "success": true,
+            "needsBefore": {
+              "health": 10000,
+              "nutrition": 8000,
+              "hydration": 8000,
+              "energy": 8000,
+              "morale": 8000
+            },
+            "inputs": {
+              "bread": 1
+            }
+          },
+          {
+            "slot": 8,
+            "phase": "Dawn",
+            "action": "H01",
+            "target": "store",
+            "variant": "water",
+            "success": true,
+            "needsBefore": {
+              "health": 10000,
+              "nutrition": 10000,
+              "hydration": 8000,
+              "energy": 7900,
+              "morale": 8000
+            },
+            "inputs": {
+              "water": 1
+            }
+          },
+          {
+            "slot": 9,
+            "phase": "Dawn",
+            "action": "H04",
+            "target": "baseSeat",
+            "variant": "base",
+            "success": true,
+            "needsBefore": {
+              "health": 10000,
+              "nutrition": 10000,
+              "hydration": 10000,
+              "energy": 7800,
+              "morale": 8000
+            },
+            "inputs": {}
+          },
+          {
+            "slot": 21,
+            "phase": "Midday",
+            "action": "H04",
+            "target": "baseSeat",
+            "variant": "base",
+            "success": true,
+            "needsBefore": {
+              "health": 10000,
+              "nutrition": 9000,
+              "hydration": 8700,
+              "energy": 7700,
+              "morale": 8412
+            },
+            "inputs": {}
+          },
+          {
+            "slot": 48,
+            "phase": "Evening",
+            "action": "H01",
+            "target": "store",
+            "variant": "bread",
+            "success": true,
+            "needsBefore": {
+              "health": 10000,
+              "nutrition": 8000,
+              "hydration": 7300,
+              "energy": 7600,
+              "morale": 6864
+            },
+            "inputs": {
+              "bread": 1
+            }
+          },
+          {
+            "slot": 49,
+            "phase": "Evening",
+            "action": "H01",
+            "target": "store",
+            "variant": "water",
+            "success": true,
+            "needsBefore": {
+              "health": 10000,
+              "nutrition": 10000,
+              "hydration": 7300,
+              "energy": 7500,
+              "morale": 6864
+            },
+            "inputs": {
+              "water": 1
+            }
+          },
+          {
+            "slot": 51,
+            "phase": "Bedtime",
+            "action": "H03",
+            "target": "bed",
+            "variant": "bed",
+            "success": true,
+            "needsBefore": {
+              "health": 10000,
+              "nutrition": 9500,
+              "hydration": 9400,
+              "energy": 7400,
+              "morale": 6570
+            },
+            "inputs": {}
+          }
+        ],
+        "activePerPhase": {
+          "Dawn": 3,
+          "Morning": 0,
+          "Midday": 1,
+          "Afternoon": 0,
+          "Evening": 2,
+          "Bedtime": 1
+        },
+        "bread": [
+          {
+            "slot": 3,
+            "action": "H01",
+            "foodBefore": 8000,
+            "foodAfter": 10000,
+            "stockAfter": 2
+          },
+          {
+            "slot": 48,
+            "action": "H01",
+            "foodBefore": 8000,
+            "foodAfter": 10000,
+            "stockAfter": 1
+          }
+        ],
+        "water": [
+          {
+            "slot": 8,
+            "action": "H01",
+            "waterBefore": 8000,
+            "waterAfter": 10000,
+            "stockAfter": 2
+          },
+          {
+            "slot": 49,
+            "action": "H01",
+            "waterBefore": 7300,
+            "waterAfter": 10000,
+            "stockAfter": 1
+          }
+        ],
+        "lastActive": 51,
+        "endNeeds": {
+          "health": 10000,
+          "nutrition": 9000,
+          "hydration": 8700,
+          "energy": 10000,
+          "morale": 6276
+        },
+        "endStock": {
+          "water": 1,
+          "milk": 0,
+          "bread": 1,
+          "steak": 0,
+          "medicine": 0,
+          "coffee": 0,
+          "wood": 0,
+          "toolkit": 1,
+          "umbrella": 0,
+          "rose_seeds": 0,
+          "apple_seeds": 0,
+          "matches": 0,
+          "soap": 0,
+          "bandage": 1,
+          "compost": 1
+        },
+        "survived": true,
+        "events": [
+          {
+            "slot": 1,
+            "kind": "action",
+            "message": "Wandered through the house.",
+            "target": "hall",
+            "source": "T01"
+          },
+          {
+            "slot": 2,
+            "kind": "action",
+            "message": "Checked the supplies.",
+            "target": "store",
+            "source": "T01"
+          },
+          {
+            "slot": 3,
+            "kind": "action",
+            "message": "Ate some bread.",
+            "target": "store",
+            "source": "H01"
+          },
+          {
+            "slot": 4,
+            "kind": "action",
+            "message": "Watched the clouds.",
+            "target": "window",
+            "source": "T01"
+          },
+          {
+            "slot": 5,
+            "kind": "action",
+            "message": "Had a look in the cupboard.",
+            "target": "cupboard",
+            "source": "T01"
+          },
+          {
+            "slot": 6,
+            "kind": "action",
+            "message": "Visited the garden.",
+            "target": "gardenView",
+            "source": "T01"
+          },
+          {
+            "slot": 7,
+            "kind": "action",
+            "message": "Wandered through the house.",
+            "target": "hall",
+            "source": "T01"
+          },
+          {
+            "slot": 8,
+            "kind": "action",
+            "message": "Drank some water.",
+            "target": "store",
+            "source": "H01"
+          },
+          {
+            "slot": 9,
+            "kind": "action",
+            "message": "Sat like a human.",
+            "target": "baseSeat",
+            "source": "H04"
+          },
+          {
+            "slot": 10,
+            "kind": "action",
+            "message": "Watched the clouds.",
+            "target": "window",
+            "source": "T01"
+          },
+          {
+            "slot": 11,
+            "kind": "action",
+            "message": "Had a look in the cupboard.",
+            "target": "cupboard",
+            "source": "T01"
+          },
+          {
+            "slot": 12,
+            "kind": "action",
+            "message": "Wandered through the house.",
+            "target": "hall",
+            "source": "T01"
+          },
+          {
+            "slot": 13,
+            "kind": "action",
+            "message": "Visited the garden.",
+            "target": "gardenView",
+            "source": "T01"
+          },
+          {
+            "slot": 14,
+            "kind": "action",
+            "message": "Had a look in the cupboard.",
+            "target": "cupboard",
+            "source": "T01"
+          },
+          {
+            "slot": 15,
+            "kind": "action",
+            "message": "Wandered through the house.",
+            "target": "hall",
+            "source": "T01"
+          },
+          {
+            "slot": 16,
+            "kind": "action",
+            "message": "Visited the garden.",
+            "target": "gardenView",
+            "source": "T01"
+          },
+          {
+            "slot": 17,
+            "kind": "action",
+            "message": "Watched the clouds.",
+            "target": "window",
+            "source": "T01"
+          },
+          {
+            "slot": 18,
+            "kind": "action",
+            "message": "Wandered through the house.",
+            "target": "hall",
+            "source": "T01"
+          },
+          {
+            "slot": 19,
+            "kind": "action",
+            "message": "Had a look in the cupboard.",
+            "target": "cupboard",
+            "source": "T01"
+          },
+          {
+            "slot": 20,
+            "kind": "action",
+            "message": "Visited the garden.",
+            "target": "gardenView",
+            "source": "T01"
+          },
+          {
+            "slot": 21,
+            "kind": "incident",
+            "message": "A disappointing little moment.",
+            "target": "body",
+            "source": "mood"
+          },
+          {
+            "slot": 21,
+            "kind": "action",
+            "message": "Sat like a human.",
+            "target": "baseSeat",
+            "source": "H04"
+          },
+          {
+            "slot": 22,
+            "kind": "action",
+            "message": "Watched the clouds.",
+            "target": "window",
+            "source": "T01"
+          },
+          {
+            "slot": 23,
+            "kind": "action",
+            "message": "Wandered through the house.",
+            "target": "hall",
+            "source": "T01"
+          },
+          {
+            "slot": 24,
+            "kind": "action",
+            "message": "Had a look in the cupboard.",
+            "target": "cupboard",
+            "source": "T01"
+          },
+          {
+            "slot": 25,
+            "kind": "action",
+            "message": "Visited the garden.",
+            "target": "gardenView",
+            "source": "T01"
+          },
+          {
+            "slot": 26,
+            "kind": "action",
+            "message": "Watched the clouds.",
+            "target": "window",
+            "source": "T01"
+          },
+          {
+            "slot": 27,
+            "kind": "action",
+            "message": "Checked the supplies.",
+            "target": "store",
+            "source": "T01"
+          },
+          {
+            "slot": 28,
+            "kind": "action",
+            "message": "Had a look in the cupboard.",
+            "target": "cupboard",
+            "source": "T01"
+          },
+          {
+            "slot": 29,
+            "kind": "action",
+            "message": "Wandered through the house.",
+            "target": "hall",
+            "source": "T01"
+          },
+          {
+            "slot": 30,
+            "kind": "action",
+            "message": "Checked the supplies.",
+            "target": "store",
+            "source": "T01"
+          },
+          {
+            "slot": 31,
+            "kind": "action",
+            "message": "Had a look in the cupboard.",
+            "target": "cupboard",
+            "source": "T01"
+          },
+          {
+            "slot": 32,
+            "kind": "action",
+            "message": "Wandered through the house.",
+            "target": "hall",
+            "source": "T01"
+          },
+          {
+            "slot": 33,
+            "kind": "action",
+            "message": "Visited the garden.",
+            "target": "gardenView",
+            "source": "T01"
+          },
+          {
+            "slot": 34,
+            "kind": "action",
+            "message": "Had a look in the cupboard.",
+            "target": "cupboard",
+            "source": "T01"
+          },
+          {
+            "slot": 35,
+            "kind": "action",
+            "message": "Checked the supplies.",
+            "target": "store",
+            "source": "T01"
+          },
+          {
+            "slot": 36,
+            "kind": "action",
+            "message": "Wandered through the house.",
+            "target": "hall",
+            "source": "T01"
+          },
+          {
+            "slot": 37,
+            "kind": "action",
+            "message": "Visited the garden.",
+            "target": "gardenView",
+            "source": "T01"
+          },
+          {
+            "slot": 38,
+            "kind": "action",
+            "message": "Watched the clouds.",
+            "target": "window",
+            "source": "T01"
+          },
+          {
+            "slot": 39,
+            "kind": "action",
+            "message": "Wandered through the house.",
+            "target": "hall",
+            "source": "T01"
+          },
+          {
+            "slot": 40,
+            "kind": "action",
+            "message": "Had a look in the cupboard.",
+            "target": "cupboard",
+            "source": "T01"
+          },
+          {
+            "slot": 41,
+            "kind": "action",
+            "message": "Visited the garden.",
+            "target": "gardenView",
+            "source": "T01"
+          },
+          {
+            "slot": 42,
+            "kind": "action",
+            "message": "Wandered through the house.",
+            "target": "hall",
+            "source": "T01"
+          },
+          {
+            "slot": 43,
+            "kind": "action",
+            "message": "Had a look in the cupboard.",
+            "target": "cupboard",
+            "source": "T01"
+          },
+          {
+            "slot": 44,
+            "kind": "action",
+            "message": "Watched the clouds.",
+            "target": "window",
+            "source": "T01"
+          },
+          {
+            "slot": 45,
+            "kind": "action",
+            "message": "Checked the supplies.",
+            "target": "store",
+            "source": "T01"
+          },
+          {
+            "slot": 46,
+            "kind": "action",
+            "message": "Had a look in the cupboard.",
+            "target": "cupboard",
+            "source": "T01"
+          },
+          {
+            "slot": 47,
+            "kind": "action",
+            "message": "Wandered through the house.",
+            "target": "hall",
+            "source": "T01"
+          },
+          {
+            "slot": 48,
+            "kind": "action",
+            "message": "Ate some bread.",
+            "target": "store",
+            "source": "H01"
+          },
+          {
+            "slot": 49,
+            "kind": "action",
+            "message": "Drank some water.",
+            "target": "store",
+            "source": "H01"
+          },
+          {
+            "slot": 50,
+            "kind": "action",
+            "message": "Watched the clouds.",
+            "target": "window",
+            "source": "T01"
+          },
+          {
+            "slot": 51,
+            "kind": "action",
+            "message": "Had a little rest.",
+            "target": "bed",
+            "source": "H03"
+          },
+          {
+            "slot": 52,
+            "kind": "action",
+            "message": "Visited the garden.",
+            "target": "gardenView",
+            "source": "T01"
+          },
+          {
+            "slot": 53,
+            "kind": "action",
+            "message": "Wandered through the house.",
+            "target": "hall",
+            "source": "T01"
+          },
+          {
+            "slot": 54,
+            "kind": "action",
+            "message": "Checked the supplies.",
+            "target": "store",
+            "source": "T01"
+          },
+          {
+            "slot": 55,
+            "kind": "action",
+            "message": "Watched the clouds.",
+            "target": "window",
+            "source": "T01"
+          },
+          {
+            "slot": 56,
+            "kind": "action",
+            "message": "Had a look in the cupboard.",
+            "target": "cupboard",
+            "source": "T01"
+          },
+          {
+            "slot": 57,
+            "kind": "action",
+            "message": "Wandered through the house.",
+            "target": "hall",
+            "source": "T01"
+          },
+          {
+            "slot": 58,
+            "kind": "action",
+            "message": "Checked the supplies.",
+            "target": "store",
+            "source": "T01"
+          },
+          {
+            "slot": 59,
+            "kind": "action",
+            "message": "Watched the clouds.",
+            "target": "window",
+            "source": "T01"
+          },
+          {
+            "slot": 60,
+            "kind": "action",
+            "message": "Visited the garden.",
+            "target": "gardenView",
+            "source": "T01"
+          },
+          {
+            "slot": 60,
+            "kind": "bedtime",
+            "message": "Settled in for the night.",
+            "target": "bed"
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,511 @@
+{
+  "provenance": "Standalone controlled operator diagnostics using genuine NEAR AI Jev responses; not canonical saved days, owner requests, ledger reservations or transactions.",
+  "at": "2026-11-01T15:08:06.088Z",
+  "sourceFiles": [
+    "src/domain/individuality.ts",
+    "src/domain/actions.ts (one recovery export alias only)",
+    "src/domain/types.ts",
+    "src/domain/prepare.ts",
+    "server/jev.ts",
+    "server/admission.ts"
+  ],
+  "decisionConfig": "0x0c5befc18112324ff3de00a387297d198b6c8a183f5cfb8cda3bd1513aadf714",
+  "decisionPolicy": "individual-routines-memory1-clipped-gains-v1",
+  "diagnosticCalls": 22,
+  "diagnosticCostMicroUSD": 2083,
+  "diagnosticBudgetMicroUSD": 10000,
+  "healthyMatched": [
+    {
+      "case": "healthy-matched-0",
+      "person": "BOK profile",
+      "day": 2,
+      "choice": "G01_plot2_apple",
+      "action": "Plant apple seeds in plot 2",
+      "probabilities": {
+        "K01_stove_toast": 0.03,
+        "K03_prep_bowl": 0.07,
+        "K05_prep_ritual": 0.06,
+        "H01_store_water": 0.01,
+        "H03_bed_bed": 0,
+        "H04_gardenView_garden": 0.08,
+        "H08_window_window": 0.11,
+        "H09_chairA_chair": 0,
+        "H09_gardenShelter_shelter": 0.01,
+        "G02_plot1_water": 0.17,
+        "G01_plot2_apple": 0.45,
+        "T01_cupboard_idle": 0.01
+      },
+      "costMicroUSD": 115
+    },
+    {
+      "case": "healthy-matched-0",
+      "person": "PEEP profile",
+      "day": 2,
+      "choice": "K03_prep_bowl",
+      "action": "Make a comfort bowl",
+      "probabilities": {
+        "K01_stove_toast": 0.15,
+        "K03_prep_bowl": 0.39,
+        "K05_prep_ritual": 0.02,
+        "H01_store_water": 0.04,
+        "H03_bed_bed": 0.01,
+        "H04_gardenView_garden": 0.03,
+        "H08_window_window": 0.22,
+        "H09_chairA_chair": 0,
+        "H09_gardenShelter_shelter": 0.01,
+        "G02_plot1_water": 0.03,
+        "G01_plot2_apple": 0.06,
+        "T01_cupboard_idle": 0.04
+      },
+      "costMicroUSD": 115
+    },
+    {
+      "case": "healthy-matched-0",
+      "person": "Controlled maker",
+      "day": 2,
+      "choice": "G01_plot2_apple",
+      "action": "Plant apple seeds in plot 2",
+      "probabilities": {
+        "K01_stove_toast": 0.02,
+        "K03_prep_bowl": 0.08,
+        "K05_prep_ritual": 0.08,
+        "H01_store_water": 0.02,
+        "H03_bed_bed": 0,
+        "H04_gardenView_garden": 0.06,
+        "H08_window_window": 0.13,
+        "H09_chairA_chair": 0,
+        "H09_gardenShelter_shelter": 0.02,
+        "G02_plot1_water": 0.17,
+        "G01_plot2_apple": 0.41,
+        "T01_cupboard_idle": 0.01
+      },
+      "costMicroUSD": 115
+    },
+    {
+      "case": "healthy-matched-0",
+      "person": "Controlled comfort",
+      "day": 2,
+      "choice": "H08_window_window",
+      "action": "Repair the window",
+      "probabilities": {
+        "K01_stove_toast": 0.04,
+        "K03_prep_bowl": 0.15,
+        "K05_prep_ritual": 0.16,
+        "H01_store_water": 0.02,
+        "H03_bed_bed": 0.01,
+        "H04_gardenView_garden": 0.19,
+        "H08_window_window": 0.19,
+        "H09_chairA_chair": 0.01,
+        "H09_gardenShelter_shelter": 0.02,
+        "G02_plot1_water": 0.04,
+        "G01_plot2_apple": 0.12,
+        "T01_cupboard_idle": 0.05
+      },
+      "costMicroUSD": 115
+    },
+    {
+      "case": "healthy-matched-1",
+      "person": "BOK profile",
+      "day": 2,
+      "choice": "G01_plot2_apple",
+      "action": "Plant apple seeds in plot 2",
+      "probabilities": {
+        "K01_stove_toast": 0.02,
+        "K03_prep_bowl": 0.08,
+        "K05_prep_ritual": 0.05,
+        "H01_store_water": 0.02,
+        "H03_bed_bed": 0,
+        "H04_gardenView_garden": 0.08,
+        "H08_window_window": 0.14,
+        "H09_chairA_chair": 0,
+        "H09_gardenShelter_shelter": 0.01,
+        "G02_plot1_water": 0.14,
+        "G01_plot2_apple": 0.45,
+        "T01_cupboard_idle": 0.01
+      },
+      "costMicroUSD": 115
+    },
+    {
+      "case": "healthy-matched-1",
+      "person": "PEEP profile",
+      "day": 2,
+      "choice": "K03_prep_bowl",
+      "action": "Make a comfort bowl",
+      "probabilities": {
+        "K01_stove_toast": 0.12,
+        "K03_prep_bowl": 0.29,
+        "K05_prep_ritual": 0.02,
+        "H01_store_water": 0.04,
+        "H03_bed_bed": 0.01,
+        "H04_gardenView_garden": 0.05,
+        "H08_window_window": 0.25,
+        "H09_chairA_chair": 0,
+        "H09_gardenShelter_shelter": 0.01,
+        "G02_plot1_water": 0.07,
+        "G01_plot2_apple": 0.09,
+        "T01_cupboard_idle": 0.05
+      },
+      "costMicroUSD": 115
+    },
+    {
+      "case": "healthy-matched-1",
+      "person": "Controlled maker",
+      "day": 2,
+      "choice": "G01_plot2_apple",
+      "action": "Plant apple seeds in plot 2",
+      "probabilities": {
+        "K01_stove_toast": 0.02,
+        "K03_prep_bowl": 0.08,
+        "K05_prep_ritual": 0.08,
+        "H01_store_water": 0.02,
+        "H03_bed_bed": 0,
+        "H04_gardenView_garden": 0.04,
+        "H08_window_window": 0.1,
+        "H09_chairA_chair": 0,
+        "H09_gardenShelter_shelter": 0.02,
+        "G02_plot1_water": 0.2,
+        "G01_plot2_apple": 0.43,
+        "T01_cupboard_idle": 0.01
+      },
+      "costMicroUSD": 115
+    },
+    {
+      "case": "healthy-matched-1",
+      "person": "Controlled comfort",
+      "day": 2,
+      "choice": "H08_window_window",
+      "action": "Repair the window",
+      "probabilities": {
+        "K01_stove_toast": 0.05,
+        "K03_prep_bowl": 0.14,
+        "K05_prep_ritual": 0.11,
+        "H01_store_water": 0.03,
+        "H03_bed_bed": 0.01,
+        "H04_gardenView_garden": 0.2,
+        "H08_window_window": 0.23,
+        "H09_chairA_chair": 0.01,
+        "H09_gardenShelter_shelter": 0.01,
+        "G02_plot1_water": 0.04,
+        "G01_plot2_apple": 0.12,
+        "T01_cupboard_idle": 0.05
+      },
+      "costMicroUSD": 115
+    }
+  ],
+  "dailyInclination": [
+    {
+      "case": "same-profile-daily-3",
+      "person": "BOK profile",
+      "day": 3,
+      "choice": "H08_window_window",
+      "action": "Repair the window",
+      "probabilities": {
+        "K01_stove_toast": 0.06,
+        "K03_prep_bowl": 0.17,
+        "K05_prep_ritual": 0.14,
+        "H01_store_water": 0.04,
+        "H03_bed_bed": 0.01,
+        "H04_gardenView_garden": 0.08,
+        "H08_window_window": 0.23,
+        "H09_chairA_chair": 0.01,
+        "H09_gardenShelter_shelter": 0.02,
+        "G02_plot1_water": 0.07,
+        "G01_plot2_apple": 0.13,
+        "T01_cupboard_idle": 0.04
+      },
+      "costMicroUSD": 115
+    },
+    {
+      "case": "same-profile-daily-4",
+      "person": "BOK profile",
+      "day": 4,
+      "choice": "K03_prep_bowl",
+      "action": "Make a comfort bowl",
+      "probabilities": {
+        "K01_stove_toast": 0.05,
+        "K03_prep_bowl": 0.42,
+        "K05_prep_ritual": 0.29,
+        "H01_store_water": 0.02,
+        "H03_bed_bed": 0.01,
+        "H04_gardenView_garden": 0.02,
+        "H08_window_window": 0.12,
+        "H09_chairA_chair": 0,
+        "H09_gardenShelter_shelter": 0,
+        "G02_plot1_water": 0.02,
+        "G01_plot2_apple": 0.03,
+        "T01_cupboard_idle": 0.02
+      },
+      "costMicroUSD": 115
+    }
+  ],
+  "urgent": [
+    {
+      "case": "urgent-needs",
+      "person": "BOK profile",
+      "day": 2,
+      "choice": "K03_prep_bowl",
+      "action": "Make a comfort bowl",
+      "probabilities": {
+        "H01_store_water": 0.18,
+        "K03_prep_bowl": 0.82,
+        "H09_chairA_chair": 0,
+        "G02_plot1_water": 0,
+        "T01_store_idle": 0
+      },
+      "costMicroUSD": 81
+    },
+    {
+      "case": "urgent-needs",
+      "person": "PEEP profile",
+      "day": 2,
+      "choice": "K03_prep_bowl",
+      "action": "Make a comfort bowl",
+      "probabilities": {
+        "H01_store_water": 0.23,
+        "K03_prep_bowl": 0.77,
+        "H09_chairA_chair": 0,
+        "G02_plot1_water": 0,
+        "T01_store_idle": 0
+      },
+      "costMicroUSD": 82
+    },
+    {
+      "case": "urgent-treatment",
+      "person": "BOK profile",
+      "day": 2,
+      "choice": "H02_body_infection",
+      "action": "Treat infection",
+      "probabilities": {
+        "H02_body_infection": 1,
+        "K05_prep_ritual": 0,
+        "H09_chairA_chair": 0,
+        "G02_plot1_water": 0,
+        "T01_store_idle": 0
+      },
+      "costMicroUSD": 78
+    },
+    {
+      "case": "urgent-treatment",
+      "person": "PEEP profile",
+      "day": 2,
+      "choice": "H02_body_infection",
+      "action": "Treat infection",
+      "probabilities": {
+        "H02_body_infection": 1,
+        "K05_prep_ritual": 0,
+        "H09_chairA_chair": 0,
+        "G02_plot1_water": 0,
+        "T01_store_idle": 0
+      },
+      "costMicroUSD": 79
+    }
+  ],
+  "conservation": {
+    "original": [
+      {
+        "case": "conservation-Morning",
+        "person": "BOK profile",
+        "day": 1,
+        "choice": "K01_stove_toast",
+        "action": "Make toast",
+        "probabilities": {
+          "K01_stove_toast": 0.82,
+          "H01_store_water": 0.08,
+          "H03_bed_bed": 0.04,
+          "H04_baseSeat_base": 0.01,
+          "T01_window_idle": 0.05
+        },
+        "costMicroUSD": 75
+      },
+      {
+        "case": "conservation-Morning",
+        "person": "PEEP profile",
+        "day": 1,
+        "choice": "K01_stove_toast",
+        "action": "Make toast",
+        "probabilities": {
+          "K01_stove_toast": 0.38,
+          "H01_store_water": 0.15,
+          "H03_bed_bed": 0.11,
+          "H04_baseSeat_base": 0.05,
+          "T01_window_idle": 0.31
+        },
+        "costMicroUSD": 75
+      },
+      {
+        "case": "conservation-Evening",
+        "person": "BOK profile",
+        "day": 1,
+        "choice": "K01_stove_toast",
+        "action": "Make toast",
+        "probabilities": {
+          "K01_stove_toast": 0.67,
+          "H01_store_water": 0.06,
+          "H03_bed_bed": 0.1,
+          "H04_baseSeat_base": 0.04,
+          "T01_window_idle": 0.13
+        },
+        "costMicroUSD": 75
+      },
+      {
+        "case": "conservation-Evening",
+        "person": "PEEP profile",
+        "day": 1,
+        "choice": "K01_stove_toast",
+        "action": "Make toast",
+        "probabilities": {
+          "K01_stove_toast": 0.31,
+          "H01_store_water": 0.1,
+          "H03_bed_bed": 0.2,
+          "H04_baseSeat_base": 0.12,
+          "T01_window_idle": 0.27
+        },
+        "costMicroUSD": 75
+      }
+    ],
+    "reversed": [
+      {
+        "id": "BOK",
+        "order": [
+          "T01_window_idle",
+          "H04_baseSeat_base",
+          "H03_bed_bed",
+          "H01_store_water",
+          "K01_stove_toast"
+        ],
+        "choice": "K01_stove_toast",
+        "probabilities": {
+          "T01_window_idle": 0.05,
+          "H04_baseSeat_base": 0.01,
+          "H03_bed_bed": 0.04,
+          "H01_store_water": 0.08,
+          "K01_stove_toast": 0.82
+        },
+        "costMicroUSD": 75
+      },
+      {
+        "id": "PEEP",
+        "order": [
+          "T01_window_idle",
+          "H04_baseSeat_base",
+          "H03_bed_bed",
+          "H01_store_water",
+          "K01_stove_toast"
+        ],
+        "choice": "K01_stove_toast",
+        "probabilities": {
+          "T01_window_idle": 0.3,
+          "H04_baseSeat_base": 0.05,
+          "H03_bed_bed": 0.1,
+          "H01_store_water": 0.14,
+          "K01_stove_toast": 0.41
+        },
+        "costMicroUSD": 75
+      }
+    ],
+    "annotated": [
+      {
+        "id": "BOK",
+        "order": [
+          "K01_stove_toast",
+          "H01_store_water",
+          "H03_bed_bed",
+          "H04_baseSeat_base",
+          "T01_window_idle"
+        ],
+        "choice": "K01_stove_toast",
+        "probabilities": {
+          "K01_stove_toast": 0.31,
+          "H01_store_water": 0.11,
+          "H03_bed_bed": 0.1,
+          "H04_baseSeat_base": 0.17,
+          "T01_window_idle": 0.31
+        },
+        "costMicroUSD": 81
+      },
+      {
+        "id": "PEEP",
+        "order": [
+          "K01_stove_toast",
+          "H01_store_water",
+          "H03_bed_bed",
+          "H04_baseSeat_base",
+          "T01_window_idle"
+        ],
+        "choice": "T01_window_idle",
+        "probabilities": {
+          "K01_stove_toast": 0.06,
+          "H01_store_water": 0.1,
+          "H03_bed_bed": 0.11,
+          "H04_baseSeat_base": 0.28,
+          "T01_window_idle": 0.45
+        },
+        "costMicroUSD": 82
+      }
+    ],
+    "decision": "Concrete clipped-gain facts substantially reduce Toast preference; PEEP chooses quiet. BOK still chooses Toast at a rounded0.31 tie, so do not claim guaranteed conservation."
+  },
+  "protocolNotes": [
+    "The eight healthy matched probes hold state and options fixed while changing only the profile seed; repeat pairs are genuine repeated calls. Other initial probes deliberately vary urgency, phase or day. All initial18 and the next2 order controls predate the final clipped-gain annotations.",
+    "The two old-policy order-reversal controls retain the same food/water/energy/morale and offered options; each seed has its own unoffered starter utilities.",
+    "The two final annotated controls likewise have each profile seed’s unoffered starter utilities; only the offered food/water/energy/leisure/quiet choices are compared.",
+    "All options remain legal and available; no model choice is overwritten, no criterion is pruned and probabilities are actual API data.",
+    "Successful recovery arithmetic is reused from the existing domain table, clipped to current needs and labeled before the phase boundary.",
+    "Earlier-today memory contains exact completed nonquiet receipts only; prior-day RPC memory remains deferred."
+  ],
+  "verification": {
+    "offline": {
+      "stableIdentity": true,
+      "distinctInterests": true,
+      "dayVariation": true,
+      "interestCoverage": true,
+      "noContextMutation": true,
+      "noCandidatePruning": true,
+      "urgentFactsUnchanged": true,
+      "within14000": true
+    },
+    "maxPayloadBytes": 12167,
+    "maximumOptions": 24,
+    "memory": {
+      "truthfulCompletedMemory": true,
+      "nonquietMemorySurvivesSixQuietRecords": true,
+      "resumePaidInputHashesIdentical": true,
+      "historyIdentical": true,
+      "finalStateIdentical": true,
+      "baseUnchanged": true
+    },
+    "domainTests": 12,
+    "serviceTests": 6,
+    "typecheck": true
+  },
+  "rollout": {
+    "operationOwner": "PM root",
+    "pauseAdmissions": true,
+    "drainAcceptedJobs": true,
+    "waitOldSignedQuoteExpirySeconds": 120,
+    "oneProductionRelease": true,
+    "unpauseAfterVerification": true
+  },
+  "primaryReference": "https://docs.typesafe.ai/model-jaggedness/jev-1.13",
+  "evidencePolicyScopes": {
+    "preAnnotation": {
+      "calls": 20,
+      "evidence": [
+        "healthyMatched",
+        "dailyInclination",
+        "urgent",
+        "conservation.original",
+        "conservation.reversed"
+      ],
+      "qualification": "These genuine calls used the earlier individuality/current-day-memory prompt and lacked the final clipped_gain_on_success/resource_caution criteria. They demonstrate those earlier exact requests; they are not tests of the exact final global decisionConfig."
+    },
+    "finalAnnotation": {
+      "calls": 2,
+      "evidence": [
+        "conservation.annotated"
+      ],
+      "decisionConfig": "0x0c5befc18112324ff3de00a387297d198b6c8a183f5cfb8cda3bd1513aadf714",
+      "qualification": "Only these two calls used the final annotated request policy in this initial22-call diagnostic set. The separate full-day counterfactual report records additional final-policy evidence."
+    }
+  }
+}

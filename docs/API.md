@@ -2,7 +2,7 @@
 
 The frontend calls the typed client in src/app/api.ts. It sends no provider key, arbitrary candidate list, state mutation, external URL or worker authority.
 
-- Public config exposes only network/address/model/multiplier.
+- Public config exposes network/address/model/multiplier and the current decision-policy fingerprint. The fingerprint supports safe operational verification and is not rendered as a product status notice.
 - Challenge + wallet message signature creates a short server session; this is not payment. Session is scoped to account and chain. A changed account/network clears it.
 - Rooster lists/current state are read from the canonical contract, bounded/paged. API shapes are in the client.
 - Quote reserves capacity before returning a signed AdmissionPermit. permit values use decimal strings across JSON; src/chain/permit.ts normalizes them losslessly. Value is processing plus mint; totalEstimate adds estimated owner network gas. First-day retry has no delivery/new mint charge.
