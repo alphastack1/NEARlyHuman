@@ -1,5 +1,7 @@
 # A website around the game
 
+**Superseded interpretation.** The owner clarified that the opening must be part of the retro pixel-art game itself: intro animation → title → game starts, with a consistent art style. Use the [current cartridge-game opening boards](../cartridge-openings/index.html) and [current brief](../cartridge-openings/README.md). These earlier surrounding-website concepts are retained only for comparison.
+
 Four visual directions requested by the owner. Each board contains three consecutive portrait-browser frames: opening, transition, and the game within the finished surrounding website. These are concept illustrations, not screenshots of an implemented shell or a new game layout.
 
 Owner clarification after this first set: **Moss & Cream is the game's palette, not a restriction on the surrounding website.** Future shell exploration can use a richer, independent cartoon palette. Match the general cozy, quirky retro mood and keep the existing game visually intact. The prompts below record the historical generation instructions; their stronger shell-palette restriction is superseded by this clarification.
