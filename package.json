@@ -1,0 +1,32 @@
+{
+  "name": "nearlyhuman",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx server/dev.ts",
+    "build": "tsc --noEmit && vite build",
+    "check": "tsc --noEmit",
+    "preview": "vite preview --host 127.0.0.1",
+    "test:domain": "tsx --test src/domain/domain.test.ts"
+  },
+  "dependencies": {
+    "@fontsource/press-start-2p": "5.3.0",
+    "@netlify/blobs": "11.1.7",
+    "phaser": "3.90.0",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
+    "viem": "2.57.14"
+  },
+  "devDependencies": {
+    "@openzeppelin/contracts": "5.6.1",
+    "@types/node": "^22.19.0",
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "@vitejs/plugin-react": "6.1.2",
+    "tsx": "4.23.15",
+    "solc": "0.8.38",
+    "typescript": "5.9.3",
+    "vite": "8.3.5"
+  }
+}

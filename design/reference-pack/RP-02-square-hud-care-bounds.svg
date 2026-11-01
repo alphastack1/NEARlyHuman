@@ -1,0 +1,106 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1360" height="1050" viewBox="0 0 1360 1050" role="img" aria-labelledby="title desc"><title id="title">RP-02 square HUD world and care bounds</title><desc id="desc">Two developer reference templates of the same 256 square. Replay has HUD y0 through39, world y40 through219 and message y220 through255. Care card covers y160 through255 and may expand upward for readable content. Not final game art.</desc><style>text{font-family:Segoe UI,Arial,sans-serif;fill:#172c3d} .inside{font-size:9px;font-weight:650}</style>
+<rect x="0" y="0" width="1360" height="1050" fill="#efebdb"/>
+<text x="40" y="45" font-size="28" font-weight="800">RP-02  /  SQUARE, HUD &amp; OVERLAY BOUNDS</text>
+<text x="40" y="80" font-size="21" font-weight="700">PROVISIONAL LOGICAL TEMPLATE — construction guide, not generated game art</text>
+<text x="40" y="111" font-size="17">Same square for phone and desktop · 256 × 256 logical art study · CSS text/hit areas reviewed independently</text>
+<text x="80" y="160" font-size="20" font-weight="800">A  ORDINARY REPLAY</text>
+<g transform="translate(80 183) scale(2)">
+<rect x="0" y="0" width="256" height="256" fill="#efebdb" stroke="#172c3d" stroke-width="2"/>
+<rect x="0" y="0" width="256" height="40" fill="#172c3d"/>
+<text x="10" y="16" font-size="10" style="fill:#efebdb">NAME · LEVEL · DAY CONTEXT</text>
+<text x="10" y="31" font-size="8" style="fill:#efebdb">HUD: y0–39  /  40 logical px</text>
+<rect x="0" y="40" width="256" height="180" fill="#dac59e"/>
+<line x1="0" y1="40" x2="0" y2="220" stroke="#b7b5a5" stroke-width="0.5"/>
+<line x1="16" y1="40" x2="16" y2="220" stroke="#b7b5a5" stroke-width="0.5"/>
+<line x1="32" y1="40" x2="32" y2="220" stroke="#b7b5a5" stroke-width="0.5"/>
+<line x1="48" y1="40" x2="48" y2="220" stroke="#b7b5a5" stroke-width="0.5"/>
+<line x1="64" y1="40" x2="64" y2="220" stroke="#b7b5a5" stroke-width="0.5"/>
+<line x1="80" y1="40" x2="80" y2="220" stroke="#b7b5a5" stroke-width="0.5"/>
+<line x1="96" y1="40" x2="96" y2="220" stroke="#b7b5a5" stroke-width="0.5"/>
+<line x1="112" y1="40" x2="112" y2="220" stroke="#b7b5a5" stroke-width="0.5"/>
+<line x1="128" y1="40" x2="128" y2="220" stroke="#b7b5a5" stroke-width="0.5"/>
+<line x1="144" y1="40" x2="144" y2="220" stroke="#b7b5a5" stroke-width="0.5"/>
+<line x1="160" y1="40" x2="160" y2="220" stroke="#b7b5a5" stroke-width="0.5"/>
+<line x1="176" y1="40" x2="176" y2="220" stroke="#b7b5a5" stroke-width="0.5"/>
+<line x1="192" y1="40" x2="192" y2="220" stroke="#b7b5a5" stroke-width="0.5"/>
+<line x1="208" y1="40" x2="208" y2="220" stroke="#b7b5a5" stroke-width="0.5"/>
+<line x1="224" y1="40" x2="224" y2="220" stroke="#b7b5a5" stroke-width="0.5"/>
+<line x1="240" y1="40" x2="240" y2="220" stroke="#b7b5a5" stroke-width="0.5"/>
+<line x1="0" y1="40" x2="256" y2="40" stroke="#b7b5a5" stroke-width="0.5"/>
+<line x1="0" y1="56" x2="256" y2="56" stroke="#b7b5a5" stroke-width="0.5"/>
+<line x1="0" y1="72" x2="256" y2="72" stroke="#b7b5a5" stroke-width="0.5"/>
+<line x1="0" y1="88" x2="256" y2="88" stroke="#b7b5a5" stroke-width="0.5"/>
+<line x1="0" y1="104" x2="256" y2="104" stroke="#b7b5a5" stroke-width="0.5"/>
+<line x1="0" y1="120" x2="256" y2="120" stroke="#b7b5a5" stroke-width="0.5"/>
+<line x1="0" y1="136" x2="256" y2="136" stroke="#b7b5a5" stroke-width="0.5"/>
+<line x1="0" y1="152" x2="256" y2="152" stroke="#b7b5a5" stroke-width="0.5"/>
+<line x1="0" y1="168" x2="256" y2="168" stroke="#b7b5a5" stroke-width="0.5"/>
+<line x1="0" y1="184" x2="256" y2="184" stroke="#b7b5a5" stroke-width="0.5"/>
+<line x1="0" y1="200" x2="256" y2="200" stroke="#b7b5a5" stroke-width="0.5"/>
+<line x1="0" y1="216" x2="256" y2="216" stroke="#b7b5a5" stroke-width="0.5"/>
+<text x="128" y="90" text-anchor="middle" font-size="16" font-weight="800">WORLD CROP</text>
+<text x="128" y="108" text-anchor="middle" font-size="10">y40–219  /  180 logical px</text>
+<text x="128" y="128" text-anchor="middle" font-size="9">16 tiles across × 11.25 tiles high</text>
+<text x="128" y="150" text-anchor="middle" font-size="8">Active feet + target + prop remain visible</text>
+<text x="128" y="169" text-anchor="middle" font-size="8">Camera moves through the larger 32×28 house</text>
+<rect x="0" y="220" width="256" height="36" fill="#172c3d"/>
+<text x="10" y="234" font-size="9" style="fill:#efebdb">EVENT MESSAGE · TWO SHORT LINES</text>
+<text x="10" y="248" font-size="8" style="fill:#efebdb">y220–255  /  36 logical px</text>
+</g>
+<text x="80" y="721" font-size="15">x0–255 inclusive; diagram enlarged ×2 for annotation</text>
+<text x="750" y="160" font-size="20" font-weight="800">B  CARE / DELIVERY</text>
+<g transform="translate(750 183) scale(2)">
+<rect x="0" y="0" width="256" height="256" fill="#efebdb" stroke="#172c3d" stroke-width="2"/>
+<rect x="0" y="0" width="256" height="40" fill="#172c3d"/>
+<text x="10" y="16" font-size="10" style="fill:#efebdb">NAME · LEVEL · DAY CONTEXT</text>
+<text x="10" y="31" font-size="8" style="fill:#efebdb">HUD: y0–39  /  40 logical px</text>
+<rect x="0" y="40" width="256" height="180" fill="#dac59e"/>
+<line x1="0" y1="40" x2="0" y2="220" stroke="#b7b5a5" stroke-width="0.5"/>
+<line x1="16" y1="40" x2="16" y2="220" stroke="#b7b5a5" stroke-width="0.5"/>
+<line x1="32" y1="40" x2="32" y2="220" stroke="#b7b5a5" stroke-width="0.5"/>
+<line x1="48" y1="40" x2="48" y2="220" stroke="#b7b5a5" stroke-width="0.5"/>
+<line x1="64" y1="40" x2="64" y2="220" stroke="#b7b5a5" stroke-width="0.5"/>
+<line x1="80" y1="40" x2="80" y2="220" stroke="#b7b5a5" stroke-width="0.5"/>
+<line x1="96" y1="40" x2="96" y2="220" stroke="#b7b5a5" stroke-width="0.5"/>
+<line x1="112" y1="40" x2="112" y2="220" stroke="#b7b5a5" stroke-width="0.5"/>
+<line x1="128" y1="40" x2="128" y2="220" stroke="#b7b5a5" stroke-width="0.5"/>
+<line x1="144" y1="40" x2="144" y2="220" stroke="#b7b5a5" stroke-width="0.5"/>
+<line x1="160" y1="40" x2="160" y2="220" stroke="#b7b5a5" stroke-width="0.5"/>
+<line x1="176" y1="40" x2="176" y2="220" stroke="#b7b5a5" stroke-width="0.5"/>
+<line x1="192" y1="40" x2="192" y2="220" stroke="#b7b5a5" stroke-width="0.5"/>
+<line x1="208" y1="40" x2="208" y2="220" stroke="#b7b5a5" stroke-width="0.5"/>
+<line x1="224" y1="40" x2="224" y2="220" stroke="#b7b5a5" stroke-width="0.5"/>
+<line x1="240" y1="40" x2="240" y2="220" stroke="#b7b5a5" stroke-width="0.5"/>
+<line x1="0" y1="40" x2="256" y2="40" stroke="#b7b5a5" stroke-width="0.5"/>
+<line x1="0" y1="56" x2="256" y2="56" stroke="#b7b5a5" stroke-width="0.5"/>
+<line x1="0" y1="72" x2="256" y2="72" stroke="#b7b5a5" stroke-width="0.5"/>
+<line x1="0" y1="88" x2="256" y2="88" stroke="#b7b5a5" stroke-width="0.5"/>
+<line x1="0" y1="104" x2="256" y2="104" stroke="#b7b5a5" stroke-width="0.5"/>
+<line x1="0" y1="120" x2="256" y2="120" stroke="#b7b5a5" stroke-width="0.5"/>
+<line x1="0" y1="136" x2="256" y2="136" stroke="#b7b5a5" stroke-width="0.5"/>
+<line x1="0" y1="152" x2="256" y2="152" stroke="#b7b5a5" stroke-width="0.5"/>
+<line x1="0" y1="168" x2="256" y2="168" stroke="#b7b5a5" stroke-width="0.5"/>
+<line x1="0" y1="184" x2="256" y2="184" stroke="#b7b5a5" stroke-width="0.5"/>
+<line x1="0" y1="200" x2="256" y2="200" stroke="#b7b5a5" stroke-width="0.5"/>
+<line x1="0" y1="216" x2="256" y2="216" stroke="#b7b5a5" stroke-width="0.5"/>
+<rect x="0" y="40" width="256" height="120" fill="#172c3d" opacity="0.16"/>
+<text x="128" y="90" text-anchor="middle" font-size="13" font-weight="750">SLEEPING HOUSE CROP</text>
+<text x="128" y="109" text-anchor="middle" font-size="8">Visible world above the ordinary care card</text>
+<rect x="0" y="160" width="256" height="96" fill="#172c3d"/>
+<text x="10" y="177" font-size="13" font-weight="800" style="fill:#efebdb">CARE / SUPPLY CARD</text>
+<text x="10" y="191" font-size="8" style="fill:#efebdb">y160–255  /  96 logical px</text>
+<text x="10" y="207" font-size="8" style="fill:#efebdb">Stock · 0–3 additions · priority · detail</text>
+<rect x="10" y="226" width="139" height="20" fill="#f6d346"/>
+<text x="79.5" y="239" text-anchor="middle" font-size="10" font-weight="800">PREPARE DAY</text>
+<text x="158" y="239" font-size="8" style="fill:#efebdb">Quiet estimate</text>
+<path d="M244 154 L244 48 M240 53 L244 48 L248 53" fill="none" stroke="#a76e4d" stroke-width="2" stroke-dasharray="4 3"/>
+</g>
+<text x="750" y="721" font-size="15">x0–255 inclusive; diagram enlarged ×2 for annotation</text>
+<text x="80" y="795" font-size="17">Readable type has priority over literal art-template pixels. Never shrink text to force the card into 96px.</text>
+<text x="80" y="826" font-size="17">At P320 / 200% text, expand the card toward y40, compact the fixed HUD and use one vertical scroller.</text>
+<text x="80" y="857" font-size="17">Move the action/fee footer into normal scroll flow when necessary. Keep every warning and focused control reachable.</text>
+<text x="80" y="888" font-size="17">OS keyboard / browser chrome / safe-area changes may require the square to scroll in the visible phone viewport.</text>
+<text x="80" y="919" font-size="17">Replay detail pauses message, camera and event time until Explicit Resume. Preparation detail pins reading while the job continues.</text>
+<text x="80" y="950" font-size="17">Low fee prominence comes from hierarchy, not unreadable contrast or size. Body text remains accessible DOM-sized text.</text>
+<text x="80" y="1018" font-size="15" font-weight="650">Source/contact, font metrics, touch sizes and dynamic overflow are pending actual P320/P390 implementation checks.</text>
+</svg>

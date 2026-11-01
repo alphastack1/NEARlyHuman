@@ -1,0 +1,3529 @@
+{
+  "revision": "2026-11-01",
+  "counts": {
+    "boards": 99,
+    "totalPanels": 215,
+    "uniqueIllustratedUIStates": 121,
+    "pendingUIStates": 0
+  },
+  "chunks": [
+    "chunk-01/coverage.json",
+    "chunk-02/coverage.json",
+    "chunk-03/coverage.json",
+    "chunk-04/coverage.json",
+    "final-pass/coverage.json"
+  ],
+  "uiStates": [
+    {
+      "id": "UI-00A",
+      "status": "illustrated_reference",
+      "boards": [
+        "chunk-03/NH-039"
+      ]
+    },
+    {
+      "id": "UI-00B",
+      "status": "illustrated_reference",
+      "boards": [
+        "chunk-03/NH-039"
+      ]
+    },
+    {
+      "id": "UI-00C",
+      "status": "illustrated_reference",
+      "boards": [
+        "final-pass/NH-068"
+      ]
+    },
+    {
+      "id": "UI-01A",
+      "status": "illustrated_reference",
+      "boards": [
+        "chunk-01/NH-002"
+      ]
+    },
+    {
+      "id": "UI-01B",
+      "status": "illustrated_reference",
+      "boards": [
+        "final-pass/NH-069"
+      ]
+    },
+    {
+      "id": "UI-01C",
+      "status": "illustrated_reference",
+      "boards": [
+        "chunk-03/NH-028"
+      ]
+    },
+    {
+      "id": "UI-01D",
+      "status": "illustrated_reference",
+      "boards": [
+        "final-pass/NH-070"
+      ]
+    },
+    {
+      "id": "UI-01E",
+      "status": "illustrated_reference",
+      "boards": [
+        "chunk-03/NH-028"
+      ]
+    },
+    {
+      "id": "UI-01F",
+      "status": "illustrated_reference",
+      "boards": [
+        "final-pass/NH-070"
+      ]
+    },
+    {
+      "id": "UI-01G",
+      "status": "illustrated_reference",
+      "boards": [
+        "final-pass/NH-071"
+      ]
+    },
+    {
+      "id": "UI-01H",
+      "status": "illustrated_reference",
+      "boards": [
+        "final-pass/NH-068"
+      ]
+    },
+    {
+      "id": "UI-01I",
+      "status": "illustrated_reference",
+      "boards": [
+        "final-pass/NH-069"
+      ]
+    },
+    {
+      "id": "UI-01J",
+      "status": "illustrated_reference",
+      "boards": [
+        "final-pass/NH-072"
+      ]
+    },
+    {
+      "id": "UI-01K",
+      "status": "illustrated_reference",
+      "boards": [
+        "chunk-03/NH-029"
+      ]
+    },
+    {
+      "id": "UI-01L",
+      "status": "illustrated_reference",
+      "boards": [
+        "chunk-03/NH-029"
+      ]
+    },
+    {
+      "id": "UI-02A",
+      "status": "illustrated_reference",
+      "boards": [
+        "chunk-01/NH-002"
+      ]
+    },
+    {
+      "id": "UI-02A-KEYBOARD",
+      "status": "illustrated_reference",
+      "boards": [
+        "final-pass/NH-073"
+      ]
+    },
+    {
+      "id": "UI-02B",
+      "status": "illustrated_reference",
+      "boards": [
+        "final-pass/NH-074"
+      ]
+    },
+    {
+      "id": "UI-02C",
+      "status": "illustrated_reference",
+      "boards": [
+        "final-pass/NH-075"
+      ]
+    },
+    {
+      "id": "UI-02D",
+      "status": "illustrated_reference",
+      "boards": [
+        "final-pass/NH-074"
+      ]
+    },
+    {
+      "id": "UI-02E",
+      "status": "illustrated_reference",
+      "boards": [
+        "chunk-03/NH-030"
+      ]
+    },
+    {
+      "id": "UI-02F",
+      "status": "illustrated_reference",
+      "boards": [
+        "chunk-03/NH-030"
+      ]
+    },
+    {
+      "id": "UI-02G",
+      "status": "illustrated_reference",
+      "boards": [
+        "final-pass/NH-071"
+      ]
+    },
+    {
+      "id": "UI-02G-FAILED",
+      "status": "illustrated_reference",
+      "boards": [
+        "final-pass/NH-076"
+      ]
+    },
+    {
+      "id": "UI-02H",
+      "status": "illustrated_reference",
+      "boards": [
+        "chunk-03/NH-031"
+      ]
+    },
+    {
+      "id": "UI-02I",
+      "status": "illustrated_reference",
+      "boards": [
+        "final-pass/NH-075"
+      ]
+    },
+    {
+      "id": "UI-02J",
+      "status": "illustrated_reference",
+      "boards": [
+        "final-pass/NH-076"
+      ]
+    },
+    {
+      "id": "UI-02K",
+      "status": "illustrated_reference",
+      "boards": [
+        "chunk-03/NH-031"
+      ]
+    },
+    {
+      "id": "UI-02K-QUOTE",
+      "status": "illustrated_reference",
+      "boards": [
+        "final-pass/NH-077"
+      ]
+    },
+    {
+      "id": "UI-03A",
+      "status": "illustrated_reference",
+      "boards": [
+        "final-pass/NH-064"
+      ]
+    },
+    {
+      "id": "UI-03B",
+      "status": "illustrated_reference",
+      "boards": [
+        "chunk-01/NH-003"
+      ]
+    },
+    {
+      "id": "UI-03B-STARTER",
+      "status": "illustrated_reference",
+      "boards": [
+        "chunk-01/NH-003"
+      ]
+    },
+    {
+      "id": "UI-03C",
+      "status": "illustrated_reference",
+      "boards": [
+        "final-pass/NH-064"
+      ]
+    },
+    {
+      "id": "UI-04A",
+      "status": "illustrated_reference",
+      "boards": [
+        "final-pass/NH-078"
+      ]
+    },
+    {
+      "id": "UI-04B",
+      "status": "illustrated_reference",
+      "boards": [
+        "final-pass/NH-079"
+      ]
+    },
+    {
+      "id": "UI-04C",
+      "status": "illustrated_reference",
+      "boards": [
+        "final-pass/NH-079"
+      ]
+    },
+    {
+      "id": "UI-04D",
+      "status": "illustrated_reference",
+      "boards": [
+        "chunk-03/NH-035"
+      ]
+    },
+    {
+      "id": "UI-04D-LT",
+      "status": "illustrated_reference",
+      "boards": [
+        "chunk-03/NH-035"
+      ]
+    },
+    {
+      "id": "UI-04E",
+      "status": "illustrated_reference",
+      "boards": [
+        "chunk-03/NH-027"
+      ]
+    },
+    {
+      "id": "UI-04F",
+      "status": "illustrated_reference",
+      "boards": [
+        "chunk-03/NH-026"
+      ]
+    },
+    {
+      "id": "UI-04G",
+      "status": "illustrated_reference",
+      "boards": [
+        "chunk-03/NH-026"
+      ]
+    },
+    {
+      "id": "UI-04G-KEYBOARD",
+      "status": "illustrated_reference",
+      "boards": [
+        "final-pass/NH-073"
+      ]
+    },
+    {
+      "id": "UI-04H",
+      "status": "illustrated_reference",
+      "boards": [
+        "final-pass/NH-072"
+      ]
+    },
+    {
+      "id": "UI-04I",
+      "status": "illustrated_reference",
+      "boards": [
+        "chunk-03/NH-027"
+      ]
+    },
+    {
+      "id": "UI-05A",
+      "status": "illustrated_reference",
+      "boards": [
+        "chunk-01/NH-004"
+      ]
+    },
+    {
+      "id": "UI-05A-STOCK",
+      "status": "illustrated_reference",
+      "boards": [
+        "final-pass/NH-080"
+      ]
+    },
+    {
+      "id": "UI-05B",
+      "status": "illustrated_reference",
+      "boards": [
+        "chunk-03/NH-034"
+      ]
+    },
+    {
+      "id": "UI-05C",
+      "status": "illustrated_reference",
+      "boards": [
+        "final-pass/NH-078"
+      ]
+    },
+    {
+      "id": "UI-05D",
+      "status": "illustrated_reference",
+      "boards": [
+        "chunk-01/NH-005"
+      ]
+    },
+    {
+      "id": "UI-05D-INSPECT",
+      "status": "illustrated_reference",
+      "boards": [
+        "chunk-01/NH-005"
+      ]
+    },
+    {
+      "id": "UI-05E",
+      "status": "illustrated_reference",
+      "boards": [
+        "final-pass/NH-080"
+      ]
+    },
+    {
+      "id": "UI-05F",
+      "status": "illustrated_reference",
+      "boards": [
+        "chunk-01/NH-001",
+        "chunk-01/NH-004"
+      ]
+    },
+    {
+      "id": "UI-05F-TINY",
+      "status": "illustrated_reference",
+      "boards": [
+        "final-pass/NH-081"
+      ]
+    },
+    {
+      "id": "UI-05G",
+      "status": "illustrated_reference",
+      "boards": [
+        "chunk-03/NH-032"
+      ]
+    },
+    {
+      "id": "UI-05H",
+      "status": "illustrated_reference",
+      "boards": [
+        "final-pass/NH-077"
+      ]
+    },
+    {
+      "id": "UI-05I",
+      "status": "illustrated_reference",
+      "boards": [
+        "final-pass/NH-081"
+      ]
+    },
+    {
+      "id": "UI-05J",
+      "status": "illustrated_reference",
+      "boards": [
+        "chunk-03/NH-032"
+      ]
+    },
+    {
+      "id": "UI-06A",
+      "status": "illustrated_reference",
+      "boards": [
+        "final-pass/NH-082"
+      ]
+    },
+    {
+      "id": "UI-06B",
+      "status": "illustrated_reference",
+      "boards": [
+        "final-pass/NH-082"
+      ]
+    },
+    {
+      "id": "UI-06B-CANCELLED",
+      "status": "illustrated_reference",
+      "boards": [
+        "final-pass/NH-083"
+      ]
+    },
+    {
+      "id": "UI-06B-REVERTED",
+      "status": "illustrated_reference",
+      "boards": [
+        "final-pass/NH-083"
+      ]
+    },
+    {
+      "id": "UI-06B-UNKNOWN",
+      "status": "illustrated_reference",
+      "boards": [
+        "final-pass/NH-084"
+      ]
+    },
+    {
+      "id": "UI-06C",
+      "status": "illustrated_reference",
+      "boards": [
+        "final-pass/NH-085"
+      ]
+    },
+    {
+      "id": "UI-06D",
+      "status": "illustrated_reference",
+      "boards": [
+        "chunk-01/NH-006"
+      ]
+    },
+    {
+      "id": "UI-06E",
+      "status": "illustrated_reference",
+      "boards": [
+        "final-pass/NH-086"
+      ]
+    },
+    {
+      "id": "UI-06E-EMPTY",
+      "status": "illustrated_reference",
+      "boards": [
+        "chunk-03/NH-033"
+      ]
+    },
+    {
+      "id": "UI-06E-PIN",
+      "status": "illustrated_reference",
+      "boards": [
+        "chunk-01/NH-008"
+      ]
+    },
+    {
+      "id": "UI-06F",
+      "status": "illustrated_reference",
+      "boards": [
+        "final-pass/NH-085"
+      ]
+    },
+    {
+      "id": "UI-06G",
+      "status": "illustrated_reference",
+      "boards": [
+        "final-pass/NH-086"
+      ]
+    },
+    {
+      "id": "UI-06H",
+      "status": "illustrated_reference",
+      "boards": [
+        "chunk-01/NH-006"
+      ]
+    },
+    {
+      "id": "UI-06I",
+      "status": "illustrated_reference",
+      "boards": [
+        "chunk-02/NH-010"
+      ]
+    },
+    {
+      "id": "UI-06J",
+      "status": "illustrated_reference",
+      "boards": [
+        "chunk-02/NH-010"
+      ]
+    },
+    {
+      "id": "UI-06J-RELEASE",
+      "status": "illustrated_reference",
+      "boards": [
+        "final-pass/NH-087"
+      ]
+    },
+    {
+      "id": "UI-06K",
+      "status": "illustrated_reference",
+      "boards": [
+        "chunk-03/NH-036"
+      ]
+    },
+    {
+      "id": "UI-06L",
+      "status": "illustrated_reference",
+      "boards": [
+        "final-pass/NH-084"
+      ]
+    },
+    {
+      "id": "UI-07A",
+      "status": "illustrated_reference",
+      "boards": [
+        "chunk-01/NH-007"
+      ]
+    },
+    {
+      "id": "UI-07B",
+      "status": "illustrated_reference",
+      "boards": [
+        "final-pass/NH-088"
+      ]
+    },
+    {
+      "id": "UI-07A-SKIP",
+      "status": "illustrated_reference",
+      "boards": [
+        "final-pass/NH-089"
+      ]
+    },
+    {
+      "id": "UI-08A",
+      "status": "illustrated_reference",
+      "boards": [
+        "chunk-02/NH-017"
+      ]
+    },
+    {
+      "id": "UI-08B",
+      "status": "illustrated_reference",
+      "boards": [
+        "chunk-01/NH-007",
+        "chunk-04/NH-054"
+      ]
+    },
+    {
+      "id": "UI-08C",
+      "status": "illustrated_reference",
+      "boards": [
+        "chunk-01/NH-001"
+      ]
+    },
+    {
+      "id": "UI-08D",
+      "status": "illustrated_reference",
+      "boards": [
+        "chunk-02/NH-018",
+        "chunk-04/NH-045",
+        "chunk-04/NH-046"
+      ]
+    },
+    {
+      "id": "UI-08E",
+      "status": "illustrated_reference",
+      "boards": [
+        "chunk-02/NH-019",
+        "chunk-04/NH-043",
+        "chunk-04/NH-046",
+        "chunk-04/NH-048",
+        "chunk-04/NH-051",
+        "chunk-04/NH-053"
+      ]
+    },
+    {
+      "id": "UI-08F",
+      "status": "illustrated_reference",
+      "boards": [
+        "chunk-04/NH-043",
+        "chunk-04/NH-052"
+      ]
+    },
+    {
+      "id": "UI-08G",
+      "status": "illustrated_reference",
+      "boards": [
+        "chunk-04/NH-040",
+        "chunk-04/NH-041",
+        "chunk-04/NH-042"
+      ]
+    },
+    {
+      "id": "UI-08H",
+      "status": "illustrated_reference",
+      "boards": [
+        "final-pass/NH-090"
+      ]
+    },
+    {
+      "id": "UI-08H-DETERMINISTIC",
+      "status": "illustrated_reference",
+      "boards": [
+        "chunk-03/NH-033"
+      ]
+    },
+    {
+      "id": "UI-08H-PIN",
+      "status": "illustrated_reference",
+      "boards": [
+        "chunk-01/NH-008"
+      ]
+    },
+    {
+      "id": "UI-08I",
+      "status": "illustrated_reference",
+      "boards": [
+        "chunk-03/NH-038"
+      ]
+    },
+    {
+      "id": "UI-08J",
+      "status": "illustrated_reference",
+      "boards": [
+        "final-pass/NH-089"
+      ]
+    },
+    {
+      "id": "UI-08K",
+      "status": "illustrated_reference",
+      "boards": [
+        "final-pass/NH-090"
+      ]
+    },
+    {
+      "id": "UI-08M",
+      "status": "illustrated_reference",
+      "boards": [
+        "final-pass/NH-066"
+      ]
+    },
+    {
+      "id": "UI-08M-TERMINAL",
+      "status": "illustrated_reference",
+      "boards": [
+        "final-pass/NH-066"
+      ]
+    },
+    {
+      "id": "UI-08L",
+      "status": "illustrated_reference",
+      "boards": [
+        "final-pass/NH-088"
+      ]
+    },
+    {
+      "id": "UI-09A",
+      "status": "illustrated_reference",
+      "boards": [
+        "chunk-02/NH-014"
+      ]
+    },
+    {
+      "id": "UI-09B",
+      "status": "illustrated_reference",
+      "boards": [
+        "chunk-02/NH-016"
+      ]
+    },
+    {
+      "id": "UI-09C",
+      "status": "illustrated_reference",
+      "boards": [
+        "chunk-02/NH-016"
+      ]
+    },
+    {
+      "id": "UI-10A",
+      "status": "illustrated_reference",
+      "boards": [
+        "final-pass/NH-065"
+      ]
+    },
+    {
+      "id": "UI-10B",
+      "status": "illustrated_reference",
+      "boards": [
+        "chunk-02/NH-014"
+      ]
+    },
+    {
+      "id": "UI-10C",
+      "status": "illustrated_reference",
+      "boards": [
+        "final-pass/NH-065"
+      ]
+    },
+    {
+      "id": "UI-10D",
+      "status": "illustrated_reference",
+      "boards": [
+        "chunk-02/NH-015"
+      ]
+    },
+    {
+      "id": "UI-10E",
+      "status": "illustrated_reference",
+      "boards": [
+        "chunk-02/NH-015"
+      ]
+    },
+    {
+      "id": "UI-11A",
+      "status": "illustrated_reference",
+      "boards": [
+        "chunk-03/NH-025"
+      ]
+    },
+    {
+      "id": "UI-11A-ANNOUNCE",
+      "status": "illustrated_reference",
+      "boards": [
+        "final-pass/NH-091"
+      ]
+    },
+    {
+      "id": "UI-11B",
+      "status": "illustrated_reference",
+      "boards": [
+        "chunk-03/NH-038"
+      ]
+    },
+    {
+      "id": "UI-11C",
+      "status": "illustrated_reference",
+      "boards": [
+        "chunk-03/NH-037"
+      ]
+    },
+    {
+      "id": "UI-11D",
+      "status": "illustrated_reference",
+      "boards": [
+        "final-pass/NH-092"
+      ]
+    },
+    {
+      "id": "UI-11D-LATEST",
+      "status": "illustrated_reference",
+      "boards": [
+        "chunk-02/NH-012"
+      ]
+    },
+    {
+      "id": "UI-11D-VERIFY",
+      "status": "illustrated_reference",
+      "boards": [
+        "final-pass/NH-092"
+      ]
+    },
+    {
+      "id": "UI-11D-OLD",
+      "status": "illustrated_reference",
+      "boards": [
+        "final-pass/NH-093"
+      ]
+    },
+    {
+      "id": "UI-11E",
+      "status": "illustrated_reference",
+      "boards": [
+        "chunk-02/NH-013"
+      ]
+    },
+    {
+      "id": "UI-11F",
+      "status": "illustrated_reference",
+      "boards": [
+        "final-pass/NH-087"
+      ]
+    },
+    {
+      "id": "UI-11F-EXPIRED",
+      "status": "illustrated_reference",
+      "boards": [
+        "chunk-02/NH-011"
+      ]
+    },
+    {
+      "id": "UI-11F-APPROVAL",
+      "status": "illustrated_reference",
+      "boards": [
+        "final-pass/NH-091"
+      ]
+    },
+    {
+      "id": "UI-11F-PENDING",
+      "status": "illustrated_reference",
+      "boards": [
+        "chunk-02/NH-011"
+      ]
+    },
+    {
+      "id": "UI-11F-RELEASED",
+      "status": "illustrated_reference",
+      "boards": [
+        "chunk-02/NH-012"
+      ]
+    },
+    {
+      "id": "UI-11F-REVERTED",
+      "status": "illustrated_reference",
+      "boards": [
+        "final-pass/NH-093"
+      ]
+    },
+    {
+      "id": "UI-11G",
+      "status": "illustrated_reference",
+      "boards": [
+        "chunk-02/NH-013"
+      ]
+    },
+    {
+      "id": "UI-11H",
+      "status": "illustrated_reference",
+      "boards": [
+        "chunk-03/NH-036"
+      ]
+    },
+    {
+      "id": "UI-11I",
+      "status": "illustrated_reference",
+      "boards": [
+        "chunk-03/NH-037"
+      ]
+    },
+    {
+      "id": "UI-11J",
+      "status": "illustrated_reference",
+      "boards": [
+        "chunk-03/NH-025"
+      ]
+    }
+  ],
+  "items": [
+    {
+      "id": "ITEM-water",
+      "status": "guide_reference_complete",
+      "boards": [
+        "NH-005"
+      ],
+      "objectGuideBoards": [
+        "chunk-02/NH-020"
+      ],
+      "fullDetailPageStatus": "illustrated_reference",
+      "objectGuideStatus": "illustrated_reference",
+      "detailReferences": [
+        {
+          "board": "NH-020",
+          "panel": "card1",
+          "artifact": "chunk-02/NH-020-water-milk-bread.png"
+        },
+        {
+          "board": "NH-005",
+          "panel": "left",
+          "artifact": "chunk-01/NH-005-water-inspection.png"
+        }
+      ]
+    },
+    {
+      "id": "ITEM-milk",
+      "status": "guide_reference_complete",
+      "boards": [],
+      "objectGuideBoards": [
+        "chunk-02/NH-020"
+      ],
+      "fullDetailPageStatus": "derivative_reference",
+      "objectGuideStatus": "illustrated_reference",
+      "detailReferences": [
+        {
+          "board": "NH-020",
+          "panel": "card2",
+          "artifact": "chunk-02/NH-020-water-milk-bread.png"
+        },
+        {
+          "board": "NH-005",
+          "panel": "left",
+          "artifact": "chunk-01/NH-005-water-inspection.png"
+        }
+      ]
+    },
+    {
+      "id": "ITEM-bread",
+      "status": "guide_reference_complete",
+      "boards": [],
+      "objectGuideBoards": [
+        "chunk-02/NH-020"
+      ],
+      "fullDetailPageStatus": "derivative_reference",
+      "objectGuideStatus": "illustrated_reference",
+      "detailReferences": [
+        {
+          "board": "NH-020",
+          "panel": "card3",
+          "artifact": "chunk-02/NH-020-water-milk-bread.png"
+        },
+        {
+          "board": "NH-005",
+          "panel": "left",
+          "artifact": "chunk-01/NH-005-water-inspection.png"
+        }
+      ]
+    },
+    {
+      "id": "ITEM-steak",
+      "status": "guide_reference_complete",
+      "boards": [],
+      "objectGuideBoards": [
+        "chunk-02/NH-021"
+      ],
+      "fullDetailPageStatus": "derivative_reference",
+      "objectGuideStatus": "illustrated_reference",
+      "detailReferences": [
+        {
+          "board": "NH-021",
+          "panel": "card1",
+          "artifact": "chunk-02/NH-021-steak-medicine-coffee.png"
+        },
+        {
+          "board": "NH-005",
+          "panel": "left",
+          "artifact": "chunk-01/NH-005-water-inspection.png"
+        }
+      ]
+    },
+    {
+      "id": "ITEM-medicine",
+      "status": "guide_reference_complete",
+      "boards": [],
+      "objectGuideBoards": [
+        "chunk-02/NH-021"
+      ],
+      "fullDetailPageStatus": "derivative_reference",
+      "objectGuideStatus": "illustrated_reference",
+      "detailReferences": [
+        {
+          "board": "NH-021",
+          "panel": "card2",
+          "artifact": "chunk-02/NH-021-steak-medicine-coffee.png"
+        },
+        {
+          "board": "NH-005",
+          "panel": "left",
+          "artifact": "chunk-01/NH-005-water-inspection.png"
+        }
+      ]
+    },
+    {
+      "id": "ITEM-coffee",
+      "status": "guide_reference_complete",
+      "boards": [],
+      "objectGuideBoards": [
+        "chunk-02/NH-021"
+      ],
+      "fullDetailPageStatus": "derivative_reference",
+      "objectGuideStatus": "illustrated_reference",
+      "detailReferences": [
+        {
+          "board": "NH-021",
+          "panel": "card3",
+          "artifact": "chunk-02/NH-021-steak-medicine-coffee.png"
+        },
+        {
+          "board": "NH-005",
+          "panel": "left",
+          "artifact": "chunk-01/NH-005-water-inspection.png"
+        }
+      ]
+    },
+    {
+      "id": "ITEM-wood",
+      "status": "guide_reference_complete",
+      "boards": [],
+      "objectGuideBoards": [
+        "chunk-02/NH-022"
+      ],
+      "fullDetailPageStatus": "derivative_reference",
+      "objectGuideStatus": "illustrated_reference",
+      "detailReferences": [
+        {
+          "board": "NH-022",
+          "panel": "card1",
+          "artifact": "chunk-02/NH-022-wood-toolkit-umbrella.png"
+        },
+        {
+          "board": "NH-005",
+          "panel": "left",
+          "artifact": "chunk-01/NH-005-water-inspection.png"
+        }
+      ]
+    },
+    {
+      "id": "ITEM-toolkit",
+      "status": "guide_reference_complete",
+      "boards": [],
+      "objectGuideBoards": [
+        "chunk-02/NH-022"
+      ],
+      "fullDetailPageStatus": "derivative_reference",
+      "objectGuideStatus": "illustrated_reference",
+      "detailReferences": [
+        {
+          "board": "NH-022",
+          "panel": "card2",
+          "artifact": "chunk-02/NH-022-wood-toolkit-umbrella.png"
+        },
+        {
+          "board": "NH-005",
+          "panel": "left",
+          "artifact": "chunk-01/NH-005-water-inspection.png"
+        }
+      ]
+    },
+    {
+      "id": "ITEM-umbrella",
+      "status": "guide_reference_complete",
+      "boards": [],
+      "objectGuideBoards": [
+        "chunk-02/NH-022"
+      ],
+      "fullDetailPageStatus": "derivative_reference",
+      "objectGuideStatus": "illustrated_reference",
+      "detailReferences": [
+        {
+          "board": "NH-022",
+          "panel": "card3",
+          "artifact": "chunk-02/NH-022-wood-toolkit-umbrella.png"
+        },
+        {
+          "board": "NH-005",
+          "panel": "left",
+          "artifact": "chunk-01/NH-005-water-inspection.png"
+        }
+      ]
+    },
+    {
+      "id": "ITEM-rose_seeds",
+      "status": "guide_reference_complete",
+      "boards": [],
+      "objectGuideBoards": [
+        "chunk-02/NH-023"
+      ],
+      "fullDetailPageStatus": "derivative_reference",
+      "objectGuideStatus": "illustrated_reference",
+      "detailReferences": [
+        {
+          "board": "NH-023",
+          "panel": "card1",
+          "artifact": "chunk-02/NH-023-seeds-matches.png"
+        },
+        {
+          "board": "NH-005",
+          "panel": "left",
+          "artifact": "chunk-01/NH-005-water-inspection.png"
+        }
+      ]
+    },
+    {
+      "id": "ITEM-apple_seeds",
+      "status": "guide_reference_complete",
+      "boards": [],
+      "objectGuideBoards": [
+        "chunk-02/NH-023"
+      ],
+      "fullDetailPageStatus": "derivative_reference",
+      "objectGuideStatus": "illustrated_reference",
+      "detailReferences": [
+        {
+          "board": "NH-023",
+          "panel": "card2",
+          "artifact": "chunk-02/NH-023-seeds-matches.png"
+        },
+        {
+          "board": "NH-005",
+          "panel": "left",
+          "artifact": "chunk-01/NH-005-water-inspection.png"
+        }
+      ]
+    },
+    {
+      "id": "ITEM-matches",
+      "status": "guide_reference_complete",
+      "boards": [],
+      "objectGuideBoards": [
+        "chunk-02/NH-023"
+      ],
+      "fullDetailPageStatus": "derivative_reference",
+      "objectGuideStatus": "illustrated_reference",
+      "detailReferences": [
+        {
+          "board": "NH-023",
+          "panel": "card3",
+          "artifact": "chunk-02/NH-023-seeds-matches.png"
+        },
+        {
+          "board": "NH-005",
+          "panel": "left",
+          "artifact": "chunk-01/NH-005-water-inspection.png"
+        }
+      ]
+    },
+    {
+      "id": "ITEM-soap",
+      "status": "guide_reference_complete",
+      "boards": [],
+      "objectGuideBoards": [
+        "chunk-02/NH-024"
+      ],
+      "fullDetailPageStatus": "derivative_reference",
+      "objectGuideStatus": "illustrated_reference",
+      "detailReferences": [
+        {
+          "board": "NH-024",
+          "panel": "card1",
+          "artifact": "chunk-02/NH-024-soap-bandage-compost.png"
+        },
+        {
+          "board": "NH-005",
+          "panel": "left",
+          "artifact": "chunk-01/NH-005-water-inspection.png"
+        }
+      ]
+    },
+    {
+      "id": "ITEM-bandage",
+      "status": "guide_reference_complete",
+      "boards": [],
+      "objectGuideBoards": [
+        "chunk-02/NH-024"
+      ],
+      "fullDetailPageStatus": "derivative_reference",
+      "objectGuideStatus": "illustrated_reference",
+      "detailReferences": [
+        {
+          "board": "NH-024",
+          "panel": "card2",
+          "artifact": "chunk-02/NH-024-soap-bandage-compost.png"
+        },
+        {
+          "board": "NH-005",
+          "panel": "left",
+          "artifact": "chunk-01/NH-005-water-inspection.png"
+        }
+      ]
+    },
+    {
+      "id": "ITEM-compost",
+      "status": "guide_reference_complete",
+      "boards": [],
+      "objectGuideBoards": [
+        "chunk-02/NH-024"
+      ],
+      "fullDetailPageStatus": "derivative_reference",
+      "objectGuideStatus": "illustrated_reference",
+      "detailReferences": [
+        {
+          "board": "NH-024",
+          "panel": "card3",
+          "artifact": "chunk-02/NH-024-soap-bandage-compost.png"
+        },
+        {
+          "board": "NH-005",
+          "panel": "left",
+          "artifact": "chunk-01/NH-005-water-inspection.png"
+        }
+      ]
+    }
+  ],
+  "worldReferences": [
+    {
+      "board": "chunk-02/NH-017",
+      "status": "illustrated_scene_reference",
+      "ids": [
+        "UI-08A",
+        "WS-24"
+      ],
+      "sourceAssetAndFullActionCoverage": "implementation stage"
+    },
+    {
+      "board": "chunk-02/NH-018",
+      "status": "illustrated_scene_reference",
+      "ids": [
+        "UI-08D",
+        "G02 / G05"
+      ],
+      "sourceAssetAndFullActionCoverage": "implementation stage"
+    },
+    {
+      "board": "chunk-02/NH-019",
+      "status": "illustrated_scene_reference",
+      "ids": [
+        "UI-08E",
+        "H07 / H04"
+      ],
+      "sourceAssetAndFullActionCoverage": "implementation stage"
+    },
+    {
+      "board": "chunk-04/NH-040",
+      "status": "recorded_action_reference",
+      "ids": [
+        "H17",
+        "WS-10",
+        "WS-19"
+      ],
+      "sourceAssetAndFullActionCoverage": "implementation stage"
+    },
+    {
+      "board": "chunk-04/NH-041",
+      "status": "recorded_action_reference",
+      "ids": [
+        "H16",
+        "WS-10"
+      ],
+      "sourceAssetAndFullActionCoverage": "implementation stage"
+    },
+    {
+      "board": "chunk-04/NH-042",
+      "status": "recorded_action_reference",
+      "ids": [
+        "H15",
+        "WS-10",
+        "WS-19"
+      ],
+      "sourceAssetAndFullActionCoverage": "implementation stage"
+    },
+    {
+      "board": "chunk-04/NH-043",
+      "status": "recorded_action_reference",
+      "ids": [
+        "H12",
+        "H13",
+        "WS-08",
+        "WS-09"
+      ],
+      "sourceAssetAndFullActionCoverage": "implementation stage"
+    },
+    {
+      "board": "chunk-04/NH-044",
+      "status": "object_state_reference",
+      "ids": [
+        "G01",
+        "WS-21"
+      ],
+      "sourceAssetAndFullActionCoverage": "implementation stage"
+    },
+    {
+      "board": "chunk-04/NH-045",
+      "status": "recorded_action_reference",
+      "ids": [
+        "G03",
+        "G04",
+        "WS-13"
+      ],
+      "sourceAssetAndFullActionCoverage": "implementation stage"
+    },
+    {
+      "board": "chunk-04/NH-046",
+      "status": "recorded_action_reference",
+      "ids": [
+        "H09",
+        "G06",
+        "WS-07",
+        "WS-14"
+      ],
+      "sourceAssetAndFullActionCoverage": "implementation stage"
+    },
+    {
+      "board": "chunk-04/NH-047",
+      "status": "object_state_reference",
+      "ids": [
+        "WS-22"
+      ],
+      "sourceAssetAndFullActionCoverage": "implementation stage"
+    },
+    {
+      "board": "chunk-04/NH-048",
+      "status": "recorded_action_reference",
+      "ids": [
+        "H09",
+        "H20",
+        "WS-07",
+        "WS-15"
+      ],
+      "sourceAssetAndFullActionCoverage": "implementation stage"
+    },
+    {
+      "board": "chunk-04/NH-049",
+      "status": "object_state_reference",
+      "ids": [
+        "H11",
+        "WS-08",
+        "WS-23"
+      ],
+      "sourceAssetAndFullActionCoverage": "implementation stage"
+    },
+    {
+      "board": "chunk-04/NH-050",
+      "status": "object_state_reference",
+      "ids": [
+        "H10",
+        "WS-23"
+      ],
+      "sourceAssetAndFullActionCoverage": "implementation stage"
+    },
+    {
+      "board": "chunk-04/NH-051",
+      "status": "recorded_action_reference",
+      "ids": [
+        "H08",
+        "WS-07"
+      ],
+      "sourceAssetAndFullActionCoverage": "implementation stage"
+    },
+    {
+      "board": "chunk-04/NH-052",
+      "status": "recorded_action_reference",
+      "ids": [
+        "H18",
+        "H19",
+        "WS-11"
+      ],
+      "sourceAssetAndFullActionCoverage": "implementation stage"
+    },
+    {
+      "board": "chunk-04/NH-053",
+      "status": "recorded_action_reference",
+      "ids": [
+        "H05",
+        "H06",
+        "WS-06"
+      ],
+      "sourceAssetAndFullActionCoverage": "implementation stage"
+    },
+    {
+      "board": "chunk-04/NH-054",
+      "status": "recorded_action_reference",
+      "ids": [
+        "H02",
+        "WS-04"
+      ],
+      "sourceAssetAndFullActionCoverage": "implementation stage"
+    },
+    {
+      "board": "final-pass/NH-055",
+      "status": "illustrated_reference",
+      "ids": [
+        "K02",
+        "K07"
+      ],
+      "sourceAssetAndFullActionCoverage": "implementation stage"
+    },
+    {
+      "board": "final-pass/NH-056",
+      "status": "illustrated_reference",
+      "ids": [
+        "K03",
+        "K04"
+      ],
+      "sourceAssetAndFullActionCoverage": "implementation stage"
+    },
+    {
+      "board": "final-pass/NH-057",
+      "status": "illustrated_reference",
+      "ids": [
+        "K05",
+        "K06"
+      ],
+      "sourceAssetAndFullActionCoverage": "implementation stage"
+    },
+    {
+      "board": "final-pass/NH-058",
+      "status": "illustrated_reference",
+      "ids": [
+        "H01"
+      ],
+      "sourceAssetAndFullActionCoverage": "implementation stage"
+    },
+    {
+      "board": "final-pass/NH-059",
+      "status": "illustrated_reference",
+      "ids": [
+        "G01"
+      ],
+      "sourceAssetAndFullActionCoverage": "implementation stage"
+    },
+    {
+      "board": "final-pass/NH-060",
+      "status": "illustrated_reference",
+      "ids": [
+        "G05",
+        "G07"
+      ],
+      "sourceAssetAndFullActionCoverage": "implementation stage"
+    },
+    {
+      "board": "final-pass/NH-061",
+      "status": "illustrated_reference",
+      "ids": [
+        "H03",
+        "H04"
+      ],
+      "sourceAssetAndFullActionCoverage": "implementation stage"
+    },
+    {
+      "board": "final-pass/NH-062",
+      "status": "illustrated_reference",
+      "ids": [
+        "H14",
+        "H13"
+      ],
+      "sourceAssetAndFullActionCoverage": "implementation stage"
+    },
+    {
+      "board": "final-pass/NH-063",
+      "status": "illustrated_reference",
+      "ids": [
+        "H07",
+        "H10"
+      ],
+      "sourceAssetAndFullActionCoverage": "implementation stage"
+    },
+    {
+      "board": "final-pass/NH-094",
+      "status": "illustrated_reference",
+      "ids": [
+        "WS-16"
+      ],
+      "sourceAssetAndFullActionCoverage": "implementation stage"
+    },
+    {
+      "board": "final-pass/NH-095",
+      "status": "illustrated_reference",
+      "ids": [
+        "WS-17"
+      ],
+      "sourceAssetAndFullActionCoverage": "implementation stage"
+    },
+    {
+      "board": "final-pass/NH-096",
+      "status": "illustrated_reference",
+      "ids": [
+        "WS-18"
+      ],
+      "sourceAssetAndFullActionCoverage": "implementation stage"
+    },
+    {
+      "board": "final-pass/NH-097",
+      "status": "illustrated_reference",
+      "ids": [
+        "WS-17",
+        "WS-18"
+      ],
+      "sourceAssetAndFullActionCoverage": "implementation stage"
+    },
+    {
+      "board": "final-pass/NH-098",
+      "status": "illustrated_reference",
+      "ids": [
+        "WS-20"
+      ],
+      "sourceAssetAndFullActionCoverage": "implementation stage"
+    },
+    {
+      "board": "final-pass/NH-099",
+      "status": "illustrated_reference",
+      "ids": [
+        "WS-21"
+      ],
+      "sourceAssetAndFullActionCoverage": "implementation stage"
+    }
+  ],
+  "runtimeChecks": "not run",
+  "referenceMap": "reference-map.json",
+  "guideCoverage": {
+    "status": "complete",
+    "uiStates": 121,
+    "uiVariants": 82,
+    "worldFrames": 146,
+    "itemDetails": 15,
+    "unmapped": 0
+  },
+  "itemDetails": [
+    {
+      "id": "ITEM-water",
+      "status": "illustrated_reference",
+      "references": [
+        {
+          "board": "NH-020",
+          "panel": "card1",
+          "artifact": "chunk-02/NH-020-water-milk-bread.png"
+        },
+        {
+          "board": "NH-005",
+          "panel": "left",
+          "artifact": "chunk-01/NH-005-water-inspection.png"
+        }
+      ]
+    },
+    {
+      "id": "ITEM-milk",
+      "status": "derivative_reference",
+      "references": [
+        {
+          "board": "NH-020",
+          "panel": "card2",
+          "artifact": "chunk-02/NH-020-water-milk-bread.png"
+        },
+        {
+          "board": "NH-005",
+          "panel": "left",
+          "artifact": "chunk-01/NH-005-water-inspection.png"
+        }
+      ]
+    },
+    {
+      "id": "ITEM-bread",
+      "status": "derivative_reference",
+      "references": [
+        {
+          "board": "NH-020",
+          "panel": "card3",
+          "artifact": "chunk-02/NH-020-water-milk-bread.png"
+        },
+        {
+          "board": "NH-005",
+          "panel": "left",
+          "artifact": "chunk-01/NH-005-water-inspection.png"
+        }
+      ]
+    },
+    {
+      "id": "ITEM-steak",
+      "status": "derivative_reference",
+      "references": [
+        {
+          "board": "NH-021",
+          "panel": "card1",
+          "artifact": "chunk-02/NH-021-steak-medicine-coffee.png"
+        },
+        {
+          "board": "NH-005",
+          "panel": "left",
+          "artifact": "chunk-01/NH-005-water-inspection.png"
+        }
+      ]
+    },
+    {
+      "id": "ITEM-medicine",
+      "status": "derivative_reference",
+      "references": [
+        {
+          "board": "NH-021",
+          "panel": "card2",
+          "artifact": "chunk-02/NH-021-steak-medicine-coffee.png"
+        },
+        {
+          "board": "NH-005",
+          "panel": "left",
+          "artifact": "chunk-01/NH-005-water-inspection.png"
+        }
+      ]
+    },
+    {
+      "id": "ITEM-coffee",
+      "status": "derivative_reference",
+      "references": [
+        {
+          "board": "NH-021",
+          "panel": "card3",
+          "artifact": "chunk-02/NH-021-steak-medicine-coffee.png"
+        },
+        {
+          "board": "NH-005",
+          "panel": "left",
+          "artifact": "chunk-01/NH-005-water-inspection.png"
+        }
+      ]
+    },
+    {
+      "id": "ITEM-wood",
+      "status": "derivative_reference",
+      "references": [
+        {
+          "board": "NH-022",
+          "panel": "card1",
+          "artifact": "chunk-02/NH-022-wood-toolkit-umbrella.png"
+        },
+        {
+          "board": "NH-005",
+          "panel": "left",
+          "artifact": "chunk-01/NH-005-water-inspection.png"
+        }
+      ]
+    },
+    {
+      "id": "ITEM-toolkit",
+      "status": "derivative_reference",
+      "references": [
+        {
+          "board": "NH-022",
+          "panel": "card2",
+          "artifact": "chunk-02/NH-022-wood-toolkit-umbrella.png"
+        },
+        {
+          "board": "NH-005",
+          "panel": "left",
+          "artifact": "chunk-01/NH-005-water-inspection.png"
+        }
+      ]
+    },
+    {
+      "id": "ITEM-umbrella",
+      "status": "derivative_reference",
+      "references": [
+        {
+          "board": "NH-022",
+          "panel": "card3",
+          "artifact": "chunk-02/NH-022-wood-toolkit-umbrella.png"
+        },
+        {
+          "board": "NH-005",
+          "panel": "left",
+          "artifact": "chunk-01/NH-005-water-inspection.png"
+        }
+      ]
+    },
+    {
+      "id": "ITEM-rose_seeds",
+      "status": "derivative_reference",
+      "references": [
+        {
+          "board": "NH-023",
+          "panel": "card1",
+          "artifact": "chunk-02/NH-023-seeds-matches.png"
+        },
+        {
+          "board": "NH-005",
+          "panel": "left",
+          "artifact": "chunk-01/NH-005-water-inspection.png"
+        }
+      ]
+    },
+    {
+      "id": "ITEM-apple_seeds",
+      "status": "derivative_reference",
+      "references": [
+        {
+          "board": "NH-023",
+          "panel": "card2",
+          "artifact": "chunk-02/NH-023-seeds-matches.png"
+        },
+        {
+          "board": "NH-005",
+          "panel": "left",
+          "artifact": "chunk-01/NH-005-water-inspection.png"
+        }
+      ]
+    },
+    {
+      "id": "ITEM-matches",
+      "status": "derivative_reference",
+      "references": [
+        {
+          "board": "NH-023",
+          "panel": "card3",
+          "artifact": "chunk-02/NH-023-seeds-matches.png"
+        },
+        {
+          "board": "NH-005",
+          "panel": "left",
+          "artifact": "chunk-01/NH-005-water-inspection.png"
+        }
+      ]
+    },
+    {
+      "id": "ITEM-soap",
+      "status": "derivative_reference",
+      "references": [
+        {
+          "board": "NH-024",
+          "panel": "card1",
+          "artifact": "chunk-02/NH-024-soap-bandage-compost.png"
+        },
+        {
+          "board": "NH-005",
+          "panel": "left",
+          "artifact": "chunk-01/NH-005-water-inspection.png"
+        }
+      ]
+    },
+    {
+      "id": "ITEM-bandage",
+      "status": "derivative_reference",
+      "references": [
+        {
+          "board": "NH-024",
+          "panel": "card2",
+          "artifact": "chunk-02/NH-024-soap-bandage-compost.png"
+        },
+        {
+          "board": "NH-005",
+          "panel": "left",
+          "artifact": "chunk-01/NH-005-water-inspection.png"
+        }
+      ]
+    },
+    {
+      "id": "ITEM-compost",
+      "status": "derivative_reference",
+      "references": [
+        {
+          "board": "NH-024",
+          "panel": "card3",
+          "artifact": "chunk-02/NH-024-soap-bandage-compost.png"
+        },
+        {
+          "board": "NH-005",
+          "panel": "left",
+          "artifact": "chunk-01/NH-005-water-inspection.png"
+        }
+      ]
+    }
+  ],
+  "worldFrames": [
+    {
+      "id": "WS-01-F01",
+      "status": "illustrated_reference",
+      "references": [
+        {
+          "board": "NH-001",
+          "panel": "left",
+          "artifact": "chunk-01/NH-001-core-anchors.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-01-F02",
+      "status": "illustrated_reference",
+      "references": [
+        {
+          "board": "NH-055",
+          "panel": "left",
+          "artifact": "final-pass/NH-055-steak-choice.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-01-F03",
+      "status": "illustrated_reference",
+      "references": [
+        {
+          "board": "NH-056",
+          "panel": "left",
+          "artifact": "final-pass/NH-056-compound-meals.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-01-F04",
+      "status": "illustrated_reference",
+      "references": [
+        {
+          "board": "NH-056",
+          "panel": "right",
+          "artifact": "final-pass/NH-056-compound-meals.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-02-F01",
+      "status": "illustrated_reference",
+      "references": [
+        {
+          "board": "NH-057",
+          "panel": "left",
+          "artifact": "final-pass/NH-057-coffee-variants.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-02-F02",
+      "status": "illustrated_reference",
+      "references": [
+        {
+          "board": "NH-057",
+          "panel": "right",
+          "artifact": "final-pass/NH-057-coffee-variants.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-02-F03",
+      "status": "illustrated_reference",
+      "references": [
+        {
+          "board": "NH-055",
+          "panel": "right",
+          "artifact": "final-pass/NH-055-steak-choice.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-03-F01",
+      "status": "illustrated_reference",
+      "references": [
+        {
+          "board": "NH-058",
+          "panel": "card1",
+          "artifact": "final-pass/NH-058-direct-consume.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-03-F02",
+      "status": "derivative_reference",
+      "references": [
+        {
+          "board": "NH-058",
+          "panel": "card1",
+          "artifact": "final-pass/NH-058-direct-consume.png"
+        },
+        {
+          "board": "NH-020",
+          "panel": "card2",
+          "artifact": "chunk-02/NH-020-water-milk-bread.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-03-F03",
+      "status": "illustrated_reference",
+      "references": [
+        {
+          "board": "NH-058",
+          "panel": "card2",
+          "artifact": "final-pass/NH-058-direct-consume.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-03-F04",
+      "status": "illustrated_reference",
+      "references": [
+        {
+          "board": "NH-058",
+          "panel": "card3",
+          "artifact": "final-pass/NH-058-direct-consume.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-04-F01",
+      "status": "derivative_reference",
+      "references": [
+        {
+          "board": "NH-054",
+          "panel": "left",
+          "artifact": "chunk-04/NH-054-targeted-treatment.png"
+        },
+        {
+          "board": "NH-095",
+          "panel": "card2",
+          "artifact": "final-pass/NH-095-condition-cues.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-04-F02",
+      "status": "illustrated_reference",
+      "references": [
+        {
+          "board": "NH-054",
+          "panel": "left",
+          "artifact": "chunk-04/NH-054-targeted-treatment.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-04-F03",
+      "status": "illustrated_reference",
+      "references": [
+        {
+          "board": "NH-054",
+          "panel": "right",
+          "artifact": "chunk-04/NH-054-targeted-treatment.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-05-F01",
+      "status": "illustrated_reference",
+      "references": [
+        {
+          "board": "NH-061",
+          "panel": "card1",
+          "artifact": "final-pass/NH-061-baseline-recovery.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-05-F02",
+      "status": "illustrated_reference",
+      "references": [
+        {
+          "board": "NH-061",
+          "panel": "card2",
+          "artifact": "final-pass/NH-061-baseline-recovery.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-05-F03",
+      "status": "illustrated_reference",
+      "references": [
+        {
+          "board": "NH-061",
+          "panel": "card3",
+          "artifact": "final-pass/NH-061-baseline-recovery.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-05-F04",
+      "status": "illustrated_reference",
+      "references": [
+        {
+          "board": "NH-019",
+          "panel": "right",
+          "artifact": "chunk-02/NH-019-wash-leisure.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-06-F01",
+      "status": "illustrated_reference",
+      "references": [
+        {
+          "board": "NH-053",
+          "panel": "left",
+          "artifact": "chunk-04/NH-053-mess-cleaning.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-06-F02",
+      "status": "illustrated_reference",
+      "references": [
+        {
+          "board": "NH-053",
+          "panel": "right",
+          "artifact": "chunk-04/NH-053-mess-cleaning.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-06-F03",
+      "status": "illustrated_reference",
+      "references": [
+        {
+          "board": "NH-063",
+          "panel": "left",
+          "artifact": "final-pass/NH-063-wipe-patch.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-06-F04",
+      "status": "illustrated_reference",
+      "references": [
+        {
+          "board": "NH-019",
+          "panel": "left",
+          "artifact": "chunk-02/NH-019-wash-leisure.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-07-F01",
+      "status": "derivative_reference",
+      "references": [
+        {
+          "board": "NH-051",
+          "panel": "left",
+          "artifact": "chunk-04/NH-051-toolkit-repair.png"
+        },
+        {
+          "board": "NH-009",
+          "panel": "card2",
+          "artifact": "chunk-01/NH-009-stove-states.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-07-F02",
+      "status": "illustrated_reference",
+      "references": [
+        {
+          "board": "NH-051",
+          "panel": "left",
+          "artifact": "chunk-04/NH-051-toolkit-repair.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-07-F03",
+      "status": "illustrated_reference",
+      "references": [
+        {
+          "board": "NH-051",
+          "panel": "right",
+          "artifact": "chunk-04/NH-051-toolkit-repair.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-07-F04",
+      "status": "illustrated_reference",
+      "references": [
+        {
+          "board": "NH-048",
+          "panel": "left",
+          "artifact": "chunk-04/NH-048-chair-construct.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-07-F05",
+      "status": "illustrated_reference",
+      "references": [
+        {
+          "board": "NH-046",
+          "panel": "left",
+          "artifact": "chunk-04/NH-046-shelter-coverage.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-08-F01",
+      "status": "derivative_reference",
+      "references": [
+        {
+          "board": "NH-063",
+          "panel": "right",
+          "artifact": "final-pass/NH-063-wipe-patch.png"
+        },
+        {
+          "board": "NH-050",
+          "panel": "card2",
+          "artifact": "chunk-04/NH-050-patch-expiry.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-08-F02",
+      "status": "illustrated_reference",
+      "references": [
+        {
+          "board": "NH-063",
+          "panel": "right",
+          "artifact": "final-pass/NH-063-wipe-patch.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-08-F03",
+      "status": "illustrated_reference",
+      "references": [
+        {
+          "board": "NH-049",
+          "panel": "card3",
+          "artifact": "chunk-04/NH-049-chair-states.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-08-F04",
+      "status": "illustrated_reference",
+      "references": [
+        {
+          "board": "NH-043",
+          "panel": "left",
+          "artifact": "chunk-04/NH-043-window-responses.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-09-F01",
+      "status": "illustrated_reference",
+      "references": [
+        {
+          "board": "NH-043",
+          "panel": "right",
+          "artifact": "chunk-04/NH-043-window-responses.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-09-F02",
+      "status": "illustrated_reference",
+      "references": [
+        {
+          "board": "NH-062",
+          "panel": "right",
+          "artifact": "final-pass/NH-062-weather-targets.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-09-F03",
+      "status": "illustrated_reference",
+      "references": [
+        {
+          "board": "NH-062",
+          "panel": "left",
+          "artifact": "final-pass/NH-062-weather-targets.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-10-F01",
+      "status": "illustrated_reference",
+      "references": [
+        {
+          "board": "NH-042",
+          "panel": "right",
+          "artifact": "chunk-04/NH-042-outage-backup.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-10-F02",
+      "status": "illustrated_reference",
+      "references": [
+        {
+          "board": "NH-041",
+          "panel": "left",
+          "artifact": "chunk-04/NH-041-water-suppression.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-10-F03",
+      "status": "illustrated_reference",
+      "references": [
+        {
+          "board": "NH-041",
+          "panel": "right",
+          "artifact": "chunk-04/NH-041-water-suppression.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-10-F04",
+      "status": "illustrated_reference",
+      "references": [
+        {
+          "board": "NH-040",
+          "panel": "right",
+          "artifact": "chunk-04/NH-040-flare-shutdown.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-11-F01",
+      "status": "illustrated_reference",
+      "references": [
+        {
+          "board": "NH-052",
+          "panel": "left",
+          "artifact": "chunk-04/NH-052-pest-responses.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-11-F02",
+      "status": "derivative_reference",
+      "references": [
+        {
+          "board": "NH-052",
+          "panel": "left",
+          "artifact": "chunk-04/NH-052-pest-responses.png"
+        },
+        {
+          "board": "NH-023",
+          "panel": "card1",
+          "artifact": "chunk-02/NH-023-seeds-matches.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-11-F03",
+      "status": "derivative_reference",
+      "references": [
+        {
+          "board": "NH-052",
+          "panel": "left",
+          "artifact": "chunk-04/NH-052-pest-responses.png"
+        },
+        {
+          "board": "NH-023",
+          "panel": "card2",
+          "artifact": "chunk-02/NH-023-seeds-matches.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-11-F04",
+      "status": "derivative_reference",
+      "references": [
+        {
+          "board": "NH-052",
+          "panel": "left",
+          "artifact": "chunk-04/NH-052-pest-responses.png"
+        },
+        {
+          "board": "NH-008",
+          "panel": "right",
+          "artifact": "chunk-01/NH-008-brain-modes.png"
+        },
+        {
+          "board": "NH-020",
+          "panel": "card2",
+          "artifact": "chunk-02/NH-020-water-milk-bread.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-11-F05",
+      "status": "derivative_reference",
+      "references": [
+        {
+          "board": "NH-052",
+          "panel": "left",
+          "artifact": "chunk-04/NH-052-pest-responses.png"
+        },
+        {
+          "board": "NH-008",
+          "panel": "right",
+          "artifact": "chunk-01/NH-008-brain-modes.png"
+        },
+        {
+          "board": "NH-021",
+          "panel": "card1",
+          "artifact": "chunk-02/NH-021-steak-medicine-coffee.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-11-F06",
+      "status": "illustrated_reference",
+      "references": [
+        {
+          "board": "NH-052",
+          "panel": "right",
+          "artifact": "chunk-04/NH-052-pest-responses.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-11-F07",
+      "status": "derivative_reference",
+      "references": [
+        {
+          "board": "NH-052",
+          "panel": "right",
+          "artifact": "chunk-04/NH-052-pest-responses.png"
+        },
+        {
+          "board": "NH-097",
+          "panel": "card3",
+          "artifact": "final-pass/NH-097-mood-exposure.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-12-F01",
+      "status": "illustrated_reference",
+      "references": [
+        {
+          "board": "NH-059",
+          "panel": "left",
+          "artifact": "final-pass/NH-059-plant-seeds.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-12-F02",
+      "status": "illustrated_reference",
+      "references": [
+        {
+          "board": "NH-059",
+          "panel": "right",
+          "artifact": "final-pass/NH-059-plant-seeds.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-12-F03",
+      "status": "illustrated_reference",
+      "references": [
+        {
+          "board": "NH-018",
+          "panel": "left",
+          "artifact": "chunk-02/NH-018-garden-water-harvest.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-12-F04",
+      "status": "derivative_reference",
+      "references": [
+        {
+          "board": "NH-018",
+          "panel": "left",
+          "artifact": "chunk-02/NH-018-garden-water-harvest.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-13-F01",
+      "status": "illustrated_reference",
+      "references": [
+        {
+          "board": "NH-045",
+          "panel": "left",
+          "artifact": "chunk-04/NH-045-compost-soil.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-13-F02",
+      "status": "derivative_reference",
+      "references": [
+        {
+          "board": "NH-045",
+          "panel": "right",
+          "artifact": "chunk-04/NH-045-compost-soil.png"
+        },
+        {
+          "board": "NH-044",
+          "panel": "card1",
+          "artifact": "chunk-04/NH-044-garden-growth.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-13-F03",
+      "status": "illustrated_reference",
+      "references": [
+        {
+          "board": "NH-045",
+          "panel": "right",
+          "artifact": "chunk-04/NH-045-compost-soil.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-14-F01",
+      "status": "illustrated_reference",
+      "references": [
+        {
+          "board": "NH-018",
+          "panel": "right",
+          "artifact": "chunk-02/NH-018-garden-water-harvest.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-14-F02",
+      "status": "illustrated_reference",
+      "references": [
+        {
+          "board": "NH-060",
+          "panel": "left",
+          "artifact": "final-pass/NH-060-harvest-abandon.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-14-F03",
+      "status": "illustrated_reference",
+      "references": [
+        {
+          "board": "NH-046",
+          "panel": "right",
+          "artifact": "chunk-04/NH-046-shelter-coverage.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-14-F04",
+      "status": "derivative_reference",
+      "references": [
+        {
+          "board": "NH-046",
+          "panel": "right",
+          "artifact": "chunk-04/NH-046-shelter-coverage.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-14-F05",
+      "status": "derivative_reference",
+      "references": [
+        {
+          "board": "NH-060",
+          "panel": "right",
+          "artifact": "final-pass/NH-060-harvest-abandon.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-14-F06",
+      "status": "illustrated_reference",
+      "references": [
+        {
+          "board": "NH-060",
+          "panel": "right",
+          "artifact": "final-pass/NH-060-harvest-abandon.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-15-F01",
+      "status": "illustrated_reference",
+      "references": [
+        {
+          "board": "NH-048",
+          "panel": "right",
+          "artifact": "chunk-04/NH-048-chair-construct.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-15-F02",
+      "status": "derivative_reference",
+      "references": [
+        {
+          "board": "NH-048",
+          "panel": "right",
+          "artifact": "chunk-04/NH-048-chair-construct.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-15-F03",
+      "status": "illustrated_reference",
+      "references": [
+        {
+          "board": "NH-033",
+          "panel": "right",
+          "artifact": "chunk-03/NH-033-brain-empty.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-16-F01",
+      "status": "illustrated_reference",
+      "references": [
+        {
+          "board": "NH-094",
+          "panel": "card1",
+          "artifact": "final-pass/NH-094-task-outcomes.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-16-F02",
+      "status": "illustrated_reference",
+      "references": [
+        {
+          "board": "NH-094",
+          "panel": "card2",
+          "artifact": "final-pass/NH-094-task-outcomes.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-16-F03",
+      "status": "illustrated_reference",
+      "references": [
+        {
+          "board": "NH-094",
+          "panel": "card3",
+          "artifact": "final-pass/NH-094-task-outcomes.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-16-F04",
+      "status": "derivative_reference",
+      "references": [
+        {
+          "board": "NH-056",
+          "panel": "left",
+          "artifact": "final-pass/NH-056-compound-meals.png"
+        },
+        {
+          "board": "NH-063",
+          "panel": "left",
+          "artifact": "final-pass/NH-063-wipe-patch.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-16-F05",
+      "status": "derivative_reference",
+      "references": [
+        {
+          "board": "NH-042",
+          "panel": "right",
+          "artifact": "chunk-04/NH-042-outage-backup.png"
+        },
+        {
+          "board": "NH-040",
+          "panel": "left",
+          "artifact": "chunk-04/NH-040-flare-shutdown.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-16-F06",
+      "status": "derivative_reference",
+      "references": [
+        {
+          "board": "NH-094",
+          "panel": "card2",
+          "artifact": "final-pass/NH-094-task-outcomes.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-16-F07",
+      "status": "derivative_reference",
+      "references": [
+        {
+          "board": "NH-094",
+          "panel": "card2",
+          "artifact": "final-pass/NH-094-task-outcomes.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-17-F01",
+      "status": "derivative_reference",
+      "references": [
+        {
+          "board": "NH-095",
+          "panel": "card1",
+          "artifact": "final-pass/NH-095-condition-cues.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-17-F02",
+      "status": "derivative_reference",
+      "references": [
+        {
+          "board": "NH-095",
+          "panel": "card1",
+          "artifact": "final-pass/NH-095-condition-cues.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-17-F03",
+      "status": "derivative_reference",
+      "references": [
+        {
+          "board": "NH-095",
+          "panel": "card2",
+          "artifact": "final-pass/NH-095-condition-cues.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-17-F04",
+      "status": "derivative_reference",
+      "references": [
+        {
+          "board": "NH-095",
+          "panel": "card2",
+          "artifact": "final-pass/NH-095-condition-cues.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-17-F05",
+      "status": "illustrated_reference",
+      "references": [
+        {
+          "board": "NH-095",
+          "panel": "card3",
+          "artifact": "final-pass/NH-095-condition-cues.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-17-F06",
+      "status": "illustrated_reference",
+      "references": [
+        {
+          "board": "NH-097",
+          "panel": "card1",
+          "artifact": "final-pass/NH-097-mood-exposure.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-17-F07",
+      "status": "illustrated_reference",
+      "references": [
+        {
+          "board": "NH-097",
+          "panel": "card3",
+          "artifact": "final-pass/NH-097-mood-exposure.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-17-F08",
+      "status": "derivative_reference",
+      "references": [
+        {
+          "board": "NH-063",
+          "panel": "left",
+          "artifact": "final-pass/NH-063-wipe-patch.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-18-F01",
+      "status": "derivative_reference",
+      "references": [
+        {
+          "board": "NH-096",
+          "panel": "card1",
+          "artifact": "final-pass/NH-096-need-deficits.png"
+        },
+        {
+          "board": "NH-079",
+          "panel": "left",
+          "artifact": "final-pass/NH-079-care-priorities.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-18-F02",
+      "status": "illustrated_reference",
+      "references": [
+        {
+          "board": "NH-096",
+          "panel": "card1",
+          "artifact": "final-pass/NH-096-need-deficits.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-18-F03",
+      "status": "derivative_reference",
+      "references": [
+        {
+          "board": "NH-096",
+          "panel": "card2",
+          "artifact": "final-pass/NH-096-need-deficits.png"
+        },
+        {
+          "board": "NH-079",
+          "panel": "left",
+          "artifact": "final-pass/NH-079-care-priorities.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-18-F04",
+      "status": "illustrated_reference",
+      "references": [
+        {
+          "board": "NH-096",
+          "panel": "card2",
+          "artifact": "final-pass/NH-096-need-deficits.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-18-F05",
+      "status": "derivative_reference",
+      "references": [
+        {
+          "board": "NH-096",
+          "panel": "card3",
+          "artifact": "final-pass/NH-096-need-deficits.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-18-F06",
+      "status": "illustrated_reference",
+      "references": [
+        {
+          "board": "NH-096",
+          "panel": "card3",
+          "artifact": "final-pass/NH-096-need-deficits.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-18-F07",
+      "status": "derivative_reference",
+      "references": [
+        {
+          "board": "NH-097",
+          "panel": "card2",
+          "artifact": "final-pass/NH-097-mood-exposure.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-18-F08",
+      "status": "illustrated_reference",
+      "references": [
+        {
+          "board": "NH-097",
+          "panel": "card2",
+          "artifact": "final-pass/NH-097-mood-exposure.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-19-F01",
+      "status": "derivative_reference",
+      "references": [
+        {
+          "board": "NH-043",
+          "panel": "left",
+          "artifact": "chunk-04/NH-043-window-responses.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-19-F02",
+      "status": "derivative_reference",
+      "references": [
+        {
+          "board": "NH-043",
+          "panel": "left",
+          "artifact": "chunk-04/NH-043-window-responses.png"
+        },
+        {
+          "board": "NH-063",
+          "panel": "right",
+          "artifact": "final-pass/NH-063-wipe-patch.png"
+        },
+        {
+          "board": "NH-051",
+          "panel": "left",
+          "artifact": "chunk-04/NH-051-toolkit-repair.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-19-F03",
+      "status": "derivative_reference",
+      "references": [
+        {
+          "board": "NH-042",
+          "panel": "left",
+          "artifact": "chunk-04/NH-042-outage-backup.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-19-F04",
+      "status": "illustrated_reference",
+      "references": [
+        {
+          "board": "NH-009",
+          "panel": "card2",
+          "artifact": "chunk-01/NH-009-stove-states.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-19-F05",
+      "status": "derivative_reference",
+      "references": [
+        {
+          "board": "NH-063",
+          "panel": "right",
+          "artifact": "final-pass/NH-063-wipe-patch.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-19-F06",
+      "status": "illustrated_reference",
+      "references": [
+        {
+          "board": "NH-049",
+          "panel": "card2",
+          "artifact": "chunk-04/NH-049-chair-states.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-20-F01",
+      "status": "derivative_reference",
+      "references": [
+        {
+          "board": "NH-007",
+          "panel": "right",
+          "artifact": "chunk-01/NH-007-saved-replay.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-20-F02",
+      "status": "derivative_reference",
+      "references": [
+        {
+          "board": "NH-018",
+          "panel": "left",
+          "artifact": "chunk-02/NH-018-garden-water-harvest.png"
+        },
+        {
+          "board": "NH-046",
+          "panel": "right",
+          "artifact": "chunk-04/NH-046-shelter-coverage.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-20-F03",
+      "status": "derivative_reference",
+      "references": [
+        {
+          "board": "NH-052",
+          "panel": "left",
+          "artifact": "chunk-04/NH-052-pest-responses.png"
+        },
+        {
+          "board": "NH-044",
+          "panel": "card2",
+          "artifact": "chunk-04/NH-044-garden-growth.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-20-F04",
+      "status": "derivative_reference",
+      "references": [
+        {
+          "board": "NH-052",
+          "panel": "left",
+          "artifact": "chunk-04/NH-052-pest-responses.png"
+        },
+        {
+          "board": "NH-008",
+          "panel": "right",
+          "artifact": "chunk-01/NH-008-brain-modes.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-20-F05",
+      "status": "illustrated_reference",
+      "references": [
+        {
+          "board": "NH-098",
+          "panel": "right",
+          "artifact": "final-pass/NH-098-rare-washout.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-20-F06",
+      "status": "derivative_reference",
+      "references": [
+        {
+          "board": "NH-097",
+          "panel": "card2",
+          "artifact": "final-pass/NH-097-mood-exposure.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-20-F07",
+      "status": "derivative_reference",
+      "references": [
+        {
+          "board": "NH-095",
+          "panel": "card1",
+          "artifact": "final-pass/NH-095-condition-cues.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-20-F08",
+      "status": "derivative_reference",
+      "references": [
+        {
+          "board": "NH-095",
+          "panel": "card2",
+          "artifact": "final-pass/NH-095-condition-cues.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-20-F09",
+      "status": "illustrated_reference",
+      "references": [
+        {
+          "board": "NH-098",
+          "panel": "left",
+          "artifact": "final-pass/NH-098-rare-washout.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-21-F01",
+      "status": "illustrated_reference",
+      "references": [
+        {
+          "board": "NH-059",
+          "panel": "left",
+          "artifact": "final-pass/NH-059-plant-seeds.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-21-F02",
+      "status": "illustrated_reference",
+      "references": [
+        {
+          "board": "NH-044",
+          "panel": "card2",
+          "artifact": "chunk-04/NH-044-garden-growth.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-21-F03",
+      "status": "illustrated_reference",
+      "references": [
+        {
+          "board": "NH-044",
+          "panel": "card3",
+          "artifact": "chunk-04/NH-044-garden-growth.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-21-F04",
+      "status": "illustrated_reference",
+      "references": [
+        {
+          "board": "NH-059",
+          "panel": "right",
+          "artifact": "final-pass/NH-059-plant-seeds.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-21-F05",
+      "status": "illustrated_reference",
+      "references": [
+        {
+          "board": "NH-099",
+          "panel": "card1",
+          "artifact": "final-pass/NH-099-apple-growth.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-21-F06",
+      "status": "illustrated_reference",
+      "references": [
+        {
+          "board": "NH-099",
+          "panel": "card2",
+          "artifact": "final-pass/NH-099-apple-growth.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-21-F07",
+      "status": "illustrated_reference",
+      "references": [
+        {
+          "board": "NH-099",
+          "panel": "card3",
+          "artifact": "final-pass/NH-099-apple-growth.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-21-F08",
+      "status": "derivative_reference",
+      "references": [
+        {
+          "board": "NH-045",
+          "panel": "left",
+          "artifact": "chunk-04/NH-045-compost-soil.png"
+        },
+        {
+          "board": "NH-066",
+          "panel": "left",
+          "artifact": "final-pass/NH-066-bedtime-terminal.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-21-F09",
+      "status": "derivative_reference",
+      "references": [
+        {
+          "board": "NH-045",
+          "panel": "left",
+          "artifact": "chunk-04/NH-045-compost-soil.png"
+        },
+        {
+          "board": "NH-047",
+          "panel": "card1",
+          "artifact": "chunk-04/NH-047-dry-wilt.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-22-F01",
+      "status": "derivative_reference",
+      "references": [
+        {
+          "board": "NH-044",
+          "panel": "card1",
+          "artifact": "chunk-04/NH-044-garden-growth.png"
+        },
+        {
+          "board": "NH-018",
+          "panel": "left",
+          "artifact": "chunk-02/NH-018-garden-water-harvest.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-22-F02",
+      "status": "illustrated_reference",
+      "references": [
+        {
+          "board": "NH-047",
+          "panel": "card3",
+          "artifact": "chunk-04/NH-047-dry-wilt.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-22-F03",
+      "status": "illustrated_reference",
+      "references": [
+        {
+          "board": "NH-047",
+          "panel": "card1",
+          "artifact": "chunk-04/NH-047-dry-wilt.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-22-F04",
+      "status": "illustrated_reference",
+      "references": [
+        {
+          "board": "NH-047",
+          "panel": "card2",
+          "artifact": "chunk-04/NH-047-dry-wilt.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-22-F05",
+      "status": "illustrated_reference",
+      "references": [
+        {
+          "board": "NH-018",
+          "panel": "right",
+          "artifact": "chunk-02/NH-018-garden-water-harvest.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-22-F06",
+      "status": "illustrated_reference",
+      "references": [
+        {
+          "board": "NH-060",
+          "panel": "right",
+          "artifact": "final-pass/NH-060-harvest-abandon.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-22-F07",
+      "status": "derivative_reference",
+      "references": [
+        {
+          "board": "NH-046",
+          "panel": "left",
+          "artifact": "chunk-04/NH-046-shelter-coverage.png"
+        },
+        {
+          "board": "NH-098",
+          "panel": "right",
+          "artifact": "final-pass/NH-098-rare-washout.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-22-F08",
+      "status": "derivative_reference",
+      "references": [
+        {
+          "board": "NH-046",
+          "panel": "left",
+          "artifact": "chunk-04/NH-046-shelter-coverage.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-23-F01",
+      "status": "derivative_reference",
+      "references": [
+        {
+          "board": "NH-048",
+          "panel": "left",
+          "artifact": "chunk-04/NH-048-chair-construct.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-23-F02",
+      "status": "derivative_reference",
+      "references": [
+        {
+          "board": "NH-048",
+          "panel": "right",
+          "artifact": "chunk-04/NH-048-chair-construct.png"
+        },
+        {
+          "board": "NH-049",
+          "panel": "card1",
+          "artifact": "chunk-04/NH-049-chair-states.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-23-F03",
+      "status": "derivative_reference",
+      "references": [
+        {
+          "board": "NH-046",
+          "panel": "left",
+          "artifact": "chunk-04/NH-046-shelter-coverage.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-23-F04",
+      "status": "derivative_reference",
+      "references": [
+        {
+          "board": "NH-046",
+          "panel": "right",
+          "artifact": "chunk-04/NH-046-shelter-coverage.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-23-F05",
+      "status": "derivative_reference",
+      "references": [
+        {
+          "board": "NH-050",
+          "panel": "all3",
+          "artifact": "chunk-04/NH-050-patch-expiry.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-23-F06",
+      "status": "derivative_reference",
+      "references": [
+        {
+          "board": "NH-049",
+          "panel": "card3",
+          "artifact": "chunk-04/NH-049-chair-states.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-23-F07",
+      "status": "derivative_reference",
+      "references": [
+        {
+          "board": "NH-043",
+          "panel": "left",
+          "artifact": "chunk-04/NH-043-window-responses.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-23-F08",
+      "status": "derivative_reference",
+      "references": [
+        {
+          "board": "NH-043",
+          "panel": "right",
+          "artifact": "chunk-04/NH-043-window-responses.png"
+        },
+        {
+          "board": "NH-062",
+          "panel": "right",
+          "artifact": "final-pass/NH-062-weather-targets.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-23-F09",
+      "status": "derivative_reference",
+      "references": [
+        {
+          "board": "NH-062",
+          "panel": "left",
+          "artifact": "final-pass/NH-062-weather-targets.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-23-F10",
+      "status": "derivative_reference",
+      "references": [
+        {
+          "board": "NH-042",
+          "panel": "right",
+          "artifact": "chunk-04/NH-042-outage-backup.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-24-F01",
+      "status": "illustrated_reference",
+      "references": [
+        {
+          "board": "NH-017",
+          "panel": "left",
+          "artifact": "chunk-02/NH-017-mailbox-delivery.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-24-F02",
+      "status": "derivative_reference",
+      "references": [
+        {
+          "board": "NH-017",
+          "panel": "right",
+          "artifact": "chunk-02/NH-017-mailbox-delivery.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-24-F03",
+      "status": "derivative_reference",
+      "references": [
+        {
+          "board": "NH-017",
+          "panel": "right",
+          "artifact": "chunk-02/NH-017-mailbox-delivery.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-24-F04",
+      "status": "illustrated_reference",
+      "references": [
+        {
+          "board": "NH-017",
+          "panel": "right",
+          "artifact": "chunk-02/NH-017-mailbox-delivery.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-25-F01",
+      "status": "illustrated_reference",
+      "references": [
+        {
+          "board": "NH-067",
+          "panel": "left",
+          "artifact": "final-pass/NH-067-doorway-camera.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-25-F02",
+      "status": "illustrated_reference",
+      "references": [
+        {
+          "board": "NH-067",
+          "panel": "right",
+          "artifact": "final-pass/NH-067-doorway-camera.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-25-F03",
+      "status": "derivative_reference",
+      "references": [
+        {
+          "board": "NH-067",
+          "panel": "both",
+          "artifact": "final-pass/NH-067-doorway-camera.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-25-F04",
+      "status": "derivative_reference",
+      "references": [
+        {
+          "board": "NH-067",
+          "panel": "both",
+          "artifact": "final-pass/NH-067-doorway-camera.png"
+        },
+        {
+          "board": "RP-01",
+          "panel": "plan",
+          "artifact": "../reference-pack/RP-01-home-bok-01-layout.svg"
+        }
+      ]
+    },
+    {
+      "id": "WS-25-F05",
+      "status": "derivative_reference",
+      "references": [
+        {
+          "board": "NH-067",
+          "panel": "both",
+          "artifact": "final-pass/NH-067-doorway-camera.png"
+        },
+        {
+          "board": "NH-089",
+          "panel": "right",
+          "artifact": "final-pass/NH-089-skip-reduced.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-26-F01",
+      "status": "derivative_reference",
+      "references": [
+        {
+          "board": "NH-066",
+          "panel": "left",
+          "artifact": "final-pass/NH-066-bedtime-terminal.png"
+        },
+        {
+          "board": "NH-061",
+          "panel": "card1",
+          "artifact": "final-pass/NH-061-baseline-recovery.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-26-F02",
+      "status": "derivative_reference",
+      "references": [
+        {
+          "board": "NH-007",
+          "panel": "right",
+          "artifact": "chunk-01/NH-007-saved-replay.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-26-F03",
+      "status": "derivative_reference",
+      "references": [
+        {
+          "board": "NH-055",
+          "panel": "left",
+          "artifact": "final-pass/NH-055-steak-choice.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-26-F04",
+      "status": "derivative_reference",
+      "references": [
+        {
+          "board": "NH-059",
+          "panel": "left",
+          "artifact": "final-pass/NH-059-plant-seeds.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-26-F05",
+      "status": "derivative_reference",
+      "references": [
+        {
+          "board": "NH-061",
+          "panel": "card2",
+          "artifact": "final-pass/NH-061-baseline-recovery.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-26-F06",
+      "status": "derivative_reference",
+      "references": [
+        {
+          "board": "NH-066",
+          "panel": "left",
+          "artifact": "final-pass/NH-066-bedtime-terminal.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-26-F07",
+      "status": "derivative_reference",
+      "references": [
+        {
+          "board": "NH-066",
+          "panel": "both",
+          "artifact": "final-pass/NH-066-bedtime-terminal.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-26-F08",
+      "status": "derivative_reference",
+      "references": [
+        {
+          "board": "NH-066",
+          "panel": "left",
+          "artifact": "final-pass/NH-066-bedtime-terminal.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-26-F09",
+      "status": "illustrated_reference",
+      "references": [
+        {
+          "board": "NH-066",
+          "panel": "left",
+          "artifact": "final-pass/NH-066-bedtime-terminal.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-26-F10",
+      "status": "illustrated_reference",
+      "references": [
+        {
+          "board": "NH-066",
+          "panel": "right",
+          "artifact": "final-pass/NH-066-bedtime-terminal.png"
+        }
+      ]
+    },
+    {
+      "id": "WS-26-F11",
+      "status": "derivative_reference",
+      "references": [
+        {
+          "board": "NH-066",
+          "panel": "both",
+          "artifact": "final-pass/NH-066-bedtime-terminal.png"
+        },
+        {
+          "board": "NH-065",
+          "panel": "right",
+          "artifact": "final-pass/NH-065-death-quiet.png"
+        }
+      ]
+    }
+  ]
+}

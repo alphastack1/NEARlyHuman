@@ -1,0 +1,374 @@
+{
+  "revision": "2026-10-31",
+  "generation": "Built-in image-generation tool",
+  "qualityPolicy": "Appearance/placement guides; minor text/icon artifacts recorded without regeneration",
+  "counts": {
+    "boards": 15,
+    "uiScenePanels": 20,
+    "itemObjectPanels": 15,
+    "totalPanels": 35,
+    "uniqueUIReferences": 17
+  },
+  "boards": [
+    {
+      "id": "NH-010",
+      "slug": "failed-uncertain",
+      "title": "Confirmed failure and uncertain save",
+      "ids": [
+        "UI-06J",
+        "UI-06I"
+      ],
+      "names": [
+        "Failed attempt, lock released",
+        "Final-save outcome uncertain"
+      ],
+      "alt": "Two recovery overlays distinguish a confirmed failed attempt with a fresh Try Again path from an uncertain final save that must be checked before another request.",
+      "use": "Give confirmed Failed a fresh-request path only after the chain records the failure and releases the lock. Keep the prior save, selected supplies and historical transaction inspectable.",
+      "boundary": "Unknown is not Failed. Checking an existing final save must not offer a paid retry, reroll, refund, deletion, or prematurely enabled Start day. Read and reconcile the same request and transaction.",
+      "note": "Confirmed Failed/released permits a fresh request; uncertain save rechecks the existing one. Back must preserve the same canonical eligibility gate.",
+      "file": "NH-010-failed-uncertain.png",
+      "width": 1774,
+      "height": 887,
+      "sha256": "d9ffa7ae2a1fcdb4aaabaaf2378cf77c1a4b698d71cbcdaa4b0814857310f604",
+      "panels": 2,
+      "status": "visual_reference_reviewed"
+    },
+    {
+      "id": "NH-011",
+      "slug": "expiry-pending",
+      "title": "Expiry available and release pending",
+      "ids": [
+        "UI-11F-EXPIRED",
+        "UI-11F-PENDING"
+      ],
+      "names": [
+        "Deadline passed, still locked",
+        "Release broadcast or uncertain"
+      ],
+      "alt": "The first overlay offers a gas-only expired-request release; the second tracks its pending or uncertain transaction without unlocking the token or starting another day.",
+      "use": "Expiry becomes callable strictly after the canonical stored deadline. Release expired request is an exceptional owner transaction with network gas only, and must remain reachable when the job backend is unavailable.",
+      "boundary": "Passing a clock does not release the pending lock. After broadcast, track the same release hash and canonical request; disable duplicate release and fresh day submission until a terminal transition is confirmed.",
+      "note": "Expiry available and release pending both remain locked. Only the first opens gas-only recovery approval; rechecking the submitted release is read-only.",
+      "file": "NH-011-expiry-pending.png",
+      "width": 1774,
+      "height": 887,
+      "sha256": "c64e2cf67f9da850bbb91f500c0c931d70833a9277cdfdf12c8a591db3e3f6a6",
+      "panels": 2,
+      "status": "visual_reference_reviewed"
+    },
+    {
+      "id": "NH-012",
+      "slug": "released-replay-missing",
+      "title": "Confirmed release and unavailable replay",
+      "ids": [
+        "UI-11F-RELEASED",
+        "UI-11D-LATEST"
+      ],
+      "names": [
+        "Request released, last save unchanged",
+        "Latest saved replay unavailable"
+      ],
+      "alt": "One overlay confirms an expired request was released without changing the last biological save; the other preserves a saved outcome while offering replay retrieval or compact-summary fallback.",
+      "use": "A confirmed release returns to the preserved save and a fresh quote/request when eligible. A missing latest packet uses the compact onchain outcome to reach care, memorial or trial completion.",
+      "boundary": "Release does not refund the old attempt or automatically charge for a new one. Missing presentation bytes do not erase the NFT/save or justify another AI call, signature, payment or reroll.",
+      "note": "Release preserves LV03/NEXT04; missing latest day-three replay remains LV03/SAVED03 with a saved-outcome exit. Technical packet wording can be simplified in the build.",
+      "file": "NH-012-released-replay-missing.png",
+      "width": 1774,
+      "height": 887,
+      "sha256": "f23621144058cdaf92fe09edde5fa2b8740388fd896106d9a310efaae72d20a4",
+      "panels": 2,
+      "status": "visual_reference_reviewed"
+    },
+    {
+      "id": "NH-013",
+      "slug": "ownership-account",
+      "title": "Ownership loss and account reconciliation",
+      "ids": [
+        "UI-11E",
+        "UI-11G"
+      ],
+      "names": [
+        "Selected token has a new owner",
+        "Wallet account or network changed"
+      ],
+      "alt": "A selected rooster becomes read-only after ownership changes, while the paired account-change overlay gates actions and checks the new wallet context.",
+      "use": "Remove future care actions immediately when ownership is lost. Account/network changes gate stale actions before rechecking the selected token and supported chain. Keep accepted jobs attached to their original token.",
+      "boundary": "A draft belongs to its account/token/network and must never be copied into another rooster. Loaded public replay data need not be erased, but it cannot authorize new actions for an old owner.",
+      "note": "Lost ownership is read-only old public state; changed account is neutral checking state. No stale care actions carry into a different account.",
+      "file": "NH-013-ownership-account.png",
+      "width": 1774,
+      "height": 887,
+      "sha256": "23d2d569e257e21ff2374ecc8d6189b1b86bba72453dd966a32bac9cb3d1dfc2",
+      "panels": 2,
+      "status": "visual_reference_reviewed"
+    },
+    {
+      "id": "NH-014",
+      "slug": "summary-memorial",
+      "title": "Living summary and retained memorial",
+      "ids": [
+        "UI-09A",
+        "UI-10B"
+      ],
+      "names": [
+        "Living saved-day summary",
+        "Dead retained collectible"
+      ],
+      "alt": "A living summary presents the survived level and next care; a retained-token memorial shows final level, terminal biological day and cause without a continue-play action.",
+      "use": "Summary shows the current saved needs, survived-day level and consequential events, with every actionable warning preserved. Memorial keeps identity, final cause/day and life summary available.",
+      "boundary": "A fatal biological day increments committed days but not survived-day level. Death retains the NFT and ends play; there is no burn, resurrection, salvage, inheritance or later living recovery.",
+      "note": "Correct saved LV04 versus terminal LV05/day6, retained NFT and empty bed. The Nutrition change row uses a heart rather than fork; use the written label/correct icon in implementation.",
+      "file": "NH-014-summary-memorial.png",
+      "width": 1774,
+      "height": 887,
+      "sha256": "a76cdae70f2599b2d6635312e532798695831288c33247848a5c3c549e732af6",
+      "panels": 2,
+      "status": "visual_reference_reviewed"
+    },
+    {
+      "id": "NH-015",
+      "slug": "trial-living-fatal",
+      "title": "Living trial completion and fatal third day",
+      "ids": [
+        "UI-10D",
+        "UI-10E"
+      ],
+      "names": [
+        "Alive at three committed testnet days",
+        "Dead on third committed testnet day"
+      ],
+      "alt": "The paired testnet outcomes distinguish an alive level-three Trial complete token from a dead level-two token whose third committed day was fatal.",
+      "use": "Living testnet trial completion means the three committed-day allowance ended while the rooster is alive. A fatal third committed result presents the memorial/dead state first, with trial exhaustion as secondary access information.",
+      "boundary": "Failures do not consume committed trial days, although operating spend remains separate. No fourth-day testnet Prepare, fabricated death, guaranteed mainnet availability, or token-migration promise is allowed.",
+      "note": "Living trial LV03/day3 is distinct from dead LV02/day3. The alive sentence is sufficient even without a separate ALIVE badge. No fourth trial day or migration implied.",
+      "file": "NH-015-trial-living-fatal.png",
+      "width": 1774,
+      "height": 887,
+      "sha256": "f39e1473e02f895708ba16052d598587999bb9e7ee9ce06753aeef90595b690a",
+      "panels": 2,
+      "status": "visual_reference_reviewed"
+    },
+    {
+      "id": "NH-016",
+      "slug": "critical-return",
+      "title": "Critical next-game-day care and unchanged return",
+      "ids": [
+        "UI-09B",
+        "UI-09C"
+      ],
+      "names": [
+        "Urgent saved condition bundle",
+        "Return after real-world absence"
+      ],
+      "alt": "A critical summary exposes exact biological due days and care priorities; its paired return view preserves the same save after a long real-world absence.",
+      "use": "Place every urgent condition and its exact due game day before decorative highlights. Suggest useful supply classes without promising Jev will choose them. A long absence preserves biological state, plot progress and output lifetimes.",
+      "boundary": "Game-day deadlines are not wall-clock neglect timers. Returning later does not apply new damage, resource loss, fees, disease progression, growth, output aging or a new committed day.",
+      "note": "Both panels keep LV04/SAVED04/NEXT05, Serious wound and Infection due game day5 bedtime. Absence changes none of the saved state or deadlines.",
+      "file": "NH-016-critical-return.png",
+      "width": 1774,
+      "height": 887,
+      "sha256": "6239a5e1653499e8a9231bb5746f9f9f1b5b273cee19d9ed6d3edf572797407b",
+      "panels": 2,
+      "status": "visual_reference_reviewed"
+    },
+    {
+      "id": "NH-017",
+      "slug": "mailbox-delivery",
+      "title": "Empty mailbox and three-unit collection",
+      "ids": [
+        "UI-08A",
+        "WS-24"
+      ],
+      "names": [
+        "Zero new delivery",
+        "Three distinct delivered types"
+      ],
+      "alt": "BOK inspects an empty mailbox and then collects a parcel with water, bread and bandage in the same connected entrance landing.",
+      "use": "The deterministic mailbox prelude reflects the authorized zero-to-three additions. Empty delivery means use stored supplies; it never creates a fake parcel or starter gift. Collection leads toward the household stores.",
+      "boundary": "The right fixture has one water, one bread and one white bandage. These are three distinct whole units, credited once in provisional day state, not three boxes or live player commands. Replay does not credit them again.",
+      "note": "Zero delivery has an empty mailbox; the other example collects three distinct authorized inputs. No fake gift, repeated credit or live command.",
+      "file": "NH-017-mailbox-delivery.png",
+      "width": 1774,
+      "height": 887,
+      "sha256": "818b9cb0ecfe20e45c91c178af7c18b1069ca8c4d0549c1679236e3fb39b83c5",
+      "panels": 2,
+      "status": "visual_reference_reviewed"
+    },
+    {
+      "id": "NH-018",
+      "slug": "garden-water-harvest",
+      "title": "Watering a plot and a later rose harvest",
+      "ids": [
+        "UI-08D",
+        "G02 / G05"
+      ],
+      "names": [
+        "Day-four watering",
+        "Later day-five harvest"
+      ],
+      "alt": "Two small plots show a rose sprout being watered without instant growth, followed on a later game day by a harvested rose leaving the first plot empty while the apple planting still grows.",
+      "use": "Keep exactly two reachable plots with distinct targets and open approaches. Watering consumes one water and sets one plot moisture to two without immediately growing or harvesting it. A later mature rose harvest consumes the planting for its immediate reward.",
+      "boundary": "The day-four snapshot is level three; the later day-five snapshot is level four. The apple plot remains a separate growing plant. Harvest creates no stored fruit/rose catalogue type, third plot, tall tree or farm expansion.",
+      "note": "Exactly two plots; watering and a later harvest are different recorded days. Moisture/growth values and crop progression follow the written rules.",
+      "file": "NH-018-garden-water-harvest.png",
+      "width": 1774,
+      "height": 887,
+      "sha256": "1d5958de88c0a5bbddfa7b941f8208502cc7868731d7ae262536c40cb080308d",
+      "panels": 2,
+      "status": "visual_reference_reviewed"
+    },
+    {
+      "id": "NH-019",
+      "slug": "wash-leisure",
+      "title": "Soap body wash and crafted-chair leisure",
+      "ids": [
+        "UI-08E",
+        "H07 / H04"
+      ],
+      "names": [
+        "Body contamination cleanup",
+        "One optional chair, base leisure retained"
+      ],
+      "alt": "BOK uses one soap at a dry wash basin, paired with the same rooster perched on a crafted wooden chair in a living area that retains a separate base leisure seat.",
+      "use": "Body wash consumes one soap and clears the named body contamination. The dry tap does not produce a water unit. Chair leisure uses the one optional chair while the always-available base leisure object remains present.",
+      "boundary": "Soap does not cure established disease. The chair does not create currency, permanent equipment or live player furniture commands; it improves the bounded leisure variant and retains its finite life. Keep walking routes and active contact space clear.",
+      "note": "Soap body-cleaning is different from established disease treatment. Crafted-chair leisure shares the existing leisure allowance; no furniture editor or player control.",
+      "file": "NH-019-wash-leisure.png",
+      "width": 1774,
+      "height": 887,
+      "sha256": "320a419d99180be28f1a8d43ad06a756870d20910dca880f48e4c7f247179374",
+      "panels": 2,
+      "status": "visual_reference_reviewed"
+    },
+    {
+      "id": "NH-020",
+      "slug": "water-milk-bread",
+      "title": "Water, milk and bread",
+      "items": [
+        "water",
+        "milk",
+        "bread"
+      ],
+      "ids": [
+        "AS-06",
+        "ITEM-water",
+        "ITEM-milk",
+        "ITEM-bread"
+      ],
+      "alt": "Water, milk and bread in three pixel-art object/usage cards.",
+      "use": "Three simple item guides per board: icon identity, relative scale and usage-label placement.",
+      "boundary": "Reference art only. Full detail UI reuses the water-detail composition and the written catalog rules. These are not transparent shipping assets or three full app pages.",
+      "note": "Distinct bottles/food silhouettes; approved direct, meal and contextual uses.",
+      "file": "NH-020-water-milk-bread.png",
+      "width": 1774,
+      "height": 887,
+      "sha256": "f81a81547dbd31e62e8a1835d18404b1f0c2c75c782f9855008431edb8198efd",
+      "panels": 3,
+      "status": "visual_reference_reviewed"
+    },
+    {
+      "id": "NH-021",
+      "slug": "steak-medicine-coffee",
+      "title": "Steak, medicine and coffee",
+      "items": [
+        "steak",
+        "medicine",
+        "coffee"
+      ],
+      "ids": [
+        "AS-06",
+        "ITEM-steak",
+        "ITEM-medicine",
+        "ITEM-coffee"
+      ],
+      "alt": "Steak, medicine and coffee in three pixel-art object/usage cards.",
+      "use": "Three simple item guides per board: icon identity, relative scale and usage-label placement.",
+      "boundary": "Reference art only. Full detail UI reuses the water-detail composition and the written catalog rules. These are not transparent shipping assets or three full app pages.",
+      "note": "Red medicine case remains distinct from bandage; medicine targets Illness/Infection, coffee can cause Jitters.",
+      "file": "NH-021-steak-medicine-coffee.png",
+      "width": 1774,
+      "height": 887,
+      "sha256": "02c960698cebb4c40567586cc1b80f6b20368231740777406e5918a60f58d19c",
+      "panels": 3,
+      "status": "visual_reference_reviewed"
+    },
+    {
+      "id": "NH-022",
+      "slug": "wood-toolkit-umbrella",
+      "title": "Wood, Hammer & Nails and umbrella",
+      "items": [
+        "wood",
+        "toolkit",
+        "umbrella"
+      ],
+      "ids": [
+        "AS-06",
+        "ITEM-wood",
+        "ITEM-toolkit",
+        "ITEM-umbrella"
+      ],
+      "alt": "Wood, Hammer & Nails and umbrella in three pixel-art object/usage cards.",
+      "use": "Three simple item guides per board: icon identity, relative scale and usage-label placement.",
+      "boundary": "Reference art only. Full detail UI reuses the water-detail composition and the written catalog rules. These are not transparent shipping assets or three full app pages.",
+      "note": "Single-use materials/contextual outputs; toolkit is consumed, umbrella roles have separate targets.",
+      "file": "NH-022-wood-toolkit-umbrella.png",
+      "width": 1774,
+      "height": 887,
+      "sha256": "b2e82077c2768e4470f1cbf242e6e068ce2a9903ab31175bb9b562eb58fa8142",
+      "panels": 3,
+      "status": "visual_reference_reviewed"
+    },
+    {
+      "id": "NH-023",
+      "slug": "seeds-matches",
+      "title": "Rose seeds, apple seeds and matches",
+      "items": [
+        "rose_seeds",
+        "apple_seeds",
+        "matches"
+      ],
+      "ids": [
+        "AS-06",
+        "ITEM-rose_seeds",
+        "ITEM-apple_seeds",
+        "ITEM-matches"
+      ],
+      "alt": "Rose seeds, apple seeds and matches in three pixel-art object/usage cards.",
+      "use": "Three simple item guides per board: icon identity, relative scale and usage-label placement.",
+      "boundary": "Reference art only. Full detail UI reuses the water-detail composition and the written catalog rules. These are not transparent shipping assets or three full app pages.",
+      "note": "Different seed symbols and matchbox; seeds plant or divert pests, matches support backup heat with wood.",
+      "file": "NH-023-seeds-matches.png",
+      "width": 1774,
+      "height": 887,
+      "sha256": "634fd5b309a5a7249a2f11b635bd40514fad7d019d37532ce7c745ef6805ec17",
+      "panels": 3,
+      "status": "visual_reference_reviewed"
+    },
+    {
+      "id": "NH-024",
+      "slug": "soap-bandage-compost",
+      "title": "Soap, bandage and compost",
+      "items": [
+        "soap",
+        "bandage",
+        "compost"
+      ],
+      "ids": [
+        "AS-06",
+        "ITEM-soap",
+        "ITEM-bandage",
+        "ITEM-compost"
+      ],
+      "alt": "Soap, bandage and compost in three pixel-art object/usage cards.",
+      "use": "Three simple item guides per board: icon identity, relative scale and usage-label placement.",
+      "boundary": "Reference art only. Full detail UI reuses the water-detail composition and the written catalog rules. These are not transparent shipping assets or three full app pages.",
+      "note": "Soap handles mess/contamination; bandage handles Wound; compost fertilizes OR restores soil.",
+      "file": "NH-024-soap-bandage-compost.png",
+      "width": 1774,
+      "height": 887,
+      "sha256": "584f2623b7bc3c02510992d85798e84b7efc0480d97a65b20549a5f3f33af097",
+      "panels": 3,
+      "status": "visual_reference_reviewed"
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+# Temporary working files; safe to clear after verified outputs are promoted.
+/TEMP/
+/node_modules/
+/dist/
+/.netlify/
+/.env
+/.env.*
+!/.env.example
+*.log
+/contracts/out/
+/contracts/cache/

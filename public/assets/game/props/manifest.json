@@ -1,0 +1,164 @@
+[
+  {
+    "name": "fridge",
+    "source": "kitchen.png",
+    "object": 0,
+    "sourceBounds": [
+      286,
+      54,
+      597,
+      663
+    ],
+    "width": 30,
+    "height": 44,
+    "anchor": "bottom-center",
+    "content": [
+      22,
+      44
+    ]
+  },
+  {
+    "name": "stove",
+    "source": "kitchen.png",
+    "object": 1,
+    "sourceBounds": [
+      905,
+      181,
+      1265,
+      663
+    ],
+    "width": 32,
+    "height": 34,
+    "anchor": "bottom-center",
+    "content": [
+      25,
+      34
+    ]
+  },
+  {
+    "name": "prep",
+    "source": "kitchen.png",
+    "object": 2,
+    "sourceBounds": [
+      1496,
+      283,
+      2022,
+      668
+    ],
+    "width": 34,
+    "height": 28,
+    "anchor": "bottom-center",
+    "content": [
+      34,
+      25
+    ]
+  },
+  {
+    "name": "bed",
+    "source": "bedroom.png",
+    "object": 0,
+    "sourceBounds": [
+      284,
+      69,
+      687,
+      670
+    ],
+    "width": 44,
+    "height": 66,
+    "anchor": "bottom-center",
+    "content": [
+      44,
+      66
+    ]
+  },
+  {
+    "name": "cupboard",
+    "source": "bedroom.png",
+    "object": 1,
+    "sourceBounds": [
+      939,
+      139,
+      1234,
+      647
+    ],
+    "width": 28,
+    "height": 44,
+    "anchor": "bottom-center",
+    "content": [
+      26,
+      44
+    ]
+  },
+  {
+    "name": "plant",
+    "source": "bedroom.png",
+    "object": 2,
+    "sourceBounds": [
+      1563,
+      275,
+      1888,
+      658
+    ],
+    "width": 26,
+    "height": 31,
+    "anchor": "bottom-center",
+    "content": [
+      26,
+      31
+    ]
+  },
+  {
+    "name": "table",
+    "source": "living.png",
+    "object": 0,
+    "sourceBounds": [
+      126,
+      188,
+      780,
+      625
+    ],
+    "width": 52,
+    "height": 36,
+    "anchor": "bottom-center",
+    "content": [
+      52,
+      35
+    ]
+  },
+  {
+    "name": "chair",
+    "source": "living.png",
+    "object": 1,
+    "sourceBounds": [
+      1019,
+      181,
+      1291,
+      618
+    ],
+    "width": 18,
+    "height": 25,
+    "anchor": "bottom-center",
+    "content": [
+      16,
+      25
+    ]
+  },
+  {
+    "name": "baseSeat",
+    "source": "living.png",
+    "object": 2,
+    "sourceBounds": [
+      1593,
+      166,
+      2043,
+      621
+    ],
+    "width": 24,
+    "height": 28,
+    "anchor": "bottom-center",
+    "content": [
+      24,
+      24
+    ]
+  }
+]
