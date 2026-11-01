@@ -124,7 +124,8 @@ export async function readAcceptedTransaction(hash: Hex, player?: Address) {
   if (!accepted || player && accepted.player.toLowerCase() !== player.toLowerCase()) throw new ServiceError('This request belongs to another wallet.', 'ownership', 403);
   const request = await readRequest(accepted.requestId);
   if (request.status === 0 || request.player.toLowerCase() !== accepted.player.toLowerCase()) throw new ServiceError('Checking this request. Please try again.', 'checking', 409);
-  return { ...accepted, request, ownerTx: receipt.transactionHash };
+  const transaction=await client.getTransaction({hash:receipt.transactionHash});
+  return { ...accepted, request, ownerTx: receipt.transactionHash, ownerNonce:transaction.from.toLowerCase()===accepted.player.toLowerCase()?transaction.nonce:undefined };
 }
 export async function chainOutcome(value: string): Promise<SavedOutcome> {
   const tokenId = checkedToken(value), rooster = await readRooster(tokenId);

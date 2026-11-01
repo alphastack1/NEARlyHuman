@@ -7,6 +7,9 @@ import type { QuoteView } from '../src/app/api';
 import { checkedAddress, checkedToken, connection, pinnedRead, readRawRooster, roosterView, serviceAccount, ServiceError, verifyConnection } from './chain';
 import { serverConfig } from './config';
 import { storage, update } from './storage';
+import { estimateError } from './estimate-error';
+import { recoverMissingAcceptance } from './acceptance';
+import type { JobControl } from './jobs';
 
 export const DECISION_PARAMETERS={incidentRate:.45,blackSwanRate:.00025} as const;
 export const DECISION_CONFIG = keccak256(toHex('NEARlyHuman:rules1:typesafe/jev-1.13:shortlist1:8nominal:24maxUrgent:ambient-v1:14000bytes:72sends:3perstep:incident.45:blackSwan.00025'));
@@ -34,13 +37,20 @@ export function reserveInLedger(ledger:AdmissionLedger, candidate:Reservation, b
   ledger.holds[candidate.id]=candidate;return candidate;
 }
 
-export async function reconcileAdmission() {
+export async function reconcileAdmission(player?:Address,requestedScope?:string) {
   const current=await storage().get<AdmissionLedger>(ledgerKey);if(!current)return;
   const {client,address,chain}=connection();const block=await client.getBlock();
   const expired=Object.values(current.value.holds).filter(h=>h.status==='held'&&h.expiresAt<Number(block.timestamp)&&(!h.chainId||h.chainId===chain.id)&&(!h.collection||equal(h.collection,address)));
   const unused:string[]=[];
   for(const h of expired){const used=await pinnedRead(()=>client.readContract({address,abi:nearlyHumanAbi,functionName:'usedPermits',args:[h.id],blockNumber:block.number}));if(!used)unused.push(h.id);}
   if(unused.length)await update(ledgerKey,initialLedger,ledger=>{for(const id of unused){const h=ledger.holds[id];if(h?.status==='held'&&h.expiresAt<Number(block.timestamp))h.status='released';}return ledger;});
+  for(const h of Object.values(current.value.holds)){
+    if(!h.requestId||h.status==='released'||h.status==='held'||player&&!equal(h.player,player)||h.chainId&&h.chainId!==chain.id||h.collection&&!equal(h.collection,address))continue;
+    const job=await storage().get<JobControl>('jobs/'+h.requestId);if(!job)continue;
+    const recovered=await recoverMissingAcceptance(job.value,h,block);
+    if(recovered.permitId===h.id&&recovered.phase==='unaccepted'&&recovered.retrySafe)await finishReservation(h.id,recovered.spentMicroUSD);
+    else if(requestedScope===h.scope&&recovered.orphanedAcceptance)throw new ServiceError('Checking an earlier wallet request. No new payment is needed.','checking',409);
+  }
 }
 
 export async function issueQuote(input:QuoteInput, playerValue:string):Promise<QuoteView> {
@@ -61,14 +71,14 @@ export async function issueQuote(input:QuoteInput, playerValue:string):Promise<Q
     try{validateDelivery(roosterView(tokenId,raw,owner).state,input.delivery||[]);delivery=encodeDelivery((input.delivery||[]).map(id=>ITEM_IDS.indexOf(id as typeof ITEM_IDS[number])));}catch(e){throw new ServiceError((e as Error).message,'delivery');}
     baseRevision=raw.revision;
   }
-  await reconcileAdmission();
+  const scope=`${chain.id}:${address.toLowerCase()}:${player.toLowerCase()}:${input.operation}:${tokenId}:${baseRevision}`;
+  await reconcileAdmission(player,scope);
   const [block,multiplier,window,mintPrice,gasPrice,balance,signer,relay]=await Promise.all([
     client.getBlock(),client.readContract({address,abi:nearlyHumanAbi,functionName:'gasMultiplier'}),client.readContract({address,abi:nearlyHumanAbi,functionName:'requestWindow'}),
     input.operation==='mint'?client.readContract({address,abi:nearlyHumanAbi,functionName:'mintPrice'}):Promise.resolve(0n),client.getGasPrice(),client.getBalance({address:account.address}),
     client.readContract({address,abi:nearlyHumanAbi,functionName:'quoteSigner'}),client.readContract({address,abi:nearlyHumanAbi,functionName:'relayer'}),
   ]);
   if(!equal(signer,account.address)||!equal(relay,account.address))throw new ServiceError('Preparation is resting. Try again shortly.','capacity',503);
-  const scope=`${chain.id}:${address.toLowerCase()}:${player.toLowerCase()}:${input.operation}:${tokenId}:${baseRevision}`;
   const draft=keccak256(toHex(JSON.stringify({name,stats,delivery})));const id=toHex(randomBytes(32));
   const candidate:Reservation={id,player,scope,chainId:chain.id,collection:address,expiresAt:Number(block.timestamp)+120,createdAt:Date.now(),status:'held',reserveMicroUSD:Math.max(60_000,cfg.attemptReserveMicroUSD),gasReserve:(gasPrice*2n*1_000_000n).toString()};
   const ledger=await update(ledgerKey,initialLedger,l=>{reserveInLedger(l,candidate,{funded:cfg.fundedMicroUSD,wallet:cfg.maxWalletAttempts,global:cfg.maxGlobalAttempts,concurrency:cfg.maxConcurrentJobs,gas:balance});return l;});
@@ -82,7 +92,7 @@ export async function issueQuote(input:QuoteInput, playerValue:string):Promise<Q
   let signature=await account.signTypedData(permitTypedData(chain.id,address,permit));
   const transactionData=()=>input.operation==='mint'?encodeFunctionData({abi:nearlyHumanAbi,functionName:'mint',args:[name,stats.body,stats.wits,stats.spirit,permit,signature]}):encodeFunctionData({abi:nearlyHumanAbi,functionName:'requestDay',args:[tokenId,permit,signature]});
   let estimate:bigint;
-  try{estimate=await client.estimateGas({account:player,to:address,data:transactionData(),value:permitValue(permit)});}catch{throw new ServiceError('Check your wallet balance, then try again.','estimate',409);}
+  try{estimate=await client.estimateGas({account:player,to:address,data:transactionData(),value:permitValue(permit)});}catch(error){throw estimateError(error);}
   permit.networkFee=(estimate*125n/100n+20_000n)*gasPrice;
   permit.processingFee=permit.networkFee*BigInt(multiplier-1);
   signature=await account.signTypedData(permitTypedData(chain.id,address,permit));

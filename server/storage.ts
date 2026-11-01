@@ -15,7 +15,9 @@ export interface DurableStore {
 export class StoreConflict extends Error { constructor() { super('The request is busy. Please check again.'); } }
 
 class CloudStore implements DurableStore {
-  private store = getStore({ name: 'nearlyhuman-v1', consistency: 'strong' });
+  // The function runtime supplies a fresh, short-lived Blobs token each invocation.
+  // A warm module may outlive that token; resolve the invocation context per operation.
+  private get store() { return getStore({ name: 'nearlyhuman-v1', consistency: 'strong' }); }
   async get<T>(key: string): Promise<Stored<T> | null> {
     const r = await this.store.getWithMetadata(key, { type: 'json', consistency: 'strong' });
     if (!r) return null;

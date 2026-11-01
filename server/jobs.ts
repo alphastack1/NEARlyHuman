@@ -10,6 +10,7 @@ import { canonicalRequest, chainOutcome, checkedAddress, checkedRequest, checked
 import { isHosted, serverConfig } from './config';
 import { buildDecision, infer, InferenceError, type Exchange } from './jev';
 import { storage, StoreConflict, update } from './storage';
+import { mayReplaceRetiredAcceptance, recoverMissingAcceptance } from './acceptance';
 
 interface Answer { inputHash:string; choice:ModelChoice; exchange:string }
 interface SlotAllowance { count:number; answer?:Answer; inputs:string[]; outputs:string[] }
@@ -22,6 +23,9 @@ export interface JobControl {
   sent:number; allowances:Record<string,SlotAllowance>; spentMicroUSD:number;
   packet?:string; commitment?:Hex; finalTx?:Hex; journal?:RelayJournal; journals?:RelayJournal[];
   latestChoice?:Receipt['choice']; failure?:string; exceptionKey?:string; updatedAt:number; createdAt:number; terminalAt?:number; compactedAt?:number;
+  canonicalResultHash?:Hex; priorTerminalPhase?:'ready'|'failed'|'expired';
+  operation?:'mint'|'day';permitExpiresAt?:number;ownerNonce?:number;retrySafe?:boolean;orphanedAcceptance?:boolean;acceptanceConflict?:boolean;
+  unacceptedProof?:{blockNumber:string;blockHash:Hex;timestamp:number;confirmedNonce?:number};
 }
 interface CheckpointBlob { context:DayContext; receipt:Receipt }
 interface ReplayPacket { version:1; requestId:Hex; inputDigest:Hex; seed:Hex; decisionConfig:Hex; result:DayResult; diagnostics:string[] }
@@ -32,12 +36,23 @@ function networkNamespace(){const {chain,address}=connection();return `${chain.i
 const replayKey=(token:string)=>`replays/${networkNamespace()}/${token}`;
 const sameNetwork=(c:JobControl)=>{const {chain,address}=connection();return c.chainId===chain.id&&equal(c.collection,address);};
 const leaseMs=90_000, sendReserve=588, maxSends=72;
-const isTerminal=(phase:JobView['phase'])=>['ready','failed','expired'].includes(phase);
+const isTerminal=(phase:JobView['phase'])=>['ready','failed','expired','unaccepted'].includes(phase);
 const equal=(a:string,b:string)=>a.toLowerCase()===b.toLowerCase();
 class HandOff extends Error {}
 class LeaseLost extends Error {}
 class CanonicalChanged extends Error {}
 const digest=(value:unknown)=>keccak256(toHex(JSON.stringify(value)));
+type CanonicalRequest=Awaited<ReturnType<typeof canonicalRequest>>;
+function sameRequestContext(c:JobControl,{request:r}:CanonicalRequest) {
+  return r.status!==0&&r.tokenId===BigInt(c.tokenId)&&equal(r.player,c.player)&&r.permitId===c.permitId&&r.inputDigest===c.inputDigest
+    &&toHex(r.seed,{size:32})===c.seed&&r.baseRevision===c.baseRevision&&r.day===c.day&&r.delivery===c.delivery
+    &&Number(r.deadline)===c.deadline&&r.rulesVersion===(c.rulesVersion??1)&&r.decisionConfig===c.decisionConfig;
+}
+function pristineAcceptance(c:JobControl) {
+  return c.sent===0&&c.spentMicroUSD===0&&c.slot===0&&c.decisions===0&&!c.checkpoint&&c.receiptKeys.length===0&&Object.keys(c.allowances).length===0
+    &&!c.packet&&!c.commitment&&!c.failure&&!c.journal&&!c.journals?.length&&!c.finalTx&&!c.priorTerminalPhase&&!c.latestChoice
+    &&!isTerminal(c.phase)&&c.phase!=='recording_failure';
+}
 function internalException(error:unknown) {
   const cfg=serverConfig();const redact=(value:string)=>[cfg.nearKey,cfg.relayKey,cfg.signingSecret,process.env.NEARLYHUMAN_QA_OWNER_KEY].filter((v):v is string=>!!v).reduce((text,key)=>text.replaceAll(key,'[redacted]'),value);
   const e=error as Error&{code?:string};
@@ -61,26 +76,85 @@ export function reserveSend(control:JobControl,slot:number,inputKey:string) {
 export async function acceptTransaction(hashValue:Hex,playerValue:string) {
   const player=checkedAddress(playerValue),accepted=await readAcceptedTransaction(checkedRequest(hashValue),player);
   const existing=await storage().get<JobControl>(jobKey(accepted.requestId));
-  if(existing){if(!equal(existing.value.player,player))throw new ServiceError('This request belongs to another wallet.','ownership',403);if(!isTerminal(existing.value.phase))await dispatchJob(accepted.requestId);return {requestId:accepted.requestId,tokenId:accepted.tokenId.toString()};}
+  let retired:JobControl|undefined;
+  if(existing){
+    if(existing.value.permitId===accepted.request.permitId){
+      if(!equal(existing.value.player,player))throw new ServiceError('This request belongs to another wallet.','ownership',403);
+      const canon=await canonicalRequest(accepted.requestId),r=canon.request;
+      if(r.inputDigest!==accepted.inputDigest||r.permitId!==accepted.request.permitId)throw new ServiceError('Checking the accepted wallet request.','checking',409);
+      if(!sameRequestContext(existing.value,canon)||existing.value.acceptedHash!==accepted.blockHash){
+        const reservation=await acceptReservation(r.permitId,accepted.requestId,r.player);
+        await update<JobControl>(jobKey(accepted.requestId),()=>existing.value,c=>{
+          if(c.permitId!==r.permitId)throw new ServiceError('Checking the accepted wallet request.','checking',409);
+          if(sameRequestContext(c,canon)&&c.acceptedHash===accepted.blockHash)return c;
+          // The same owner transaction can be mined on a different fork with a new
+          // birth seed/deadline. Only untouched work can adopt that new context.
+          c.generation++;delete c.lease;
+          if(r.status===1&&canon.raw&&canon.owner&&equal(canon.owner,player)&&reservation.status==='accepted'&&pristineAcceptance(c)){
+            Object.assign(c,{inputDigest:r.inputDigest,seed:toHex(r.seed,{size:32}),decisionConfig:r.decisionConfig,rulesVersion:r.rulesVersion,deadline:Number(r.deadline),baseRevision:r.baseRevision,day:r.day,delivery:r.delivery,
+              ownerTx:accepted.ownerTx,ownerNonce:accepted.ownerNonce,acceptedBlock:accepted.blockNumber.toString(),acceptedHash:accepted.blockHash,
+              base:unpackState(canon.raw.state,{seed:canon.raw.seed,name:canon.raw.name,stats:{body:canon.raw.body,wits:canon.raw.wits,spirit:canon.raw.spirit}}),
+              phase:r.decisionConfig===DECISION_CONFIG&&r.rulesVersion===1?'queued':'checking',orphanedAcceptance:false,acceptanceConflict:false,retrySafe:false});
+            delete c.unacceptedProof;
+          }else {c.phase='checking';c.acceptanceConflict=true;}
+          c.updatedAt=Date.now();return c;
+        });
+      }
+      const current=await refreshTerminal((await storage().get<JobControl>(jobKey(accepted.requestId)))!.value);
+      if(!isTerminal(current.phase)&&!current.acceptanceConflict&&!current.orphanedAcceptance)await dispatchJob(accepted.requestId);return {requestId:accepted.requestId,tokenId:accepted.tokenId.toString()};
+    }
+    if(!await mayReplaceRetiredAcceptance(existing.value,accepted.request.permitId))throw new ServiceError('Checking the earlier wallet request.','checking',409);
+    retired=existing.value;await finishReservation(retired.permitId,retired.spentMicroUSD);await immutable(`orphaned-jobs/${retired.requestId}/${retired.permitId}`,retired);
+  }
   const canon=await canonicalRequest(accepted.requestId),r=canon.request;
   if(!canon.raw||!canon.owner||r.status===0)throw new ServiceError('Checking this request.','checking',409);
-  await acceptReservation(r.permitId,accepted.requestId,r.player);
+  const reservation=await acceptReservation(r.permitId,accepted.requestId,r.player);
   const base=unpackState(canon.raw.state,{seed:canon.raw.seed,name:canon.raw.name,stats:{body:canon.raw.body,wits:canon.raw.wits,spirit:canon.raw.spirit}});
   const {chain,address}=connection();
   const control:JobControl={version:1,chainId:chain.id,collection:address,requestId:accepted.requestId,tokenId:accepted.tokenId.toString(),player:r.player,permitId:r.permitId,inputDigest:r.inputDigest,
     seed:toHex(r.seed,{size:32}),decisionConfig:r.decisionConfig,rulesVersion:r.rulesVersion,deadline:Number(r.deadline),baseRevision:r.baseRevision,day:r.day,delivery:r.delivery,
+    operation:reservation.quote?.permit.operation===0?'mint':reservation.quote?.permit.operation===1?'day':undefined,permitExpiresAt:reservation.expiresAt,ownerNonce:accepted.ownerNonce,
     ownerTx:accepted.ownerTx,acceptedBlock:accepted.blockNumber.toString(),acceptedHash:accepted.blockHash,base,
     phase:r.status===1&&r.decisionConfig===DECISION_CONFIG&&r.rulesVersion===1?'queued':'checking',generation:0,receiptKeys:[],slot:0,decisions:0,sent:0,allowances:{},spentMicroUSD:0,updatedAt:Date.now(),createdAt:Date.now()};
-  await storage().put(jobKey(accepted.requestId),control,{isNew:true});
+  if(retired){
+    const old=retired;
+    await update<JobControl>(jobKey(accepted.requestId),()=>old,current=>{
+      if(current.permitId===control.permitId)return current;
+      if(current.permitId!==old.permitId||current.inputDigest!==old.inputDigest||current.unacceptedProof?.blockHash!==old.unacceptedProof?.blockHash)throw new ServiceError('Checking the accepted wallet request.','checking',409);
+      control.generation=current.generation+1;return control;
+    });
+  }else await storage().put(jobKey(accepted.requestId),control,{isNew:true});
   await dispatchJob(accepted.requestId);return {requestId:accepted.requestId,tokenId:accepted.tokenId.toString()};
 }
-function view(c:JobControl):JobView {return {requestId:c.requestId,tokenId:c.tokenId,phase:c.phase,decisions:c.decisions,slot:c.slot,updatedAt:c.updatedAt,latestChoice:c.latestChoice,ownerTx:c.ownerTx,finalTx:c.finalTx};}
+function view(c:JobControl):JobView {return {requestId:c.requestId,tokenId:c.tokenId,phase:c.phase,decisions:c.decisions,slot:c.slot,updatedAt:c.updatedAt,latestChoice:c.latestChoice,ownerTx:c.ownerTx,finalTx:c.finalTx,retrySafe:c.retrySafe,operation:c.operation};}
 export async function getJob(value:string,playerValue?:string):Promise<JobView> {
   const id=checkedRequest(value),entry=await storage().get<JobControl>(jobKey(id));
   if(!entry)throw new ServiceError('Checking this request. Please try again shortly.','checking',404);
   if(playerValue&&!equal(entry.value.player,checkedAddress(playerValue)))throw new ServiceError('This request belongs to another wallet.','ownership',403);
   // A status read deliberately never purchases inference or acquires a worker lease.
-  return view(entry.value);
+  return view(await refreshTerminal(entry.value));
+}
+async function refreshTerminal(c:JobControl):Promise<JobControl> {
+  if(sameNetwork(c)){
+    const ledger=await storage().get<{holds:Record<string,import('./admission').Reservation>}>('control/admission-v1'),hold=ledger?.value.holds[c.permitId];
+    if(hold){c=await recoverMissingAcceptance(c,hold);if(c.phase==='unaccepted'&&c.retrySafe){await finishReservation(c.permitId,c.spentMicroUSD);return c;}}
+  }
+  if(c.orphanedAcceptance||c.acceptanceConflict)return c;
+  if(!isTerminal(c.phase)||!sameNetwork(c))return c;
+  const canon=await canonicalRequest(c.requestId),r=canon.request;
+  let matches=r.inputDigest===c.inputDigest&&r.status===({ready:2,failed:3,expired:4}[c.phase as 'ready'|'failed'|'expired']);
+  if(matches&&c.phase==='ready'){
+    const {client,address}=connection();const [summary]=await pinnedRead(()=>client.readContract({address,abi:nearlyHumanAbi,functionName:'getDay',args:[BigInt(c.tokenId),c.day],blockNumber:canon.block.number}));
+    matches=summary.requestId===c.requestId&&summary.replayCommitment===c.commitment&&(!c.canonicalResultHash||c.canonicalResultHash===r.resultHash);
+  }
+  if(matches)return c;
+  return update<JobControl>(jobKey(c.requestId),()=>c,current=>{
+    if(isTerminal(current.phase)&&current.generation===c.generation){
+      current.priorTerminalPhase=current.phase as 'ready'|'failed'|'expired';
+      current.phase=current.phase==='failed'?'recording_failure':'checking';current.updatedAt=Date.now();
+    }
+    return current;
+  });
 }
 export async function wakeJob(value:string,playerValue:string) {
   const id=checkedRequest(value),player=checkedAddress(playerValue);
@@ -89,14 +163,15 @@ export async function wakeJob(value:string,playerValue:string) {
     // Recover its indexed event immediately rather than waiting for the scheduled scan.
     const canon=await canonicalRequest(id);
     if(!canon.request.status||!equal(canon.request.player,player))throw new ServiceError('This request belongs to another wallet.','ownership',403);
-    const {client,address,chain}=connection(),minimum=BigInt(deployments[chain.id]?.blockNumber||0);
+    const {client,address,chain}=connection(),knownDeployment=deployments[chain.id];
+    const minimum=knownDeployment&&equal(knownDeployment.address,address)?BigInt(knownDeployment.blockNumber):0n;
     let from=canon.block.number>19_999n?canon.block.number-19_999n:0n;if(from<minimum)from=minimum;
     const logs=await pinnedRead(()=>client.getContractEvents({address,abi:nearlyHumanAbi,eventName:'DayRequested',args:{requestId:id,player},fromBlock:from,toBlock:canon.block.number,strict:true}));
     const event=logs.find(log=>log.args.requestId===id&&log.transactionHash);
     if(!event)throw new ServiceError('Checking the accepted request. Try again shortly.','checking',409);
     await acceptTransaction(event.transactionHash,player);
   }
-  await getJob(id,player);await dispatchJob(id);return getJob(id,player);
+  const current=await getJob(id,player);if(current.phase!=='unaccepted')await dispatchJob(id);return getJob(id,player);
 }
 const localRunning=new Set<string>();
 export async function dispatchJob(id:Hex) {
@@ -126,10 +201,15 @@ async function loadCheckpoint(c:JobControl):Promise<DayCheckpoint|undefined> {
   return {context:cp.value.context,receipts};
 }
 async function assertPending(c:JobControl,minimumSeconds=0) {
-  const current=await canonicalRequest(c.requestId),r=current.request;
+  return assertPendingAt(c,await canonicalRequest(c.requestId),minimumSeconds);
+}
+async function assertPendingAt(c:JobControl,current:CanonicalRequest,minimumSeconds?:number) {
+  const r=current.request;
   if(r.status!==1)throw new CanonicalChanged('Canonical terminal.');
-  if(!current.raw||!current.owner||r.inputDigest!==c.inputDigest||r.rulesVersion!==(c.rulesVersion??1)||r.decisionConfig!==c.decisionConfig||current.raw.pendingRequest!==c.requestId||current.raw.revision!==c.baseRevision||!equal(current.owner,c.player)||digest(unpackState(current.raw.state,{seed:current.raw.seed,name:current.raw.name,stats:{body:current.raw.body,wits:current.raw.wits,spirit:current.raw.spirit}}))!==digest(c.base))throw new CanonicalChanged('Canonical inputs changed.');
-  if(Number(current.block.timestamp)+minimumSeconds>c.deadline)throw new InferenceError('deadline');
+  if(!sameRequestContext(c,current)||!current.raw||!current.owner||current.raw.pendingRequest!==c.requestId||current.raw.revision!==c.baseRevision||!equal(current.owner,c.player)||digest(unpackState(current.raw.state,{seed:current.raw.seed,name:current.raw.name,stats:{body:current.raw.body,wits:current.raw.wits,spirit:current.raw.spirit}}))!==digest(c.base))throw new CanonicalChanged('Canonical inputs changed.');
+  const {client}=connection(),accepted=await client.getBlock({blockNumber:BigInt(c.acceptedBlock)});
+  if(accepted.hash!==c.acceptedHash)throw new CanonicalChanged('Canonical acceptance changed.');
+  if(minimumSeconds!==undefined&&Number(current.block.timestamp)+minimumSeconds>c.deadline)throw new InferenceError('deadline');
   return current;
 }
 
@@ -137,6 +217,7 @@ async function assertPending(c:JobControl,minimumSeconds=0) {
 export async function runJob(value:string) {
   await verifyConnection();
   const id=checkedRequest(value),leaseId=randomUUID(),started=Date.now();let generation=0;
+  const previous=await storage().get<JobControl>(jobKey(id));if(previous){const refreshed=await refreshTerminal(previous.value);if(refreshed.orphanedAcceptance||refreshed.acceptanceConflict)return;}
   let control:JobControl;
   try{
     control=await update<JobControl>(jobKey(id),()=>{throw new ServiceError('Unknown request.','request',404);},c=>{
@@ -149,7 +230,9 @@ export async function runJob(value:string) {
   };
   try{
     if(await syncTerminal(control,edit))return;
+    if(control.orphanedAcceptance||control.acceptanceConflict){await edit(c=>{c.phase='checking';});return;}
     if(control.phase==='recording_failure'){await settleFailure(control,edit);return;}
+    if(control.priorTerminalPhase==='expired'&&!control.packet){await edit(c=>{c.phase='checking';});return;}
     // A later release must not silently prepare an earlier accepted configuration with new rules.
     // Fully prepared immutable packets and saved historical replays need no new inference.
     if(!control.packet&&(control.decisionConfig!==DECISION_CONFIG||(control.rulesVersion??1)!==1)){await edit(c=>{c.phase='checking';});return;}
@@ -194,6 +277,7 @@ export async function runJob(value:string) {
       const key=await immutable(`packets/${control.tokenId}/${control.day}`,packet),commitment=digest(packet);
       await edit(c=>{c.packet=key;c.commitment=commitment;c.phase='saving';});
     }
+    if(control.phase!=='saving')await edit(c=>{c.phase='saving';});
     await settleSuccess(control,edit);
   }catch(error){
     if(error instanceof LeaseLost||error instanceof HandOff||error instanceof RelayBusy)return;
@@ -228,15 +312,18 @@ async function settleSuccess(c:JobControl,edit:Edit) {
 }
 async function settleFailure(c:JobControl,edit:Edit) {
   const canon=await canonicalRequest(c.requestId);if(canon.request.status!==1){await syncTerminal(c,edit);return;}
+  await assertPendingAt(c,canon);
   const intent=Number(canon.block.timestamp)>c.deadline?expiryIntent(c.requestId):failureIntent(c.requestId,c.failure||'preparation_interrupted');
   await terminalTransaction(intent,j=>journal(c,edit,j));await syncTerminal(c,edit);
 }
 async function syncTerminal(c:JobControl,edit:Edit) {
   const canon=await canonicalRequest(c.requestId),r=canon.request;
+  if(!sameRequestContext(c,canon))throw new CanonicalChanged('Accepted request changed.');
   if(r.status===1){if(Number(canon.block.timestamp)>c.deadline){
+    // Expiry is also a terminal relay intent, so it must bind the accepted fork.
+    await assertPendingAt(c,canon);
     await terminalTransaction(expiryIntent(c.requestId),j=>journal(c,edit,j));return syncTerminal(c,edit);
   }return false;}
-  if(r.status===0||r.inputDigest!==c.inputDigest)throw new CanonicalChanged('Accepted request changed.');
   if(r.status===2){
     if(!c.packet||!c.commitment)throw new CanonicalChanged('Saved commitment mismatch.');
     const packet=await storage().get<ReplayPacket>(c.packet);if(!packet||digest(packet.value)!==c.commitment)throw new CanonicalChanged('Saved packet missing.');
@@ -244,11 +331,17 @@ async function syncTerminal(c:JobControl,edit:Edit) {
     if(r.resultHash!==expected)throw new CanonicalChanged('Saved result mismatch.');
     const {client,address}=connection();const [summary]=await pinnedRead(()=>client.readContract({address,abi:nearlyHumanAbi,functionName:'getDay',args:[BigInt(c.tokenId),c.day],blockNumber:canon.block.number}));
     if(summary.replayCommitment!==c.commitment||summary.stateHash!==keccak256(packState(packet.value.result.finalState) as Hex))throw new CanonicalChanged('Canonical save mismatch.');
+    if(!canon.raw)throw new CanonicalChanged('Canonical life is missing.');
+    const canonicalDay=canon.raw.day;
     await update<TokenPackets>(replayKey(c.tokenId),()=>({days:{}}),index=>{
-      if(index.latest&&c.day>index.latest){const previous=index.days[index.latest];if(previous&&!previous.supersededAt)previous.supersededAt=Date.now();}
-      index.latest=Math.max(index.latest||0,c.day);index.days[c.day]={...index.days[c.day],day:c.day,requestId:c.requestId,packet:c.packet!,commitment:c.commitment!,...(c.day<index.latest&&!index.days[c.day]?.supersededAt?{supersededAt:Date.now()}: {})};return index;
+      index.latest=canonicalDay;index.days[c.day]={...index.days[c.day],day:c.day,requestId:c.requestId,packet:c.packet!,commitment:c.commitment!};
+      for(const entry of Object.values(index.days)){
+        if(entry.day===canonicalDay)delete entry.supersededAt;
+        else if(!entry.supersededAt)entry.supersededAt=Date.now();
+      }
+      return index;
     });
-    await edit(j=>{j.phase='ready';j.terminalAt||=Date.now();});
+    await edit(j=>{j.phase='ready';j.canonicalResultHash=r.resultHash;delete j.priorTerminalPhase;j.terminalAt||=Date.now();});
   }else await edit(j=>{j.phase=r.status===3?'failed':'expired';j.terminalAt||=Date.now();});
   await finishReservation(c.permitId,c.spentMicroUSD);return true;
 }
@@ -276,8 +369,9 @@ export async function reconcile() {
   if(!obtained||(await storage().get<{id:string}>(leaseKey))?.value.id!==leaseId)return;
   try{
   const head=await client.getBlockNumber(),scanKey=`control/scan-${chain.id}-${address}`;
-  const cursor=await storage().get<{block:string}>(scanKey),deployment=deployments[chain.id];
-  let from=cursor?BigInt(cursor.value.block):BigInt(deployment?.blockNumber||head);
+  const cursor=await storage().get<{block:string}>(scanKey),knownDeployment=deployments[chain.id];
+  const deployment=knownDeployment&&equal(knownDeployment.address,address)?knownDeployment:undefined;
+  let from=cursor?BigInt(cursor.value.block):BigInt(deployment?.blockNumber||0);
   if(from>32n)from-=32n;
   // A bounded range keeps scheduled work short; repeated runs advance the cursor.
   const end=head<from+20_000n?head:from+20_000n;
@@ -290,9 +384,10 @@ export async function reconcile() {
   await storage().put(scanKey,{block:scanned.toString()});
   await reconcileAdmission();
   const keys=await storage().list('jobs/');
-  for(const key of keys){const entry=await storage().get<JobControl>(key);if(!entry)continue;const c=entry.value;
+  for(const key of keys){const entry=await storage().get<JobControl>(key);if(!entry)continue;let c=entry.value;
     if(Date.now()-started>175_000)break;
     if(!sameNetwork(c))continue;
+    if(isTerminal(c.phase))c=await refreshTerminal(c);
     if(!isTerminal(c.phase)&&(!c.lease||c.lease.until<Date.now()))await dispatchJob(c.requestId);
     else if(isTerminal(c.phase))await finishReservation(c.permitId,c.spentMicroUSD);
   }

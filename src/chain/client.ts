@@ -11,6 +11,8 @@ export * from './permit';
 export * from './config';
 
 export const RequestStatus = { None: 0, Pending: 1, Settled: 2, Failed: 3, Expired: 4 } as const;
+export type ReplacementReason='cancelled'|'repriced'|'replaced';
+export type OwnerReceipt=TransactionReceipt&{replacementReason?:ReplacementReason;originalHash:Hex};
 
 export function publicChain(config: CollectionConfig) {
   return createPublicClient({ chain: chainFor(config.chainId), transport: http(config.rpcUrl) });
@@ -56,7 +58,11 @@ export function createChainReader(config: CollectionConfig) {
     window: () => client.readContract({ ...contract, functionName: 'requestWindow' }),
     balance: (player: Address) => client.getBalance({ address: player }),
     receipt: (hash: Hex) => client.getTransactionReceipt({ hash }),
-    wait: (hash: Hex) => client.waitForTransactionReceipt({ hash, confirmations: 1, timeout: 120_000 }),
+    async wait(hash:Hex):Promise<OwnerReceipt> {
+      let replacementReason:ReplacementReason|undefined;
+      const receipt=await client.waitForTransactionReceipt({hash,confirmations:1,timeout:120_000,onReplaced:event=>{replacementReason=event.reason;}});
+      return {...receipt,replacementReason,originalHash:hash};
+    },
     resolvePermitSubmission:(permitId:Hex,player:Address,fromBlock:bigint,expiresAt:bigint)=>resolvePermitSubmission(config,permitId,player,fromBlock,expiresAt),
     async expiryAvailable(requestId: Hex) {
       const [request, block] = await Promise.all([

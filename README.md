@@ -32,7 +32,7 @@ The service is a trusted relay. Jev is called through NEAR AI; this integration 
 | NFT and request lifecycle | `contracts/`, `src/chain/` |
 | Quotes, authentication, real Jev calls and durable work | `server/`, `netlify/functions/` |
 
-The [service guide](docs/service.md), [contract guide](docs/chain.md), [domain notes](docs/domain-notes.md), [asset provenance](docs/assets.md) and [sprint record](docs/SPRINT_RECORD.md) explain decisions and verification. The first actual day completed sixty slots using twelve Jev calls for a recorded **$0.000707**; this is one measured run, not a fixed future price or balance claim.
+The [service guide](docs/service.md), [contract guide](docs/chain.md), [domain notes](docs/domain-notes.md), [asset provenance](docs/assets.md) and [sprint record](docs/SPRINT_RECORD.md) explain decisions and verification. The [refinement audit](docs/UX_AUDIT.md), [screenshot gallery](docs/ux-audit/index.html), [UI coverage ledger](docs/UI_COVERAGE.md) and [recovery witnesses](docs/RECOVERY_AUDIT.md) record the later critique and repair loops. The first actual day completed sixty slots using twelve Jev calls for a recorded **$0.000707**; this is one measured run, not a fixed future price or balance claim.
 
 ## Design references
 

@@ -1,0 +1,736 @@
+[
+  {
+    "id": "equal-width-style",
+    "title": "Approved reference beside the rendered phone build",
+    "kind": "Visual comparison",
+    "stage": "After",
+    "group": "Visual direction",
+    "note": "Unmodified screenshots arranged at an equal 370px frame width. The larger separate phone dock preserves usable supply controls.",
+    "flows": "",
+    "image": "screenshots/001-equal-width-style.png"
+  },
+  {
+    "id": "cold-trial-before",
+    "title": "Watched day lost its replay entry",
+    "kind": "Actual project chain",
+    "stage": "Before",
+    "group": "Saved days",
+    "note": "Cold BOK trial return originally had no watch action. This was reproduced before the replay-entry fix.",
+    "flows": "UI-07B / UI-10D",
+    "image": "screenshots/002-cold-trial-before.png"
+  },
+  {
+    "id": "cold-trial-after",
+    "title": "Watch remains available on reconnect",
+    "kind": "Actual project chain",
+    "stage": "After",
+    "group": "Saved days",
+    "note": "Canonical BOK after reconnect; the watch action no longer depends on retaining a packet in page memory.",
+    "flows": "UI-07B / UI-10D",
+    "image": "screenshots/003-cold-trial-after.png"
+  },
+  {
+    "id": "stat-return-before",
+    "title": "Stat draft reset after Back",
+    "kind": "Actual project chain",
+    "stage": "Before",
+    "group": "Start and mint",
+    "note": "The reduced Body allocation silently reset on reopening the mint draft.",
+    "flows": "",
+    "image": "screenshots/004-stat-return-before.png"
+  },
+  {
+    "id": "stat-return-after",
+    "title": "Stat allocation survives Back",
+    "kind": "Actual project chain",
+    "stage": "After",
+    "group": "Start and mint",
+    "note": "The same scoped draft returns with Body 1 and one point remaining.",
+    "flows": "",
+    "image": "screenshots/005-stat-return-after.png"
+  },
+  {
+    "id": "birth",
+    "title": "Confirmed birth and original starter supplies",
+    "kind": "Controlled local chain",
+    "stage": "After",
+    "group": "Start and mint",
+    "note": "Disposable Anvil NFT, actual API/contract flow, controlled provider outage. No real Jev request was made.",
+    "flows": "",
+    "image": "screenshots/006-birth.png"
+  },
+  {
+    "id": "auth-declined",
+    "title": "Authentication decline keeps the draft",
+    "kind": "Controlled local chain",
+    "stage": "After",
+    "group": "Recovery",
+    "note": "Declining the session signature issued zero quotes and retained the FAILSAFE name.",
+    "flows": "",
+    "image": "screenshots/007-auth-declined.png"
+  },
+  {
+    "id": "first-day-failed",
+    "title": "Failed included day retains the NFT",
+    "kind": "Controlled local chain",
+    "stage": "After",
+    "group": "Recovery",
+    "note": "Canonical Failed, day 0, level 0, original three bread, three water and three unique utility gifts preserved.",
+    "flows": "",
+    "image": "screenshots/008-first-day-failed.png"
+  },
+  {
+    "id": "same-nft-retry",
+    "title": "Retry saves day one on the same NFT",
+    "kind": "Controlled local chain",
+    "stage": "After",
+    "group": "Recovery",
+    "note": "One day retry with mint fee zero reached Ready on the same token 7; the slow controlled worker was observed on reconnect, without another request.",
+    "flows": "",
+    "image": "screenshots/009-same-nft-retry.png"
+  },
+  {
+    "id": "tiny-help-before",
+    "title": "Reading was confined to the game square",
+    "kind": "Actual project chain",
+    "stage": "Before",
+    "group": "Phone reading",
+    "note": "The first-player review found important help below a very short inner scroll area.",
+    "flows": "",
+    "image": "screenshots/010-tiny-help-before.png"
+  },
+  {
+    "id": "full-height-help",
+    "title": "Reading uses the available phone height",
+    "kind": "Actual project chain",
+    "stage": "After",
+    "group": "Phone reading",
+    "note": "Frozen-build independent review: help remains readable while gameplay retains its square composition.",
+    "flows": "",
+    "image": "screenshots/011-full-height-help.png"
+  },
+  {
+    "id": "click-through-before",
+    "title": "A Help tap inspected furniture behind the menu",
+    "kind": "Actual project chain",
+    "stage": "Before",
+    "group": "Phone reading",
+    "note": "An actual pointer tap repeatedly opened Crafted chair instead of Help in a stable build.",
+    "flows": "",
+    "image": "screenshots/012-click-through-before.png"
+  },
+  {
+    "id": "click-through-after",
+    "title": "The same menu path opens Help",
+    "kind": "Actual project chain",
+    "stage": "After",
+    "group": "Phone reading",
+    "note": "UI and renderer input gates both protect the modal. The exact path passed twice; a later direct chair tap still worked.",
+    "flows": "",
+    "image": "screenshots/013-click-through-after.png"
+  },
+  {
+    "id": "empty-slot-before",
+    "title": "Empty supply slots gave no response",
+    "kind": "Actual project chain",
+    "stage": "Before",
+    "group": "Daily care",
+    "note": "The obvious plus button was a dead affordance, found by the independent first-player critic.",
+    "flows": "",
+    "image": "screenshots/014-empty-slot-before.png"
+  },
+  {
+    "id": "supply-picker",
+    "title": "Empty plus opens a labeled supply picker",
+    "kind": "Actual project chain",
+    "stage": "After",
+    "group": "Daily care",
+    "note": "One tap selects from all fifteen supplies; Back leaves the draft unchanged.",
+    "flows": "",
+    "image": "screenshots/015-supply-picker.png"
+  },
+  {
+    "id": "three-supplies",
+    "title": "Three selections survive menu navigation",
+    "kind": "Actual project chain",
+    "stage": "After",
+    "group": "Daily care",
+    "note": "Water, Milk and Bread remain selected after stock inspection and Back.",
+    "flows": "",
+    "image": "screenshots/016-three-supplies.png"
+  },
+  {
+    "id": "care-phone",
+    "title": "Canonical PEEP care on a phone",
+    "kind": "Actual project chain",
+    "stage": "After",
+    "group": "Daily care",
+    "note": "The square sleeping home, direct supply slots and one yellow Prepare action retain the Moss & Cream direction.",
+    "flows": "",
+    "image": "screenshots/017-care-phone.png"
+  },
+  {
+    "id": "care-desktop",
+    "title": "Complete care composition fits desktop height",
+    "kind": "Actual project chain",
+    "stage": "After",
+    "group": "Responsive layouts",
+    "note": "The reviewed desktop column fits the 1440x900 viewport; narrow-container supply counts preserve hit areas.",
+    "flows": "",
+    "image": "screenshots/018-care-desktop.png"
+  },
+  {
+    "id": "conditions",
+    "title": "Every active condition remains reachable",
+    "kind": "Controlled local chain",
+    "stage": "After",
+    "group": "Daily care",
+    "note": "A deliberately seeded canonical local fixture carries all eight conditions; this is not naturally attained Jev play.",
+    "flows": "",
+    "image": "screenshots/019-conditions.png"
+  },
+  {
+    "id": "garden",
+    "title": "Garden state is available without chasing the NPC",
+    "kind": "Controlled local chain",
+    "stage": "After",
+    "group": "Daily care",
+    "note": "Status exposes the recorded plots and relevant house outputs/lifetimes behind a deliberate detail action.",
+    "flows": "",
+    "image": "screenshots/020-garden.png"
+  },
+  {
+    "id": "reprice",
+    "title": "Fee-bumped owner transaction reaches Ready",
+    "kind": "Controlled local chain",
+    "stage": "After",
+    "group": "Recovery",
+    "note": "Actual Anvil same-nonce replacement; the canonical replacement hash is journaled before acceptance.",
+    "flows": "",
+    "image": "screenshots/021-reprice.png"
+  },
+  {
+    "id": "cancel",
+    "title": "Cancelled replacement restores care",
+    "kind": "Controlled local chain",
+    "stage": "After",
+    "group": "Recovery",
+    "note": "The request was not accepted and the biological day stayed unchanged.",
+    "flows": "",
+    "image": "screenshots/022-cancel.png"
+  },
+  {
+    "id": "scope-stays",
+    "title": "Late acceptance does not steal another NPC view",
+    "kind": "Controlled local chain",
+    "stage": "After",
+    "group": "Recovery",
+    "note": "The funded request completed while the player stayed on their selected Trial NPC.",
+    "flows": "",
+    "image": "screenshots/023-scope-stays.png"
+  },
+  {
+    "id": "base-changed",
+    "title": "Changed canonical base stops before wallet send",
+    "kind": "Controlled local chain",
+    "stage": "After",
+    "group": "Recovery",
+    "note": "A valid quote at a newer revision triggered review, not payment; the Water/Bread draft survived.",
+    "flows": "",
+    "image": "screenshots/024-base-changed.png"
+  },
+  {
+    "id": "unknown-blocked",
+    "title": "Unknown submission blocks a second mint",
+    "kind": "Controlled local chain",
+    "stage": "After",
+    "group": "Recovery",
+    "note": "A missing hash is reconciled through its signed permit instead of treated as rejection.",
+    "flows": "",
+    "image": "screenshots/025-unknown-blocked.png"
+  },
+  {
+    "id": "unknown-safe",
+    "title": "Strict expired-unused proof restores the draft",
+    "kind": "Controlled local chain",
+    "stage": "After",
+    "group": "Recovery",
+    "note": "The existing submission became safe to retry only after canonical proof.",
+    "flows": "",
+    "image": "screenshots/026-unknown-safe.png"
+  },
+  {
+    "id": "orphan-quarantine",
+    "title": "A vanished acceptance remains checking before proof",
+    "kind": "Scenario from controlled proof",
+    "stage": "After",
+    "group": "Recovery",
+    "note": "The UI is driven by the separate real local rollback proof, not a production reorg.",
+    "flows": "",
+    "image": "screenshots/027-orphan-quarantine.png"
+  },
+  {
+    "id": "orphan-safe",
+    "title": "Proven unaccepted mint restores its draft",
+    "kind": "Scenario from controlled proof",
+    "stage": "After",
+    "group": "Recovery",
+    "note": "Only retrySafe plus a known mint operation permits this route; no onchain Failed/Expired claim is invented.",
+    "flows": "",
+    "image": "screenshots/028-orphan-safe.png"
+  },
+  {
+    "id": "owner-error-before",
+    "title": "Successful ownership retry retained an old warning",
+    "kind": "Controlled transport failure",
+    "stage": "Before",
+    "group": "Read failures",
+    "note": "The real owner loaded while the old connection alert incorrectly remained.",
+    "flows": "",
+    "image": "screenshots/029-owner-error-before.png"
+  },
+  {
+    "id": "owner-error-after",
+    "title": "Successful ownership read clears its warning",
+    "kind": "Controlled transport failure",
+    "stage": "After",
+    "group": "Read failures",
+    "note": "Only the owner-list GET was interrupted; real canonical data was restored on the same page.",
+    "flows": "",
+    "image": "screenshots/030-owner-error-after.png"
+  },
+  {
+    "id": "replay-error-after",
+    "title": "Successful replay retry clears its warning",
+    "kind": "Controlled transport failure",
+    "stage": "After",
+    "group": "Read failures",
+    "note": "The real saved packet returns without retaining the earlier unavailable notice.",
+    "flows": "",
+    "image": "screenshots/031-replay-error-after.png"
+  },
+  {
+    "id": "lookup-error-after",
+    "title": "Valid token selection clears an old lookup error",
+    "kind": "Controlled transport failure",
+    "stage": "After",
+    "group": "Read failures",
+    "note": "Token 999999 genuinely returned 404; choosing canonical PEEP no longer carries that error into its saved day.",
+    "flows": "",
+    "image": "screenshots/032-lookup-error-after.png"
+  },
+  {
+    "id": "zero-owner",
+    "title": "Verified zero ownership reaches Hatch",
+    "kind": "Actual public identity read",
+    "stage": "After",
+    "group": "Start and mint",
+    "note": "The project relay address genuinely owns no NFTs. This verifies the read flow, not cryptographic wallet authentication.",
+    "flows": "",
+    "image": "screenshots/033-zero-owner.png"
+  },
+  {
+    "id": "archive-list",
+    "title": "Saved days is a discoverable archive",
+    "kind": "Actual project chain",
+    "stage": "After",
+    "group": "Saved days",
+    "note": "Three canonical BOK days are listed with watch/actions and recorded retention information.",
+    "flows": "",
+    "image": "screenshots/034-archive-list.png"
+  },
+  {
+    "id": "archive-film",
+    "title": "An older saved day plays without generating a new day",
+    "kind": "Actual project chain",
+    "stage": "After",
+    "group": "Saved days",
+    "note": "No new owner request or model call was made. The latest viewing acknowledgement stayed unchanged.",
+    "flows": "",
+    "image": "screenshots/035-archive-film.png"
+  },
+  {
+    "id": "archive-actions",
+    "title": "Compact onchain history remains readable",
+    "kind": "Actual project chain",
+    "stage": "After",
+    "group": "Saved days",
+    "note": "Sixty actual compact records are described literally, without invented full snapshots or model probabilities.",
+    "flows": "",
+    "image": "screenshots/036-archive-actions.png"
+  },
+  {
+    "id": "wrong-day-before",
+    "title": "Delivery introduction inherited the wrong day in details",
+    "kind": "Actual project chain",
+    "stage": "Before",
+    "group": "Saved days",
+    "note": "A stable build showed DAY02 in the game and Day 3 in details before its first receipt.",
+    "flows": "",
+    "image": "screenshots/037-wrong-day-before.png"
+  },
+  {
+    "id": "recorded-day-after",
+    "title": "The first delivery frame has the correct day evidence",
+    "kind": "Actual project chain",
+    "stage": "After",
+    "group": "Saved days",
+    "note": "Independent retest before the first receipt: Day 2 details link the real request, save and NFT.",
+    "flows": "",
+    "image": "screenshots/038-recorded-day-after.png"
+  },
+  {
+    "id": "recorded-stock",
+    "title": "Recorded inventory does not show a future delivery draft",
+    "kind": "Actual project chain",
+    "stage": "After",
+    "group": "Saved days",
+    "note": "The historical Water detail reads Stored 1; future care selections remain preserved but are not represented as old delivery.",
+    "flows": "",
+    "image": "screenshots/039-recorded-stock.png"
+  },
+  {
+    "id": "cream-surround",
+    "title": "Reading cards preserve the approved cream surround",
+    "kind": "Actual project chain",
+    "stage": "After",
+    "group": "Visual direction",
+    "note": "The final visual pass removed the flat gray page-wide backdrop while preserving the navy card and input boundary.",
+    "flows": "",
+    "image": "screenshots/040-cream-surround.png"
+  },
+  {
+    "id": "keyboard-search",
+    "title": "Search remains reachable in a panned visible viewport",
+    "kind": "Viewport surrogate",
+    "stage": "After",
+    "group": "Responsive layouts",
+    "note": "Desktop surrogate: visible viewport 300px high at offset top 200/left 5. This is not a physical phone keyboard claim.",
+    "flows": "",
+    "image": "screenshots/041-keyboard-search.png"
+  },
+  {
+    "id": "keyboard-mint",
+    "title": "Mint field and action remain reachable by scrolling",
+    "kind": "Viewport surrogate",
+    "stage": "After",
+    "group": "Responsive layouts",
+    "note": "The same explicitly controlled geometry preserves access to the field, Back and primary action.",
+    "flows": "",
+    "image": "screenshots/042-keyboard-mint.png"
+  },
+  {
+    "id": "visitor-before",
+    "title": "Milk diversion reaches the actual visitor",
+    "kind": "Controlled renderer state",
+    "stage": "Before",
+    "group": "World actions",
+    "note": "Canonical domain action/state with synthetic setup; no real model choice. Paused after-frames explicitly flush a completed WebGL frame.",
+    "flows": "",
+    "image": "screenshots/043-visitor-before.png"
+  },
+  {
+    "id": "visitor-after",
+    "title": "Milk diversion reaches the actual visitor",
+    "kind": "Controlled renderer state",
+    "stage": "After",
+    "group": "World actions",
+    "note": "Verified completed renderer frame. This is world-layer evidence, not a complete contract/API journey.",
+    "flows": "",
+    "image": "screenshots/044-visitor-after.png"
+  },
+  {
+    "id": "sandwich-before",
+    "title": "The visible outcome is a sandwich",
+    "kind": "Controlled renderer state",
+    "stage": "Before",
+    "group": "World actions",
+    "note": "Canonical domain action/state with synthetic setup; no real model choice. Paused after-frames explicitly flush a completed WebGL frame.",
+    "flows": "",
+    "image": "screenshots/045-sandwich-before.png"
+  },
+  {
+    "id": "sandwich-after",
+    "title": "The visible outcome is a sandwich",
+    "kind": "Controlled renderer state",
+    "stage": "After",
+    "group": "World actions",
+    "note": "Verified completed renderer frame. This is world-layer evidence, not a complete contract/API journey.",
+    "flows": "",
+    "image": "screenshots/046-sandwich-after.png"
+  },
+  {
+    "id": "apple-before",
+    "title": "Harvested apple is visible",
+    "kind": "Controlled renderer state",
+    "stage": "Before",
+    "group": "World actions",
+    "note": "Canonical domain action/state with synthetic setup; no real model choice. Paused after-frames explicitly flush a completed WebGL frame.",
+    "flows": "",
+    "image": "screenshots/047-apple-before.png"
+  },
+  {
+    "id": "apple-after",
+    "title": "Harvested apple is visible",
+    "kind": "Controlled renderer state",
+    "stage": "After",
+    "group": "World actions",
+    "note": "Verified completed renderer frame. This is world-layer evidence, not a complete contract/API journey.",
+    "flows": "",
+    "image": "screenshots/048-apple-after.png"
+  },
+  {
+    "id": "death-before",
+    "title": "Seeking the fatal record shows a fallen rooster",
+    "kind": "Controlled renderer state",
+    "stage": "Before",
+    "group": "World actions",
+    "note": "Canonical domain action/state with synthetic setup; no real model choice. Paused after-frames explicitly flush a completed WebGL frame.",
+    "flows": "",
+    "image": "screenshots/049-death-before.png"
+  },
+  {
+    "id": "death-after",
+    "title": "Seeking the fatal record shows a fallen rooster",
+    "kind": "Controlled renderer state",
+    "stage": "After",
+    "group": "World actions",
+    "note": "Verified completed renderer frame. This is world-layer evidence, not a complete contract/API journey.",
+    "flows": "",
+    "image": "screenshots/050-death-after.png"
+  },
+  {
+    "id": "prelude-before",
+    "title": "Initial replay callback belongs to the chosen day",
+    "kind": "Controlled renderer state",
+    "stage": "Before",
+    "group": "World actions",
+    "note": "Canonical domain action/state with synthetic setup; no real model choice. Paused after-frames explicitly flush a completed WebGL frame.",
+    "flows": "",
+    "image": "screenshots/051-prelude-before.png"
+  },
+  {
+    "id": "prelude-after",
+    "title": "Initial replay callback belongs to the chosen day",
+    "kind": "Controlled renderer state",
+    "stage": "After",
+    "group": "World actions",
+    "note": "Verified completed renderer frame. This is world-layer evidence, not a complete contract/API journey.",
+    "flows": "",
+    "image": "screenshots/052-prelude-after.png"
+  },
+  {
+    "id": "world-sheet-1",
+    "title": "World action and condition sheet 1",
+    "kind": "Controlled renderer state",
+    "stage": "After",
+    "group": "World coverage",
+    "note": "Part of the 82-case, 35-action-family visual sweep. Synthetic starting states use canonical outcomes; these are not claims about actual Jev selections.",
+    "flows": "",
+    "image": "screenshots/053-world-sheet-1.png"
+  },
+  {
+    "id": "world-sheet-2",
+    "title": "World action and condition sheet 2",
+    "kind": "Controlled renderer state",
+    "stage": "After",
+    "group": "World coverage",
+    "note": "Part of the 82-case, 35-action-family visual sweep. Synthetic starting states use canonical outcomes; these are not claims about actual Jev selections.",
+    "flows": "",
+    "image": "screenshots/054-world-sheet-2.png"
+  },
+  {
+    "id": "world-sheet-3",
+    "title": "World action and condition sheet 3",
+    "kind": "Controlled renderer state",
+    "stage": "After",
+    "group": "World coverage",
+    "note": "Part of the 82-case, 35-action-family visual sweep. Synthetic starting states use canonical outcomes; these are not claims about actual Jev selections.",
+    "flows": "",
+    "image": "screenshots/055-world-sheet-3.png"
+  },
+  {
+    "id": "world-sheet-4",
+    "title": "World action and condition sheet 4",
+    "kind": "Controlled renderer state",
+    "stage": "After",
+    "group": "World coverage",
+    "note": "Part of the 82-case, 35-action-family visual sweep. Synthetic starting states use canonical outcomes; these are not claims about actual Jev selections.",
+    "flows": "",
+    "image": "screenshots/056-world-sheet-4.png"
+  },
+  {
+    "id": "world-sheet-5",
+    "title": "World action and condition sheet 5",
+    "kind": "Controlled renderer state",
+    "stage": "After",
+    "group": "World coverage",
+    "note": "Part of the 82-case, 35-action-family visual sweep. Synthetic starting states use canonical outcomes; these are not claims about actual Jev selections.",
+    "flows": "",
+    "image": "screenshots/057-world-sheet-5.png"
+  },
+  {
+    "id": "world-sheet-6",
+    "title": "World action and condition sheet 6",
+    "kind": "Controlled renderer state",
+    "stage": "After",
+    "group": "World coverage",
+    "note": "Part of the 82-case, 35-action-family visual sweep. Synthetic starting states use canonical outcomes; these are not claims about actual Jev selections.",
+    "flows": "",
+    "image": "screenshots/058-world-sheet-6.png"
+  },
+  {
+    "id": "world-sheet-7",
+    "title": "World action and condition sheet 7",
+    "kind": "Controlled renderer state",
+    "stage": "After",
+    "group": "World coverage",
+    "note": "Part of the 82-case, 35-action-family visual sweep. Synthetic starting states use canonical outcomes; these are not claims about actual Jev selections.",
+    "flows": "",
+    "image": "screenshots/059-world-sheet-7.png"
+  },
+  {
+    "id": "world-sheet-8",
+    "title": "World action and condition sheet 8",
+    "kind": "Controlled renderer state",
+    "stage": "After",
+    "group": "World coverage",
+    "note": "Part of the 82-case, 35-action-family visual sweep. Synthetic starting states use canonical outcomes; these are not claims about actual Jev selections.",
+    "flows": "",
+    "image": "screenshots/060-world-sheet-8.png"
+  },
+  {
+    "id": "world-sheet-9",
+    "title": "World action and condition sheet 9",
+    "kind": "Controlled renderer state",
+    "stage": "After",
+    "group": "World coverage",
+    "note": "Part of the 82-case, 35-action-family visual sweep. Synthetic starting states use canonical outcomes; these are not claims about actual Jev selections.",
+    "flows": "",
+    "image": "screenshots/061-world-sheet-9.png"
+  },
+  {
+    "id": "world-sheet-10",
+    "title": "World action and condition sheet 10",
+    "kind": "Controlled renderer state",
+    "stage": "After",
+    "group": "World coverage",
+    "note": "Part of the 82-case, 35-action-family visual sweep. Synthetic starting states use canonical outcomes; these are not claims about actual Jev selections.",
+    "flows": "",
+    "image": "screenshots/062-world-sheet-10.png"
+  },
+  {
+    "id": "world-sheet-11",
+    "title": "World action and condition sheet 11",
+    "kind": "Controlled renderer state",
+    "stage": "After",
+    "group": "World coverage",
+    "note": "Part of the 82-case, 35-action-family visual sweep. Synthetic starting states use canonical outcomes; these are not claims about actual Jev selections.",
+    "flows": "",
+    "image": "screenshots/063-world-sheet-11.png"
+  },
+  {
+    "id": "world-sheet-12",
+    "title": "World action and condition sheet 12",
+    "kind": "Controlled renderer state",
+    "stage": "After",
+    "group": "World coverage",
+    "note": "Part of the 82-case, 35-action-family visual sweep. Synthetic starting states use canonical outcomes; these are not claims about actual Jev selections.",
+    "flows": "",
+    "image": "screenshots/064-world-sheet-12.png"
+  },
+  {
+    "id": "world-sheet-13",
+    "title": "World action and condition sheet 13",
+    "kind": "Controlled renderer state",
+    "stage": "After",
+    "group": "World coverage",
+    "note": "Part of the 82-case, 35-action-family visual sweep. Synthetic starting states use canonical outcomes; these are not claims about actual Jev selections.",
+    "flows": "",
+    "image": "screenshots/065-world-sheet-13.png"
+  },
+  {
+    "id": "world-sheet-14",
+    "title": "World action and condition sheet 14",
+    "kind": "Controlled renderer state",
+    "stage": "After",
+    "group": "World coverage",
+    "note": "Part of the 82-case, 35-action-family visual sweep. Synthetic starting states use canonical outcomes; these are not claims about actual Jev selections.",
+    "flows": "",
+    "image": "screenshots/066-world-sheet-14.png"
+  },
+  {
+    "id": "short-wide-before",
+    "title": "Short wide screen compressed the game into a tiny pillar",
+    "kind": "Actual project chain",
+    "stage": "Before",
+    "group": "Responsive layouts",
+    "note": "Rendered review found small art and broken labels despite the absence of horizontal overflow.",
+    "image": "screenshots/067-short-wide-before.png"
+  },
+  {
+    "id": "short-wide-after",
+    "title": "Short wide screen uses the world beside its care dock",
+    "kind": "Actual project chain",
+    "stage": "After",
+    "group": "Responsive layouts",
+    "note": "The same square playfield and same controls fit the available space at1024x600.",
+    "image": "screenshots/068-short-wide-after.png"
+  },
+  {
+    "id": "short-wide-900",
+    "title": "The same wide-short arrangement at900x600",
+    "kind": "Actual project chain",
+    "stage": "After",
+    "group": "Responsive layouts",
+    "note": "No extra controls or separate game mode are introduced.",
+    "image": "screenshots/069-short-wide-900.png"
+  },
+  {
+    "id": "portrait-final",
+    "title": "Portrait layout stays a readable house and dock",
+    "kind": "Actual project chain",
+    "stage": "After",
+    "group": "Responsive layouts",
+    "note": "The wide-screen refinement leaves the phone composition intact.",
+    "image": "screenshots/070-portrait-final.png"
+  },
+  {
+    "id": "pending-history",
+    "title": "Watching while waiting returns to the funded job",
+    "kind": "Scenario from controlled proof",
+    "stage": "After",
+    "group": "Saved days",
+    "note": "Pending-request metadata wraps a real saved PEEP movie to verify the UI return path; no new project request or model call.",
+    "image": "screenshots/071-pending-history.png"
+  },
+  {
+    "id": "back-during-read",
+    "title": "Back cancels a delayed reading intent",
+    "kind": "Controlled transport failure",
+    "stage": "After",
+    "group": "Read failures",
+    "note": "A held real historical-movie GET was released after Back to Options. The menu remained open and the movie did not steal the view.",
+    "image": "screenshots/072-back-during-read.png"
+  },
+  {
+    "id": "full-stock-before",
+    "title": "Large stock clipped on a narrow phone",
+    "kind": "Controlled local authority",
+    "stage": "Before",
+    "group": "Care and supplies",
+    "note": "Actual local canonical stock at65,535 exposed a clipped first digit in the original narrow modal.",
+    "flows": "UI-04 / UI-08",
+    "image": "screenshots/073-full-stock-before.png"
+  },
+  {
+    "id": "full-stock-after",
+    "title": "Every full stock count fits at320px",
+    "kind": "Controlled local authority",
+    "stage": "After",
+    "group": "Care and supplies",
+    "note": "All fifteen canonical counts are65,535; measured spans fit their buttons. No response substitution, writes or wallet actions.",
+    "flows": "UI-04 / UI-08",
+    "image": "screenshots/074-full-stock-after.png"
+  }
+]

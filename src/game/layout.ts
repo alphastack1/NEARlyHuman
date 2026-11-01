@@ -19,7 +19,7 @@ export const TARGET_TILES:Record<TargetId,TilePoint>={
  bed:{x:21,y:6},cupboard:{x:26,y:5},body:{x:19,y:21},baseSeat:{x:5,y:21},chair:{x:10,y:21},chairA:{x:10,y:21},chairB:{x:10,y:24},
  plot1:{x:25,y:21},plot2:{x:28,y:21},gardenShelter:{x:26,y:19},gardenView:{x:26,y:24},pest:{x:25,y:22},mailbox:{x:20,y:24},hall:{x:16,y:14},
 };
-export const TARGET_LABELS:Record<TargetId,string>={store:'Pantry',prep:'Preparation counter',stove:'Stove',cutoff:'Stove',surface:'Kitchen counter',window:'Window',bed:'Bed',cupboard:'Supply cupboard',body:'Washroom',baseSeat:'Comfortable seat',chair:'Crafted chair',chairA:'Crafted chair',chairB:'Crafted chair',plot1:'Rose plot',plot2:'Apple plot',gardenShelter:'Garden shelter',gardenView:'Garden',pest:'Garden visitor',mailbox:'Delivery box',hall:'Hall'};
+export const TARGET_LABELS:Record<TargetId,string>={store:'Pantry',prep:'Preparation counter',stove:'Stove',cutoff:'Stove',surface:'Kitchen counter',window:'Window',bed:'Bed',cupboard:'Supply cupboard',body:'Washroom',baseSeat:'Comfortable seat',chair:'Crafted chair',chairA:'Crafted chair',chairB:'Crafted chair',plot1:'Plot 1',plot2:'Plot 2',gardenShelter:'Garden shelter',gardenView:'Garden',pest:'Garden visitor',mailbox:'Delivery box',hall:'Hall'};
 export const SOLIDS:[number,number,number,number][]=[
  [4,3,2,2],[7,3,2,2],[10,3,2,2],[12,3,2,2], [18,3,3,4],[26,3,2,2],
  [4,19,2,2],[10,20,1,1],[10,23,1,1],[20,18,2,2],[25,20,1,1],[28,20,1,1],[26,18,1,1],[21,24,1,1],

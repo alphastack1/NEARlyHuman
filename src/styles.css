@@ -1,4 +1,392 @@
 /* Moss & Cream. The house stays square; care and mint use a portrait dock. */
+.modal-backdrop {
+  position: fixed;
+  z-index: 50;
+  inset: auto;
+  top: var(--visible-top, 0px);
+  left: var(--visible-left, 0px);
+  width: var(--visible-width, 100vw);
+  height: var(--visible-height);
+  padding: max(16px, env(safe-area-inset-top)) max(12px, env(safe-area-inset-right)) max(16px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left));
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-backdrop>.composition-modal {
+  position: relative;
+  inset: auto;
+  padding: 0;
+  background: none;
+  width: min(100%, 640px);
+  max-height: 100%;
+  display: flex;
+  container-type: inline-size;
+}
+
+.game-composition>.game-frame[inert],
+.game-composition>.care-dock[inert],
+.game-composition>.mint-dock[inert] {
+  filter: brightness(.6);
+}
+
+.modal-backdrop .composition-modal .panel {
+  max-height: calc(var(--visible-height) - max(16px, env(safe-area-inset-top)) - max(16px, env(safe-area-inset-bottom)));
+  margin: 0;
+}
+
+.composition-modal .back-button {
+  width: 44px;
+  height: 44px;
+  min-height: 44px;
+  padding: 13px;
+}
+
+.supply-picker {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.supply-picker>button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 80px;
+  min-width: 0;
+  padding: 8px 4px;
+  border: 2px solid #648491;
+  background: #152d3c;
+  font-size: clamp(8px, 1.9cqw, 12px);
+  line-height: 1.8;
+  text-align: center;
+}
+
+.supply-picker>button.selected {
+  border-color: var(--yellow);
+}
+
+.supply-picker img {
+  width: 32px;
+  height: 32px;
+}
+
+.supply-picker small {
+  font-size: .85em;
+  color: #b7cdca;
+}
+
+.game-composition .game-hud {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+.game-hud .identity-line {
+  height: 32px;
+}
+
+.game-hud .identity-button {
+  height: 32px;
+  min-height: 32px;
+}
+
+.game-hud .day-context {
+  position: relative;
+  min-height: 32px;
+  padding-right: 40px;
+}
+
+.game-hud .options-button {
+  position: absolute;
+  top: 0;
+  right: -3px;
+  width: 44px;
+  height: 32px;
+  min-height: 32px;
+  padding: 8px 14px;
+}
+
+.game-hud .options-button svg {
+  width: 16px;
+  height: 16px;
+}
+
+.game-hud .meter-row {
+  height: 32px;
+  margin-top: 0;
+}
+
+.game-hud .needs-button {
+  height: 32px;
+  min-height: 32px;
+  align-items: center;
+}
+
+.game-hud .brain-button {
+  width: 44px;
+  height: 32px;
+  min-width: 44px;
+  min-height: 32px;
+}
+
+.game-hud .brain-button svg {
+  width: 22px;
+  height: 22px;
+}
+
+.care-dock .catalog-row .catalog-next {
+  width: 44px;
+  min-width: 44px;
+  position: relative;
+  padding-top: 8px;
+}
+
+.catalog-next .catalog-position {
+  position: absolute;
+  top: 2px;
+  font-size: 7px;
+  line-height: 1.3;
+}
+
+.care-dock .catalog-item .item-detail-button {
+  min-height: 44px;
+}
+
+.game-composition .care-dock .care-stock {
+  min-height: 44px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+.reading-context {
+  margin: 0 0 8px;
+  font-size: clamp(8px, 1.9cqw, 12px);
+  color: #afc7ce;
+  line-height: 1.6;
+}
+
+.help-facts {
+  margin: 14px 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: clamp(9px, 2.15cqw, 14px);
+  color: #c3d4d1;
+  line-height: 1.9;
+}
+
+.help-facts li {
+  margin: 0 0 10px;
+  padding-left: 10px;
+  border-left: 2px solid #6c9258;
+}
+
+.status-place-list {
+  margin: 12px 0 0;
+}
+
+.status-place {
+  position: relative;
+  display: block;
+  width: 100%;
+  min-height: 52px;
+  padding: 10px 22px 10px 0;
+  border: 0;
+  border-top: 1px solid #466371;
+  text-align: left;
+  background: none;
+}
+
+.place-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: clamp(10px, 2.5cqw, 16px);
+  line-height: 1.7;
+}
+
+.place-title strong {
+  font-size: .84em;
+  font-weight: 400;
+  color: #d7d49a;
+}
+
+.place-detail {
+  display: block;
+  font-size: clamp(8px, 1.9cqw, 12px);
+  line-height: 1.9;
+  color: #b5ccce;
+  margin-top: 3px;
+}
+
+.place-chevron {
+  position: absolute;
+  right: 3px;
+  top: 12px;
+  font-size: 18px;
+  color: #bed3d5;
+}
+
+.status-empty {
+  margin: 14px 0;
+  color: #a9c1c7;
+  font-size: clamp(9px, 2.1cqw, 14px);
+}
+
+.stock-grid>button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  background: #102938;
+  border: 1px solid #597785;
+  padding: 7px 2px;
+  min-width: 0;
+  min-height: 58px;
+  font-size: clamp(8px, 1.8cqw, 12px);
+  line-height: 1.4;
+}
+
+.stock-grid>button img {
+  width: 26px;
+  height: 26px;
+}
+
+.compact-history {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.compact-history li {
+  display: flex;
+  gap: 10px;
+  padding: 10px 0;
+  border-bottom: 1px solid #3f5a68;
+  font-size: clamp(9px, 2.2cqw, 14px);
+  line-height: 1.8;
+}
+
+.compact-history li>small {
+  width: 22px;
+  flex: none;
+  color: #a0b9c1;
+  font-size: .8em;
+}
+
+.compact-history strong {
+  display: block;
+  font-weight: 400;
+}
+
+.compact-history span {
+  display: block;
+  color: #adc5cc;
+  font-size: .85em;
+  margin-top: 3px;
+}
+
+.compact-history .terminal strong,
+.compact-history .failed strong {
+  color: #edc88c;
+}
+
+.saved-days-row {
+  border-top: 1px solid #4e6d7b;
+  padding: 14px 0;
+}
+
+.saved-days-heading {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  font-size: clamp(10px, 2.5cqw, 16px);
+  line-height: 1.7;
+}
+
+.saved-days-heading strong {
+  font-weight: 400;
+  color: #f4e6a4;
+}
+
+.saved-days-heading>.life-badge {
+  margin-left: auto;
+}
+
+.saved-days-date,
+.saved-days-retention,
+.saved-days-unavailable,
+.saved-days-context {
+  display: block;
+  font-size: clamp(8px, 1.85cqw, 12px);
+  line-height: 1.9;
+  color: #abc5cc;
+  margin: 6px 0;
+}
+
+.saved-days-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  margin-top: 8px;
+}
+
+.saved-days-controls>.saved-days-watch {
+  flex: 1;
+  min-height: 44px;
+  font-size: clamp(10px, 2.2cqw, 15px);
+  padding: 10px 8px;
+}
+
+.saved-days-actions {
+  min-height: 44px;
+  font-size: clamp(9px, 1.95cqw, 13px);
+}
+
+.saved-days-more {
+  width: 100%;
+  margin-top: 8px;
+}
+
+.day-log-button {
+  position: absolute;
+  right: 0;
+  bottom: calc(100% + 10px);
+  min-width: 76px;
+  min-height: 44px;
+  padding: 8px;
+  color: #e2e9df;
+  background: #173243;
+  border: 2px solid #7894a1;
+  box-shadow: inset 0 0 0 2px #2c4a59;
+  font-size: clamp(9px, 1.9cqw, 14px);
+}
+
+.test-faucet-link {
+  display: inline-block;
+  margin-top: 12px;
+  min-height: 32px;
+  text-underline-offset: 4px;
+}
+
+@media (min-width: 900px) and (max-height: 700px) {
+  .app-root .game-composition.with-care {
+    width: min(100%, 1040px, calc(100dvh + 364px));
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(340px, 380px);
+    align-items: center;
+    gap: 24px;
+  }
+
+  .game-composition.with-care>.game-frame {
+    justify-self: end;
+    width: min(100%, calc(100dvh - 40px));
+  }
+}
 .fit-text {
   display: block;
   width: 100%;
@@ -1253,6 +1641,14 @@ input::placeholder {
   margin: 5% 0;
 }
 
+@container (max-width: 430px) {
+  .stock-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+
+@container (max-width: 350px) {
+  .stock-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
 .stock-grid>span {
   display: flex;
   align-items: center;
@@ -1315,9 +1711,14 @@ input::placeholder {
 }
 
 .probability-label {
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  background: #142b3a;
+  padding: 5px 0;
   display: block;
   text-align: right;
-  font-size: clamp(7px,1.6cqw,11px);
+  font-size: clamp(8px,1.7cqw,12px);
   color: #8ea8b1;
   margin-top: 8px;
 }
@@ -1822,7 +2223,7 @@ input::placeholder {
 }
 
 .game-composition.with-care {
-  width: min(100%,640px,calc(100dvh - 360px));
+  width: min(100%,640px,max(240px,calc((100dvh - 320px) / 1.2)));
 }
 
 .composition-modal {
@@ -1998,7 +2399,7 @@ input::placeholder {
 }
 
 .game-composition.with-form {
-  width: min(100%,620px,calc(100dvh - 440px));
+  width: min(100%,620px,max(320px,calc(100dvh - 440px)));
 }
 
 .mint-dock {

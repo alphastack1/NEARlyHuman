@@ -1,6 +1,6 @@
 # NEARlyHuman — Master Game Design
 
-Status: revised design after twelve full-guide critiques; the owner has selected visual reference VR-01. The complete scene map has six review perspectives, corrections and targeted post-correction checks. The complete mockup-guide package is available: 99 boards/215 panels with every screen state and storyboard variant referenced. No game implementation, test passage or release approval is claimed.
+Status: design baseline revised after twelve full-guide critiques, with visual reference VR-01 selected by the owner. The scene map and 99-board/215-panel mockup package remain the design references. A working testnet build and subsequent UX/recovery audit are now recorded separately in [SPRINT_RECORD.md](docs/SPRINT_RECORD.md), [UI_COVERAGE.md](docs/UI_COVERAGE.md), [RECOVERY_AUDIT.md](docs/RECOVERY_AUDIT.md) and [assets.md](docs/assets.md). Those records distinguish actual hosted play, controlled authority scenarios and unexecuted boundaries; the mockups themselves are not execution evidence. The owner has deferred mainnet until testnet testing and refinement are finalized.
 
 Owner: Enzo Smith.
 
@@ -12,7 +12,7 @@ The completed 84-answer questionnaire supplied by the owner is the product input
 
 The earlier conversation authorizes a sequence of research, questions, a comprehensive Markdown design, visual exploration, complete mockups, testnet implementation, mainnet release, and hackathon submission.
 
-This draft belongs to the design stage of that sequence.
+This document preserves the design baseline for that sequence; the companion execution records describe the implemented testnet game and measured refinements.
 
 It contains no implementation code.
 

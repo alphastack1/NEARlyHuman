@@ -1,11 +1,14 @@
-import type { DayResult, GameState, ItemId, Stats, Receipt } from '../domain';
+import type { DayResult, GameState, ItemId, Stats, Receipt, RecentAction } from '../domain';
 import type { Hex } from 'viem';
 
 export interface PublicConfig { chainId:number; chainName:string; rpcUrl:string; explorerUrl:string; collection:Hex; testnet:boolean; model:string; multiplier:number }
 export interface Rooster { id:string; owner:string; revision:number; state:GameState; pending?:{ id:string; deadline:number; status:string }; latestDay:number }
-export interface JobView { requestId:string; tokenId:string; phase:'queued'|'preparing'|'saving'|'ready'|'failed'|'recording_failure'|'expired'|'checking'; decisions:number; slot:number; updatedAt:number; latestChoice?:Receipt['choice']; ownerTx?:Hex; finalTx?:Hex; message?:string }
+export interface JobView { requestId:string; tokenId:string; phase:'queued'|'preparing'|'saving'|'ready'|'failed'|'recording_failure'|'expired'|'checking'|'unaccepted'; decisions:number; slot:number; updatedAt:number; latestChoice?:Receipt['choice']; ownerTx?:Hex; finalTx?:Hex; message?:string; retrySafe?:boolean; operation?:'mint'|'day' }
 export interface QuoteView { permit:Record<string,unknown>; signature:Hex; value:string; networkEstimate:string; totalEstimate:string; expiresAt:number }
-export interface SavedOutcome { rooster:Rooster; summary:string[]; history:unknown[] }
+export type CompactHistoryEntry = RecentAction & { outcome:number };
+export interface SavedDay { day:number; level:number; alive:boolean; deathCause?:GameState['deathCause']; savedAt:number; requestId:Hex; replayCommitment:Hex; requestTx?:Hex; saveTx?:Hex; replayAvailable?:boolean; protected:boolean; retentionEnd?:number }
+export interface SavedDaysPage { rooster:Rooster; days:SavedDay[]; nextBefore?:number }
+export interface SavedOutcome { rooster:Rooster; summary:string[]; history:CompactHistoryEntry[]; savedDay?:SavedDay }
 export class ApiError extends Error { constructor(message:string,public code:string,public status:number) { super(message); } }
 let session='';
 export function setSession(value:string) { session=value; }
@@ -26,5 +29,6 @@ export const api={
   job:(id:string)=>request<JobView>('/job/'+encodeURIComponent(id)),
   wake:(id:string)=>request<JobView>('/wake',{requestId:id}),
   replay:(tokenId:string,day?:number)=>request<{result:DayResult;commitment:Hex}>('/replay/'+encodeURIComponent(tokenId)+(day?'?day='+day:'')),
-  outcome:(tokenId:string)=>request<SavedOutcome>('/outcome/'+encodeURIComponent(tokenId)),
+  days:(tokenId:string,before?:number)=>request<SavedDaysPage>('/days/'+encodeURIComponent(tokenId)+(before?'?before='+before:'')),
+  outcome:(tokenId:string,day?:number)=>request<SavedOutcome>('/outcome/'+encodeURIComponent(tokenId)+(day?'?day='+day:'')),
 };

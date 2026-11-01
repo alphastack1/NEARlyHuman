@@ -6,6 +6,8 @@ import { chainOutcome, checkedRequest, connection, readRooster, readRoosters, Se
 import { issueQuote } from './admission';
 import { acceptTransaction, getJob, wakeJob, getReplay, getOutcome } from './jobs';
 import { StoreConflict } from './storage';
+import { BaseError, ContractFunctionRevertedError } from 'viem';
+import { readSavedDays, readSavedOutcome } from './saved-days';
 
 const json = (value: unknown, status = 200, extra: HeadersInit = {}) => new Response(JSON.stringify(value, (_, v) => typeof v === 'bigint' ? v.toString() : v), { status, headers: { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store', ...extra } });
 const notFound = () => new ServiceError('This page has wandered off.', 'not_found', 404);
@@ -44,7 +46,14 @@ export async function handleApi(request: Request): Promise<Response> {
       if (dayText && !/^[1-9]\d{0,8}$/.test(dayText)) throw notFound();
       return json(await getReplay(match[1], dayText ? Number(dayText) : undefined, session(request, false)));
     }
-    if (!post && (match = path.match(/^\/api\/outcome\/([1-9]\d{0,19})$/))) return json(await getOutcome(match[1]));
+    if (!post && (match = path.match(/^\/api\/days\/([1-9]\d{0,19})$/))) {
+      const before=url.searchParams.get('before');if(before&&!/^[1-9]\d{0,9}$/.test(before))throw notFound();
+      return json(await readSavedDays(match[1],before?Number(before):undefined));
+    }
+    if (!post && (match = path.match(/^\/api\/outcome\/([1-9]\d{0,19})$/))) {
+      const day=url.searchParams.get('day');if(day&&!/^[1-9]\d{0,9}$/.test(day))throw notFound();
+      return json(await readSavedOutcome(match[1],day?Number(day):undefined));
+    }
     if (!post && (match = path.match(/^\/api\/nft\/(46630|4663)\/([1-9]\d{0,19})(\/image\.svg)?$/))) {
       if (Number(match[1]) !== serverConfig().chainId) throw notFound();
       const rooster = await readRooster(match[2]), s = rooster.state;
@@ -60,6 +69,10 @@ export async function handleApi(request: Request): Promise<Response> {
     }
     throw notFound();
   } catch (error) {
+    if (error instanceof BaseError) {
+      const reverted = error.walk(cause => cause instanceof ContractFunctionRevertedError);
+      if (reverted instanceof ContractFunctionRevertedError && reverted.data?.errorName === 'ERC721NonexistentToken') return json({ error: { code: 'not_found', message: 'No rooster has that token number.' } }, 404);
+    }
     if (error instanceof ServiceError) return json({ error: { code: error.code, message: error.message } }, error.status);
     if (error instanceof StoreConflict) return json({ error: { code: 'busy', message: error.message } }, 409);
     // Provider/RPC details stay server-side; never forward credentials or raw transactions.
