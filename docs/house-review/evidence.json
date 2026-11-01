@@ -1,0 +1,164 @@
+[
+  {
+    "id": "before-care",
+    "title": "Before · the house was a locked bedroom crop",
+    "image": "images/before-care.png",
+    "note": "Actual published PEEP care. Dragging the floor did not let the player see other rooms."
+  },
+  {
+    "id": "before-cupboard",
+    "title": "Before · a cupboard with little to discover",
+    "image": "images/before-cupboard.png",
+    "note": "Actual published object reader: All in order, without a route to its stored supplies."
+  },
+  {
+    "id": "rooms",
+    "title": "Five quiet room shortcuts",
+    "image": "images/rooms.png",
+    "note": "Independent actual App review. The room strip closes after choosing; dragging the floor also browses."
+  },
+  {
+    "id": "kitchen",
+    "title": "Look around the kitchen",
+    "image": "images/kitchen.png",
+    "note": "Actual saved PEEP house, with no NPC command, paid request or new biological day."
+  },
+  {
+    "id": "garden",
+    "title": "Look around the garden",
+    "image": "images/garden.png",
+    "note": "The two actual plots are now reachable from care."
+  },
+  {
+    "id": "living",
+    "title": "Find the furniture the rooster made",
+    "image": "images/living.png",
+    "note": "Actual saved house. Room browsing moves the camera; the rooster continues resting."
+  },
+  {
+    "id": "cupboard-peek",
+    "title": "Touch a place and keep the house visible",
+    "image": "images/cupboard-peek.png",
+    "note": "A brief care peek exposes actual stored counts. Its Info control opens the complete reader."
+  },
+  {
+    "id": "cupboard",
+    "title": "Useful cupboard, narrow phone",
+    "image": "images/cupboard.png",
+    "note": "All fifteen actual supply types lead to item details. Compact names fit; quantities retain their larger type."
+  },
+  {
+    "id": "pantry",
+    "title": "Pantry stock at320px",
+    "image": "images/pantry.png",
+    "note": "Actual PEEP stock. A zero count is useful information, and its item reader can plan a future delivery."
+  },
+  {
+    "id": "milk-details",
+    "title": "From the pantry to a supply decision",
+    "image": "images/milk-details.png",
+    "note": "Existing item details/Add flow; proposed delivery is not credited to stored stock."
+  },
+  {
+    "id": "plot-peek",
+    "title": "A plot gives an immediate useful response",
+    "image": "images/plot-peek.png",
+    "note": "Actual garden tap leaves the room visible and shows plot facts."
+  },
+  {
+    "id": "plot-details",
+    "title": "Growth and water belong to that saved plot",
+    "image": "images/plot-details.png",
+    "note": "Actual empty Plot1, moisture0/2 and relevant supplies. This does not grant a free planting/harvest action."
+  },
+  {
+    "id": "peek",
+    "title": "A little acknowledgement",
+    "image": "images/peek.png",
+    "note": "Final source, actual saved PEEP state, native care tap. Two-pixel head/chest lift remains grounded."
+  },
+  {
+    "id": "resettle",
+    "title": "Then back to resting",
+    "image": "images/resettle.png",
+    "note": "Same foot position and saved state after the short response."
+  },
+  {
+    "id": "lamp-on",
+    "title": "A readable little pool of light",
+    "image": "images/lamp-on.png",
+    "note": "Final lamp treatment in the real renderer. This fixture view predates only the later camera-headroom adjustment."
+  },
+  {
+    "id": "lamp-off",
+    "title": "A lamp that responds to a tap",
+    "image": "images/lamp-off.png",
+    "note": "The shade cools and floor pool disappears; an actual power outage prevents a working light."
+  },
+  {
+    "id": "plant",
+    "title": "Leaves rustle while the pot stays put",
+    "image": "images/plant.png",
+    "note": "Actual pointer response. It is brief; the house is not constantly wobbling."
+  },
+  {
+    "id": "chair-slide",
+    "title": "Furniture moves through space",
+    "image": "images/chair-slide.png",
+    "note": "Canonical controlled H20 fixture, captured mid-slide. Chair and rooster move together to the recorded anchor."
+  },
+  {
+    "id": "carry",
+    "title": "Travel has a visible purpose",
+    "image": "images/carry.png",
+    "note": "Actual saved BOK receipt. Seeds are carried before contact; inventory has not yet changed."
+  },
+  {
+    "id": "headroom-before",
+    "title": "Rejected · the face disappeared at320px",
+    "image": "images/headroom-before.png",
+    "note": "Independent actual App capture after a full1s settle. This was a real fixed-HUD framing defect."
+  },
+  {
+    "id": "headroom320",
+    "title": "Final · settled face and peek fit at320px",
+    "image": "images/headroom320.png",
+    "note": "Actual App with its75px HUD. Sleep/rest/Follow/Bedroom use the corrected shared camera point; actor and bed do not move."
+  },
+  {
+    "id": "headroom390",
+    "title": "Final · the portrait composition stays clean",
+    "image": "images/headroom390.png",
+    "note": "Actual App after Kitchen → Return PEEP and1.1s settle."
+  },
+  {
+    "id": "full-stock",
+    "title": "Controlled full-stock geometry",
+    "image": "images/full-stock.png",
+    "note": "Only this ownership GET deliberately sets all fifteen stock counts to65,535 for layout testing. It is not claimed as naturally attained project stock. The task draft was restored after this scenario."
+  },
+  {
+    "id": "trial-before",
+    "title": "Before · a living pet became inaccessible",
+    "image": "images/trial-before.png",
+    "note": "Actual BOK after its three testnet days had replay/summary but no way to visit its house."
+  },
+  {
+    "id": "visit-home",
+    "title": "Visit a completed living pet",
+    "image": "images/visit-home.png",
+    "note": "Actual BOK, SAVED03. Explore house, stock and saved films remain available; there is no fourth-day Prepare or delivery."
+  },
+  {
+    "id": "visit-home320",
+    "title": "A free home visit on the narrow phone",
+    "image": "images/visit-home320.png",
+    "note": "Actual BOK at320px, with the corrected bedroom framing and compact home controls."
+  },
+  {
+    "id": "visit-item",
+    "title": "Read actual stock without planning another day",
+    "image": "images/visit-item.png",
+    "note": "Final exact browser build: actual Stored1 bandage, no Add control and no future-delivery line."
+  }
+]

@@ -1,6 +1,6 @@
 import { BODY_CLASSIC, BEAK_ORANGE, HEADGEAR_GRIDS, BODY_COLOR_INDICES, HEADGEAR_COLOR_INDICES, PALETTE } from './rooster-data';
 
-export type RoosterPose = 'idle' | 'breathe' | 'preen' | 'stretch' | 'walk-a' | 'walk-b' | 'blink' | 'sleep' | 'use' | 'eat' | 'treat' | 'garden' | 'repair' | 'hurt' | 'dead';
+export type RoosterPose = 'idle' | 'breathe' | 'preen' | 'stretch' | 'perk' | 'doze' | 'peek' | 'walk-a' | 'walk-b' | 'blink' | 'sleep' | 'use' | 'eat' | 'treat' | 'garden' | 'repair' | 'hurt' | 'dead';
 export interface RoosterTraits { body: number; wing: number; headgear: number; accent: number }
 export const ROOSTER_FRAME = { width:32, height:40, padX:4, padY:12, footX:18, footY:35 } as const;
 
@@ -24,13 +24,13 @@ export function roosterGrid(seed:string, pose:RoosterPose='idle'): Uint8Array {
   }
   // Move only the original wing for work poses. Identity, silhouette, hat and face
   // stay source-derived; the arm reaches toward the actual tool/food location.
-  if(['use','eat','treat','garden','repair','preen','stretch'].includes(pose)){
+  if(['use','eat','treat','garden','repair','preen','stretch','perk'].includes(pose)){
     for(let y=14;y<19;y++)for(let x=9;x<18;x++)if(BODY_CLASSIC[y*24+x]===8)grid[y*24+x]=t.body;
-    const wing=pose==='eat'||pose==='preen'?[[14,11],[15,10],[16,9],[16,10],[15,11]]:pose==='treat'?[[13,13],[14,12],[15,12],[15,13],[14,14]]:pose==='garden'?[[14,16],[15,17],[16,18],[17,18],[17,17]]:pose==='repair'||pose==='stretch'?[[13,12],[14,11],[15,10],[16,10],[16,11]]:[[14,14],[15,13],[16,13],[17,13],[17,14]];
+    const wing=pose==='eat'||pose==='preen'?[[14,11],[15,10],[16,9],[16,10],[15,11]]:pose==='treat'?[[13,13],[14,12],[15,12],[15,13],[14,14]]:pose==='garden'?[[14,16],[15,17],[16,18],[17,18],[17,17]]:pose==='repair'||pose==='stretch'?[[13,12],[14,11],[15,10],[16,10],[16,11]]:pose==='perk'?[[14,14],[15,13],[16,12],[17,12],[17,13]]:[[14,14],[15,13],[16,13],[17,13],[17,14]];
     for(const[x,y]of wing)grid[y*24+x]=t.wing;
   }
   // Close the base eye before overlays, so shades/masks are never overwritten.
-  if (pose==='blink'||pose==='sleep'||pose==='dead'||pose==='preen') grid[7*24+16]=11;
+  if (pose==='blink'||pose==='sleep'||pose==='dead'||pose==='preen'||pose==='doze') grid[7*24+16]=11;
   const hat = HEADGEAR_GRIDS[t.headgear];
   for(let i=0;i<576;i++) if(hat[i]) grid[i]=hat[i]===5?t.accent:hat[i];
   for(let i=0;i<576;i++) if(BEAK_ORANGE[i]) grid[i]=BEAK_ORANGE[i];
@@ -49,10 +49,13 @@ export function roosterCanvas(seed:string, pose:RoosterPose='idle'):HTMLCanvasEl
   const c=document.createElement('canvas');c.width=ROOSTER_FRAME.width;c.height=ROOSTER_FRAME.height;
   const ctx=c.getContext('2d')!;ctx.imageSmoothingEnabled=false;
   const grid=roosterGrid(seed,pose);
-  const bob=pose==='walk-a'?-1:pose==='walk-b'?0:pose==='sleep'?1:pose==='garden'?1:pose==='hurt'?1:0;
-  for(let y=0;y<24;y++)for(let x=0;x<24;x++) { const v=grid[y*24+x];if(v){ctx.fillStyle=PALETTE[v];ctx.fillRect(x+4,y+12+bob+(pose==='breathe'&&y<18?-1:0),1,1);} }
-  // Lift the chest one source pixel while the feet stay planted.
-  if(pose==='breathe')for(let x=0;x<24;x++){const v=grid[18*24+x];if(v){ctx.fillStyle=PALETTE[v];ctx.fillRect(x+4,29,1,1);}}
+  const bob=pose==='walk-a'?-1:pose==='walk-b'?0:pose==='sleep'||pose==='peek'?1:pose==='garden'?1:pose==='hurt'?1:0;
+  // Attention and tiredness move the chest, not the foot anchor. Headgear moves
+  // with its existing pixels rather than being repainted over the face.
+  const chestLift=pose==='peek'?-2:pose==='breathe'||pose==='perk'?-1:pose==='doze'?1:0;
+  for(let y=0;y<24;y++)for(let x=0;x<24;x++) { const v=grid[y*24+x];if(v){ctx.fillStyle=PALETTE[v];ctx.fillRect(x+4,y+12+bob+(y<18?chestLift:0),1,1);} }
+  // Join the lifted chest to the planted lower body, including the two-pixel peek.
+  if(chestLift<0)for(let row=30+bob+chestLift;row<30+bob;row++)for(let x=0;x<24;x++){const v=grid[18*24+x];if(v){ctx.fillStyle=PALETTE[v];ctx.fillRect(x+4,row,1,1);}}
   return c;
 }
 

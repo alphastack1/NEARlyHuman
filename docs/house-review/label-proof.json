@@ -1,0 +1,26 @@
+{
+  "evidence": "Actual canonical PEEP2 cupboard at320px; CSS-only compact label fitting",
+  "names": [
+    {
+      "text": "Medicine",
+      "width": 64,
+      "height": 12,
+      "font": 8,
+      "lineHeight": 12,
+      "oneLine": true,
+      "inside": true
+    },
+    {
+      "text": "Umbrella",
+      "width": 64,
+      "height": 12,
+      "font": 8,
+      "lineHeight": 12,
+      "oneLine": true,
+      "inside": true
+    }
+  ],
+  "allTargets44": true,
+  "errors": [],
+  "posts": []
+}

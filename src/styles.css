@@ -2619,3 +2619,91 @@ input::placeholder {
     max-width: 460px;
   }
 }
+
+.house-view-controls {
+  position: absolute;
+  right: -2px;
+  bottom: calc(100% + 7px);
+  display: flex;
+  gap: 6px;
+}
+
+.house-view-controls button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 36px;
+  padding: 7px 9px;
+  color: #d5e1d7;
+  background: #183342;
+  border: 2px solid #7895a2;
+  box-shadow: inset 0 0 0 1px #304e5e, 1px 2px #0d2230;
+  font-size: clamp(8px, 2.1cqw, 12px);
+  line-height: 1.4;
+}
+
+.house-view-controls .selected { color: var(--yellow); border-color: var(--yellow); }
+.house-follow { max-width: 42cqw; overflow-wrap: anywhere; }
+
+.house-room-strip {
+  position: absolute;
+  bottom: calc(100% + 49px);
+  left: -3px;
+  right: -3px;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 3px;
+  padding: 5px;
+  background: #152e3e;
+  border: 2px solid #8da8af;
+  box-shadow: 0 2px 0 #0a2030;
+}
+
+.house-room-strip button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-width: 0;
+  min-height: 48px;
+  padding: 5px 2px;
+  border: 1px solid #526e78;
+  background: #213b48;
+  color: #e6e6d1;
+  font-size: clamp(6.5px, 1.9cqw, 11px);
+  line-height: 1.4;
+}
+
+.house-room-strip .selected { border-color: var(--yellow); background: #3d4a3c; color: #fff0ad; }
+.house-room-strip svg { color: #c0d39b; }
+
+.house-peek {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+  min-width: 0;
+  min-height: 44px;
+  border: 0;
+  padding: 1px 5px;
+  background: transparent;
+  text-align: left;
+  color: #efeccf;
+}
+
+.house-peek-copy { display: flex; flex-direction: column; gap: 7px; min-width: 0; }
+.house-peek strong { font-size: clamp(9px, 2.55cqw, 14px); line-height: 1.4; }
+.house-peek-detail { font-size: clamp(8px, 2.1cqw, 12px); color: #bed0c7; line-height: 1.5; overflow-wrap: anywhere; }
+.house-peek-stock { display: flex; gap: 14px; flex-wrap: wrap; align-items: center; }
+.house-peek-stock>span { display: inline-flex; align-items: center; gap: 4px; font-size: clamp(8px, 2.1cqw, 12px); }
+.house-peek-stock img { width: 19px; height: 19px; image-rendering: pixelated; object-fit: contain; }
+.house-peek-stock b { font-weight: normal; }
+.house-peek>svg { flex: none; color: #a7c3c5; }
+.screen-replay .event-lines { transition: opacity 180ms linear; }
+.screen-replay.is-traveling .event-lines { opacity: .65; }
+
+.home-visit-links { display: flex; justify-content: space-around; gap: 10px; }
+.home-visit-links>.text-button { min-height: 44px; margin: 0; font-size: clamp(9px, 2.2cqw, 13px); }

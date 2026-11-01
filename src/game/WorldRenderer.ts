@@ -10,6 +10,8 @@ import { PROP_URLS } from '../art/asset-urls';
 import { findRoute, targetPoint, TARGET_LABELS, WORLD_HEIGHT, WORLD_WIDTH, type WorldPoint } from './layout';
 import { purposefulTravelMs, receiptTiming } from './presentation';
 import { quietSpanAt } from './quiet-spans';
+import { BEDROOM_VIEW, HOUSE_ROOMS, constrainHouseView, roomAtView, type HouseRoom, type HouseView } from './house-view';
+import { samplePersonality, sampleAttention, NPC_ATTENTION_MS, NPC_ATTENTION_COOLDOWN_MS } from './personality';
 
 export interface WorldCallbacks {
  onReceipt?:(receipt:Receipt,index:number)=>void;
@@ -18,6 +20,8 @@ export interface WorldCallbacks {
  onProgress?:(index:number,total:number)=>void;
  onComplete?:()=>void;
  onInspect?:(target:TargetId)=>void;
+ onViewChange?:(view:HouseView)=>void;
+ onMotion?:(motion:{traveling:boolean})=>void;
 }
 export interface SavePresentation { sleep?:boolean; dim?:boolean; focus?:TargetId }
 export interface PlaybackOptions { startIndex?:number; durationMs?:number }
@@ -28,6 +32,7 @@ export interface WorldController {
  pause:()=>void;resume:()=>void;skip:()=>void;seek:(index:number)=>void;
  setMuted:(muted:boolean)=>void;setZoom:(zoom:number)=>void;
  setInputEnabled:(enabled:boolean)=>void;
+ setExploreEnabled:(enabled:boolean)=>void;focusRoom:(room:HouseRoom)=>void;followActor:()=>void;
  getCurrentIndex:()=>number;isPaused:()=>boolean;
  dispose:()=>void;
 }
@@ -35,6 +40,9 @@ export interface WorldController {
 interface Prop {kind:FixtureArt;id?:TargetId;x:number;y:number;image:Phaser.GameObjects.Image;shadow?:Phaser.GameObjects.Ellipse;opts:ArtOptions}
 interface Particle {sprite:Phaser.GameObjects.Rectangle;x:number;y:number;vx:number;vy:number;life:number;total:number}
 interface Playback {day:DayResult;index:number;elapsed:number;normalSlot:number;perSlot:number;route:WorldPoint[];routeLength:number;travel:number;effect:boolean;stage:'prelude'|'receipts'|'ending';paused:boolean;preludeTarget:'mailbox'|'store';montage?:boolean;originCamera?:WorldPoint;quietSpanEnd?:number}
+interface HouseGesture {pointer:number;x:number;y:number;view:WorldPoint;prop?:Prop;actor?:boolean;dragging:boolean}
+interface HouseResponse {prop:Prop;elapsed:number;duration:number;scaleX:number;scaleY:number;leaf?:Phaser.GameObjects.Image}
+interface HouseAction {kind:'move'|'reveal';prop:Prop;elapsed:number;duration:number;fromY:number;toY:number;actorFrom?:WorldPoint;actorTo?:WorldPoint}
 
 const demoState:GameState={version:1,seed:'demo',name:'BOK',stats:{body:2,wits:2,spirit:1},day:0,level:0,alive:true,needs:{health:10000,nutrition:8000,hydration:8000,energy:8000,morale:8000},inventory:Object.fromEntries(ITEM_IDS.map(i=>[i,0])) as GameState['inventory'],conditions:[],plots:[{plant:null,growth:0,moisture:0,dryDays:0,soilBlocked:false,pendingBonus:false},{plant:null,growth:0,moisture:0,dryDays:0,soilBlocked:false,pendingBonus:false}],house:{mess:0,damage:{stove:false,window:false,chair:false},chairLife:0,chairAnchor:0,shelterLife:0,umbrellaLife:[0,0],stovePatch:0,windowPatch:0,chairBrace:false,windowBrace:false,dripDiverted:false,backupHeat:false,powerOut:false,fire:'none'},recent:[]};
 
@@ -53,7 +61,7 @@ class HomeScene extends Phaser.Scene {
  private particles:Particle[]=[];
  private clock=0;private frame='';private seed='demo';private facing=1;private modeSleep=true;
  private fireFx!:Phaser.GameObjects.Graphics;private messFx!:Phaser.GameObjects.Graphics;private taskFx!:Phaser.GameObjects.Graphics;
- private worldPoint:WorldPoint={x:312,y:88};private cameraPoint:WorldPoint={x:368,y:120};
+ private worldPoint:WorldPoint={x:312,y:88};private cameraPoint:WorldPoint={...BEDROOM_VIEW};
  private readyResolve:()=>void;
  private muted=false;private audio:AudioContext|null=null;private lastStep=0;
  private lastMessage='';
@@ -64,6 +72,11 @@ class HomeScene extends Phaser.Scene {
  private inspectFx!:Phaser.GameObjects.Graphics;private inspectMark?:{x:number;y:number;w:number;h:number;remaining:number};
  private queued:(()=>void)[]=[];private initialized=false;
  private inputEnabled=true;
+ private exploreEnabled=false;private exploring=false;private explorePoint?:WorldPoint;private viewNotice='';
+ private gesture?:HouseGesture;private response?:HouseResponse;private houseAction?:HouseAction;
+ private houseFx!:Phaser.GameObjects.Graphics;private lampOn=true;
+ private attentionAt?:number;private lastAttention=-Infinity;private attentionFacing=1;
+ private motion=false;
 
  constructor(cb:WorldCallbacks,readyResolve:()=>void){super('home');this.cb=cb;this.readyResolve=readyResolve;}
  preload():void {
@@ -95,9 +108,22 @@ class HomeScene extends Phaser.Scene {
   for(let i=0;i<3;i++)this.zeds.push(this.add.text(314+i*5,61-i*7,'z',{fontFamily:'monospace',fontSize:i===0?'8px':'6px',fontStyle:'bold',color:'#eee8ce'}).setDepth(502));
   this.fireFx=this.add.graphics().setDepth(470);this.messFx=this.add.graphics().setDepth(4);this.taskFx=this.add.graphics().setDepth(480);
   this.ambientFx=this.add.graphics().setDepth(13);
+  this.houseFx=this.add.graphics().setDepth(478);
   this.night=this.add.rectangle(0,0,640,500,0x192945,1).setOrigin(0).setScrollFactor(0).setDepth(900).setAlpha(.22);
   this.transition=this.add.rectangle(0,0,640,500,0x182d3d,1).setOrigin(0).setScrollFactor(0).setDepth(950).setAlpha(0);
   this.inspectFx=this.add.graphics().setDepth(960);
+  this.actor.setInteractive(new Phaser.Geom.Rectangle(8,12,20,25),Phaser.Geom.Rectangle.Contains);this.actor.input!.cursor='pointer';this.actor.input!.enabled=false;
+  this.input.on('gameobjectdown',(pointer:Phaser.Input.Pointer,object:Phaser.GameObjects.GameObject)=>{
+   if(!this.acceptsPointer(pointer))return;
+   const prop=this.props.find(p=>p.image===object);
+   if(object===this.actor&&!this.exploreEnabled)return;
+   if(prop&&!prop.id&&!this.exploreEnabled)return;
+   this.beginGesture(pointer,prop,object===this.actor);
+  });
+  this.input.on('pointerdown',(pointer:Phaser.Input.Pointer)=>{if(this.acceptsPointer(pointer)&&!this.gesture)this.beginGesture(pointer);});
+  this.input.on('pointermove',(pointer:Phaser.Input.Pointer)=>this.moveGesture(pointer));
+  this.input.on('pointerup',(pointer:Phaser.Input.Pointer)=>this.endGesture(pointer));
+  this.input.on('pointerupoutside',()=>{this.gesture=undefined;});
   this.input.enabled=this.inputEnabled;this.applyState(this.state);this.setSave(this.state);this.initialized=true;this.readyResolve();for(const q of this.queued)q();this.queued=[];
  }
  private texture(kind:FixtureArt,opts:ArtOptions={}):string {
@@ -134,14 +160,98 @@ class HomeScene extends Phaser.Scene {
   if(kind==='window')image.setDepth(12);
   if(kind==='bed')image.setScale(1.2);
   const p:Prop={kind,id,x,y,image,shadow,opts};this.props.push(p);
-  if(id){const px=Math.max(0,(32-image.width)/2),py=Math.max(0,(32-image.height)/2);image.setInteractive(new Phaser.Geom.Rectangle(-px,-py,image.width+px*2,image.height+py*2),Phaser.Geom.Rectangle.Contains);image.input!.cursor='pointer';image.on('pointerdown',(pointer:Phaser.Input.Pointer)=>{
-   if(!this.inputEnabled||pointer.event?.target!==this.game.canvas||!image.visible)return;let selected=p;
-   if(p.kind==='shelter'){const plot=this.props.find(q=>q.kind==='plot'&&Math.abs(pointer.worldX-q.x)<=20&&pointer.worldY>=q.y-32&&pointer.worldY<=q.y+8);if(plot)selected=plot;}
-   this.pausePlayback();this.openAudio();const bounds=selected.image.getBounds();this.inspectMark={x:bounds.x-2,y:bounds.y-2,w:bounds.width+4,h:bounds.height+4,remaining:650};this.drawInspect(0);this.cb.onInspect?.(selected.id!);this.tone('tap');
-  });}
+  const px=Math.max(0,(32-image.width)/2),py=Math.max(0,(32-image.height)/2);image.setInteractive(new Phaser.Geom.Rectangle(-px,-py,image.width+px*2,image.height+py*2),Phaser.Geom.Rectangle.Contains);image.input!.cursor='pointer';image.input!.enabled=!!id||this.exploreEnabled;
   return p;
  }
  private setProp(prop:Prop,opts:ArtOptions):void {prop.opts=opts;prop.image.setTexture(this.texture(prop.kind,opts));}
+ private acceptsPointer(pointer:Phaser.Input.Pointer):boolean {return this.inputEnabled&&pointer.event?.target===this.game.canvas&&pointer.y>=38&&pointer.y<=220;}
+ private beginGesture(pointer:Phaser.Input.Pointer,prop?:Prop,actor=false):void {
+  if(!this.acceptsPointer(pointer))return;
+  this.gesture={pointer:pointer.id,x:pointer.x,y:pointer.y,view:{...this.cameraPoint},prop,actor,dragging:false};
+ }
+ private moveGesture(pointer:Phaser.Input.Pointer):void {
+  const gesture=this.gesture;if(!gesture||gesture.pointer!==pointer.id||!this.inputEnabled)return;
+  const dx=pointer.x-gesture.x,dy=pointer.y-gesture.y;
+  if(!gesture.dragging&&Math.hypot(dx,dy)<6)return;
+  gesture.dragging=true;if(!this.exploreEnabled)return;this.exploring=true;this.explorePoint=constrainHouseView({x:gesture.view.x-dx/this.cameras.main.zoom,y:gesture.view.y-dy/this.cameras.main.zoom},this.cameras.main.zoom);
+  this.cameraPoint={...this.explorePoint};this.cameras.main.centerOn(Math.round(this.cameraPoint.x),Math.round(this.cameraPoint.y));this.notifyView();
+ }
+ private endGesture(pointer:Phaser.Input.Pointer):void {
+  const gesture=this.gesture;this.gesture=undefined;
+  if(!gesture||gesture.pointer!==pointer.id||gesture.dragging||!this.acceptsPointer(pointer))return;
+  if(gesture.actor){if(this.exploreEnabled&&this.state.alive&&this.clock-this.lastAttention>=NPC_ATTENTION_COOLDOWN_MS){this.attentionAt=this.clock;this.lastAttention=this.clock;this.attentionFacing=pointer.worldX<this.actor.x?-1:1;this.openAudio();this.tone('tap');}return;}
+  let prop=gesture.prop;if(!prop||!prop.image.visible)return;
+  if(prop.kind==='shelter'){const plot=this.props.find(p=>p.kind==='plot'&&Math.abs(pointer.worldX-p.x)<=20&&pointer.worldY>=p.y-32&&pointer.worldY<=p.y+8);if(plot)prop=plot;}
+  this.openAudio();const bounds=prop.image.getBounds();this.inspectMark={x:bounds.x-2,y:bounds.y-2,w:bounds.width+4,h:bounds.height+4,remaining:650};this.drawInspect(0);
+  if(this.exploreEnabled)this.respondToProp(prop);else if(prop.id)this.pausePlayback();
+  this.tone('tap');if(prop.id)this.cb.onInspect?.(prop.id);
+ }
+ private notifyView():void {
+  const view:HouseView={exploring:this.exploring,...(this.exploring?{room:roomAtView(this.explorePoint||this.cameraPoint)}:{})};
+  const key=JSON.stringify(view);if(key!==this.viewNotice){this.viewNotice=key;this.cb.onViewChange?.(view);}
+ }
+ public explore(enabled:boolean):void {
+  if(this.exploreEnabled===enabled)return;this.exploreEnabled=enabled;this.gesture=undefined;
+  if(!enabled){this.exploring=false;this.explorePoint=undefined;this.clearResponse();this.lampOn=true;this.attentionAt=undefined;this.notifyView();}
+  if(this.initialized){for(const prop of this.props)if(prop.image.input)prop.image.input.enabled=!!prop.id||enabled;this.actor.input!.enabled=enabled&&this.state.alive;}
+ }
+ public focus(room:HouseRoom):void {this.enqueue(()=>{if(!this.exploreEnabled||!this.inputEnabled)return;const target=HOUSE_ROOMS.find(r=>r.id===room);if(!target)return;this.gesture=undefined;this.exploring=true;this.explorePoint=constrainHouseView(target,this.cameras.main.zoom);this.notifyView();});}
+ public follow():void {this.exploring=false;this.explorePoint=undefined;this.gesture=undefined;this.notifyView();}
+ private resetPresence():void {this.follow();this.clearResponse();this.clearHouseAction();this.lampOn=true;this.attentionAt=undefined;this.lastAttention=-Infinity;this.setMotion(false);}
+ private clearResponse():void {
+  const response=this.response;if(!response)return;
+  response.prop.image.setCrop().setScale(response.scaleX,response.scaleY).setRotation(0).setOrigin(.5,1).setPosition(response.prop.x,response.prop.y);
+  response.leaf?.destroy();this.response=undefined;
+  if(response.prop.kind==='fridge'||response.prop.kind==='cupboard')this.setProp(response.prop,{});
+ }
+ private respondToProp(prop:Prop):void {
+  this.clearResponse();if(prop.kind==='pantry')prop=this.props.find(p=>p.kind==='fridge')||prop;
+  const response:HouseResponse={prop,elapsed:0,duration:900,scaleX:prop.image.scaleX,scaleY:prop.image.scaleY};this.response=response;
+  if(prop.kind==='fridge'||prop.kind==='cupboard')this.setProp(prop,{...prop.opts,open:true});
+  if(prop.kind==='bedside'&&!this.state.house.powerOut)this.lampOn=!this.lampOn;
+  if(prop.kind==='plant'){
+   const cut=Math.floor(prop.image.height*.68);prop.image.setCrop(0,cut,prop.image.width,prop.image.height-cut);
+   response.leaf=this.add.image(prop.x,prop.y,prop.image.texture.key).setOrigin(.5,1).setScale(response.scaleX,response.scaleY).setCrop(0,0,prop.image.width,cut).setTint(prop.image.tintTopLeft).setDepth(prop.image.depth+.05);
+  }
+ }
+ private updateResponse(dt:number):void {
+  const response=this.response;if(!response)return;response.elapsed+=dt;
+  if(response.elapsed>=response.duration){this.clearResponse();return;}
+  const progress=response.elapsed/response.duration,wave=Math.sin(progress*Math.PI*4)*(1-progress),prop=response.prop;
+  if(prop.kind==='plant')response.leaf?.setRotation(wave*.035).setX(prop.x+Math.round(wave));
+  if(prop.kind==='painting')prop.image.setOrigin(.5,0).setPosition(prop.x,prop.y-prop.image.height*response.scaleY).setRotation(wave*.035);
+ }
+ private clearHouseAction(finish=false):void {
+  const action=this.houseAction;if(!action)return;
+  action.prop.image.setPosition(action.prop.x,action.prop.y).setScale(1).setAlpha(action.prop.kind==='shelter'?.9:1);
+  action.prop.shadow?.setPosition(action.prop.x+1,action.prop.y+1).setDepth(action.prop.y-.8);
+  if(finish&&action.actorTo)this.worldPoint={...action.actorTo};this.houseAction=undefined;
+ }
+ private beginHouseAction(before:GameState,after:GameState,receipt:Receipt):void {
+  this.clearHouseAction();if(!after.alive||!receipt.success)return;
+  const chair=this.props.find(p=>p.id==='chair')!,shelter=this.props.find(p=>p.kind==='shelter')!;
+  if(receipt.action==='H20'&&before.house.chairAnchor!==after.house.chairAnchor){
+   const from=targetPoint('chair',before.house.chairAnchor),to=targetPoint('chair',after.house.chairAnchor);
+   this.houseAction={kind:'move',prop:chair,elapsed:0,duration:650,fromY:before.house.chairAnchor?384:336,toY:chair.y,actorFrom:from,actorTo:to};
+  }else if(!before.house.chairLife&&after.house.chairLife)this.houseAction={kind:'reveal',prop:chair,elapsed:0,duration:450,fromY:chair.y,toY:chair.y};
+  else if(!before.house.shelterLife&&after.house.shelterLife)this.houseAction={kind:'reveal',prop:shelter,elapsed:0,duration:500,fromY:shelter.y,toY:shelter.y};
+ }
+ private updateHouseAction(dt:number):void {
+  const action=this.houseAction;if(!action)return;action.elapsed+=dt;
+  if(action.elapsed>=action.duration){this.clearHouseAction(true);return;}
+  if(action.kind==='move'&&action.actorFrom&&action.actorTo){const t=action.elapsed/action.duration;this.worldPoint={x:Phaser.Math.Linear(action.actorFrom.x,action.actorTo.x,t),y:Phaser.Math.Linear(action.actorFrom.y,action.actorTo.y,t)};}
+ }
+ private drawHouseResponse():void {
+  const g=this.houseFx;g.clear();const lamp=this.props.find(p=>p.kind==='bedside');
+  if(lamp&&(!this.lampOn||this.state.house.powerOut)){g.fillStyle(0x596f79);g.fillRect(lamp.x-7,lamp.y-32,15,8);g.fillRect(lamp.x-6,lamp.y-33,13,1);g.fillStyle(0x7e908f);g.fillRect(lamp.x-6,lamp.y-32,13,6);g.fillStyle(0x9ca9a2);g.fillRect(lamp.x-5,lamp.y-32,11,1);g.fillStyle(0x687e84);g.fillRect(lamp.x-7,lamp.y-25,15,1);}
+  const response=this.response;if(response?.prop.kind==='shelf'){
+   const prop=response.prop,rise=Math.round(Math.sin(response.elapsed/response.duration*Math.PI)*3);g.fillStyle(0xe6dfc2);g.fillRect(prop.x-8,prop.y-18-rise,3,1);g.fillStyle(0x9aaa9b);g.fillRect(prop.x-8,prop.y-16-rise,3,1);
+  }
+  const action=this.houseAction;if(!action)return;const t=action.elapsed/action.duration;
+  if(action.kind==='move'){const y=Phaser.Math.Linear(action.fromY,action.toY,t);action.prop.image.setPosition(action.prop.x,Math.round(y)).setDepth(y);action.prop.shadow?.setPosition(action.prop.x+1,y+1).setDepth(y-.8);}
+  else{const lift=Math.sin(t*Math.PI)*3;action.prop.image.setScale(1,Math.min(1,.84+t*.3)).setY(action.toY-lift).setAlpha(action.prop.kind==='shelter'?Math.min(.9,.45+t):1);}
+ }
+ private setMotion(traveling:boolean):void {if(this.motion===traveling)return;this.motion=traveling;this.cb.onMotion?.({traveling});}
  private pose(pose:RoosterPose):void {
   const key='rooster-'+this.seed+'-'+pose;if(!this.textures.exists(key))this.textures.addCanvas(key,roosterCanvas(this.seed,pose));
   if(this.frame!==key){this.actor.setTexture(key);this.frame=key;}
@@ -173,6 +283,7 @@ class HomeScene extends Phaser.Scene {
    if(p.kind==='umbrella')p.image.setVisible(state.house.umbrellaLife[p.x<430?0:1]>0&&state.house.shelterLife===0);
    p.shadow?.setPosition(p.x+1,p.y+1).setDepth(p.y-.8).setVisible(p.image.visible);
   }
+  if(this.actor.input)this.actor.input.enabled=this.exploreEnabled&&state.alive;
   this.drawMess();
  }
  private drawMess():void {
@@ -181,14 +292,16 @@ class HomeScene extends Phaser.Scene {
   if(this.state.conditions.some(c=>c.kind==='contaminatedSurface'&&!c.resolved)){this.messFx.fillStyle(0x76835b,.7);this.messFx.fillRect(201,57,3,2);this.messFx.fillRect(211,59,2,1);}
  }
  public setSave(state:GameState=demoState,options:SavePresentation={}):void {this.enqueue(()=>{
+  const keepView=this.exploreEnabled&&this.exploring&&this.state.seed===state.seed&&this.state.day===state.day;if(!keepView)this.resetPresence();
   this.playback=null;this.inspectMark=undefined;this.inspectFx.clear();this.transition.setAlpha(0);this.taskFx.clear();this.closeStorage();this.applyState(state);this.modeSleep=options.sleep!==false&&state.alive;this.held.setVisible(false);this.secondHeld.setVisible(false);this.actor.setVisible(state.alive);this.actor.setRotation(0);
   this.shadow.setVisible(state.alive&&!this.modeSleep);this.blanket.setVisible(this.modeSleep);this.setLight(options.dim===false?0:state.day===0?.05:.23);
-  if(this.modeSleep){this.worldPoint={x:312,y:74};this.cameraPoint={x:368,y:112};this.facing=1;this.pose('sleep');}
+  if(this.modeSleep){this.worldPoint={x:312,y:74};this.cameraPoint={...BEDROOM_VIEW};this.facing=1;this.pose('sleep');}
   else{this.worldPoint=targetPoint(options.focus||'bed',state.house.chairAnchor);this.cameraPoint={x:this.worldPoint.x,y:this.worldPoint.y+18};this.pose('idle');}
   if(options.focus&&!this.modeSleep)this.cameraPoint=targetPoint(options.focus,state.house.chairAnchor);
   this.actor.setPosition(this.worldPoint.x,this.worldPoint.y);this.shadow.setPosition(this.worldPoint.x,this.worldPoint.y);this.centerCamera(true);
  });}
  public start(day:DayResult,options:PlaybackOptions={}):void {this.enqueue(()=>{
+  this.resetPresence();
   this.openAudio();this.clearParticles();this.transition.setAlpha(0);this.modeSleep=false;this.blanket.setVisible(false);this.setLight(0);for(const z of this.zeds)z.setVisible(false);
   const index=Math.min(Math.max(0,options.startIndex||0),Math.max(0,day.receipts.length-1));const first=day.receipts[index];if(!first){this.applyState(day.finalState);this.cb.onComplete?.();return;}
   const approach=first.decisionSnapshot||first.before;
@@ -205,6 +318,7 @@ class HomeScene extends Phaser.Scene {
   }
  });}
  private beginReceipt(notifySnapshot=true,allowQuietSpan=true):void {
+  this.clearHouseAction(true);
   const pb=this.playback;if(!pb)return;const receipt=pb.day.receipts[pb.index];if(!receipt){this.beginEnding();return;}
   delete pb.quietSpanEnd;
   const approach=receipt.decisionSnapshot||receipt.before;
@@ -220,6 +334,7 @@ class HomeScene extends Phaser.Scene {
   this.cb.onReceipt?.(receipt,pb.index);if(notifySnapshot)this.cb.onSnapshot?.(approach,pb.index);this.cb.onProgress?.(pb.index,pb.day.receipts.length);
  }
  private receiptPoint(receipt:Receipt,state:GameState):WorldPoint {
+  if(receipt.action==='H20')return targetPoint('chair',state.house.chairAnchor);
   if(receipt.target==='pest'){
    const episode=receipt.choice?.situation?.episodes.find(e=>!e.resolved&&(e.kind==='visitor'||e.kind==='seedEater'));
    if(episode?.kind==='visitor')return{x:88,y:121};
@@ -231,6 +346,7 @@ class HomeScene extends Phaser.Scene {
   return point;
  }
  private beginEnding():void {
+  this.clearHouseAction(true);
   const pb=this.playback;if(!pb)return;this.closeStorage();this.held.setVisible(false);this.secondHeld.setVisible(false);this.taskFx.clear();this.transition.setAlpha(0);pb.montage=false;pb.stage='ending';pb.elapsed=0;pb.effect=false;
   if(pb.day.finalState.alive){
    const dest=targetPoint('bed');pb.route=[{...this.worldPoint},...findRoute(this.worldPoint,dest)];pb.routeLength=0;
@@ -245,7 +361,7 @@ class HomeScene extends Phaser.Scene {
   this.worldPoint={x:Math.round(point.x),y:Math.round(point.y)};
  }
  private beginEffect(receipt:Receipt):void {
-  this.applyState(receipt.snapshot);this.cb.onSnapshot?.(receipt.snapshot,receipt.index);
+  const before=this.state;this.applyState(receipt.snapshot);this.beginHouseAction(before,receipt.snapshot,receipt);this.cb.onSnapshot?.(receipt.snapshot,receipt.index);
   const message=receipt.lines.join('\n');if(message!==this.lastMessage){this.cb.onMessage?.(receipt.lines);this.lastMessage=message;}
   const colors=receipt.success?['#f6e3a7','#b6d391']:['#c7a16a','#d48561'];
   if(receipt.action!=='T01')this.emitPixels(this.actor.x+this.facing*8,this.actor.y-12,colors[0],6);
@@ -257,9 +373,10 @@ class HomeScene extends Phaser.Scene {
  }
  update(_time:number,delta:number):void {
   if(!this.initialized)return;
-  const paused=!!this.playback?.paused;const dt=paused?0:Math.min(delta,70);this.clock+=dt;
+  const paused=!!this.playback?.paused||this.exploreEnabled&&!this.inputEnabled;const dt=paused?0:Math.min(delta,70);this.clock+=dt;
   if(!paused)this.updatePlayback(dt);
-  this.updateActor(paused);this.drawInspect(Math.min(delta,70));if(!paused){this.updateParticles(dt);this.drawHazards();this.drawTask();this.drawAmbient();this.centerCamera(false,dt);}
+  if(!paused){this.updateHouseAction(dt);this.updateResponse(dt);}this.updateActor(paused);this.drawInspect(dt);this.drawHouseResponse();if(!paused){this.updateParticles(dt);this.drawHazards();this.drawTask();this.drawAmbient();this.centerCamera(false,dt);}
+  const pb=this.playback;this.setMotion(!paused&&!!pb&&(pb.stage==='receipts'&&pb.elapsed<pb.travel&&pb.routeLength>=3||pb.stage==='prelude'&&pb.preludeTarget==='store'&&pb.elapsed<900+pb.travel||pb.stage==='ending'&&pb.elapsed<pb.travel));
  }
  private updatePlayback(dt:number):void {
   const pb=this.playback;if(!pb)return;pb.elapsed+=dt;
@@ -306,7 +423,7 @@ class HomeScene extends Phaser.Scene {
     else if(!sleeping&&workProgress>.82&&receipt.success)pose=eating?'eat':'blink';
     else if(beat&&!sleeping)pose='idle';
     if(sleeping){point={x:312,y:74};this.facing=1;}
-    if(seated){point=receipt.target==='baseSeat'?{x:80,y:331}:{x:168,y:this.state.house.chairAnchor?379:331};pose=beat?'blink':'idle';}
+    if(seated){point=receipt.target==='baseSeat'?{x:80,y:331}:{x:168,y:this.state.house.chairAnchor?379:331};const personality=samplePersonality({seed:this.seed,clockMs:this.clock,mode:'seated',state:this.state,facing:this.facing,target:receipt.target,activityKey:receipt.day+':'+receipt.slot});pose=personality.pose;this.facing=personality.facing;}
     const inputs=Object.keys(receipt.inputs) as ItemId[],input=repair&&inputs.includes('toolkit')?'toolkit':inputs[0],result=pb.effect?actionResultProp(receipt):undefined,display=result?'result-'+result:input?'item-'+input:undefined;
     const consumed=pb.effect&&(receipt.action.startsWith('G')&&receipt.action!=='G05'||pb.elapsed-pb.travel>(pb.perSlot-pb.travel)*.82);
     if(display&&this.textures.exists(display)&&this.state.alive&&!consumed){
@@ -321,15 +438,16 @@ class HomeScene extends Phaser.Scene {
     if(receipt.target==='store'){const fridge=this.props.find(p=>p.kind==='fridge')!;if(!fridge.opts.open)this.setProp(fridge,{open:true});}
     if(receipt.target==='cupboard'){const cupboard=this.props.find(p=>p.kind==='cupboard')!;if(!cupboard.opts.open)this.setProp(cupboard,{open:true});}
     if(receipt.action==='T01'){
-     const rest=pb.elapsed-pb.travel,phase=(Math.floor(this.clock/220)+receipt.slot)%18;
-     pose=phase===0?'blink':phase<5?'breathe':phase===8?'preen':phase===12?'stretch':'idle';
+     const personality=samplePersonality({seed:this.seed,clockMs:this.clock,mode:'quiet',state:this.state,facing:this.facing,target:receipt.target,activityKey:receipt.day+':'+receipt.slot});pose=personality.pose;this.facing=personality.facing;
      this.held.setVisible(false);
-     // A small head turn, never an invented walk/action or mechanical benefit.
-     if(rest>350&&rest<520)this.facing=receipt.slot%2?1:-1;
-     if(receipt.target==='gardenView'&&rest>450)this.facing=1;
     }
    }
-  }else if(Math.floor(this.clock/230)%23===0)pose='blink';else if(Math.floor(this.clock/700)%3===0)pose='breathe';
+  }else{const personality=samplePersonality({seed:this.seed,clockMs:this.clock,mode:sleeping?'sleep':'awake',state:this.state,facing:this.facing,activityKey:this.state.day});pose=personality.pose;this.facing=personality.facing;}
+  if(pb?.stage==='receipts'&&pb.elapsed<pb.travel){
+   const r=pb.day.receipts[pb.index],items=Object.keys(r.inputs) as ItemId[];if(items[0])this.held.setTexture('item-'+items[0]).setOrigin(.5).setScale(.85).setRotation(0).setFlipX(this.facing<0).setVisible(true).setPosition(point.x+this.facing*11,point.y-13).setDepth(point.y+2);else this.held.setVisible(false);
+   if(items[1])this.secondHeld.setTexture('item-'+items[1]).setOrigin(.5).setScale(.7).setRotation(0).setVisible(true).setPosition(point.x-this.facing*7,point.y-8).setDepth(point.y+2);
+  }
+  if(this.exploreEnabled&&this.attentionAt!==undefined){const attention=sampleAttention({elapsedMs:this.clock-this.attentionAt,state:this.state,sleeping,facing:this.facing,toward:this.attentionFacing});if(attention){pose=attention.pose;this.facing=attention.facing;}else if(this.clock-this.attentionAt>=NPC_ATTENTION_MS)this.attentionAt=undefined;}
   const tremble=!sleeping&&this.state.alive&&this.state.conditions.some(c=>c.kind==='jitters'&&!c.resolved)?Math.floor(this.clock/85)%2:0;
   this.pose(pose);this.blanket.setVisible(sleeping&&this.state.alive);this.actor.setPosition(point.x+tremble,point.y).setDepth(sleeping?113:seated?point.y+7:point.y+1);this.shadow.setPosition(point.x,point.y+1).setDepth(point.y-.5).setVisible(this.actor.visible&&!sleeping&&!seated);
   const underShelter=this.worldPoint.x>382&&this.worldPoint.y>295&&this.worldPoint.y<370;
@@ -349,7 +467,7 @@ class HomeScene extends Phaser.Scene {
   if(!night){
    for(let i=0;i<6;i++){const t=(this.clock/340+i*7)%31;g.fillStyle(0xffedbb,.17+Math.sin(t/31*Math.PI)*.22);g.fillRect(Math.round(123+i*11+Math.sin(t*.3)),Math.round(78+t),1,1);}
   }
-  if(night&&!this.state.house.powerOut){g.fillStyle(0xf4df9e,.035);g.fillEllipse(354,92,43,28);g.fillStyle(0xf4df9e,.04);g.fillEllipse(354,91,29,19);}
+  if(this.lampOn&&!this.state.house.powerOut){const strength=night?1:.4;g.fillStyle(0xf4df9e,.14*strength);g.fillEllipse(354,116,60,32);g.fillStyle(0xf4df9e,.08*strength);g.fillEllipse(354,116,36,18);g.fillStyle(0xf4df9e,.07*strength);g.fillEllipse(354,75,26,20);}
  }
  private setLight(level:number):void {
   this.lightLevel=level;this.night.setAlpha(level*.52);const weight=Math.min(1,Math.max(0,level/.23));
@@ -419,22 +537,23 @@ class HomeScene extends Phaser.Scene {
  private updateParticles(dt:number):void {this.particles=this.particles.filter(p=>{p.life-=dt;if(p.life<=0){p.sprite.destroy();return false;}p.x+=p.vx*dt;p.y+=p.vy*dt;p.sprite.setPosition(Math.round(p.x),Math.round(p.y));p.vy+=.00005*dt;p.sprite.setAlpha(Math.min(1,p.life/200));return true;});}
  private clearParticles():void {for(const p of this.particles)p.sprite.destroy();this.particles=[];}
  private centerCamera(immediate:boolean,delta=16):void {
+  if(this.exploreEnabled&&this.exploring&&this.explorePoint){const target=constrainHouseView(this.explorePoint,this.cameras.main.zoom),blend=immediate?1:1-Math.exp(-Math.max(0,delta)/130);this.cameraPoint={x:Phaser.Math.Linear(this.cameraPoint.x,target.x,blend),y:Phaser.Math.Linear(this.cameraPoint.y,target.y,blend)};this.cameras.main.centerOn(Math.round(this.cameraPoint.x),Math.round(this.cameraPoint.y));return;}
   const pb=this.playback;const resting=pb?.stage==='receipts'&&pb.elapsed>=pb.travel&&pb.day.receipts[pb.index]?.action==='H03';
   const receipt=pb?.stage==='receipts'?pb.day.receipts[pb.index]:undefined;
   const frame=(point:WorldPoint)=>receipt&&(receipt.target==='window'||receipt.action==='H14')?{x:point.x+12,y:84}:{x:point.x,y:point.y+17};
   if(pb?.stage==='receipts'&&pb.montage){const dest=pb.route.at(-1)!;this.cameraPoint=pb.elapsed<340?{...pb.originCamera!}:frame(dest);this.cameras.main.centerOn(Math.round(this.cameraPoint.x),Math.round(this.cameraPoint.y));return;}
-  const cam=this.cameras.main;const target=this.modeSleep||resting?{x:368,y:112}:frame(this.worldPoint);
+  const cam=this.cameras.main;const target=this.modeSleep||resting?BEDROOM_VIEW:frame(this.worldPoint);
   const blend=1-Math.exp(-Math.max(0,delta)/140);
   if(immediate)this.cameraPoint={...target};else{this.cameraPoint.x=Phaser.Math.Linear(this.cameraPoint.x,target.x,blend);this.cameraPoint.y=Phaser.Math.Linear(this.cameraPoint.y,target.y,blend);}
   cam.centerOn(Math.round(this.cameraPoint.x),Math.round(this.cameraPoint.y));
  }
- public pausePlayback():void {if(this.playback)this.playback.paused=true;}
+ public pausePlayback():void {if(this.playback)this.playback.paused=true;this.setMotion(false);}
  public resumePlayback():void {if(this.playback){this.playback.paused=false;this.openAudio();}}
- public skipPlayback():void {const pb=this.playback;if(!pb)return;this.playback=null;this.held.setVisible(false);this.actor.setRotation(0);this.setSave(pb.day.finalState);this.cb.onSnapshot?.(pb.day.finalState,pb.day.receipts.length);this.cb.onProgress?.(pb.day.receipts.length,pb.day.receipts.length);this.cb.onComplete?.();}
- public seekReceipt(index:number):void {const pb=this.playback;if(!pb)return;pb.stage='receipts';this.modeSleep=false;this.blanket.setVisible(false);pb.index=Phaser.Math.Clamp(index,0,pb.day.receipts.length-1);this.beginReceipt(true,false);const r=pb.day.receipts[pb.index];this.worldPoint=this.receiptPoint(r,r.snapshot);pb.elapsed=pb.perSlot*.8;pb.effect=true;this.applyState(r.snapshot);this.updateActor(false);this.drawTask();this.drawHazards();pb.paused=true;this.centerCamera(true);this.lastMessage=r.lines.join('\n');this.cb.onSnapshot?.(r.snapshot,pb.index);this.cb.onMessage?.(r.lines);}
+ public skipPlayback():void {const pb=this.playback;if(!pb)return;this.resetPresence();this.playback=null;this.held.setVisible(false);this.actor.setRotation(0);this.setSave(pb.day.finalState);this.cb.onSnapshot?.(pb.day.finalState,pb.day.receipts.length);this.cb.onProgress?.(pb.day.receipts.length,pb.day.receipts.length);this.cb.onComplete?.();}
+ public seekReceipt(index:number):void {const pb=this.playback;if(!pb)return;this.resetPresence();pb.stage='receipts';this.modeSleep=false;this.blanket.setVisible(false);pb.index=Phaser.Math.Clamp(index,0,pb.day.receipts.length-1);this.beginReceipt(true,false);const r=pb.day.receipts[pb.index];this.worldPoint=this.receiptPoint(r,r.snapshot);pb.elapsed=pb.perSlot*.8;pb.effect=true;this.applyState(r.snapshot);this.updateActor(false);this.drawTask();this.drawHazards();pb.paused=true;this.centerCamera(true);this.lastMessage=r.lines.join('\n');this.cb.onSnapshot?.(r.snapshot,pb.index);this.cb.onMessage?.(r.lines);}
  public currentIndex():number{return this.playback?.index??0;}
  public paused():boolean{return !!this.playback?.paused;}
- public enableInput(enabled:boolean):void {this.inputEnabled=enabled;if(this.initialized)this.input.enabled=enabled;}
+ public enableInput(enabled:boolean):void {this.inputEnabled=enabled;if(!enabled)this.gesture=undefined;if(this.initialized)this.input.enabled=enabled;}
  public mute(value:boolean):void {this.muted=value;}
  public zoom(value:number):void {this.enqueue(()=>{this.cameras.main.setZoom(Phaser.Math.Clamp(value,.9,1.3));this.centerCamera(true);});}
  private enqueue(f:()=>void):void{if(this.initialized)f();else this.queued.push(f);}
@@ -450,7 +569,7 @@ class HomeScene extends Phaser.Scene {
 export function createWorldRenderer(container:HTMLElement,callbacks:WorldCallbacks={}):WorldController {
  let resolve=()=>{};const ready=new Promise<void>(r=>{resolve=r;});const scene=new HomeScene(callbacks,resolve);
  const game=new Phaser.Game({type:Phaser.AUTO,parent:container,width:256,height:256,backgroundColor:'#192c34',pixelArt:true,roundPixels:true,antialias:false,transparent:false,render:{antialias:false,pixelArt:true,roundPixels:true},scale:{mode:Phaser.Scale.FIT,autoCenter:Phaser.Scale.CENTER_BOTH,width:256,height:256},scene:[scene],audio:{noAudio:true},fps:{target:60,forceSetTimeOut:false}});
- return{ready,showSave:(s,o)=>scene.setSave(s,o),playDay:(d,o)=>scene.start(d,o),pause:()=>scene.pausePlayback(),resume:()=>scene.resumePlayback(),skip:()=>scene.skipPlayback(),seek:i=>scene.seekReceipt(i),setMuted:m=>scene.mute(m),setZoom:z=>scene.zoom(z),setInputEnabled:enabled=>scene.enableInput(enabled),getCurrentIndex:()=>scene.currentIndex(),isPaused:()=>scene.paused(),dispose:()=>{scene.shutdownWorld();game.destroy(true);}};
+ return{ready,showSave:(s,o)=>scene.setSave(s,o),playDay:(d,o)=>scene.start(d,o),pause:()=>scene.pausePlayback(),resume:()=>scene.resumePlayback(),skip:()=>scene.skipPlayback(),seek:i=>scene.seekReceipt(i),setMuted:m=>scene.mute(m),setZoom:z=>scene.zoom(z),setInputEnabled:enabled=>scene.enableInput(enabled),setExploreEnabled:enabled=>scene.explore(enabled),focusRoom:room=>scene.focus(room),followActor:()=>scene.follow(),getCurrentIndex:()=>scene.currentIndex(),isPaused:()=>scene.paused(),dispose:()=>{scene.shutdownWorld();game.destroy(true);}};
 }
 
 export {TARGET_LABELS};

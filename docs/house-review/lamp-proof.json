@@ -1,0 +1,14 @@
+{
+  "provenance": "Final shipping source, actual saved PEEP care, native lamp tap; no browser method override or paid work",
+  "checks": {
+    "lampStartedOn": true,
+    "lampTurnedOff": true,
+    "powerGuard": true,
+    "savedStateUnchanged": true,
+    "nightGrade": 0.23,
+    "zeroErrors": true,
+    "zeroWrites": true
+  },
+  "errors": [],
+  "writes": []
+}

@@ -3,3 +3,5 @@ export type { WorldController, WorldCallbacks, SavePresentation, PlaybackOptions
 export { TARGET_TILES, targetPoint, findRoute, TILE } from './layout';
 export { itemImageUrl, itemSvg } from '../art/pixels';
 export { roosterImageUrl, roosterSvg, roosterTraits } from '../art/rooster';
+export { HOUSE_ROOMS } from './house-view';
+export type { HouseRoom, HouseView } from './house-view';

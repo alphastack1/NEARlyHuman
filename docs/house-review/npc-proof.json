@@ -1,0 +1,40 @@
+{
+  "provenance": "FINAL SHIPPING SOURCE (no browser overrides), actual saved PEEP2 state, real Phaser renderer and native care tap; fixed elapsed frame probes use controlled world clock.",
+  "records": [
+    {
+      "elapsed": 200,
+      "pose": "rooster-0x979865feead295b3add9300f03b7591f1c800ad7008c762121e70698a3ec7efa-peek",
+      "foot": {
+        "x": 312,
+        "y": 74
+      },
+      "unchangedState": true
+    },
+    {
+      "elapsed": 500,
+      "pose": "rooster-0x979865feead295b3add9300f03b7591f1c800ad7008c762121e70698a3ec7efa-peek",
+      "foot": {
+        "x": 312,
+        "y": 74
+      },
+      "unchangedState": true
+    },
+    {
+      "elapsed": 1000,
+      "pose": "rooster-0x979865feead295b3add9300f03b7591f1c800ad7008c762121e70698a3ec7efa-sleep",
+      "foot": {
+        "x": 312,
+        "y": 74
+      },
+      "unchangedState": true
+    }
+  ],
+  "checks": {
+    "actualSourcePeek500": true,
+    "actualSourceSettled1000": true,
+    "unchangedState": true,
+    "groundedFoot": true,
+    "noErrors": true
+  },
+  "errors": []
+}
