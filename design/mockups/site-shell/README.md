@@ -2,6 +2,8 @@
 
 Four visual directions requested by the owner. Each board contains three consecutive portrait-browser frames: opening, transition, and the game within the finished surrounding website. These are concept illustrations, not screenshots of an implemented shell or a new game layout.
 
+Owner clarification after this first set: **Moss & Cream is the game's palette, not a restriction on the surrounding website.** Future shell exploration can use a richer, independent cartoon palette. Match the general cozy, quirky retro mood and keep the existing game visually intact. The prompts below record the historical generation instructions; their stronger shell-palette restriction is superseded by this clarification.
+
 Open [the comparison viewer](index.html), or the individual boards:
 
 | Board | Flow | Character |
@@ -20,7 +22,7 @@ Open [the comparison viewer](index.html), or the individual boards:
 - Keep Skip reachable in every opening stage, including the middle house-window stage where the illustration omits it. On short phones, reduce the wordmark/decorative margins before reducing the game. Sound is optional; the sequence must also work silently.
 - Prefer a few compact reusable illustrated layers with transform/opacity/mask animation over a full-screen video. These boards do not establish an actual byte budget or measured startup time; measure and optimize assets during implementation.
 - CRT/window decoration must stay outside all game pixels and touch controls. The CRT's rounded glass and reflections are artistic cues; the actual game stays flat, undistorted and glare-free.
-- Preserve Moss & Cream, navy, honey and restrained terracotta. Keep the page free of marketing paragraphs, blockchain decoration and additional competing actions.
+- Preserve the existing game's colors. Give the surrounding website freedom to use a richer, independent palette that matches its cozy, quirky retro mood. Keep the page free of marketing paragraphs, blockchain decoration and additional competing actions.
 
 Built-in `image_gen` produced all four boards using the approved house reference and a current real game capture. The exact prompts and reference paths are in [prompts.json](prompts.json). Outputs were visually checked, then copied into this permanent directory. No runtime or asset here depends on `TEMP/`; no live site change or production deployment was made for these concepts.
 
