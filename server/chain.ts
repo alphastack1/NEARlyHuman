@@ -1,5 +1,5 @@
 import { randomUUID } from 'node:crypto';
-import { createPublicClient, encodeFunctionData, http, keccak256, toHex, type Address, type Hex } from 'viem';
+import { BlockNotFoundError, ContractFunctionRevertedError, ExecutionRevertedError, createPublicClient, encodeFunctionData, http, keccak256, toHex, type Address, type Hex } from 'viem';
 import { privateKeyToAccount } from 'viem/accounts';
 import { nearlyHumanAbi } from '../src/chain/abi';
 import { chainFor, type CollectionConfig } from '../src/chain/config';
@@ -56,12 +56,30 @@ export async function verifyConnection() {
   })().catch(()=>{verifiedConnections.delete(key);throw new ServiceError('The home connection is resting. Try again shortly.','connection',503);});
   verifiedConnections.set(key,{until:Date.now()+30_000,pending});return pending;
 }
+/** A missing RPC block is different from a missing transaction, account or application record. */
+export function blockUnavailable(error:unknown):boolean {
+  const seen=new Set<unknown>(),causes:Array<{name?:unknown;message?:unknown;shortMessage?:unknown;details?:unknown;cause?:unknown}>=[];
+  for(let current=error,depth=0;current&&typeof current==='object'&&depth<8&&!seen.has(current);depth++){
+    seen.add(current);const e=current as typeof causes[number];causes.push(e);current=e.cause;
+  }
+  // A contract's own revert reason can contain these words, including on another line.
+  if(causes.some(e=>e instanceof ContractFunctionRevertedError||e instanceof ExecutionRevertedError||['ContractFunctionRevertedError','ExecutionRevertedError'].includes(String(e.name))))return false;
+  for(const e of causes){
+    if(e instanceof BlockNotFoundError)return true;
+    for(const text of [e.shortMessage,e.details,e.message])if(typeof text==='string'){
+      for(const line of text.split('\n').map(line=>line.trim()).filter(Boolean).filter((line,index)=>index===0||/^Details:\s*/i.test(line))){
+        const detail=line.trim().replace(/^Details:\s*/i,'');
+        if(/^Block(?: at (?:number "[0-9]+"|hash "0x[0-9a-f]{64}"))? could not be found\.(?:\s|$)/i.test(detail)||/^(?:unsupported block number|header not found|block not found)(?:[.:\s]|$)/i.test(detail))return true;
+      }
+    }
+  }
+  return false;
+}
 /** Public RPC replicas can briefly disagree about the newest supported height. */
 export async function pinnedRead<T>(read:()=>Promise<T>):Promise<T> {
   for(let attempt=0;;attempt++){
     try{return await read();}catch(error){
-      const details=error instanceof Error?error.message:String(error);
-      if(attempt>=4||!/(unsupported block number|header not found|block not found)/i.test(details))throw error;
+      if(attempt>=4||!blockUnavailable(error))throw error;
       await new Promise(resolve=>setTimeout(resolve,250*(attempt+1)));
     }
   }
@@ -70,12 +88,12 @@ export async function pinnedRead<T>(read:()=>Promise<T>):Promise<T> {
 export async function readRawRooster(tokenId: bigint) {
   await verifyConnection();
   const { client, address } = connection();
-  const block = await client.getBlock();
+  const block = await pinnedRead(()=>client.getBlock());
   const [raw, owner] = await pinnedRead(()=>Promise.all([
     client.readContract({ address, abi: nearlyHumanAbi, functionName: 'getRooster', args: [tokenId], blockNumber: block.number }),
     client.readContract({ address, abi: nearlyHumanAbi, functionName: 'ownerOf', args: [tokenId], blockNumber: block.number }),
   ]));
-  const verified=await client.getBlock({blockNumber:block.number});if(verified.hash!==block.hash)throw new ServiceError('Checking the latest saved day. Try again.','checking',409);
+  const verified=await pinnedRead(()=>client.getBlock({blockNumber:block.number}));if(verified.hash!==block.hash)throw new ServiceError('Checking the latest saved day. Try again.','checking',409);
   return { raw, owner, block };
 }
 export function roosterView(tokenId: bigint, raw: ChainRooster, owner: Address, request?: ChainRequest): Rooster {
@@ -103,14 +121,14 @@ export async function readRequest(requestId: Hex): Promise<ChainRequest> {
 }
 export async function canonicalRequest(requestId: Hex) {
   await verifyConnection();
-  const { client, address } = connection(); const block = await client.getBlock();
+  const { client, address } = connection(); const block = await pinnedRead(()=>client.getBlock());
   const request = await pinnedRead(()=>client.readContract({ address, abi: nearlyHumanAbi, functionName: 'getRequest', args: [requestId], blockNumber: block.number }));
   if (request.status === 0) return { request, block, raw: undefined, owner: undefined };
   const [raw, owner] = await pinnedRead(()=>Promise.all([
     client.readContract({ address, abi: nearlyHumanAbi, functionName: 'getRooster', args: [request.tokenId], blockNumber: block.number }),
     client.readContract({ address, abi: nearlyHumanAbi, functionName: 'ownerOf', args: [request.tokenId], blockNumber: block.number }),
   ]));
-  const verified=await client.getBlock({blockNumber:block.number});if(verified.hash!==block.hash)throw new ServiceError('Checking the accepted day. Try again.','checking',409);
+  const verified=await pinnedRead(()=>client.getBlock({blockNumber:block.number}));if(verified.hash!==block.hash)throw new ServiceError('Checking the accepted day. Try again.','checking',409);
   return { request, raw, owner, block };
 }
 export async function readAcceptedTransaction(hash: Hex, player?: Address) {
@@ -118,7 +136,7 @@ export async function readAcceptedTransaction(hash: Hex, player?: Address) {
   const { client, address } = connection();
   const receipt = await client.getTransactionReceipt({ hash: checkedRequest(hash) });
   if (receipt.status !== 'success') throw new ServiceError('The request was not accepted. Your saved day is unchanged.', 'transaction');
-  const block = await client.getBlock({ blockNumber: receipt.blockNumber });
+  const block = await pinnedRead(()=>client.getBlock({ blockNumber: receipt.blockNumber }));
   if (block.hash !== receipt.blockHash) throw new ServiceError('Checking this transaction. Please try again.', 'checking', 409);
   const accepted = acceptedRequest({ ...receipt, logs: receipt.logs.filter(log => log.address.toLowerCase() === address.toLowerCase()) });
   if (!accepted || player && accepted.player.toLowerCase() !== player.toLowerCase()) throw new ServiceError('This request belongs to another wallet.', 'ownership', 403);
@@ -179,7 +197,7 @@ export async function terminalTransaction(intent: RelayIntent, onJournal: (journ
       catch (error) { let known = false; try { await client.getTransaction({ hash: pending.hash }); known = true; } catch { /* remain uncertain */ } if (!known) throw error; }
       receipt = await client.waitForTransactionReceipt({ hash: pending.hash, confirmations: 1, timeout: 70_000 });
     }
-    const canonicalBlock = await client.getBlock({ blockNumber: receipt.blockNumber });
+    const canonicalBlock = await pinnedRead(()=>client.getBlock({ blockNumber: receipt.blockNumber }));
     if (canonicalBlock.hash !== receipt.blockHash) throw new ServiceError('Checking chain confirmation.', 'checking', 409);
     await update<RelayControl>(relayKey, () => ({}), control => {
       if (control.lease?.id !== leaseId || control.pending?.hash !== pending!.hash) throw new RelayBusy();

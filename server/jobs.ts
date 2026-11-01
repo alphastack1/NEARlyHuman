@@ -6,7 +6,7 @@ import { decodeDelivery } from '../src/chain/permit';
 import { ITEM_IDS, cloneState, packState, prepareDay, unpackState, type DayCheckpoint, type DayContext, type DayResult, type GameState, type ModelChoice, type Receipt } from '../src/domain';
 import type { JobView } from '../src/app/api';
 import { acceptReservation, DECISION_CONFIG, DECISION_PARAMETERS, finishReservation, reconcileAdmission } from './admission';
-import { canonicalRequest, chainOutcome, checkedAddress, checkedRequest, checkedToken, connection, expiryIntent, failureIntent, finalizeIntent, pinnedRead, readAcceptedTransaction, readRawRooster, RelayBusy, terminalTransaction, ServiceError, verifyConnection, type RelayJournal } from './chain';
+import { blockUnavailable, canonicalRequest, chainOutcome, checkedAddress, checkedRequest, checkedToken, connection, expiryIntent, failureIntent, finalizeIntent, pinnedRead, readAcceptedTransaction, readRawRooster, RelayBusy, terminalTransaction, ServiceError, verifyConnection, type RelayJournal } from './chain';
 import { isHosted, serverConfig } from './config';
 import { buildDecision, infer, InferenceError, type Exchange } from './jev';
 import { storage, StoreConflict, update } from './storage';
@@ -59,7 +59,7 @@ function internalException(error:unknown) {
   return {name:typeof e?.name==='string'?e.name:'UnknownError',code:typeof e?.code==='string'?e.code:undefined,message:redact(typeof e?.message==='string'?e.message:String(error)).slice(0,2500),stack:redact(typeof e?.stack==='string'?e.stack:'').slice(0,6000)};
 }
 function infrastructureInterrupted(error:unknown) {
-  const e=error as Error&{code?:string};return error instanceof StoreConflict||['EPERM','EACCES','EBUSY','ETIMEDOUT','ECONNRESET'].includes(e?.code||'')||/^(HttpRequestError|TimeoutError|RpcRequestError)$/.test(e?.name||'')||/(unsupported block number|header not found|fetch failed|socket hang up|request timed out)/i.test(e?.message||'');
+  const e=error as Error&{code?:string};return blockUnavailable(error)||error instanceof StoreConflict||['EPERM','EACCES','EBUSY','ETIMEDOUT','ECONNRESET'].includes(e?.code||'')||/^(HttpRequestError|TimeoutError|RpcRequestError)$/.test(e?.name||'')||/(fetch failed|socket hang up|request timed out)/i.test(e?.message||'');
 }
 async function immutable(prefix:string,value:unknown) {
   const key=`${prefix}/${digest(value)}`;await storage().put(key,value,{isNew:true});return key;
@@ -207,7 +207,7 @@ async function assertPendingAt(c:JobControl,current:CanonicalRequest,minimumSeco
   const r=current.request;
   if(r.status!==1)throw new CanonicalChanged('Canonical terminal.');
   if(!sameRequestContext(c,current)||!current.raw||!current.owner||current.raw.pendingRequest!==c.requestId||current.raw.revision!==c.baseRevision||!equal(current.owner,c.player)||digest(unpackState(current.raw.state,{seed:current.raw.seed,name:current.raw.name,stats:{body:current.raw.body,wits:current.raw.wits,spirit:current.raw.spirit}}))!==digest(c.base))throw new CanonicalChanged('Canonical inputs changed.');
-  const {client}=connection(),accepted=await client.getBlock({blockNumber:BigInt(c.acceptedBlock)});
+  const {client}=connection(),accepted=await pinnedRead(()=>client.getBlock({blockNumber:BigInt(c.acceptedBlock)}));
   if(accepted.hash!==c.acceptedHash)throw new CanonicalChanged('Canonical acceptance changed.');
   if(minimumSeconds!==undefined&&Number(current.block.timestamp)+minimumSeconds>c.deadline)throw new InferenceError('deadline');
   return current;
@@ -286,7 +286,7 @@ export async function runJob(value:string) {
       console.error('Preparation interrupted',id,detail.name,detail.code||'');
       if(exceptionKey)await edit(c=>{c.exceptionKey=exceptionKey;});
     }
-    if(error instanceof CanonicalChanged){try{if(await syncTerminal(control,edit))return;}catch{/* Quarantine inconsistent chain/checkpoint data. */}await edit(c=>{c.phase='checking';});return;}
+    if(error instanceof CanonicalChanged||(error instanceof ServiceError&&error.code==='checking'&&error.status===409)){try{if(error instanceof CanonicalChanged&&await syncTerminal(control,edit))return;}catch{/* Quarantine inconsistent chain/checkpoint data. */}await edit(c=>{c.phase='checking';});return;}
     if(control.packet||control.journal){await edit(c=>{c.phase=control.packet?'saving':'recording_failure';});return;}
     if(infrastructureInterrupted(error)){await edit(c=>{c.phase='queued';});return;}
     // Operational failure is distinct from biological death; the base save is untouched.
