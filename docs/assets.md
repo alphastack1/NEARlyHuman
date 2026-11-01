@@ -252,3 +252,6 @@ Day2 completed-frame check now displays Day2/LV01 immediately and emits one
 initial snapshot; first-day and later-receipt starts also emit one. The recorded
 water/bread/rose-seed delivery remains present exactly once, unchanged through
 the prelude. No game state is recalculated or delivery applied by this callback.
+
+
+The subsequent [gameplay and animation critique](GAMEPLAY_REVIEW.md) records the calm115px/s gait, actor1.45, first/last editing of unchanged quiet spans, literal outcome cues, historical restart and final portrait recap. Its [permanent motion gallery](gameplay-review/index.html) includes matched390px frames and twelve-second before/after clips. Original receipts and exact seeking remain unchanged.

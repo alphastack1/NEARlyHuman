@@ -5,10 +5,12 @@ import { ITEM_CATALOG, ITEM_IDS, PHASES, cloneState, conditionLabel, createIniti
 import { createWorldRenderer, itemImageUrl, roosterImageUrl, TARGET_LABELS, type WorldController } from '../game';
 import { acceptedRequest, createChainReader, createOwnerWallet, explorerTransaction, permitFromJSON, type CollectionConfig } from '../chain/client';
 import { api, ApiError, setSession, type JobView, type PublicConfig, type QuoteView, type Rooster, type SavedOutcome, type CompactHistoryEntry, type SavedDay, type SavedDaysPage } from './api';
-import { Icon, type IconName } from './Icons';
+import { Icon } from './Icons';
 import { SavedStatus } from './SavedStatus';
 import { describeCompactAction } from './compactHistory';
 import { SavedDaysPanel } from './SavedDaysPanel';
+import { quietSpanAt } from '../game/quiet-spans';
+import { NEED_ICONS, NEED_KEYS, dayHighlights, recordedChanges, receiptMark, signedNeed, type Need } from './receiptFeedback';
 type Screen = 'entry' | 'mint' | 'care' | 'processing' | 'ready' | 'replay' | 'summary' | 'memorial' | 'trial' | 'firstRetry';
 type ModalContent = {
     kind: 'options' | 'help' | 'selector' | 'status' | 'fee' | 'details' | 'wallet' | 'birth' | 'history' | 'owner' | 'supplies' | 'savedDays';
@@ -52,7 +54,7 @@ type Submitted = {
 };
 const initialStats: Stats = { body: 2, wits: 2, spirit: 1 };
 const labels: Record<keyof GameState['needs'], string> = { health: 'Health', nutrition: 'Nutrition', hydration: 'Hydration', energy: 'Energy', morale: 'Morale' };
-const needIcons: Record<keyof GameState['needs'], IconName> = { health: 'heart', nutrition: 'food', hydration: 'water', energy: 'energy', morale: 'morale' };
+const needIcons = NEED_ICONS;
 const deathNames:Record<NonNullable<GameState['deathCause']>,string>={health:'Health depleted',starvation:'Food deficit',dehydration:'Water deficit',wound:'Serious wound',illness:'Illness',infection:'Infection',structural:'House accident'};
 const needs = Object.keys(labels) as Array<keyof GameState['needs']>;
 const asTime = (n: number) => n < 1e12 ? n * 1000 : n;
@@ -117,6 +119,10 @@ function Panel({ title, children, footer, kind = 'compact', back, accessory }: {
         body.current = localBody.current; });
     return <section className={'panel panel-' + kind} aria-label={title}><header className="panel-head">{back && <button className="icon-button back-button" aria-label="Back" onClick={back}><Icon name="back"/></button>}{title && <h1 className="panel-title" tabIndex={-1}>{title}</h1>}{accessory}</header><div className="panel-body" ref={localBody} onScroll={onScroll}>{children}{error && <p className="error-message" role="alert">{error}</p>}</div>{footer && <footer className="panel-footer">{footer}</footer>}</section>;
 }
+function RecordedEffect({receipt}:{receipt:Receipt}) {
+    const changes=recordedChanges(receipt);
+    return <div className="recorded-result"><p className="recorded-target">{TARGET_LABELS[receipt.target]||'Home'}</p>{changes.length>0&&<div className="recorded-changes">{changes.map(change=><span className={'recorded-change '+change.tone} key={change.key} aria-label={change.label} title={change.label}>{change.item?<img src={itemImageUrl(change.item)} alt=""/>:change.icon?<Icon name={change.icon}/>:null}<span>{change.text}</span></span>)}</div>}</div>;
+}
 export default function App() {
     const host = useRef<HTMLDivElement>(null), world = useRef<WorldController | undefined>(undefined);
     const [config, setConfig] = useState<PublicConfig>(), [screen, setScreen] = useState<Screen>('entry'), [modal, setModal] = useState<Modal | null>(null);
@@ -136,6 +142,8 @@ export default function App() {
  const [ownershipRead,setOwnershipRead]=useState<'unknown'|'loading'|'ready'|'error'>('unknown');
     const [canonicalStale,setCanonicalStale]=useState(false);
     const [catalogSize,setCatalogSize]=useState(()=>window.innerWidth<360?4:5);
+    const [meterCue,setMeterCue]=useState<{sequence:number;changes:Partial<Record<Need,number>>}>();
+    const playbackPacket=useRef<DayResult|undefined>(undefined),snapshotCursor=useRef<{packet:DayResult|undefined;index:number;state:GameState}|undefined>(undefined),cueSequence=useRef(0);
     const catalogSizeRef=useRef(catalogSize);
     const [choiceNotice, setChoiceNotice] = useState(false), [ownedLoading, setOwnedLoading] = useState(false);
     const session = useRef<{
@@ -170,6 +178,7 @@ export default function App() {
     const focusName=(element:Element|null)=>element?.getAttribute('aria-label')||element?.textContent?.trim()||undefined;
     const open=(m:Modal)=>{
         const c=context.current;
+        setMeterCue(undefined);
         modalInputBlocked.current=true;
         world.current?.setInputEnabled(false);
         if(c.modal)menuTrail.current.push({modal:c.modal,invoker:focusName(document.activeElement),scroll:panelScroll.current?.scrollTop||0});
@@ -201,6 +210,8 @@ export default function App() {
         document.addEventListener('keydown',keyboard);return()=>{cancelAnimationFrame(id);document.removeEventListener('keydown',keyboard);};
     },[modal]);
     useEffect(()=>{const enabled=!modal&&canInspect(screen);modalInputBlocked.current=!enabled;world.current?.setInputEnabled(enabled);},[modal,screen,selected?.id]);
+    useEffect(()=>{if(modal||screen!=='replay')setMeterCue(undefined);},[modal,screen]);
+    useEffect(()=>{if(!meterCue)return;const timer=window.setTimeout(()=>setMeterCue(undefined),900);return()=>window.clearTimeout(timer);},[meterCue]);
     const clearQuote = () => setQuote(undefined);
     useEffect(()=>{
         const row=document.querySelector<HTMLElement>('.catalog-row');if(!row)return;
@@ -228,7 +239,14 @@ export default function App() {
         if (!host.current)
             return;
         const renderer = createWorldRenderer(host.current, { onReceipt: (r, i) => { setReceipt(r); setReplayIndex(i); const c = context.current; if (c.selected)
-                store.set(`nh:${c.config?.chainId}:${c.account?.toLowerCase()}:${c.selected.id}:play:${r.day}`, i); }, onSnapshot: s => setHud(s), onMessage: setLines, onComplete: () => { if(archiveReturn.current){returnFromArchive();return;}setPaused(false); const c = context.current; const r = c.selected; if (r) {
+                store.set(`nh:${c.config?.chainId}:${c.account?.toLowerCase()}:${c.selected.id}:play:${r.day}`, i); }, onSnapshot: (s,index) => {
+                const c=context.current,packet=playbackPacket.current,previous=snapshotCursor.current,impact=packet?.receipts[index]?.snapshot===s;
+                if(c.screen==='replay'&&!c.modal&&impact&&previous?.packet===packet&&previous.index===index&&previous.state!==s){
+                    const changes:Partial<Record<Need,number>>={};for(const need of NEED_KEYS){const delta=s.needs[need]-previous.state.needs[need];if(delta)changes[need]=delta;}
+                    if(Object.keys(changes).length)setMeterCue({sequence:++cueSequence.current,changes});
+                }
+                snapshotCursor.current={packet,index,state:s};setHud(s);
+            }, onMessage: setLines, onComplete: () => { if(archiveReturn.current){returnFromArchive();return;}setPaused(false); const c = context.current; const r = c.selected; if (r) {
                 store.set(`nh:${c.config?.chainId}:${c.account?.toLowerCase()}:${r.id}:watched`, r.latestDay);
                 store.set(`nh:${c.config?.chainId}:${c.account?.toLowerCase()}:${r.id}:play:${c.result?.day || r.latestDay}`, null);
                 setHud(r.state);
@@ -638,7 +656,7 @@ export default function App() {
     finally {
         setBusy(false);
     } }
-    function presentSavedResult(packet:DayResult,index=0){navigationGeneration.current++;setJobId(undefined);setResult(packet);setHud(packet.receipts[index]?.decisionSnapshot||packet.receipts[index]?.before||packet.finalState);setReceipt(undefined);setReplayIndex(index);setReplayLoading(false);setModal(null);setPaused(false);setScreen('replay');world.current?.playDay(packet,{startIndex:index});}
+    function presentSavedResult(packet:DayResult,index=0){playbackPacket.current=packet;snapshotCursor.current=undefined;setMeterCue(undefined);navigationGeneration.current++;setJobId(undefined);setResult(packet);setHud(packet.receipts[index]?.decisionSnapshot||packet.receipts[index]?.before||packet.finalState);setReceipt(undefined);setReplayIndex(index);setReplayLoading(false);setModal(null);setPaused(false);setScreen('replay');world.current?.playDay(packet,{startIndex:index});}
     function startPlayback(start?: number) { archiveReturn.current=undefined;setHistoricalDay(undefined);if (!result)
         return; const remembered = store.get(scope() + ':play:' + result.day, 0); const index = start ?? (watched(selected!) ? 0 : Math.max(0, Math.min(result.receipts.length - 1, remembered)));presentSavedResult(result,index); }
     function returnFromArchive(){
@@ -656,7 +674,7 @@ export default function App() {
         try{const packet=await api.replay(current.id,day.day);if(op!==operationToken.current||generation!==navigationGeneration.current||context.current.selected?.id!==current.id||context.current.modal!==reading)return;
             if(day.day!==current.latestDay||current.pending){const previous=archiveReturn.current;archiveReturn.current={tokenId:current.id,screen:previous?previous.screen:screen,result:previous?previous.result:result,compact:previous?previous.compact:compactOutcome,delivery:[...delivery],page,modal:reading||{kind:'savedDays'},trail:[...menuTrail.current],scroll:panelScroll.current?.scrollTop||0,latestDay:current.latestDay};setHistoricalDay(day.day);historyFocusDay.current=day.day;}
             else{archiveReturn.current=undefined;setHistoricalDay(undefined);}
-            setPacketMissing(false);menuTrail.current=[];const at=store.get(scope(current.id)+':play:'+day.day,0);presentSavedResult(packet.result,Math.max(0,Math.min(packet.result.receipts.length-1,at)));
+            setPacketMissing(false);menuTrail.current=[];presentSavedResult(packet.result,0);
         }catch(e){if(op===operationToken.current&&generation===navigationGeneration.current)setError(humanError(e));}
         finally{if(op===operationToken.current){setBusy(false);setBusyLabel('');}}
     }
@@ -687,7 +705,7 @@ export default function App() {
         }catch(e){if(generation===navigationGeneration.current&&operationToken.current===op)setError(humanError(e));}finally{if(operationToken.current===op){setBusy(false);setBusyLabel('');}}
     }
     const savedActions=()=>compactOutcome?.history.length?<button className="text-button" onClick={()=>open({kind:'compactHistory',entries:cloneState(compactOutcome.history),day:compactOutcome.savedDay?.day||compactOutcome.rooster.state.day})}>View saved actions</button>:null;
-    function pause() { world.current?.pause(); setPaused(true); }
+    function pause() { world.current?.pause(); setMeterCue(undefined);setPaused(true); }
     function resume() { menuTrail.current=[];setModal(null); world.current?.resume(); setPaused(false); }
     function brain() { const c = context.current; open({ kind: 'brain', choice: (c.screen === 'replay' ? c.receipt?.choice : c.job?.latestChoice) ? cloneState(c.screen === 'replay' ? c.receipt!.choice : c.job!.latestChoice) : undefined, receipt: c.screen === 'replay' && c.receipt ? cloneState(c.receipt) : undefined, preparing: c.screen === 'processing' }); setChoiceNotice(false); }
     function beginMint() { archiveReturn.current=undefined;setHistoricalDay(undefined);operationToken.current++;navigationGeneration.current++;setJobId(undefined);setJob(undefined);setBusy(false);setBusyLabel('');menuTrail.current=[];setError(''); setQuote(undefined); setScreen('mint'); setModal(null); setName(store.get('nh:name:' + account, '')); setStats(store.get('nh:stats:' + account, initialStats)); }
@@ -726,7 +744,7 @@ export default function App() {
         if (screen === 'ready')
             return <Panel title={'Day ' + (selected?.latestDay || result?.day || 1) + ' saved'} kind="ready" footer={<>{replayLoading?primary('Opening replay',()=>{},true):!packetMissing && result ? primary(store.get(scope() + ':play:' + result.day, 0) > 0 ? 'Resume day '+result.day : 'Watch day '+result.day, () => startPlayback()) : primary('View saved outcome', savedOutcome)}<button className="text-button" onClick={() => packetMissing ? void loadReplay(selected!, true) : savedOutcome()}>{packetMissing ? 'Retry replay' : 'View saved outcome'}</button></>}><p className="saved-line"><Icon name="check" color="#8ac05c"/>Saved onchain</p>{selected && !selected.state.alive && <span className="life-badge dead">Final day</span>}{packetMissing && <p className="short-copy">The replay is unavailable.<br />Your saved outcome remains.</p>}</Panel>;
         if (screen === 'summary')
-            return <Panel title={'Day ' + selected?.state.day + ' survived'} kind="summary" footer={<>{primary(config?.testnet && selected!.state.day >= 3 ? 'Choose rooster' : 'Next day', () => config?.testnet && selected!.state.day >= 3 ? open({ kind: 'selector' }) : setScreen('care'))}{selected?.latestDay ? <button className="text-button" onClick={() => void watchLatest()}>Watch again</button> : null}{savedDaysLink()}</>}><p className="level-result">Level {Math.max(0, (selected?.state.level || 1) - 1)} <span>→</span> <strong>{selected?.state.level}</strong></p>{warnings.length > 0 ? <div className="summary-warnings">{warnings.map(w => <button key={w.label} onClick={() => open({ kind: 'status' })}><img src={itemImageUrl(w.item)} alt=""/>{w.label}{w.due&&<small>Day {w.due}</small>}</button>)}</div> : <ul className="day-highlights">{(result?.summary || []).map(s => <li key={s}>{s}</li>)}</ul>}{savedActions()}</Panel>;
+            return <Panel title={'Day ' + selected?.state.day + ' survived'} kind="summary" footer={<>{primary(config?.testnet && selected!.state.day >= 3 ? 'Choose rooster' : 'Next day', () => config?.testnet && selected!.state.day >= 3 ? open({ kind: 'selector' }) : setScreen('care'))}{selected?.latestDay ? <button className="text-button" onClick={() => void watchLatest()}>Watch again</button> : null}{savedDaysLink()}</>}><p className="level-result">Level {Math.max(0, (selected?.state.level || 1) - 1)} <span>→</span> <strong>{selected?.state.level}</strong></p>{warnings.length > 0&&<div className="summary-warnings">{warnings.map(w => <button key={w.label} onClick={() => open({ kind: 'status' })}><img src={itemImageUrl(w.item)} alt=""/>{w.label}{w.due&&<small>Day {w.due}</small>}</button>)}</div>}<ul className="day-highlights">{dayHighlights(result).map(line => <li key={line}>{line}</li>)}</ul>{savedActions()}</Panel>;
         if (screen === 'memorial')
             return <Panel title={selected?.state.name + ' · Memorial'} kind="memorial" footer={<>{primary('Choose rooster', () => open({ kind: 'selector' }))}<button className="text-button" onClick={beginMint}>Hatch another</button></>}><div className="memorial-content"><img className="memorial-portrait" src={roosterImageUrl(selected?.state.seed || '0x0')} alt={selected?.state.name}/><div><p>Level {selected?.state.level}</p><p>Final day {selected?.state.day}</p><p className="death-cause">{selected?.state.deathCause?deathNames[selected.state.deathCause]:'This life ended'}</p></div></div>{selected?.state.deathContributors?.some(c=>c!==selected.state.deathCause)&&<p className="reading-context">Also: {[...new Set(selected.state.deathContributors.filter(c=>c!==selected.state.deathCause))].map(c=>deathNames[c]).join(' · ')}</p>}<p className="retained-line">The NFT remains in your wallet.</p>{selected?.latestDay ? <button className="text-button" onClick={() => void watchLatest()}>Watch final day</button> : null}{savedActions()}</Panel>;
         if (screen === 'trial')
@@ -790,8 +808,8 @@ export default function App() {
         if (modal.kind === 'brain') {
             const choice=modal.choice,canResume=modal.view?.screen==='replay'&&screen==='replay';
             return <Panel title={modal.preparing?'Jev is choosing':'Recorded choice'} kind="brain" back={close} footer={primary(canResume?'Resume':menuTrail.current.length?'Back':'Close',canResume?resume:close)}>
-                {choice?<><p className="brain-caption">{modal.preparing?'Day spoilers':'Presentation paused'}</p><small className="probability-label">Model choice probability</small><div className="choice-list">{choice.candidates.map(candidate=><div className={'choice-row '+(choice.selected===candidate.key?'picked':'')} key={candidate.key}><Icon name={choice.selected===candidate.key?'check':'play'} size={12}/><span>{candidate.label}</span><b>{choice.probabilities?.[candidate.key]!==undefined?Math.round(choice.probabilities[candidate.key]*100)+'%':'—'}</b></div>)}</div>{modal.preparing&&<p className="newer-choice">{choiceNotice?'Newer choices available':'Preparation continues'}</p>}</>:<p className="short-copy">{modal.receipt?'This step needed no model choice.':'No recorded choice yet.'}</p>}
-                {modal.receipt&&<p className="recorded-effect">{modal.receipt.lines.join(' ')}</p>}
+                {choice?<><p className="brain-caption">{modal.preparing?'Day spoilers':'Paused'}</p><small className="probability-label">Model choice probability</small><div className="choice-list">{choice.candidates.map(candidate=><div className={'choice-row '+(choice.selected===candidate.key?'picked':'')} key={candidate.key}><Icon name={choice.selected===candidate.key?'check':'play'} size={12}/><span>{candidate.label}</span><b>{choice.probabilities?.[candidate.key]!==undefined?Math.round(choice.probabilities[candidate.key]*100)+'%':'—'}</b></div>)}</div>{modal.preparing&&<p className="newer-choice">{choiceNotice?'Newer choices available':'Preparation continues'}</p>}</>:<p className="short-copy">{modal.receipt?'This step needed no model choice.':'No recorded choice yet.'}</p>}
+                {modal.receipt&&<><p className="recorded-effect">{modal.receipt.lines.join(' ')}</p><RecordedEffect receipt={modal.receipt}/></>}
             </Panel>;
         }
         if (modal.kind === 'birth') {
@@ -809,8 +827,11 @@ export default function App() {
         if (modal.kind === 'fee')
             return <Panel title="Estimate details" back={close} footer={primary('Close', close)}>{quote ? <div className="fee-breakdown"><span>Network</span><b>{fee(quote.networkEstimate)}</b><span>Care</span><b>{fee(String(BigInt(quote.value) - BigInt(String(quote.permit.mintFee || 0))))}</b>{BigInt(String(quote.permit.mintFee||0))>0n&&<><span>Mint</span><b>{fee(String(quote.permit.mintFee))}</b></>}<span>Total</span><b>{fee(quote.totalEstimate)}</b></div> : <p className="short-copy">A fresh estimate is shown<br />before wallet approval.</p>}{config?.testnet && <p className="help-small">Test ETH has no real-world value.</p>}</Panel>;
         if(modal.kind==='compactHistory')return <Panel title={'Saved day '+modal.day} back={close} footer={primary('Back',close)}><ol className="compact-history">{modal.entries.map((entry,index)=>{const row=describeCompactAction(entry);return <li className={(row.terminal?'terminal ':row.failed?'failed ':'')+(row.quiet?'quiet':'')} key={index}><small>{index+1}</small><div><strong>{row.title}</strong><span>{row.detail}</span></div></li>;})}</ol></Panel>;
-        if (modal.kind === 'history')
-            return <Panel title={'Day ' + result?.day} back={close} footer={primary('Resume', resume)}><div className="history-list">{result?.receipts.map((r, i) => <button className={i === replayIndex ? 'selected' : ''} key={i} onClick={() => { world.current?.seek(i); setReceipt(r); open({ kind: 'brain', choice: r.choice ? cloneState(r.choice) : undefined, receipt: cloneState(r), preparing: false }); }}><small>{i + 1}</small><span>{r.lines[0]}</span></button>)}</div></Panel>;
+        if (modal.kind === 'history') {
+            const quietEntries=new Set<number>(),entries=result?.receipts||[];
+            for(let index=0;index<entries.length;){const span=quietSpanAt(entries,index);if(span){for(let i=span.start;i<=span.end;i++)quietEntries.add(i);index=span.end+1;}else index++;}
+            return <Panel title={'Day ' + result?.day} back={close} footer={primary('Resume', resume)}><div className="history-list">{entries.map((r, i) => {const mark=receiptMark(r),quiet=quietEntries.has(i);return <div className="history-entry" key={i}>{(!i||r.phase!==entries[i-1]?.phase)&&<h2 className="history-phase">{r.phase}</h2>}<button className={(i===replayIndex?'selected ':'')+(quiet?'quiet':'moment')} onClick={() => { world.current?.seek(i); setReceipt(r); open({ kind: 'brain', choice: r.choice ? cloneState(r.choice) : undefined, receipt: cloneState(r), preparing: false }); }}><small>{i + 1}</small><span className="history-mark" aria-hidden="true">{mark.item?<img src={itemImageUrl(mark.item)} alt=""/>:mark.icon?<Icon name={mark.icon}/>:<i/>}</span><span>{r.lines[0]}</span></button></div>;})}</div></Panel>;
+        }
         if (modal.kind === 'owner')
             return <Panel title="A new owner" footer={primary('Choose rooster', () => open({ kind: 'selector' }))}><p className="short-copy">This rooster has a new owner.</p></Panel>;
         const id=modal.view?.tokenId||selected?.id,sameJob=job?.tokenId===id?job:undefined,attempt=lastAttempt?.tokenId===id?lastAttempt:undefined;
@@ -822,6 +843,6 @@ export default function App() {
 
     }
     return <PanelContext.Provider value={{ error, body: panelScroll, onScroll: e => { scrollMemory.current[(modal ? 'modal:' + modal.kind : screen) + ':' + selected?.id] = e.currentTarget.scrollTop; } }}><main className={'app-root screen-' + screen}><div className={'game-composition ' + (screen === 'care' ? 'with-care' : screen === 'mint' ? 'with-form' : '')}><div className={'game-frame ' + (screen === 'replay' ? 'is-replaying' : '')} inert={!!modal}><div className="world-mount" ref={host}/><header className={'game-hud ' + (!headerRooster ? 'unowned' : '')}><div className="identity-line">{headerRooster ? <button className="identity-button" onClick={() => open({ kind: 'selector' })}>{headerRooster.state.name}<span>LV{String(displayState?.level || 0).padStart(2, '0')}</span><span className="selector-caret" aria-hidden="true">▼</span></button> : <span className="entry-brand">{mintIdentity?screen==='processing'?'Hatching '+(name.trim()||'rooster'):'New rooster':'NEARlyHuman'}</span>}<div className="day-context">{headerRooster ? <span>{screen === 'replay' ? 'DAY' : screen === 'care' || screen === 'processing' || screen === 'firstRetry' ? 'NEXT' : 'SAVED'}{String(screen === 'replay' ? receipt?.day || result?.day : screen === 'care' || screen === 'processing' || screen === 'firstRetry' ? (headerRooster.state.day + 1) : headerRooster.state.day).padStart(2, '0')}</span> : config?.testnet ? <span className="network-badge">TESTNET</span> : null}<button className="icon-button options-button" aria-label="Options" onClick={() => open({ kind: 'options' })}><Icon name="gear"/></button></div></div>{headerRooster && displayState && <div className="meter-row"><button className="needs-button" aria-label="Open health and needs" onClick={() => { if (screen === 'replay')
-        pause(); open({ kind: 'status' }); }}>{needs.map(k => <span className={'need-meter need-' + k} key={k}><Icon name={needIcons[k]}/><span className="meter-pips">{[1, 2, 3, 4, 5].map(i => <i key={i} className={displayState.needs[k] >= i * 2000 ? 'on' : ''}/>)}</span></span>)}</button><button className={'brain-button ' + (job?.phase === 'preparing' ? 'thinking' : '')} onClick={brain} aria-label="Inspect Jev choice"><Icon name="brain" size={19}/></button></div>}</header>{screen === 'replay' && !modal && <div className="event-box"><button className="day-log-button" onClick={()=>{pause();open({kind:'history'});}}>Day log</button><button className="event-lines" onClick={() => { pause(); open({ kind: 'history' }); }}><span>{lines[0]}</span><span>{lines[1]}</span></button><div className="replay-controls"><button className="icon-button" aria-label={paused ? 'Resume' : 'Pause'} onClick={paused ? resume : pause}><Icon name={paused ? 'play' : 'pause'}/></button><button className="icon-button" aria-label={historicalDay?'Back to saved days':'Skip to summary'} onClick={() => world.current?.skip()}><Icon name="skip"/></button></div>{paused && <button className="resume-label" onClick={resume}>Resume</button>}</div>}{screen === 'care' && <div className="event-box care-sleep"><div className="event-lines"><span>{warnings[0]?.label || 'Settled in for the night.'}</span><span>{warnings[0]?.due?expiryText(warnings[0].due):warnings[0]?'A supply may help.':'Nearly human.'}</span></div></div>}<div className="screen-overlay">{!modal && screen !== 'replay' && screen !== 'care' && screen !== 'mint' ? renderScreen() : null}</div>{config?.testnet && selected && <span className="corner-network">TESTNET</span>}</div>{screen === 'care' && <div className="care-dock" inert={!!modal}>{renderScreen()}</div>}{screen === 'mint' && <div className="mint-dock" inert={!!modal}>{renderScreen()}</div>}{modal && createPortal(<div className="modal-backdrop" onClick={e => { if (e.target === e.currentTarget)close(); }}><div className="composition-modal" role="dialog" aria-modal="true" aria-label="Game details" onClick={e => { if (e.target === e.currentTarget)
+        pause(); open({ kind: 'status' }); }}>{needs.map(k => {const delta=meterCue?.changes[k];return <span className={'need-meter need-' + k+(delta?' has-change':'')} key={k}><Icon name={needIcons[k]}/><span className="meter-pips">{[1, 2, 3, 4, 5].map(i => <i key={i} className={displayState.needs[k] >= i * 2000 ? 'on' : ''}/>)}</span>{delta&&<span className={'need-change '+(delta>0?'up':'down')} key={meterCue.sequence} aria-hidden="true">{signedNeed(delta)}</span>}</span>;})}</button><button className={'brain-button ' + (job?.phase === 'preparing' ? 'thinking' : '')} onClick={brain} aria-label="Inspect Jev choice"><Icon name="brain" size={19}/></button></div>}</header>{screen === 'replay' && !modal && <div className="event-box"><button className="day-log-button" onClick={()=>{pause();open({kind:'history'});}}>Day log</button><button className="event-lines" onClick={() => { pause(); open({ kind: 'history' }); }}><span>{lines[0]}</span><span>{lines[1]}</span></button><div className="replay-controls"><button className="icon-button" aria-label={paused ? 'Resume' : 'Pause'} onClick={paused ? resume : pause}><Icon name={paused ? 'play' : 'pause'}/></button><button className="icon-button" aria-label={historicalDay?'Back to saved days':'Skip to summary'} onClick={() => world.current?.skip()}><Icon name="skip"/></button></div>{paused && <button className="resume-label" onClick={resume}>Resume</button>}</div>}{screen === 'care' && <div className="event-box care-sleep"><div className="event-lines"><span>{warnings[0]?.label || 'Settled in for the night.'}</span><span>{warnings[0]?.due?expiryText(warnings[0].due):warnings[0]?'A supply may help.':'Nearly human.'}</span></div></div>}<div className="screen-overlay">{!modal && screen !== 'replay' && screen !== 'care' && screen !== 'mint' ? renderScreen() : null}</div>{config?.testnet && selected && <span className="corner-network">TESTNET</span>}</div>{screen === 'care' && <div className="care-dock" inert={!!modal}>{renderScreen()}</div>}{screen === 'mint' && <div className="mint-dock" inert={!!modal}>{renderScreen()}</div>}{modal && createPortal(<div className="modal-backdrop" onClick={e => { if (e.target === e.currentTarget)close(); }}><div className="composition-modal" role="dialog" aria-modal="true" aria-label="Game details" onClick={e => { if (e.target === e.currentTarget)
         close(); }}>{renderModal()}</div></div>,document.body)}</div></main></PanelContext.Provider>;
 }

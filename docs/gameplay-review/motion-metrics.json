@@ -1,0 +1,46 @@
+{
+  "provenance": "actual immutable saved packets, controlled step-driven real Phaser renderer; no API POST, signatures or model calls",
+  "runs": [
+    {
+      "label": "before",
+      "seconds": 110.4,
+      "renderedReceipts": 60,
+      "montageCuts": 48,
+      "complete": true,
+      "errors": []
+    },
+    {
+      "label": "after",
+      "seconds": 121.8,
+      "renderedReceipts": 60,
+      "montageCuts": 48,
+      "complete": true,
+      "errors": []
+    },
+    {
+      "label": "final",
+      "seconds": 74.4,
+      "renderedReceipts": 28,
+      "montageCuts": 18,
+      "complete": true,
+      "errors": []
+    },
+    {
+      "label": "final-peep",
+      "seconds": 75,
+      "renderedReceipts": 30,
+      "montageCuts": 17,
+      "complete": true,
+      "errors": []
+    }
+  ],
+  "allOriginalReceipts": 60,
+  "actorScale": {
+    "before": 1.25,
+    "after": 1.45,
+    "approvedBy": "PM actual390px fixture review",
+    "footPivotUnchanged": true
+  },
+  "purposefulGaitWorldPxPerSecond": 115,
+  "fullBeforeRealtimeSeconds": 112.5296
+}

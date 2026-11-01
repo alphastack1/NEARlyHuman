@@ -1,0 +1,110 @@
+[
+  {
+    "id": "before-choice",
+    "title": "Before · a choice without its consequences",
+    "image": "images/before-choice.png",
+    "note": "Actual PEEP day two, published baseline. The probabilities and joke were visible; the consumed milk and changed needs were absent."
+  },
+  {
+    "id": "after-choice",
+    "title": "After · the recorded target and consequences",
+    "image": "images/after-choice.png",
+    "note": "Actual saved PEEP receipt. Need and inventory badges report literal net changes, including recorded boundary effects."
+  },
+  {
+    "id": "impact",
+    "title": "A brief cue at the recorded impact",
+    "image": "images/impact.png",
+    "note": "Actual Milk receipt: Food +25, Water +27, Energy −1. The cue clears on pause/menu and is absent on start/seek."
+  },
+  {
+    "id": "chair",
+    "title": "A tangible result and its actual costs",
+    "image": "images/chair.png",
+    "note": "Actual PEEP chair build at320px. No new reward, causal model explanation or inference was invented."
+  },
+  {
+    "id": "before-log",
+    "title": "Before · every repeated visit had equal weight",
+    "image": "images/before-log.png",
+    "note": "Actual saved transcript before phase landmarks and visual emphasis."
+  },
+  {
+    "id": "after-log",
+    "title": "After · six phases and every original entry",
+    "image": "images/after-log.png",
+    "note": "All60 receipts remain individually seekable. Harmless unchanged entries are quieter; purposeful outcomes keep their item or action icon."
+  },
+  {
+    "id": "before-summary",
+    "title": "Before · the day missed its accomplishment",
+    "image": "images/before-summary.png",
+    "note": "Actual published PEEP summary surfaced Jitters cleared but omitted the successful chair build."
+  },
+  {
+    "id": "rejected-summary",
+    "title": "Rejected intermediate · recap clipped under the HUD",
+    "image": "images/rejected-summary.png",
+    "note": "The PM and independent player both rejected this390px result. Horizontal fit did not prove a usable story panel."
+  },
+  {
+    "id": "summary320",
+    "title": "Final · the whole recap at320px",
+    "image": "images/summary320.png",
+    "note": "The title, level and three actual highlights fit above one main action and two secondary links."
+  },
+  {
+    "id": "summary390",
+    "title": "Final · the whole recap at390px",
+    "image": "images/summary390.png",
+    "note": "The same compact portrait composition keeps the title below the HUD and every highlight visible."
+  },
+  {
+    "id": "summary430",
+    "title": "Final · wider portrait recap",
+    "image": "images/summary430.png",
+    "note": "Actual saved PEEP result at430px; no separate data or generated summary."
+  },
+  {
+    "id": "before-rewatch",
+    "title": "Before · Watch reopened the final moment",
+    "image": "images/before-rewatch.png",
+    "note": "A naturally completed historical PEEP day reopened near its end and returned in4.337seconds."
+  },
+  {
+    "id": "after-rewatch",
+    "title": "After · Watch begins that day again",
+    "image": "images/after-rewatch.png",
+    "note": "DAY01/LV00 at the original opening. The separate Ready Resume behavior remains available."
+  },
+  {
+    "id": "toast",
+    "title": "Final renderer · toast at the stove",
+    "image": "images/toast.png",
+    "note": "Canonical controlled fixture, frozen1.45 actor, completed frame120ms after the actual effect. No paid model choice is claimed."
+  },
+  {
+    "id": "garden",
+    "title": "Final renderer · watering the real plot",
+    "image": "images/garden.png",
+    "note": "Canonical controlled watering contact. Feet, prop position and visible result were reviewed."
+  },
+  {
+    "id": "bed",
+    "title": "Final renderer · blue bedding and a readable rooster",
+    "image": "images/bed.png",
+    "note": "Canonical controlled rest contact. The larger actor retains its foot pivot and fits the blanket."
+  },
+  {
+    "id": "scale-small",
+    "title": "Actor comparison ·1.25",
+    "image": "images/scale-small.png",
+    "note": "Matched controlled pose used for the PM scale comparison; this is already the revised gesture."
+  },
+  {
+    "id": "scale-final",
+    "title": "Actor comparison ·1.45",
+    "image": "images/scale-final.png",
+    "note": "Same pose and foot position. The PM selected this scale; it is the final source value."
+  }
+]

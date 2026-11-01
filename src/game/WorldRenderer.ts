@@ -8,7 +8,8 @@ import { roosterCanvas, ROOSTER_FRAME, type RoosterPose } from '../art/rooster';
 import { ACTION_PROPS, actionPropCanvas, actionResultProp } from '../art/action-props';
 import { PROP_URLS } from '../art/asset-urls';
 import { findRoute, targetPoint, TARGET_LABELS, WORLD_HEIGHT, WORLD_WIDTH, type WorldPoint } from './layout';
-import { receiptTiming } from './presentation';
+import { purposefulTravelMs, receiptTiming } from './presentation';
+import { quietSpanAt } from './quiet-spans';
 
 export interface WorldCallbacks {
  onReceipt?:(receipt:Receipt,index:number)=>void;
@@ -33,7 +34,7 @@ export interface WorldController {
 
 interface Prop {kind:FixtureArt;id?:TargetId;x:number;y:number;image:Phaser.GameObjects.Image;shadow?:Phaser.GameObjects.Ellipse;opts:ArtOptions}
 interface Particle {sprite:Phaser.GameObjects.Rectangle;x:number;y:number;vx:number;vy:number;life:number;total:number}
-interface Playback {day:DayResult;index:number;elapsed:number;normalSlot:number;perSlot:number;route:WorldPoint[];routeLength:number;travel:number;effect:boolean;stage:'prelude'|'receipts'|'ending';paused:boolean;preludeTarget:'mailbox'|'store';montage?:boolean;originCamera?:WorldPoint}
+interface Playback {day:DayResult;index:number;elapsed:number;normalSlot:number;perSlot:number;route:WorldPoint[];routeLength:number;travel:number;effect:boolean;stage:'prelude'|'receipts'|'ending';paused:boolean;preludeTarget:'mailbox'|'store';montage?:boolean;originCamera?:WorldPoint;quietSpanEnd?:number}
 
 const demoState:GameState={version:1,seed:'demo',name:'BOK',stats:{body:2,wits:2,spirit:1},day:0,level:0,alive:true,needs:{health:10000,nutrition:8000,hydration:8000,energy:8000,morale:8000},inventory:Object.fromEntries(ITEM_IDS.map(i=>[i,0])) as GameState['inventory'],conditions:[],plots:[{plant:null,growth:0,moisture:0,dryDays:0,soilBlocked:false,pendingBonus:false},{plant:null,growth:0,moisture:0,dryDays:0,soilBlocked:false,pendingBonus:false}],house:{mess:0,damage:{stove:false,window:false,chair:false},chairLife:0,chairAnchor:0,shelterLife:0,umbrellaLife:[0,0],stovePatch:0,windowPatch:0,chairBrace:false,windowBrace:false,dripDiverted:false,backupHeat:false,powerOut:false,fire:'none'},recent:[]};
 
@@ -87,7 +88,7 @@ class HomeScene extends Phaser.Scene {
   add('shelter',432,354,'gardenShelter');add('umbrella',408,341);add('umbrella',456,341);
   add('plant',390,405);add('plant',474,399);add('mailbox',344,400,'mailbox');add('plant',304,402);
   this.shadow=this.add.ellipse(this.worldPoint.x,this.worldPoint.y,16,5,0x302f28,.22).setDepth(200);
-  this.actor=this.add.image(this.worldPoint.x,this.worldPoint.y,'__DEFAULT').setOrigin(ROOSTER_FRAME.footX/32,ROOSTER_FRAME.footY/40).setScale(1.25).setDepth(201);
+  this.actor=this.add.image(this.worldPoint.x,this.worldPoint.y,'__DEFAULT').setOrigin(ROOSTER_FRAME.footX/32,ROOSTER_FRAME.footY/40).setScale(1.45).setDepth(201);
   this.held=this.add.image(0,0,'item-water').setOrigin(.5).setVisible(false).setDepth(202);
   this.secondHeld=this.add.image(0,0,'item-water').setOrigin(.5).setVisible(false).setDepth(202);
   this.blanket=this.add.image(312,112,this.texture('bedCover')).setOrigin(.5,1).setScale(1.2).setDepth(500).setVisible(false);
@@ -203,8 +204,9 @@ class HomeScene extends Phaser.Scene {
    this.lastMessage=lines.join('\n');this.cb.onMessage?.(lines);this.beginReceipt(false);
   }
  });}
- private beginReceipt(notifySnapshot=true):void {
+ private beginReceipt(notifySnapshot=true,allowQuietSpan=true):void {
   const pb=this.playback;if(!pb)return;const receipt=pb.day.receipts[pb.index];if(!receipt){this.beginEnding();return;}
+  delete pb.quietSpanEnd;
   const approach=receipt.decisionSnapshot||receipt.before;
   this.closeStorage();this.blanket.setVisible(false);this.applyState(approach);this.actor.setVisible(approach.alive);this.held.setVisible(false);
   this.setLight(({Dawn:.05,Morning:0,Midday:0,Afternoon:0,Evening:.08,Bedtime:.17} as Record<string,number>)[receipt.phase]||0);
@@ -213,6 +215,8 @@ class HomeScene extends Phaser.Scene {
   pb.routeLength=0;for(let i=1;i<pb.route.length;i++)pb.routeLength+=Phaser.Math.Distance.BetweenPoints(pb.route[i-1],pb.route[i]);
   const quietNeighbors=pb.day.receipts[pb.index-1]?.action==='T01'||pb.day.receipts[pb.index+1]?.action==='T01';
   const timing=receiptTiming(receipt,pb.routeLength,pb.normalSlot,quietNeighbors);pb.travel=timing.travel;pb.perSlot=timing.duration;pb.montage=timing.montage;pb.originCamera={...this.cameraPoint};pb.elapsed=0;pb.effect=false;this.transition.setAlpha(0);
+  const quietSpan=allowQuietSpan?quietSpanAt(pb.day.receipts,pb.index):undefined;
+  if(quietSpan){pb.quietSpanEnd=quietSpan.end;pb.perSlot=Math.max(pb.perSlot,1850);}
   this.cb.onReceipt?.(receipt,pb.index);if(notifySnapshot)this.cb.onSnapshot?.(approach,pb.index);this.cb.onProgress?.(pb.index,pb.day.receipts.length);
  }
  private receiptPoint(receipt:Receipt,state:GameState):WorldPoint {
@@ -231,7 +235,7 @@ class HomeScene extends Phaser.Scene {
   if(pb.day.finalState.alive){
    const dest=targetPoint('bed');pb.route=[{...this.worldPoint},...findRoute(this.worldPoint,dest)];pb.routeLength=0;
    for(let i=1;i<pb.route.length;i++)pb.routeLength+=Phaser.Math.Distance.BetweenPoints(pb.route[i-1],pb.route[i]);
-   pb.travel=pb.routeLength<3?80:Math.min(1700,Math.max(400,pb.routeLength*13));
+   pb.travel=purposefulTravelMs(pb.routeLength);
   }else pb.travel=0;
  }
  private closeStorage():void {for(const p of this.props)if(p.kind==='fridge'||p.kind==='cupboard')this.setProp(p,{});}
@@ -260,9 +264,9 @@ class HomeScene extends Phaser.Scene {
  private updatePlayback(dt:number):void {
   const pb=this.playback;if(!pb)return;pb.elapsed+=dt;
   if(pb.stage==='prelude'){
-   if(pb.elapsed>900&&pb.preludeTarget==='mailbox'){pb.preludeTarget='store';const m=this.props.find(p=>p.kind==='mailbox')!;this.setProp(m,{open:false,parcel:false});const dest=targetPoint('store');pb.route=[{...this.worldPoint},...findRoute(this.worldPoint,dest)];pb.routeLength=0;for(let i=1;i<pb.route.length;i++)pb.routeLength+=Phaser.Math.Distance.BetweenPoints(pb.route[i-1],pb.route[i]);this.tone('tap');}
-   if(pb.preludeTarget==='store')this.moveOnRoute(pb,Math.min(1,(pb.elapsed-900)/2200));
-   if(pb.elapsed>3500){pb.stage='receipts';this.beginReceipt();}return;
+   if(pb.elapsed>900&&pb.preludeTarget==='mailbox'){pb.preludeTarget='store';const m=this.props.find(p=>p.kind==='mailbox')!;this.setProp(m,{open:false,parcel:false});const dest=targetPoint('store');pb.route=[{...this.worldPoint},...findRoute(this.worldPoint,dest)];pb.routeLength=0;for(let i=1;i<pb.route.length;i++)pb.routeLength+=Phaser.Math.Distance.BetweenPoints(pb.route[i-1],pb.route[i]);pb.travel=purposefulTravelMs(pb.routeLength);this.tone('tap');}
+   if(pb.preludeTarget==='store')this.moveOnRoute(pb,Math.min(1,(pb.elapsed-900)/pb.travel));
+   if(pb.preludeTarget==='store'&&pb.elapsed>900+pb.travel+500){pb.stage='receipts';this.beginReceipt();}return;
   }
   if(pb.stage==='ending'){
    this.held.setVisible(false);
@@ -280,28 +284,36 @@ class HomeScene extends Phaser.Scene {
    this.moveOnRoute(pb,progress);if(this.transition.alpha<.4&&this.clock-this.lastStep>170){this.lastStep=this.clock;this.tone('step');}
   }
   else if(!pb.effect&&pb.elapsed>pb.travel+(pb.perSlot-pb.travel)*.48){pb.effect=true;this.beginEffect(receipt);}
-  if(pb.elapsed>=pb.perSlot){this.held.setVisible(false);if(!receipt.snapshot.alive||pb.index>=pb.day.receipts.length-1)this.beginEnding();else{pb.index++;this.beginReceipt();}}
+  if(pb.elapsed>=pb.perSlot){this.held.setVisible(false);if(!receipt.snapshot.alive||pb.index>=pb.day.receipts.length-1)this.beginEnding();else{pb.index=pb.quietSpanEnd??pb.index+1;this.beginReceipt();}}
  }
  private updateActor(paused:boolean):void {
   if(paused)return;this.actor.setRotation(this.state.alive?0:-Math.PI/2);this.secondHeld.setVisible(false);
   const pb=this.playback;let pose:RoosterPose='idle';let sleeping=this.modeSleep,seated=false;let point={...this.worldPoint};
-  if(this.modeSleep)pose='sleep';else if(!this.state.alive)pose='dead';else if(pb?.stage==='ending'&&pb.elapsed<pb.travel||pb?.stage==='prelude'&&pb.preludeTarget==='store')pose=Math.floor(this.clock/110)%2?'walk-a':'walk-b';
+  if(this.modeSleep)pose='sleep';else if(!this.state.alive)pose='dead';else if(pb?.stage==='ending'&&pb.elapsed<pb.travel||pb?.stage==='prelude'&&pb.preludeTarget==='store'&&pb.elapsed<900+pb.travel)pose=Math.floor(this.clock/110)%2?'walk-a':'walk-b';
   else if(pb?.stage==='receipts'){
    const receipt=pb.day.receipts[pb.index];if(pb.elapsed<pb.travel)pose=Math.floor(this.clock/110)%2?'walk-a':'walk-b';else if(receipt){
-    const beat=Math.floor(this.clock/230)%2;
+    const workElapsed=Math.max(0,pb.elapsed-pb.travel),workDuration=Math.max(1,pb.perSlot-pb.travel),workProgress=Math.min(1,workElapsed/workDuration);
+    // A purposeful gesture starts with this action, not an unrelated world clock.
+    const beat=Math.floor(workElapsed/230)%2;
+    const stroke=Math.sin(Math.min(1,workProgress/.48)*Math.PI);
     if(receipt.action.startsWith('G')&&(receipt.target==='plot1'||receipt.target==='plot2'))this.facing=receipt.target==='plot1'?1:-1;
+    else if(receipt.action!=='T01'&&!['H03','H04'].includes(receipt.action))this.facing=1;
     const eating=receipt.action==='H01'||receipt.action==='K07'||receipt.action.startsWith('K')&&pb.effect||receipt.action==='G05'&&receipt.variant==='apple';
     const repair=['H08','H09','H10','H11','H12','H15','H20'].includes(receipt.action);
     sleeping=receipt.action==='H03';seated=receipt.action==='H04'&&receipt.variant!=='garden';
     pose=sleeping?'sleep':pb.effect&&!receipt.success?'hurt':eating?'eat':receipt.action==='H02'?'treat':receipt.action.startsWith('G')?'garden':repair?'repair':'use';
-    if(beat&&!sleeping)pose='idle';
+    if(!sleeping&&workProgress<.13)pose='idle';
+    else if(!sleeping&&workProgress>.82&&receipt.success)pose=eating?'eat':'blink';
+    else if(beat&&!sleeping)pose='idle';
     if(sleeping){point={x:312,y:74};this.facing=1;}
     if(seated){point=receipt.target==='baseSeat'?{x:80,y:331}:{x:168,y:this.state.house.chairAnchor?379:331};pose=beat?'blink':'idle';}
     const inputs=Object.keys(receipt.inputs) as ItemId[],input=repair&&inputs.includes('toolkit')?'toolkit':inputs[0],result=pb.effect?actionResultProp(receipt):undefined,display=result?'result-'+result:input?'item-'+input:undefined;
     const consumed=pb.effect&&(receipt.action.startsWith('G')&&receipt.action!=='G05'||pb.elapsed-pb.travel>(pb.perSlot-pb.travel)*.82);
     if(display&&this.textures.exists(display)&&this.state.alive&&!consumed){
      const lift=eating?-18:receipt.target==='window'?-29:receipt.action.startsWith('G')?-10:-12;
-     this.held.setTexture(display).setVisible(true).setScale(1).setFlipX(this.facing<0).setRotation((repair?beat?-.25:.2:receipt.action==='G02'?-.45:0)*this.facing).setPosition(point.x+this.facing*(eating?11:13),point.y+lift+beat).setDepth(point.y+2);
+     const toolArc=repair?(pb.effect ? .18 : .2-stroke*.9):receipt.action==='G02'?-.25-stroke*.35:0;
+     const reach=repair?Math.round(stroke*3):0;
+     this.held.setTexture(display).setVisible(true).setScale(1).setFlipX(this.facing<0).setRotation(toolArc*this.facing).setPosition(point.x+this.facing*((eating?11:13)+reach),point.y+lift+(repair?-Math.round(stroke*3):beat)).setDepth(point.y+2);
     }else this.held.setVisible(false);
     const second=inputs.find(i=>i!==input);
     if(second&&!pb.effect)this.secondHeld.setTexture('item-'+second).setOrigin(.5).setScale(.9).setVisible(true).setPosition(point.x-this.facing*8,point.y-5).setDepth(point.y+2);
@@ -419,7 +431,7 @@ class HomeScene extends Phaser.Scene {
  public pausePlayback():void {if(this.playback)this.playback.paused=true;}
  public resumePlayback():void {if(this.playback){this.playback.paused=false;this.openAudio();}}
  public skipPlayback():void {const pb=this.playback;if(!pb)return;this.playback=null;this.held.setVisible(false);this.actor.setRotation(0);this.setSave(pb.day.finalState);this.cb.onSnapshot?.(pb.day.finalState,pb.day.receipts.length);this.cb.onProgress?.(pb.day.receipts.length,pb.day.receipts.length);this.cb.onComplete?.();}
- public seekReceipt(index:number):void {const pb=this.playback;if(!pb)return;pb.stage='receipts';this.modeSleep=false;this.blanket.setVisible(false);pb.index=Phaser.Math.Clamp(index,0,pb.day.receipts.length-1);this.beginReceipt();const r=pb.day.receipts[pb.index];this.worldPoint=this.receiptPoint(r,r.snapshot);pb.elapsed=pb.perSlot*.8;pb.effect=true;this.applyState(r.snapshot);this.updateActor(false);this.drawTask();this.drawHazards();pb.paused=true;this.centerCamera(true);this.lastMessage=r.lines.join('\n');this.cb.onSnapshot?.(r.snapshot,pb.index);this.cb.onMessage?.(r.lines);}
+ public seekReceipt(index:number):void {const pb=this.playback;if(!pb)return;pb.stage='receipts';this.modeSleep=false;this.blanket.setVisible(false);pb.index=Phaser.Math.Clamp(index,0,pb.day.receipts.length-1);this.beginReceipt(true,false);const r=pb.day.receipts[pb.index];this.worldPoint=this.receiptPoint(r,r.snapshot);pb.elapsed=pb.perSlot*.8;pb.effect=true;this.applyState(r.snapshot);this.updateActor(false);this.drawTask();this.drawHazards();pb.paused=true;this.centerCamera(true);this.lastMessage=r.lines.join('\n');this.cb.onSnapshot?.(r.snapshot,pb.index);this.cb.onMessage?.(r.lines);}
  public currentIndex():number{return this.playback?.index??0;}
  public paused():boolean{return !!this.playback?.paused;}
  public enableInput(enabled:boolean):void {this.inputEnabled=enabled;if(this.initialized)this.input.enabled=enabled;}
