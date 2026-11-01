@@ -732,5 +732,95 @@
     "note": "All fifteen canonical counts are65,535; measured spans fit their buttons. No response substitution, writes or wallet actions.",
     "flows": "UI-04 / UI-08",
     "image": "screenshots/074-full-stock-after.png"
+  },
+  {
+    "id": "live-kit",
+    "title": "Published care with the actual next-day delivery",
+    "kind": "Actual hosted project chain",
+    "stage": "After",
+    "group": "Published verification",
+    "note": "Public site, funded developer NFT PEEP#2. Milk, Coffee and Wood were selected for its second day.",
+    "flows": "Public release",
+    "image": "screenshots/075-live-kit.png"
+  },
+  {
+    "id": "live-ready",
+    "title": "Real hosted day two saved before playback",
+    "kind": "Actual hosted project chain",
+    "stage": "After",
+    "group": "Published verification",
+    "note": "The public worker prepared sixty slots and committed state, compact history and replay hash before Watch became available.",
+    "flows": "Public release",
+    "image": "screenshots/076-live-ready.png"
+  },
+  {
+    "id": "live-film",
+    "title": "Actual hosted Jev replay",
+    "kind": "Actual hosted project chain",
+    "stage": "After",
+    "group": "Published verification",
+    "note": "The recorded rooster uses its chair. Viewing is presentation only and creates no new biological day.",
+    "flows": "Public release",
+    "image": "screenshots/077-live-film.png"
+  },
+  {
+    "id": "live-choice",
+    "title": "Genuine recorded Jev probabilities",
+    "kind": "Actual hosted project chain",
+    "stage": "After",
+    "group": "Published verification",
+    "note": "Probabilities and the selected action came from the saved real Jev result; opening the inspector pauses presentation.",
+    "flows": "Public release",
+    "image": "screenshots/078-live-choice.png"
+  },
+  {
+    "id": "live-summary",
+    "title": "PEEP survives its second public day",
+    "kind": "Actual hosted project chain",
+    "stage": "After",
+    "group": "Published verification",
+    "note": "Actual saved result: level2, alive, no pending request. Replay/skip did not run inference again.",
+    "flows": "Public release",
+    "image": "screenshots/079-live-summary.png"
+  },
+  {
+    "id": "live-archive",
+    "title": "Two actual days in the published archive",
+    "kind": "Actual hosted project chain",
+    "stage": "After",
+    "group": "Published verification",
+    "note": "Public current/older day metadata: latest replay protected; older replay has the stated retention date.",
+    "flows": "Public release",
+    "image": "screenshots/080-live-archive.png"
+  },
+  {
+    "id": "live-cold-care",
+    "title": "Independent cold public care review",
+    "kind": "Actual hosted project chain",
+    "stage": "After",
+    "group": "Published verification",
+    "note": "Actual published PEEP#2 is level2/NEXT03. Reviewing and returning from its older film retained the three selected supplies.",
+    "flows": "Independent public review",
+    "image": "screenshots/081-live-cold-care.png"
+  },
+  {
+    "id": "live-narrow-archive",
+    "title": "Published archive on a320px phone",
+    "kind": "Actual hosted project chain",
+    "stage": "After",
+    "group": "Published verification",
+    "note": "Read-only actual project data. Both saved days and their watch/actions controls remain reachable on the narrow phone.",
+    "flows": "Independent public review",
+    "image": "screenshots/082-live-narrow-archive.png"
+  },
+  {
+    "id": "live-explorer-details",
+    "title": "Published exact-day explorer evidence",
+    "kind": "Actual hosted project chain",
+    "stage": "After",
+    "group": "Published verification",
+    "note": "Actual day-two request/save links match the independent RPC and cloud verification. No signing or API POST occurred in this review.",
+    "flows": "Independent public review",
+    "image": "screenshots/083-live-explorer-details.png"
   }
 ]

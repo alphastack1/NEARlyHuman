@@ -18,3 +18,5 @@ The focused verification set is 17 contract lifecycle witnesses, three live star
 ## Public release evidence
 
 The single production release passed its actual hosted playthrough. BOK #1's day three used 38 real Jev sends / 2,436 µUSD and reached Ready in 48.517 seconds from its durable accepted-job record. All sixty receipts were saved; playback/choice inspection/resume/skip reached Trial complete with BOK alive at level three. Public config, metadata, SVG, current state and the earlier replay returned 200. The playthrough and independent read-only phone review reported no browser errors. Exact deployment/transaction/commitment details and permanent captures are in [RELEASE_EVIDENCE.md](RELEASE_EVIDENCE.md). These notes are retained locally without another production deployment.
+
+The subsequent refinement sprint and its separately published PEEP day-two verification are recorded in [UX_AUDIT.md](UX_AUDIT.md), with the permanent screenshot gallery, UI dispositions and independent recovery evidence. Mainnet remains deferred by the owner.

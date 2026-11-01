@@ -34,3 +34,5 @@ Verified admission, jobs, replay packets, diagnostics and indexes were imported 
 Across the four application attempts in this sprint, the service recorded **100 Jev sends and $0.006245**: three successful days and one operational failure. This excludes the earlier small provider probe and is not a promise of fixed future pricing.
 
 These post-publication notes and captures are committed locally without a second production push, preserving the one-release deployment budget.
+
+The subsequent refinement sprint and its separately published PEEP day-two verification are recorded in [UX_AUDIT.md](UX_AUDIT.md), with the permanent screenshot gallery, UI dispositions and independent recovery evidence. Mainnet remains deferred by the owner.

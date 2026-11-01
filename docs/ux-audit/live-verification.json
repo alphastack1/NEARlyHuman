@@ -1,0 +1,31 @@
+{
+  "at": "2026-11-01T12:09:32.230Z",
+  "chainId": 46630,
+  "collection": "0x998551395f8a0c4ebd1f883b8c18a41d2cecabfb",
+  "tokenId": "2",
+  "name": "PEEP",
+  "day": 2,
+  "level": 2,
+  "alive": true,
+  "requestId": "0x37e70f146037c3682ae05922357d80640bffa85a425462abd7281b8b0d9021d6",
+  "requestTransaction": "0x10fcbf35f8cd266e7a92726230e07ed79865d5790ce07fde6766ef36d0f9525f",
+  "saveTransaction": "0x6466018d898ddde62edc841a4edbcf8cf72f1835441465a712998cb3de9d23c0",
+  "commitment": "0xa32e9752d7b9e6694defc33cfa9105d808814f9f24bfa6f272be9350ae9344af",
+  "receipts": 60,
+  "historyBytes": 240,
+  "modelDecisions": 33,
+  "httpSends": 33,
+  "costMicroUSD": 2114,
+  "acceptedToReadyMs": 42412,
+  "checks": {
+    "ready": true,
+    "packetCommitment": true,
+    "stateHash": true,
+    "history": true,
+    "resultHash": true,
+    "sixtyReceipts": true,
+    "currentDay": true,
+    "currentAlive": true,
+    "noPending": true
+  }
+}

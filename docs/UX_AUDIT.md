@@ -2,7 +2,7 @@
 
 The audit used repeated **observe → capture → independent critique → fix → rerender** loops. It reviewed the actual game against the original Moss & Cream reference, including an equal-width comparison, rather than treating the mockup gallery or TypeScript as proof of a working experience.
 
-The permanent [browsable evidence gallery](ux-audit/index.html) contains **74 curated captures**, including before/after comparisons and fourteen world-coverage sheets. The images and gallery work without `TEMP/`. [UI_COVERAGE.md](UI_COVERAGE.md) maps named guide states to executed evidence, explicit shared-layout derivatives and remaining limits. [RECOVERY_AUDIT.md](RECOVERY_AUDIT.md) records the authority and persistence witnesses; [assets.md](assets.md) records the renderer and art evidence.
+The permanent [browsable evidence gallery](ux-audit/index.html) contains **83 curated captures**, including before/after comparisons and fourteen world-coverage sheets. The images and gallery work without `TEMP/`. [UI_COVERAGE.md](UI_COVERAGE.md) maps named guide states to executed evidence, explicit shared-layout derivatives and remaining limits. [RECOVERY_AUDIT.md](RECOVERY_AUDIT.md) records the authority and persistence witnesses; [assets.md](assets.md) records the renderer and art evidence.
 
 ## Review roles and process
 
@@ -65,4 +65,21 @@ Mainnet remains deferred by the owner. Real third-party wallet approval/fee-bump
 
 The retained v1 collection also has explicit deep-fork/signed-intent limitations documented in the recovery audit and mainnet-readiness notes. Mainnet foundation review must account for full-context outcome binding and metadata/collection identity; a new deployment was not treated as a cost-free fix that could mislabel existing NFTs.
 
-The final refinement release and public hosted verification are recorded separately after publication. No additional production push is required merely to save post-release evidence locally.
+## Published refinement verification
+
+One production push published source `8dbcdedf25aa0edbe2a460a49a7a2ef6afc39b0d`, Netlify deployment `6ae72b2c06cae709c234b89f`, at **12:06:37 UTC**. Mainnet remains deferred. The browser build and all three hosted function bundles compiled; the function manifest specifies Node 22, background preparation and five-minute reconciliation. The staged source/browser-output credential scan found no credential leaks or tracked temporary files.
+
+The public page connected the authorized testnet wallet, selected **Milk, Coffee and Wood** for PEEP #2, and submitted one normal next-day transaction. Its hosted worker reached Ready in **42.412 seconds** from the durable accepted-job record, using **33 real Jev sends / 2,114 µUSD ($0.002114)**. The result is **day two, level two, alive, sixty receipts, 240 compact-history bytes and no pending request**.
+
+- [Owner request transaction](https://explorer.testnet.chain.robinhood.com/tx/0x10fcbf35f8cd266e7a92726230e07ed79865d5790ce07fde6766ef36d0f9525f).
+- [Saved-day transaction](https://explorer.testnet.chain.robinhood.com/tx/0x6466018d898ddde62edc841a4edbcf8cf72f1835441465a712998cb3de9d23c0).
+- Request ID: `0x37e70f146037c3682ae05922357d80640bffa85a425462abd7281b8b0d9021d6`.
+- Replay commitment: `0xa32e9752d7b9e6694defc33cfa9105d808814f9f24bfa6f272be9350ae9344af`.
+
+A separate read-only chain/cloud verification recomputed the replay commitment, packed-state hash and request result hash, and compared the exact saved compact history. All checks matched. The permanent [machine-readable verification](ux-audit/live-verification.json) contains public identifiers and measurements only.
+
+The public flow reached Ready, played the actual film, paused for genuine recorded choice probabilities, resumed, skipped to the saved summary, listed days two/one and opened day one. It reported no page errors. The original harness then waited for the current-day label “Skip to summary” in the older film, whose correct control is “Back to saved days.” That selector timeout was retained as a tool error; no second payment or preparation was used to replace the run.
+
+An independent cold review of the exact published JavaScript/CSS verified PEEP's current day-two state, both saved days, and **Watch day one → Back to saved days → Back** returning to care at level two/NEXT03 with its selected kit intact. It compared the exact request/save explorer links above with the day-two API result. Seven API reads returned 200, with **zero non-GET requests and zero console/page errors**. Phone 390/320 and desktop 1440 captures are in the gallery; the [read-only evidence record](ux-audit/published-read-review.json) preserves the endpoint and cache observations. Hashed JavaScript is immutable; the versioned furniture PNG revalidates.
+
+The workstation wallet bridge and disposable QA servers were stopped after signing and verification. The new hosted job lived in production Blobs and was processed by the hosted background worker; the workstation's local data store did not contain that accepted job. Post-release notes and captures are retained in a local evidence commit without another production push.
