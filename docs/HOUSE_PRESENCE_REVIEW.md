@@ -36,4 +36,10 @@ Machine-readable evidence is retained with the [gallery](house-review/index.html
 
 This pass changes local presentation and inspection. The saved biological state, legal choices, AI probabilities, day rules, fees, contract and packed history are unchanged. Lamp/decor reactions and camera browsing do not advance the day or grant an item. This pass needed no new inference or owner transaction. Existing backend/domain suites were not repeatedly rerun for these UI/art changes; build/type checking and focused native-input, state and pixel witnesses cover the changed paths.
 
-Mainnet remains deferred. The final published-artifact check is recorded after one release for this pass; post-release evidence is retained locally without another production push.
+## Published verification
+
+One production push published source `420274a50bdde921de61adc6a799635eebb0f50d`, Netlify deployment `6ae74676f9169a1691b75aa5`, at **21:03:03 Bangkok time (14:03:03 UTC)**. The independent public check loaded the exact final `index-DqKB_tTq.js` build with workstation QA servers stopped.
+
+BOK's trial leads to Visit home at SAVED03, with no Prepare, delivery or remaining-day controls. Kitchen exploration and the actual Stored1 bandage reader work without Add or future-delivery copy. PEEP retains normal NEXT03 care and an enabled Prepare action. At320px, native Kitchen → Return PEEP →1.1s settle leaves the face visible; the native peek is visible too. The public Milk/Coffee/Wood draft was preserved. Four API reads returned200, with **zero page errors and zero API writes**.
+
+The [public verification record](house-review/published-proof.json) retains that exact scope. Gallery home, read-only item and narrow peek frames now use the public captures. Owned browser pages and temporary servers are closed; post-release evidence is committed locally without a second production push. Mainnet remains deferred.
