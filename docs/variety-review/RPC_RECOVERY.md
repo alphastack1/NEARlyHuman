@@ -12,4 +12,6 @@ Independent adversarial review caught and fixed a potential multiline contract-r
 
 Checks: TypeScript passed; existing service/storage suite now8/8 passes, including the two focused recovery tests. Whitespace passed. A final leading-newline classifier adjustment passed its focused test. No contract/domain suite was rerun because legal rules/state/codec/provider policy are untouched.
 
-Permanent files: server/chain.ts, server/jobs.ts, server/service.test.ts. No decisionConfig/prompt/body changes, new infrastructure, product edits, credentials, actual chain/model calls, commits or pushes. Source frozen for PM deployment and the new same-NPC day2 retry.
+Permanent files: server/chain.ts, server/jobs.ts, server/service.test.ts. The isolated authoring/test stage made no actual chain/model calls or publication. The patch changes no decisionConfig, prompt, model body, domain rule or contract.
+
+The PM subsequently published `421f2ccb2dfd6e01b4724adc9ea216b081cb6aa1` at15:55:47 UTC on1 November2026. NORI's new accepted day2 request completed on the same NFT with the same intended day seed,60 genuine calls and a canonically verified save. The old Failed request remains historical. This successful live retry is separate from the injected checkpoint-resume witness; it is not proof that the live retry encountered another missing-block error. See [the final result](../VARIETY_AND_FIRST_USE_REVIEW.md#published-result-and-real-funded-evidence) and [canonical verification](canonical-verification.json).

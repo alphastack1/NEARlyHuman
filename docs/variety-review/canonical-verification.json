@@ -1,0 +1,353 @@
+{
+  "at": "2026-11-01T16:00:33.648Z",
+  "chainId": 46630,
+  "collection": "0x998551395f8a0c4ebd1f883b8c18a41d2cecabfb",
+  "rows": [
+    {
+      "name": "MISO",
+      "tokenId": "3",
+      "day": 1,
+      "level": 1,
+      "alive": true,
+      "requestId": "0xa71ce6037bc026f083c99b00d48ee894f594d4efe08e4c34ccb0d0c0dc95ec5c",
+      "requestTransaction": "0x02fb5cb1bce43902b3448d06e21edfa6a571f8a19ca5d731ac87ab79b5de6c14",
+      "saveTransaction": "0x3dfc98b7c880ef3e20e87164fa9e01bc56b5bd13e664741647d1a0243f4c9a74",
+      "commitment": "0x344cbc7f23f8a8c122de78b3fa57914c3c745deeb0ddcf5da384482275701d82",
+      "decisionConfig": "0x0c5befc18112324ff3de00a387297d198b6c8a183f5cfb8cda3bd1513aadf714",
+      "receipts": 60,
+      "decisions": 60,
+      "sends": 60,
+      "costMicroUSD": 5624,
+      "acceptedToReadyMs": 66583,
+      "profile": {
+        "interest": "gardening",
+        "secondaryInterest": "making",
+        "mealStyle": "ritual",
+        "rhythm": "late",
+        "signature": "preen",
+        "tempo": "measured",
+        "curiosity": "reserved",
+        "resourceStyle": "experiment"
+      },
+      "active": [
+        {
+          "slot": 1,
+          "phase": "Dawn",
+          "action": "H01",
+          "target": "store",
+          "variant": "water"
+        },
+        {
+          "slot": 2,
+          "phase": "Dawn",
+          "action": "H01",
+          "target": "store",
+          "variant": "bread"
+        },
+        {
+          "slot": 4,
+          "phase": "Dawn",
+          "action": "H04",
+          "target": "baseSeat",
+          "variant": "base"
+        },
+        {
+          "slot": 18,
+          "phase": "Morning",
+          "action": "H04",
+          "target": "baseSeat",
+          "variant": "base"
+        },
+        {
+          "slot": 47,
+          "phase": "Evening",
+          "action": "H01",
+          "target": "store",
+          "variant": "bread"
+        },
+        {
+          "slot": 49,
+          "phase": "Evening",
+          "action": "H01",
+          "target": "store",
+          "variant": "water"
+        },
+        {
+          "slot": 51,
+          "phase": "Bedtime",
+          "action": "H03",
+          "target": "bed",
+          "variant": "bed"
+        }
+      ],
+      "endNeeds": {
+        "health": 10000,
+        "nutrition": 9000,
+        "hydration": 8700,
+        "energy": 10000,
+        "morale": 8236
+      },
+      "endStock": {
+        "water": 1,
+        "milk": 0,
+        "bread": 1,
+        "steak": 0,
+        "medicine": 0,
+        "coffee": 0,
+        "wood": 0,
+        "toolkit": 1,
+        "umbrella": 1,
+        "rose_seeds": 0,
+        "apple_seeds": 0,
+        "matches": 0,
+        "soap": 1,
+        "bandage": 0,
+        "compost": 0
+      },
+      "checks": {
+        "commitment": true,
+        "stateHash": true,
+        "history": true,
+        "resultHash": true,
+        "policy": true,
+        "noPending": true,
+        "sameRetrySeed": true
+      },
+      "packet": "packets/miso-day1.json",
+      "archivedStateHash": "0xc8504980d2b5f37292ef0a239f88c79dadb111e9470145a12e7ab9fd9219fdd8",
+      "archivedResultHash": "0xee8d5a87ce16ca9eba22198548f49b97522b04e32c809f3f16de4ecfac22f535"
+    },
+    {
+      "name": "NORI",
+      "tokenId": "4",
+      "day": 1,
+      "level": 1,
+      "alive": true,
+      "requestId": "0xfeabd32158d280ec1315fe1ecffa8ad8854e98d5848e89d0b1f886f1486fc76a",
+      "requestTransaction": "0xcd401c0a8899dfb400a4314ff6a692ecb1fd68ce214e638892d485ffe5c65043",
+      "saveTransaction": "0xb2a40ecc43e523e69526403688792ab61e5e9091df3a5cb4bb38eb648fe0f482",
+      "commitment": "0x116ba95b35c707458afce25bad84c78bfea1b8a8a42e4e32cbc1e5f2c4a2b6a7",
+      "decisionConfig": "0x0c5befc18112324ff3de00a387297d198b6c8a183f5cfb8cda3bd1513aadf714",
+      "receipts": 60,
+      "decisions": 60,
+      "sends": 60,
+      "costMicroUSD": 5162,
+      "acceptedToReadyMs": 67624,
+      "profile": {
+        "interest": "cooking",
+        "secondaryInterest": "comfort",
+        "mealStyle": "ritual",
+        "rhythm": "late",
+        "signature": "stretch",
+        "tempo": "measured",
+        "curiosity": "reserved",
+        "resourceStyle": "experiment"
+      },
+      "active": [
+        {
+          "slot": 1,
+          "phase": "Dawn",
+          "action": "K01",
+          "target": "stove",
+          "variant": "toast"
+        },
+        {
+          "slot": 11,
+          "phase": "Morning",
+          "action": "H01",
+          "target": "store",
+          "variant": "water"
+        },
+        {
+          "slot": 12,
+          "phase": "Morning",
+          "action": "H01",
+          "target": "store",
+          "variant": "bread"
+        },
+        {
+          "slot": 14,
+          "phase": "Morning",
+          "action": "H04",
+          "target": "baseSeat",
+          "variant": "base"
+        },
+        {
+          "slot": 21,
+          "phase": "Midday",
+          "action": "K01",
+          "target": "stove",
+          "variant": "toast"
+        },
+        {
+          "slot": 38,
+          "phase": "Afternoon",
+          "action": "H04",
+          "target": "baseSeat",
+          "variant": "base"
+        },
+        {
+          "slot": 51,
+          "phase": "Bedtime",
+          "action": "H03",
+          "target": "bed",
+          "variant": "bed"
+        }
+      ],
+      "endNeeds": {
+        "health": 10000,
+        "nutrition": 8000,
+        "hydration": 6700,
+        "energy": 10000,
+        "morale": 9118
+      },
+      "endStock": {
+        "water": 2,
+        "milk": 0,
+        "bread": 0,
+        "steak": 0,
+        "medicine": 0,
+        "coffee": 0,
+        "wood": 0,
+        "toolkit": 0,
+        "umbrella": 1,
+        "rose_seeds": 0,
+        "apple_seeds": 0,
+        "matches": 0,
+        "soap": 1,
+        "bandage": 0,
+        "compost": 1
+      },
+      "checks": {
+        "commitment": true,
+        "stateHash": true,
+        "history": true,
+        "resultHash": true,
+        "policy": true,
+        "noPending": true,
+        "sameRetrySeed": true
+      },
+      "packet": "packets/nori-day1.json",
+      "archivedStateHash": "0x98c516c8b0b8ca518da22d2011730e2e806bbd8ac8150f6713ae8ddb2eebeb24",
+      "archivedResultHash": "0xddcaaf1d4594ef41dba871d916c0c93fd9d8ff4fbeb6d007fee54f9d0d00c0e3"
+    },
+    {
+      "kind": "failed-attempt",
+      "tokenId": "4",
+      "day": 2,
+      "requestId": "0x213e49aec22a8015f25109059a61c21d002e7246801c297ea8ba45ea30023466",
+      "saveTransaction": "0x3e4e78fd814f6a9e4085fe25560c0d903f26e1ff3e3e9bcd29147d1b4472582f",
+      "costMicroUSD": 4164,
+      "sends": 40,
+      "reason": "preparation_interrupted",
+      "canonicalFailed": true
+    },
+    {
+      "name": "NORI",
+      "tokenId": "4",
+      "day": 2,
+      "level": 2,
+      "alive": true,
+      "requestId": "0x7ffb28447fb33528e034c809440406fa9176b855d2f9f460e6594e78e85057b5",
+      "requestTransaction": "0x3be8400ee8e3977a8d7ffce20c68589924ab2c61145fc123c15920cb2c4b4592",
+      "saveTransaction": "0x477fb36a3aa2f44d1abcb60e6542e888540267291c6c37a99dbd8065389b94e4",
+      "commitment": "0x5a7c66213e560119238a3b0e280f806d65bb4364fd844b8562159525bb86c82e",
+      "decisionConfig": "0x0c5befc18112324ff3de00a387297d198b6c8a183f5cfb8cda3bd1513aadf714",
+      "receipts": 60,
+      "decisions": 60,
+      "sends": 60,
+      "costMicroUSD": 6255,
+      "acceptedToReadyMs": 73558,
+      "profile": {
+        "interest": "cooking",
+        "secondaryInterest": "comfort",
+        "mealStyle": "ritual",
+        "rhythm": "late",
+        "signature": "stretch",
+        "tempo": "measured",
+        "curiosity": "reserved",
+        "resourceStyle": "experiment"
+      },
+      "active": [
+        {
+          "slot": 1,
+          "phase": "Dawn",
+          "action": "H01",
+          "target": "store",
+          "variant": "water"
+        },
+        {
+          "slot": 2,
+          "phase": "Dawn",
+          "action": "H04",
+          "target": "baseSeat",
+          "variant": "base"
+        },
+        {
+          "slot": 3,
+          "phase": "Dawn",
+          "action": "K05",
+          "target": "prep",
+          "variant": "ritual"
+        },
+        {
+          "slot": 12,
+          "phase": "Morning",
+          "action": "H01",
+          "target": "store",
+          "variant": "milk"
+        },
+        {
+          "slot": 13,
+          "phase": "Morning",
+          "action": "H04",
+          "target": "baseSeat",
+          "variant": "base"
+        },
+        {
+          "slot": 51,
+          "phase": "Bedtime",
+          "action": "H03",
+          "target": "bed",
+          "variant": "bed"
+        }
+      ],
+      "endNeeds": {
+        "health": 10000,
+        "nutrition": 7500,
+        "hydration": 6700,
+        "energy": 10000,
+        "morale": 8530
+      },
+      "endStock": {
+        "water": 1,
+        "milk": 0,
+        "bread": 0,
+        "steak": 0,
+        "medicine": 0,
+        "coffee": 0,
+        "wood": 0,
+        "toolkit": 0,
+        "umbrella": 1,
+        "rose_seeds": 1,
+        "apple_seeds": 0,
+        "matches": 0,
+        "soap": 1,
+        "bandage": 0,
+        "compost": 1
+      },
+      "checks": {
+        "commitment": true,
+        "stateHash": true,
+        "history": true,
+        "resultHash": true,
+        "policy": true,
+        "noPending": true,
+        "sameRetrySeed": true
+      },
+      "packet": "packets/nori-day2.json",
+      "archivedStateHash": "0x0f29b2a5d6859aed4bc6df78f0b801dfba938e7622c76db23f29b098c4364f71",
+      "archivedResultHash": "0x4c176ef07f79fd9fa97d90dedfbe6353ca0f51e698fcde09d981e754f2973ad4"
+    }
+  ]
+}

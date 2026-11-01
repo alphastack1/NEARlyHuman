@@ -136,5 +136,53 @@
     "title": "Another day has a different accent",
     "image": "images/bok-day3.png",
     "note": "Seed/day-derived presentation, suppressed during hazards, serious need or death."
+  },
+  {
+    "id": "funded-day1-start",
+    "title": "Real hatch · first day starts automatically",
+    "image": "images/funded-day1-start.png",
+    "note": "NORI #4 after the Ready handoff fix: LV00, actual day-one film, no manual Watch step."
+  },
+  {
+    "id": "funded-day1-progress",
+    "title": "Real hatch · the film advances",
+    "image": "images/funded-day1-progress.png",
+    "note": "A later room/pose/action confirms progression beyond an auto flag. The genuine60-receipt day was already saved."
+  },
+  {
+    "id": "funded-day1-summary",
+    "title": "Real hatch · a clear next step",
+    "image": "images/funded-day1-summary.png",
+    "note": "SAVED01 / LV01: Next day leads, replay and the archive remain secondary."
+  },
+  {
+    "id": "funded-kit",
+    "title": "Same NFT · retry with the saved life intact",
+    "image": "images/funded-kit.png",
+    "note": "The previous Failed request retained day1. Actual selected delivery is milk, coffee and rose seeds, verified from the saved packet."
+  },
+  {
+    "id": "funded-day2-start",
+    "title": "Real next day · delivery becomes the film",
+    "image": "images/funded-day2-start.png",
+    "note": "Current published code starts NORI day2 at LV01 with the real incoming supplies. One new owner submission; no remint."
+  },
+  {
+    "id": "funded-day2-progress",
+    "title": "Real next day · a different room and action",
+    "image": "images/funded-day2-progress.png",
+    "note": "Later kitchen frame with visible need deltas. No browser errors were recorded."
+  },
+  {
+    "id": "funded-day2-log",
+    "title": "Real next day · actual progress reaches row10",
+    "image": "images/funded-day2-log.png",
+    "note": "The selected real log row supplies independent evidence of advancement beyond the opening record."
+  },
+  {
+    "id": "funded-day2-summary",
+    "title": "Real next day · saved level2",
+    "image": "images/funded-day2-summary.png",
+    "note": "Canonical day2 survived. Commitment, state, history and result hash all match the contract; the earlier failure stays recorded."
   }
 ]
