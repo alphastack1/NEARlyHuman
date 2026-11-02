@@ -51,3 +51,12 @@ The final compiled browser review watched MISO day 2 completely (71.244 seconds)
 The next-visit UI also passed thirteen source-flow states, including a failed read/retry, cancellation by the owner path, 320px portrait and enlarged text. A narrow landscape follow-up restored both secondary actions to one row without reducing their touch height. [Guest-flow proof](choice-review/proofs/guest-flow.json) · [landscape follow-up](choice-review/proofs/landscape.json).
 
 The final browser artifact is `index-DB6S9AVB.js`, with `index-MeejJbyk.css`. The function package inspection confirms Node 22, background preparation, five-minute reconciliation and the frozen canonical-memory/fork-reset code. Finished source, recordings and proof records live outside the scratch directory. Publication and public-browser evidence are appended after the single reviewed release.
+
+
+## Published verification
+
+Source `3aa3c84b1ba80126a61fb8831ca35c590349e3c2` published in Netlify deployment `6ae838dcaa55b0326e55cf59`, Ready at **2026-11-02T07:17:17.634Z** (2 November 2026, Bangkok afternoon). Actual public config exposes the new policy; all five JS/CSS assets and all three recording hashes match the local release manifest. Canonical replay endpoints return the expected commitments, and the older NORI recording remains readable unchanged.
+
+The public browser checked title/Start, finished MISO day 2, used Watch day 3, then Visit PEEP at actual 390px/320px phone sizes. These were explicit Finish visit flow checks, separate from the complete natural compiled watches. There were no page errors, API writes or document overflow. Testnet admissions were reopened with no pending request in transaction `0xb9fcf85378d00f79f35f4e1f0ff4ba11c3cbaa8b298a001ac0da0d7fbcf9ecae`. No mainnet action occurred.
+
+[Public flow proof](choice-review/proofs/published.json) · [publication record](choice-review/proofs/publication.json). Completion proofs are committed locally after publication, avoiding a second production deployment.
