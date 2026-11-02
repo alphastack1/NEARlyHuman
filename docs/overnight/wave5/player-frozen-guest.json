@@ -1,0 +1,23 @@
+{
+  "scope": "Controlled connected-identity presentation around actual cached testnet NFT1 snapshot (observed latestDay2) and genuine saved Jev Day1 packet. No authority/financial balances invented; no live API/signatures/transactions/inference.",
+  "errors": [],
+  "posts": [],
+  "cases": [
+    {
+      "owner": true,
+      "expected": "Latest home",
+      "day": 1,
+      "currentLifeDay": 2,
+      "pass": true,
+      "image": "player-frozen-guest-owner-390.png"
+    },
+    {
+      "owner": false,
+      "expected": "Hatch your own",
+      "day": 1,
+      "currentLifeDay": 2,
+      "pass": true,
+      "image": "player-frozen-guest-visitor-390.png"
+    }
+  ]
+}

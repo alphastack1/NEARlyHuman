@@ -1,6 +1,6 @@
 import { randomUUID, createHash } from 'node:crypto';
 import { encodeFunctionData, keccak256, parseAbi, parseTransaction, recoverTransactionAddress, toHex, type Hex, type PublicClient, type PrivateKeyAccount } from 'viem';
-import { storage, type DurableStore } from '../storage';
+import { storage, StoreConflict, type DurableStore } from '../storage';
 import { prepareV2, v2DecisionConfig, type V2ChoiceProvider, type V2PreparationOptions } from './preparation';
 import { validateV2FrozenInput, v2WorkerInputHash, verifyV2Runtime, V2ContextError, type V2FrozenInput, type V2RuntimeIdentity } from './context';
 import { paidV2Call, requireV2JobBudget, finishV2JobBudget, updateV2Record, V2BudgetError } from './budget';
@@ -9,6 +9,7 @@ import { sendV2 } from './jev';
 import { readV2AcceptedTransaction } from './chain';
 import { expandV2History, encodeTrace, Op } from '../../src/v2';
 import { reconcileV2QuoteFunding } from './quotes';
+import { isV2StateLagError } from '../../src/chain/v2-transport';
 
 export interface V2Job {
   version: 2; id: string; campaignId: string; input: V2FrozenInput; inputHash: Hex;
@@ -116,7 +117,7 @@ export async function prepareV2Job(
     if (error instanceof V2LeaseLost) throw error;
     await updateV2Record<V2Job>(store, id, () => { throw Error('Missing accepted day'); }, j => {
       const e = error as Error & { code?: string };
-      const retryable = ['StoreConflict', 'HttpRequestError', 'TimeoutError', 'RpcRequestError'].includes(e.name) || ['EPERM', 'EBUSY', 'EACCES', 'ECONNRESET', 'ETIMEDOUT'].includes(e.code || '');
+      const retryable = error instanceof StoreConflict || isV2StateLagError(error) || ['HttpRequestError', 'TimeoutError', 'RpcRequestError'].includes(e.name) || ['EPERM', 'EBUSY', 'EACCES', 'ECONNRESET', 'ETIMEDOUT'].includes(e.code || '');
       fence(j, lease); j.phase = retryable ? 'queued' : error instanceof V2ContextError && error.code === 'expired' ? 'expiry_due'
         : error instanceof V2ContextError || error instanceof V2BudgetError && error.code === 'changed' ? 'quarantined' : 'failure_due';
       j.failureCode = error instanceof V2ContextError ? error.code : 'preparation_interrupted'; delete j.lease; j.updatedAt = Date.now(); return j;
@@ -228,7 +229,7 @@ export async function readV2CanonicalMemory(client: PublicClient, input: V2Froze
     if (day === input.day - 1 && record.stateHash !== input.baseHash) throw new V2ContextError('context', 'The prior saved state changed.');
     const trace = expandV2History(record.history);
     if (keccak256(encodeTrace(trace)) !== record.traceHash) throw new V2ContextError('context', 'The prior action history changed.');
-    previousDays.push({ day, actions: trace.steps.filter(a => ![Op.Quiet, Op.QuietMain, Op.Pickup].includes(a.op)).slice(-6) });
+    previousDays.push({ day, actions: trace.steps.filter(a => ![Op.QuietMain, Op.Pickup].includes(a.op)).slice(-6) });
   }
   if ((await client.getBlock({ blockNumber: BigInt(input.acceptedBlock) })).hash !== input.acceptedBlockHash) throw new V2ContextError('context', 'The accepted block changed.');
   return normalizeV2Memory({ name, previousDays, pressureMicro: input.pressure }, input.day);

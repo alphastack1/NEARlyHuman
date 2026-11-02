@@ -1,12 +1,12 @@
 import { createHash } from 'node:crypto';
 import {
-  Op, ITEMS, NEEDS, CONDITIONS, PLANTS, RECIPES, MAIN_OPS, openDay, legalActions, kitItems,
+  Op, ITEMS, NEEDS, CONDITIONS, PLANTS, RECIPES, WEIGHTS, MAIN_OPS, ACUTE_OPS, openDay, legalActions, kitItems,
   type State, type Step, type Candidate, type Context,
 } from '../../src/v2';
 import { v2Personality, v2DayInclination, V2_PERSONALITY_VERSION, type V2Interest } from '../../src/v2/personality';
 import type { V2Decision, V2Selection } from './preparation';
 
-export const V2_MIND_POLICY = 'v2-mind-dawn-truthful-memory-4';
+export const V2_MIND_POLICY = 'v2-mind-dawn-truthful-memory-6';
 export interface V2PastAction extends Step { success?: boolean }
 export interface V2PreviousDay { day: number; actions: V2PastAction[] }
 export interface V2MindMemory { name?: string; previousDays?: V2PreviousDay[]; pressureMicro?: string }
@@ -36,6 +36,30 @@ export interface V2ModelReply {
     usageEstimated?: boolean; choices: Record<string, string>;
   };
 }
+export interface V2OpportunityBudget {
+  ordinary_uses_left: number; ordinary_opportunities_left: number; routine_phases_left: number[];
+  main_uses_left: number; acute_response_uses_left: number;
+}
+/** Remaining allowances come from the real clock/counters, not need-based guesses. */
+export function v2OpportunityBudget(c: Pick<Context, 'slot' | 'ordinaryUses' | 'ordinaryMask' | 'mainUsed' | 'acuteUses'>): V2OpportunityBudget {
+  const phase = Math.max(1, Math.floor((Math.max(1, c.slot) - 1) / 10));
+  const phases = [1,2,3,4,5].filter(p => p >= phase && !(c.ordinaryMask & (1 << p)));
+  const ordinary = Math.max(0, 5 - c.ordinaryUses);
+  return { ordinary_uses_left: ordinary, ordinary_opportunities_left: Math.min(ordinary, phases.length), routine_phases_left: phases,
+    main_uses_left: !c.mainUsed && c.slot <= 40 ? 1 : 0, acute_response_uses_left: Math.max(0, 2 - c.acuteUses) };
+}
+/** Exact ordinary boundary arithmetic only: no future action/event or survival promise. */
+export function v2NominalCareForecast(s: State, slot: number) {
+  const phase = Math.max(0, Math.floor((Math.max(1, slot) - 1) / 10)), remaining = Math.max(0, 6 - phase);
+  const water = [700,600,700,700,600,700].slice(phase).reduce((a,b) => a+b, 0);
+  const moodPerPhase = Math.round(300 * (50 - s.stats[2]!) / 50);
+  return { phase_boundaries_left: remaining,
+    food_after_remaining_phase_losses: Math.max(0, s.needs[1]! - remaining * 500) / 100,
+    water_after_remaining_phase_losses: Math.max(0, s.needs[2]! - water) / 100,
+    morale_after_remaining_phase_losses: Math.max(0, s.needs[4]! - remaining * moodPerPhase) / 100,
+    energy_after_remaining_phase_losses: s.needs[3]! / 100,
+    note: 'Nominal phase losses only, if the life continues: no future actions, project recovery or new events. Existing condition damage and death are excluded. Living bedtime energy gain is separate.' };
+}
 
 const active = (s: State, id: number) => s.conditions[id]!.severity > 0 && !s.conditions[id]!.resolved;
 const action = (a: Step): Step => ({ slot: a.slot, op: a.op, arg: a.arg, variant: a.variant, goods: [...a.goods] });
@@ -60,7 +84,7 @@ export function v2ActionInterest(a: Step): V2Interest {
 }
 export function normalizeV2Memory(memory: V2MindMemory | undefined, day: number): V2MindMemory {
   const previous = (memory?.previousDays || []).filter(d => Number.isInteger(d.day) && d.day > 0 && d.day < day)
-    .sort((a, b) => a.day - b.day).slice(-2).map(d => ({ day: d.day, actions: d.actions.filter(a => ![Op.Quiet, Op.QuietMain, Op.Pickup].includes(a.op)).slice(-6).map(a => ({ ...action(a), ...(typeof a.success === 'boolean' ? { success: a.success } : {}) })) }));
+    .sort((a, b) => a.day - b.day).slice(-2).map(d => ({ day: d.day, actions: d.actions.filter(a => ![Op.QuietMain, Op.Pickup].includes(a.op)).slice(-6).map(a => ({ ...action(a), ...(typeof a.success === 'boolean' ? { success: a.success } : {}) })) }));
   return { ...(memory?.name ? { name: memory.name.slice(0, 8) } : {}), previousDays: previous,
     ...(memory?.pressureMicro && /^(0|[1-9]\d*)$/.test(memory.pressureMicro) ? { pressureMicro: memory.pressureMicro } : {}) };
 }
@@ -106,22 +130,28 @@ export function offerV2MindCandidates(context: Pick<Context, 'state' | 'day'>, c
 function facts(a: Candidate, s: State, memory: V2MindMemory, today: Step[]) {
   const recovery = v2ClippedRecovery(a, s), prior = memory.previousDays?.flatMap(d => d.actions) || [];
   const clinical = a.op === Op.Treat ? s.conditions[a.arg] : undefined;
-  const points = a.op === Op.Ship ? a.goods.reduce((n, id) => n + (id ? [65,65,95,115,65,95,40,40,116,212,276,340][id - 23]! : 0), 0) : 0;
+  const points = a.op === Op.Ship ? a.goods.reduce((n, id) => n + (id ? WEIGHTS[id - 23]! : 0), 0) : 0;
   const U = 1_000_000n, K = 50_000n * U;
   const price = points && memory.pressureMicro !== undefined ? BigInt(points) * U * K / (10n * (K + BigInt(memory.pressureMicro))) : undefined;
+  const craft = a.op === Op.Craft ? RECIPES[a.arg] : undefined;
+  const craftPrice = craft && memory.pressureMicro !== undefined ? BigInt(WEIGHTS[craft.output - 22]!) * U * K / (10n * (K + BigInt(memory.pressureMicro))) : undefined;
   return {
     action: a.label, role: a.role, family: v2ActivityFamily(a), interest: v2ActionInterest(a), use: a.inputs,
+    ordinary_opportunity_cost: a.role === 'routine' ? 1 : 0,
     energy_cost: a.energy / 100, success_chance: a.chanceBps / 10000, effect: a.description,
     ...(a.recovery.some(Boolean) ? { clipped_gain_on_success: recovery } : {}),
     ...(a.possibleFailures.length ? { separate_risks: a.possibleFailures } : {}),
     ...(clinical ? { condition: CONDITIONS[a.arg], due_game_day: clinical.dueDay } : {}),
     ...(a.op === Op.Wash ? { exposure: CONDITIONS[a.arg] } : {}),
     ...(a.op === Op.Plant ? { bed: a.arg + 1, grows: PLANTS[a.variant]!.name, wet_bedtimes_until_ready: PLANTS[a.variant]!.ticks } : {}),
-    ...(a.op === Op.Craft ? { object: RECIPES[a.arg]!.name, wood_required: RECIPES[a.arg]!.wood } : {}),
+    ...(craft ? { object: craft.name, wood_required: craft.wood, produces: { item: ITEMS[craft.output], units: 1 },
+      ...(craftPrice !== undefined ? { potential_single_unit_shipping_reward: { currency: 'NHC', micro_units: craftPrice.toString(), at_current_accepted_pressure: true,
+        condition: 'No automatic credit. An actual eligible shipment must consume this finished unit; it costs an ordinary opportunity. Future-day quotes can differ.' } } : {}) } : {}),
     ...(s.goal >= 3 ? { saved_goal_material: { wood_now:s.inventory[6],wood_after_this_action:s.inventory[6]!-(a.inputs.wood||0)+(a.op===Op.Harvest?s.plots.filter(p=>p.kind===9&&p.ticks===0).length:0),wood_target:GOALS[s.goal]!.wood,
       note:'The intention is advisory. Waiting preserves material; necessary care or a worthwhile different project can still take priority.' } } : {}),
     ...nonRecoveryFacts(a, s),
-    ...(points ? { shipping_base_points: points / 10, ...(price !== undefined ? { accepted_token_quote: (Number(price) / 1e6).toFixed(6) } : {}) } : {}),
+    ...(points ? { shipping_base_points: points / 10, currency: 'NHC', credit_target: 'this NFT onchain purse',
+      ...(price !== undefined ? { accepted_token_quote: (Number(price) / 1e6).toFixed(6), accepted_reward_micro: price.toString() } : {}) } : {}),
     familiarity: { exact_today: today.filter(x => same(x, a)).length, family_today: today.filter(x => v2ActivityFamily(x) === v2ActivityFamily(a)).length,
       prior_attempts: prior.filter(x => same(x, a)).length, prior_known_successes: prior.filter(x => x.success === true && same(x, a)).length },
     ...(a.recovery.some(Boolean) && Object.keys(a.inputs).length && Math.max(...Object.values(recovery)) < 15 ? { resource_caution:'Only a small recovery fits; a whole item is spent. Compare free comfort or an ordinary moment.' } : {}),
@@ -139,6 +169,8 @@ function nonRecoveryFacts(a: Candidate, s: State): Record<string, unknown> {
     case Op.CoverRain:return {target:'body',does:'Spend umbrella to prevent this storm physical exposure only; stock loss may remain'};
     case Op.Well:return {target:'all occupied beds',does:'Set moisture to 2 without drinking bottles; no instant growth'};
     case Op.Harvest:return {collects:s.plots.flatMap((p,i)=>p.kind&&p.ticks===0?[{bed:i+1,item:ITEMS[Number(PLANTS[p.kind]!.output)],units:1}]:[]),does:'One round collects all ready outputs; first pickup counts toward finite total'};
+    case Op.Craft:return {does:'Spend real wood to create one actual finished inventory object. It can be kept or included in an eligible shipment; it does not restore needs or grant a household buff.'};
+    case Op.Ship:return {does:'Consume the indicated real finished goods and credit their accepted NHC reward to this NFT purse. No needs recovery. Goods that are not shipped stay in inventory.'};
     case Op.BuildChair:return {does:'One optional chair lasting 5 living bedtimes including today; chair leisure gives 15 morale instead of 10'};
     case Op.BuildShelter:return {does:'Garden weather cover for 4 living bedtimes including today; no water/growth'};
     case Op.CoverPlot:return {bed:a.arg+1,does:'Weather cover for this bed for 3 living bedtimes; no water/growth'};
@@ -169,10 +201,13 @@ function stateFacts(s: State, day: number, slot: number, memory: V2MindMemory) {
     house: s.house, intention: { id: s.goal, label: GOALS[s.goal]!.label, wood_saved: s.inventory[6], wood_target: GOALS[s.goal]!.wood,
       review_on_day: s.goalReviewDay, review_is_not_a_completion_deadline: true },
     previous_days: { source: 'Canonical bounded executed attempts from completed days. Success is unknown unless explicitly included; not a full biography.', days: memory.previousDays || [] },
+    economy: { currency: 'NHC', earns_by: 'An actual shipment of finished home-grown or handmade goods credits this NFT purse; crafting alone does not mint tokens.',
+      owner_controls: 'The current NFT owner can explicitly withdraw NHC or burn 250 NHC to hatch another NFT life. Purse funds survive death.',
+      token_hatch_price_micro: '250000000', ai_may_withdraw_or_spend: false, cash_redemption_promised: false,
+      choice: 'Keeping, enjoying, eating or shipping actual goods are different valid choices when offered. The purse reward is a real option, not a requirement to maximize profit.' },
     rhythm: { remaining_phase_losses: 6 - Math.floor((Math.max(1, slot) - 1) / 10), food_loss_per_phase: 5, water_loss_by_phase: [7,6,7,7,6,7], morale_loss_per_phase: Math.round(300 * (50 - s.stats[2]!) / 50) / 100,
       energy_loss_per_phase: 0, living_bedtime_energy: 35, rest_uses_per_day: 2, leisure_uses_per_day: 2 },
-    care_timing: { food_after_remaining_losses_without_eating:Math.max(0,s.needs[1]!/100-(6-Math.floor((Math.max(1,slot)-1)/10))*5),
-      note:'This is ordinary phase loss only, not a guarantee against existing conditions/incidents. A comfortable late-day need does not need a whole item merely to finish at100.' },
+    care_timing: v2NominalCareForecast(s, slot),
     rule: 'One main undertaking and five ordinary opportunities. Supplies wait outside until pickup. No offline aging. Safe care may repeat. No automatic wealth spending; shipping consumes actual finished items. Use only an offered choice and never invent growth, materials or a benefit.',
   };
 }
@@ -183,10 +218,16 @@ function request(kind: V2ModelRequest['kind'], state: Record<string, unknown>, q
   return { input, inputHash: createHash('sha256').update(body).digest('hex'), expected, kind };
 }
 export function buildV2Request(decision: V2Decision, rawMemory?: V2MindMemory): V2ModelRequest {
-  const memory = normalizeV2Memory(rawMemory, decision.day), today = decision.earlierToday.filter(a => ![Op.Quiet,Op.QuietMain,Op.Pickup].includes(a.op)).slice(-8);
+  const memory = normalizeV2Memory(rawMemory, decision.day), today = decision.earlierToday.filter(a => ![Op.QuietMain,Op.Pickup].includes(a.op)).slice(-8);
+  const executed = decision.earlierToday;
+  const opportunities = decision.opportunities || v2OpportunityBudget({ slot: decision.slot,
+    ordinaryUses: executed.filter(a=>!MAIN_OPS.has(a.op)&&!ACUTE_OPS.has(a.op)&&a.op!==Op.Pickup).length,
+    ordinaryMask: executed.filter(a=>!MAIN_OPS.has(a.op)&&!ACUTE_OPS.has(a.op)&&a.op!==Op.Pickup).reduce((mask,a)=>mask|(1<<Math.max(1,Math.floor((a.slot-1)/10))),0),
+    mainUsed: executed.some(a=>MAIN_OPS.has(a.op)), acuteUses: executed.filter(a=>ACUTE_OPS.has(a.op)).length });
   // This is the canonical menu already recorded by preparation, not a second filter.
   const offered = decision.candidates;
   return request(decision.mode, { ...stateFacts(decision.state, decision.day, decision.slot, memory), decision_kind: decision.mode, earlier_today: today,
+    opportunities, opportunity_note: 'Explicit quiet moments spend an ordinary opportunity too. Breakfast or milk may combine care within one opportunity; this is an available tradeoff, not an instruction to choose it. Acute uses need an actual eligible episode.',
     ...(decision.dailyFocus ? { main_undertaking: { ...decision.dailyFocus, nominal_recovery: Object.fromEntries(NEEDS.map((k,i)=>[k,(decision.dailyFocus!.recovery[i]||0)/100])),
       clipped_recovery_if_done_now:Object.fromEntries(NEEDS.map((k,i)=>[k,Math.min(10000-decision.state.needs[i]!,decision.dailyFocus!.recovery[i]||0)/100])), intended_slot:36, success_not_guaranteed:decision.dailyFocus.chanceBps<10000 } } : {}) }, {
     next_action: { type: 'choice', instructions: decision.mode === 'acute' ? 'Deal with the actual immediate danger before its boundary. Legal ordinary care may need to happen before a response to survive residual harm. Compare whole-item costs, exact health, active conditions and stated residual damage; do not blindly use a free cutoff if its smoke would kill you.'
@@ -236,11 +277,12 @@ export function buildV2PlanRequest(context: V2PlanChoices): V2ModelRequest {
   for (const id of kitItems(context.kit)) future.inventory[id]!++;
   const questions: Record<string, unknown> = {
     main_undertaking: { type: 'choice', instructions: 'Choose ONE afternoon undertaking from feasible materials after parcel collection. Prefer meaningful progress and this individual\'s tastes over automatically repeating yesterday. A useful harvest, repair or meal may repeat. This is an intention, not immediate work; urgent care can prevent it. Do not invent ripe plants, growth or another project.', criteria: Object.fromEntries(context.main.map(a => [a.key, facts(a, future, memory, [])])) },
-    morning_order: { type: 'choice', instructions: 'Choose a natural morning. Before-pickup activities use EXISTING pantry stock and consume one ordinary opportunity; nothing is free. Compare useful ritual, simple care and a quiet look. Collection follows, and urgent care can change this order.', criteria: Object.fromEntries(context.morning.map(m => [m.key, { ...(m.candidate ? facts(m.candidate, context.base, memory, []) : { no_before_pickup_action: true }), action: m.label }])) },
+    morning_order: { type: 'choice', instructions: 'Choose a natural morning. Before-pickup activities use EXISTING pantry stock and consume one ordinary opportunity, including a quiet look. They share the Morning phase rather than adding a sixth opportunity. Compare useful ritual, simple care and a quiet look against the remaining day. Collection follows, and urgent care can change this order.', criteria: Object.fromEntries(context.morning.map(m => [m.key, { ...(m.candidate ? facts(m.candidate, context.base, memory, []) : { no_before_pickup_action: true }), action: m.label, ordinary_opportunity_cost: m.beforePickup ? 1 : 0, ordinary_opportunities_left_after_this_morning: m.beforePickup ? 4 : 5 }])) },
   };
   const expected: Record<string, string[]> = { main_undertaking: context.main.map(a => a.key), morning_order: context.morning.map(a => a.key) };
   if (context.goals.length) { questions.long_intention = { type: 'choice', instructions: 'Choose or review one modest long-term intention. Keeping it is valid. Progress uses actual wood/plants/stock; reviewing after three days is not a completion deadline. Care still comes first, and this intention never authorizes spending or creates anything.', criteria: Object.fromEntries(context.goals.map(g => [g.key, { intention: g.label, ...(g.wood ? { wood_target: g.wood, actual_wood: context.base.inventory[6] } : {}) }])) }; expected.long_intention = context.goals.map(a => a.key); }
-  return request('plan', { ...stateFacts(context.base, context.base.day + 1, 0, memory), decision_kind: 'dawn_plan', delivery_waiting_outside: kitItems(context.kit).map(i => ITEMS[i]), project_stock_after_collection: Object.fromEntries(ITEMS.flatMap((id, i) => future.inventory[i] ? [[id, future.inventory[i]]] : [])) }, questions, expected);
+  return request('plan', { ...stateFacts(context.base, context.base.day + 1, 0, memory), decision_kind: 'dawn_plan', opportunities: v2OpportunityBudget({slot:0,ordinaryUses:0,ordinaryMask:0,mainUsed:false,acuteUses:0}),
+    delivery_waiting_outside: kitItems(context.kit).map(i => ITEMS[i]), project_stock_after_collection: Object.fromEntries(ITEMS.flatMap((id, i) => future.inventory[i] ? [[id, future.inventory[i]]] : [])) }, questions, expected);
 }
 export function decodeV2Choice(reply: V2ModelReply): V2Selection {
   const answer = reply.answers.next_action; if (!answer) throw Error('Missing action choice.');

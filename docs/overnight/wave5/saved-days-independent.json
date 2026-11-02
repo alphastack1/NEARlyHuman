@@ -1,0 +1,46 @@
+{
+  "scope": "Independent actual RH testnet saved-day/receipt and private durable-record readback. No signing, provider call, reconciliation or ledger write.",
+  "observedBlock": "147239216",
+  "observedBlockHash": "0xaa83c9d72e05399e32efaf3d55cbd22abf5244c2dbe52785eb5254cc094d105e",
+  "results": [
+    {
+      "requestId": "0x32c75eebc5216a5f1cd3cba6309506bdbb67e8f25cf04258b0fc7f52f2d14790",
+      "tokenId": "1",
+      "day": 1,
+      "phase": "ready",
+      "status": 2,
+      "finalTx": "0xf8c4f5da80538e37f06c07261b77d3a4bbba68a9ca9e6163669d109605847629",
+      "commitment": "0x4ba4f509bec3bf0df1e510fae8e38a7ddb693190d5366aa32c8373e11743d6f7",
+      "policy": "v2-canonical-dawn-plan-memory-3",
+      "model": "typesafe/jev-1.13-20260917",
+      "rewardMicro": "0",
+      "paidSends": 5,
+      "chargedMicroUSD": 507,
+      "quoteStatus": "retired",
+      "aiHoldActive": false,
+      "gasHoldPresent": false,
+      "finalizeGasUsed": "1768069",
+      "pass": true
+    },
+    {
+      "requestId": "0x34736a193d41909f880ad2022a3bbb90b7db13d26b5fab342e96a3f9ecde777d",
+      "tokenId": "1",
+      "day": 2,
+      "phase": "ready",
+      "status": 2,
+      "finalTx": "0x9d2d489d75ba33e6f235317d49b3009ddd461cbde5b37becfdb0422d813976e9",
+      "commitment": "0xafc8e6268b55453bace4f4a2810de09754c0a73a538a58524377241612e5f9d5",
+      "policy": "v2-canonical-dawn-plan-memory-3",
+      "model": "typesafe/jev-1.13-20260917",
+      "rewardMicro": "0",
+      "paidSends": 5,
+      "chargedMicroUSD": 575,
+      "quoteStatus": "retired",
+      "aiHoldActive": false,
+      "gasHoldPresent": false,
+      "finalizeGasUsed": "1747067",
+      "pass": true
+    }
+  ],
+  "passed": true
+}

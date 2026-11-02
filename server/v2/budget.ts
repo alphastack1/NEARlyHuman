@@ -24,6 +24,7 @@ interface Pool {
 }
 interface CampaignClosure {
   at: number; chargedMicroUSD: number; entryCount: number; snapshotHash: string; reason: string;
+  canonicalization?: 'code-unit-v1';
 }
 interface Entry {
   callId: string; inputHash: string; status: 'sent' | 'complete' | 'uncertain';
@@ -37,10 +38,12 @@ interface Campaign {
   closed?: CampaignClosure;
 }
 const money = (n: unknown): n is number => typeof n === 'number' && Number.isSafeInteger(n) && n >= 0;
-const canonical = (value: unknown): unknown => Array.isArray(value) ? value.map(canonical)
-  : value && typeof value === 'object' ? Object.fromEntries(Object.entries(value).sort(([a], [b]) => a.localeCompare(b)).map(([k, v]) => [k, canonical(v)])) : value;
+// Preserve the original closed audit using its explicit English collation.
+// New closures use locale-independent code-unit order, including nested values.
+const canonical = (value: unknown, codeUnits = false): unknown => Array.isArray(value) ? value.map(v => canonical(v, codeUnits))
+  : value && typeof value === 'object' ? Object.fromEntries(Object.entries(value).sort(([a], [b]) => codeUnits ? a < b ? -1 : a > b ? 1 : 0 : a.localeCompare(b, 'en-GB')).map(([k, v]) => [k, canonical(v, codeUnits)])) : value;
 const closureHash = (c: Campaign) => sha(JSON.stringify(canonical({ version: c.version, id: c.id, limitMicroUSD: c.limitMicroUSD,
-  chargedMicroUSD: c.chargedMicroUSD, entries: c.entries, jobs: c.jobs || {} })));
+  chargedMicroUSD: c.chargedMicroUSD, entries: c.entries, jobs: c.jobs || {} }, c.closed?.canonicalization === 'code-unit-v1')));
 function validCampaign(c: Campaign): void {
   if (c.version !== 2 || !/^[a-z0-9][a-z0-9-]{1,79}$/.test(c.id) || !money(c.limitMicroUSD) || c.limitMicroUSD > 100_000 || !money(c.chargedMicroUSD) || typeof c.halted !== 'boolean'
     || !c.entries || typeof c.entries !== 'object' || Array.isArray(c.entries)) throw new V2BudgetError('changed', 'The AI accounting needs another check.');
@@ -50,7 +53,7 @@ function validCampaign(c: Campaign): void {
   if (c.jobs !== undefined && (!c.jobs || typeof c.jobs !== 'object' || Array.isArray(c.jobs))) throw new V2BudgetError('changed', 'The job allocation needs another check.');
   for (const [id, job] of Object.entries(c.jobs || {})) if (!money(job.limitMicroUSD) || !money(job.chargedMicroUSD) || typeof job.active !== 'boolean'
     || entries.filter(e => e.jobId === id).reduce((sum, e) => sum + e.chargedMicroUSD, 0) !== job.chargedMicroUSD) throw new V2BudgetError('changed', 'The job allocation needs another check.');
-  if (c.closed && (!money(c.closed.at) || !c.halted || c.closed.chargedMicroUSD !== c.chargedMicroUSD || c.closed.entryCount !== entries.length
+  if (c.closed && (c.closed.canonicalization !== undefined && c.closed.canonicalization !== 'code-unit-v1' || !money(c.closed.at) || !c.halted || c.closed.chargedMicroUSD !== c.chargedMicroUSD || c.closed.entryCount !== entries.length
     || typeof c.closed.reason !== 'string' || !c.closed.reason.trim() || c.closed.reason.length > 300 || c.closed.snapshotHash !== closureHash(c) || entries.some(e => e.status !== 'complete')
     || Object.values(c.jobs || {}).some(j => j.active))) throw new V2BudgetError('changed', 'The closed campaign audit changed.');
 }
@@ -231,7 +234,8 @@ export async function closeV2Campaign(id: string, reason: string, store: Durable
     if (c.closed) { if (c.closed.reason !== reason) throw new V2BudgetError('changed', 'This closure already has an audit reason.'); return c; }
     if (Object.values(c.entries).some(e => e.status !== 'complete') || Object.values(c.jobs || {}).some(j => j.active) || c.chargedMicroUSD > c.limitMicroUSD) throw new V2BudgetError('uncertain', 'Finish and reconcile all sends and job allowances before closing.');
     c.halted = true;
-    c.closed = { at: Date.now(), chargedMicroUSD: c.chargedMicroUSD, entryCount: Object.keys(c.entries).length, snapshotHash: closureHash(c), reason };
+    c.closed = { at: Date.now(), chargedMicroUSD: c.chargedMicroUSD, entryCount: Object.keys(c.entries).length, snapshotHash: '', reason, canonicalization: 'code-unit-v1' };
+    c.closed.snapshotHash = closureHash(c);
     return c;
   });
   // A crash here leaves a closed, fully reserved campaign. Re-entering with the

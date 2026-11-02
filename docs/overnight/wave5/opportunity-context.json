@@ -1,0 +1,17 @@
+{
+  "scope": "Pure canonical context/phase/forecast experiments; explicit states and scripted provider, zero inference/chain/ledger changes.",
+  "passed": 10,
+  "checks": [
+    "slot1 nominal food/water/morale exactly matches no-action kernel boundaries; energy remains62 until separate bedtime gain",
+    "slot11 nominal food/water/morale exactly matches no-action kernel boundaries; energy remains62 until separate bedtime gain",
+    "slot21 nominal food/water/morale exactly matches no-action kernel boundaries; energy remains62 until separate bedtime gain",
+    "slot36 nominal food/water/morale exactly matches no-action kernel boundaries; energy remains62 until separate bedtime gain",
+    "slot51 nominal food/water/morale exactly matches no-action kernel boundaries; energy remains62 until separate bedtime gain",
+    "real masks/counters and elapsed main window bound the remaining opportunities",
+    "two-day canonical memory retains explicit spent Quiet without inventing success",
+    "Dawn declares quiet cost1/Morning phase sharing and collect-first cost0 without extra turns",
+    "actual preparation/provider path reports four uses after a Dawn quiet; all original five-routine limits remain",
+    "new truthful facts remain within existing14000-byte provider envelope"
+  ],
+  "decisionConfig": "0xf9611381f13507467f2251a42e2c487a74b4881277b91c24ad0bf97547621aa9"
+}

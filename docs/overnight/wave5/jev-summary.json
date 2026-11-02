@@ -1,0 +1,212 @@
+{
+  "scope": "Actual final-compiled RH testnet collection and real NEAR AI Jev calls; consecutive observations, not a matched causal trial.",
+  "chainId": 46630,
+  "collection": "0x30cb5213fa94020a95893ddb6b07470dbf7a9efc",
+  "days": 39,
+  "sends": 199,
+  "chargedMicroUSD": 28328,
+  "uncertain": 0,
+  "shipments": 0,
+  "policies": {
+    "mind4": {
+      "days": 16,
+      "sends": 83,
+      "chargedMicroUSD": 10561,
+      "mornings": {
+        "look-first": 12,
+        "breakfast-first": 1,
+        "collect-first": 3
+      },
+      "breakfasts": 1
+    },
+    "mind5": {
+      "days": 20,
+      "sends": 101,
+      "chargedMicroUSD": 15330,
+      "mornings": {
+        "look-first": 18,
+        "collect-first": 1,
+        "coffee-0": 1
+      },
+      "breakfasts": 17
+    },
+    "mind6": {
+      "days": 3,
+      "sends": 15,
+      "chargedMicroUSD": 2437,
+      "mornings": {
+        "look-first": 3
+      },
+      "breakfasts": 3
+    }
+  },
+  "lives": {
+    "MISO": {
+      "id": "1",
+      "stats": [
+        2,
+        2,
+        1
+      ],
+      "seed": "0xb0becfe76db3ae6756067938ef42cffd5cadd89823779358ea960064f86c56da",
+      "personality": {
+        "interest": "gardening",
+        "secondaryInterest": "comfort",
+        "mealStyle": "simple",
+        "rhythm": "unhurried",
+        "signature": "breathe",
+        "tempo": "measured",
+        "curiosity": "inquisitive",
+        "resourceStyle": "save-specials",
+        "craftStyle": "patient-projects"
+      },
+      "mintHash": "0x87bbfd579d7ce1c7a3bb5278cc8e7a8dbc4a0ab8aa8a0e2136642d5a4546bc7c",
+      "lastDay": 26,
+      "alive": true,
+      "needs": [
+        10000,
+        9500,
+        9300,
+        10000,
+        8942
+      ],
+      "purseMicro": "0",
+      "inventory": {
+        "water": 2,
+        "bread": 1,
+        "coffee": 1,
+        "wood": 4,
+        "strawberry": 1,
+        "apple": 2,
+        "toy_boat": 1
+      },
+      "crafts": [
+        {
+          "day": 19,
+          "op": "Craft",
+          "finalTx": "0xba710e15e01e05498b2e59e0a4d9ae2e7ef88f6609c08660e806f4f349f007d9"
+        }
+      ],
+      "proposals": [
+        {
+          "day": 7,
+          "kind": "mishap",
+          "accepted": true,
+          "certificate": true
+        },
+        {
+          "day": 10,
+          "kind": "mood",
+          "accepted": true,
+          "certificate": true
+        },
+        {
+          "day": 11,
+          "kind": "sickness",
+          "accepted": true,
+          "certificate": true
+        },
+        {
+          "day": 19,
+          "kind": "visitor",
+          "accepted": true,
+          "certificate": true
+        },
+        {
+          "day": 20,
+          "kind": "seedEater",
+          "accepted": true,
+          "certificate": true
+        },
+        {
+          "day": 22,
+          "kind": "rain",
+          "accepted": true,
+          "certificate": false
+        }
+      ]
+    },
+    "PEEP": {
+      "id": "2",
+      "stats": [
+        1,
+        3,
+        1
+      ],
+      "seed": "0xb71831db97dc9874d01ba6be4a274b2dee1172239d67c2e849b930f0c94d3cd0",
+      "personality": {
+        "interest": "gardening",
+        "secondaryInterest": "exploring",
+        "mealStyle": "simple",
+        "rhythm": "early",
+        "signature": "perk",
+        "tempo": "unhurried",
+        "curiosity": "inquisitive",
+        "resourceStyle": "experiment",
+        "craftStyle": "little-useful-things"
+      },
+      "mintHash": "0x37fe08a34e4ff9fb3a2402e68c174962545eb366583df47beca8a871dc31c930",
+      "lastDay": 13,
+      "alive": true,
+      "needs": [
+        10000,
+        8500,
+        8000,
+        10000,
+        3568
+      ],
+      "purseMicro": "0",
+      "inventory": {
+        "milk": 1,
+        "bread": 2,
+        "marigold_seed": 1,
+        "blueberry": 1,
+        "grape": 1
+      },
+      "crafts": [],
+      "proposals": [
+        {
+          "day": 2,
+          "kind": "washout",
+          "accepted": true,
+          "certificate": true
+        },
+        {
+          "day": 3,
+          "kind": "fixtureBreak",
+          "accepted": true,
+          "certificate": true
+        },
+        {
+          "day": 5,
+          "kind": "sickness",
+          "accepted": true,
+          "certificate": true
+        },
+        {
+          "day": 7,
+          "kind": "mishap",
+          "accepted": true,
+          "certificate": true
+        },
+        {
+          "day": 8,
+          "kind": "rain",
+          "accepted": true,
+          "certificate": false
+        }
+      ]
+    }
+  },
+  "nativeFeeClaims": [
+    {
+      "hash": "0x011ae0ed1e7d2ba887ba3e50f0882adf5b300275c39b86507a93214b5bb3ad8f",
+      "treasury": "0x131C15fD2d9151F361213d8e8BC2a188Dc0149c6",
+      "nativeFeesBefore": "4860800000000000",
+      "nativeFeesAfter": "0",
+      "note": "Developer native fees only; no NHC purse withdrawal or AI credit reset."
+    }
+  ],
+  "ownerGiftContext": "MISO/PEEP had different owner-selected seeds/stats and random onsets. AfterDay12 the owner stopped new seeds and used care-only supplies, including milk; this is not a pure personality or prompt ablation.",
+  "result": "Both retained their finished/home-grown goods; there was no organic shipment in these39saved days. No sale, credit or economic success is fabricated."
+}

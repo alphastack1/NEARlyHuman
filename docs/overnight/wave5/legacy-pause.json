@@ -1,0 +1,15 @@
+{
+  "scope": "Controlled HTTP-only mock of verified original collection; no actual legacy quote, chain or financial ledger call. Relay/provider keys intentionally absent.",
+  "pausedRejected": true,
+  "localFilesCreated": 0,
+  "estimateOrSubmissionCalls": 0,
+  "rpcMethods": [
+    "eth_chainId",
+    "eth_getCode",
+    "eth_call",
+    "eth_call",
+    "eth_call",
+    "eth_call"
+  ],
+  "passed": true
+}

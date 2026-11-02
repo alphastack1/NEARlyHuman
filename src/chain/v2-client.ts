@@ -1,5 +1,6 @@
-import { createPublicClient,createWalletClient,custom,http,defineChain,parseAbi,parseEventLogs,encodeFunctionData,keccak256,recoverTypedDataAddress,type Address,type Hex,type EIP1193Provider,type TransactionReceipt } from 'viem';
+import { createPublicClient,createWalletClient,custom,defineChain,parseAbi,parseEventLogs,encodeFunctionData,keccak256,recoverTypedDataAddress,type Address,type Hex,type EIP1193Provider,type TransactionReceipt } from 'viem';
 import { chainFor } from './config';
+import { v2HttpTransport } from './v2-transport';
 import { v2AdmissionTypedData } from './v2-admission';
 import type { V2PublicConfig,V2OwnerQuote } from '../v2/public';
 
@@ -25,7 +26,7 @@ export interface V2SubmissionIntent {account:Address;chainId:number;collection:A
 export class V2WalletError extends Error {constructor(public code:string,message:string,public intent?:V2SubmissionIntent){super(message);}}
 export type V2OwnerReceipt=TransactionReceipt&{replacementReason?:'repriced'|'cancelled'|'replaced';originalHash:Hex};
 export function createV2ChainReader(config:V2PublicConfig){
- const client=createPublicClient({chain:chain(config),transport:http(config.rpcUrl,{timeout:15000,retryCount:1}),cacheTime:0}),at={address:config.collection,abi:v2Abi};
+ const client=createPublicClient({chain:chain(config),transport:v2HttpTransport(config.rpcUrl,{timeout:15000,retryCount:1}),cacheTime:0}),at={address:config.collection,abi:v2Abi};
  return {client,config,balance:(owner:Address)=>client.getBalance({address:owner}),tokenBalance:(owner:Address)=>client.readContract({address:config.token,abi:tokenAbi,functionName:'balanceOf',args:[owner]}),
   ownerOf:(id:bigint)=>client.readContract({...at,functionName:'ownerOf',args:[id]}),purse:(id:bigint)=>client.readContract({...at,functionName:'purse',args:[id]}),purseNonce:(id:bigint)=>client.readContract({...at,functionName:'purseNonce',args:[id]}),
   async wait(hash:Hex):Promise<V2OwnerReceipt>{let replacementReason:V2OwnerReceipt['replacementReason'];const receipt=await client.waitForTransactionReceipt({hash,confirmations:1,timeout:120000,onReplaced:e=>{replacementReason=e.reason;}});if(replacementReason==='cancelled'||replacementReason==='replaced')throw new V2WalletError(replacementReason,'That wallet payment was changed.');if(receipt.status!=='success')throw new V2WalletError('reverted','That payment did not complete.');const block=await client.getBlock({blockNumber:receipt.blockNumber});if(block.hash!==receipt.blockHash)throw new V2WalletError('uncertain','Checking that payment again.');return {...receipt,originalHash:hash,replacementReason};},

@@ -5,10 +5,10 @@
   "timezone": "Asia/Bangkok",
   "intervalMinutes": 60,
   "scheduledWaveCount": 6,
-  "completedWaveCount": 4,
-  "nextWave": 5,
+  "completedWaveCount": 5,
+  "nextWave": 6,
   "activeWave": null,
-  "status": "waiting_for_next_hourly_wave",
+  "status": "waiting_for_final_hourly_wave",
   "owner": "PM chat only",
   "preparation": {
     "wave": 0,
@@ -95,7 +95,20 @@
     {
       "number": 5,
       "focus": "Integrated testnet/backend/gameplay refinement",
-      "status": "pending"
+      "status": "complete",
+      "startedAtUtc": "2026-11-02T19:23:03Z",
+      "owners": {
+        "reliability": "wave5_release_adversary",
+        "player": "wave5_real_player",
+        "deploymentAndPM": "PM",
+        "mind": "wave5_real_mind"
+      },
+      "question": "Does the complete candidate remain useful, varied and reliable through actual Robinhood testnet receipts, final-policy Jev decisions and real rendered player flows?",
+      "completedAtUtc": "2026-11-02T20:31:18Z",
+      "evidence": "docs/overnight/wave5/README.md",
+      "screenshots": "docs/overnight/wave5/images/player-manifest.json",
+      "result": "Deployed verified V2 RH testnet collection after V1 pause/cloud drain. Saved39 actual Jev days using199 sends/$0.028328,0uncertain; real wood-to-Toy-boat, both purses honestly0NHC. Fixed cross-process CAS/transient retry, observed RPC state lag, opportunity/economy facts and real phone pacing/context. All accepted work terminal; no cloud import/settings/main push yet.",
+      "nextPriority": "Fresh final deep reviewers; bounded selective shipping choices can expose already-permitted produce/surplus baskets while retaining special craft. After any final offchain policy change drain epoch and capture actual final guest; then sealed cloud import, scoped production config, single main push, hosted owner/background/purse verification and stop automation. Preserve actual zero-purse scope until a genuine shipment occurs."
     },
     {
       "number": 6,
@@ -110,6 +123,6 @@
     "mainnetAuthorized": false,
     "intermediateProductionPushesAllowed": false,
     "finalTestnetPublicationAuthorized": true,
-    "status": "not_started"
+    "status": "testnet_contract_candidate_verified"
   }
 }

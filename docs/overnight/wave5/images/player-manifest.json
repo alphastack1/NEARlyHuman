@@ -1,0 +1,85 @@
+{
+  "scope": "Actual RH testnet/Jev saved films through the local candidate; reviewer initiated no wallet transaction or inference. Historical connected-identity checks are separately controlled.",
+  "browser": "Separate Codex Browser shared profile; one owned tab; no profile reset.",
+  "paidInferenceByReview": 0,
+  "walletTransactionsByReview": 0,
+  "images": [
+    {
+      "file": "player-day1-home-390.png",
+      "scope": "Actual testnet/Jev NFT1 Day1 initial film; current attached public life wasDay2"
+    },
+    {
+      "file": "player-public-life-390.png",
+      "scope": "Actual current NFT1 public profile attached to the Day1 replay at read time"
+    },
+    {
+      "file": "player-day1-complete-320.png",
+      "scope": "Actual Day1 full normal playback completion at320×568; before scoped presentation polish"
+    },
+    {
+      "file": "player-day1-complete-430.png",
+      "scope": "Same actual full-playback completion at430×932"
+    },
+    {
+      "file": "player-seed-carry-after-390.png",
+      "scope": "Actual Day1 project approached after explicit pre-project seek; final smaller seedpacket"
+    },
+    {
+      "file": "player-day4-harvest-390.png",
+      "scope": "Actual Day4 normal harvest following explicit pre-project seek; before the final tiny gesture refinement"
+    },
+    {
+      "file": "player-day4-watering-390.png",
+      "scope": "Actual Day4 continuous meal/well/two-bed watering sequence"
+    },
+    {
+      "file": "player-garden-gesture-a-390.png",
+      "scope": "Actual Day4 contact, final two-pose cosmetic gesture frameA after explicit seek"
+    },
+    {
+      "file": "player-garden-gesture-b-390.png",
+      "scope": "Same actual contact260ms later, frameB; route/authority unchanged"
+    },
+    {
+      "file": "player-bed-inspection-390.png",
+      "scope": "Actual final Day4 state after explicit seek; real lower-blanket canvas tap"
+    },
+    {
+      "file": "player-frozen-guest-owner-390.png",
+      "scope": "Actual cached testnet Day2-life/Day1-film, with controlled connected-owner identity; not an authenticated financial flow"
+    },
+    {
+      "file": "player-frozen-guest-visitor-390.png",
+      "scope": "Same actual cached snapshot with controlled non-owner identity; preserves anonymous Hatch flow"
+    },
+    {
+      "file": "player-final-day26-profile-390.png",
+      "scope": "Final mind6 actual current NFT1 Day26 public profile; canonical0NHC and current dynamic portrait."
+    },
+    {
+      "file": "player-final-day26-contact1-390.png",
+      "scope": "Final mind6 actual Day26 first tree contact, normal continuous approach after explicit pre-main seek."
+    },
+    {
+      "file": "player-final-day26-contact2-390.png",
+      "scope": "Same actual harvest second tree contact; normal continuous movement between both beds."
+    },
+    {
+      "file": "player-final-day26-harvest-390.png",
+      "scope": "Actual accepted final-policy Day26 canonical Wood+1 and Apple+1; no new provider call by reviewer."
+    },
+    {
+      "file": "player-final-day26-workshop-390.png",
+      "scope": "Actual Day26 after explicit post-harvest seek and manual camera pan/tap: workshop4wood and Toy boat1."
+    },
+    {
+      "file": "player-final-day26-belongings-390.png",
+      "scope": "Settled actual recorded Day26 Belongings: Toy boat1,wood4,apple2,strawberry1 and care stock."
+    },
+    {
+      "file": "player-final-day26-purse-390.png",
+      "scope": "Actual canonical0NHC purse; no fabricated earnings or shipment."
+    }
+  ],
+  "finalPolicyRecord": "../player-final-policy.json"
+}

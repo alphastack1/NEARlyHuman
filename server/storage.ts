@@ -12,7 +12,7 @@ export interface DurableStore {
   list(prefix: string): Promise<string[]>;
   delete(key: string): Promise<void>;
 }
-export class StoreConflict extends Error { constructor() { super('The request is busy. Please check again.'); } }
+export class StoreConflict extends Error { constructor() { super('The request is busy. Please check again.'); this.name = 'StoreConflict'; } }
 
 class CloudStore implements DurableStore {
   // The function runtime supplies a fresh, short-lived Blobs token each invocation.
@@ -44,13 +44,46 @@ class LocalStore implements DurableStore {
     const operation = this.queue.catch(() => {}).then(run); this.queue = operation; return operation;
   }
   private file(key: string) { return path.join(this.dir, createHash('sha256').update(key).digest('hex') + '.json'); }
+  /** Exclusive pathname creation makes conditional writes atomic across local workers.
+   * A crashed writer leaves its lock for inspection; never unlink a stale pathname
+   * automatically because another contender may have acquired it in the meantime.
+   */
+  private async mutate<T>(key: string, run: () => Promise<T>): Promise<T> {
+    await fs.mkdir(this.dir, { recursive: true });
+    const lock = this.file(key) + '.lock', token = randomUUID(), deadline = Date.now() + 5000;
+    let acquired = false;
+    while (!acquired) {
+      try {
+        const handle = await fs.open(lock, 'wx', 0o600);
+        try { await handle.writeFile(JSON.stringify({ version: 1, pid: process.pid, token, createdAt: Date.now() })); }
+        finally { await handle.close(); }
+        acquired = true;
+      } catch (error) {
+        if ((error as NodeJS.ErrnoException).code !== 'EEXIST') throw error;
+        if (Date.now() >= deadline) throw new StoreConflict();
+        await new Promise(resolve => setTimeout(resolve, 25 + Math.floor(Math.random() * 25)));
+      }
+    }
+    try { return await run(); }
+    finally {
+      const held = JSON.parse(await fs.readFile(lock, 'utf8')) as { pid?: number; token?: string };
+      if (held.pid !== process.pid || held.token !== token) throw new StoreConflict();
+      for (let attempt = 0;; attempt++) {
+        try { await fs.unlink(lock); break; }
+        catch (error) {
+          if (attempt >= 6 || !['EPERM', 'EACCES', 'EBUSY'].includes((error as NodeJS.ErrnoException).code || '')) throw error;
+          await new Promise(resolve => setTimeout(resolve, 30 * 2 ** attempt));
+        }
+      }
+    }
+  }
   private async read<T>(key: string): Promise<Stored<T> | null> {
     try { const r = JSON.parse(await fs.readFile(this.file(key), 'utf8')); return { value: r.value, etag: r.etag }; }
     catch (error) { if ((error as NodeJS.ErrnoException).code === 'ENOENT') return null; throw error; }
   }
   get<T>(key: string): Promise<Stored<T> | null> { return this.serial(() => this.read<T>(key)); }
   async put<T>(key: string, value: T, condition: { etag?: string; isNew?: boolean } = {}) {
-    return this.serial(async () => {
+    return this.serial(() => this.mutate(key, async () => {
       const old = await this.read<T>(key);
       if (condition.isNew && old || condition.etag && old?.etag !== condition.etag) return false;
       await fs.mkdir(this.dir, { recursive: true });
@@ -67,7 +100,7 @@ class LocalStore implements DurableStore {
         }
         return true;
       } finally { await fs.rm(temp, { force: true }).catch(() => {}); }
-    });
+    }));
   }
   async list(prefix: string) {
     return this.serial(async () => {
@@ -76,7 +109,7 @@ class LocalStore implements DurableStore {
     return keys;
     });
   }
-  async delete(key: string) { await this.serial(() => fs.rm(this.file(key), { force: true })); }
+  async delete(key: string) { await this.serial(() => this.mutate(key, () => fs.rm(this.file(key), { force: true }))); }
 }
 let singleton: DurableStore | undefined;
 export const storage = () => singleton ||= isHosted() ? new CloudStore() : new LocalStore();

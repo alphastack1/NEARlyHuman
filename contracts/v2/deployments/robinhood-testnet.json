@@ -1,0 +1,72 @@
+{
+  "runtime": {
+    "chainId": 46630,
+    "collection": "0x30cb5213fa94020a95893ddb6b07470dbf7a9efc",
+    "verifier": "0x7620cde82d323074b102cfb8cf1c2fdd9999ee34",
+    "actionModule": "0xc22067bb7845342a2e2b135c4fb03f47547f2091",
+    "controllerCodeHash": "0xb8c4891d4208fe1d209465ff3868beb99e9920f03b1e78a83805329c80fe5a6d",
+    "verifierCodeHash": "0xe094d738ac772a2c0e0d1fbcadf84db0b2f8d9fbd6afb049086cc2d51c3f5fd7",
+    "actionModuleCodeHash": "0xa826c7f09afc4ea32d557d12ccc9e43f483fed57a0ecbbf4ca12fbac3c62fc3c",
+    "rulesHash": "0xdbba15bd27ab533240cf3d24e0df997d850ca3c4ba598e7d222b3061216d5363",
+    "decisionConfig": "0x047da3d3246af856a8f89d4608e2a094170560ffbf75644d9035a5b3dd31f374",
+    "relayer": "0x3c63FD61B244b3B3290c74993F603816c6144C26",
+    "quoteSigner": "0x3c63FD61B244b3B3290c74993F603816c6144C26"
+  },
+  "token": "0x4DC12133f8B71E9FD7e3571d6FAda84a5DdBE5a2",
+  "nativeMintPrice": "400000000000000",
+  "artifactFingerprint": "2dac90ff23b62be7e5f57fbfaf48fd82f5c0544534292e8f4d9b2eb2dc1f8364",
+  "compiler": "0.8.38+commit.1835d247.Emscripten.clang",
+  "checkedAt": "2026-11-02T19:26:56.294Z",
+  "transactions": {
+    "pauseV1": {
+      "hash": "0xcfc56183855cfe7c65b521e1faa9e57271961cb67f6a359365c3d5b9bb285b22",
+      "blockNumber": "147236167",
+      "gasUsed": "30476"
+    },
+    "V2ActionModule": {
+      "hash": "0x7d069f105fc24d0f09fe6681bae4c3c4096280ac6ecd4e7d40433b758e86c782",
+      "blockNumber": "147236180",
+      "gasUsed": "5046736",
+      "contractAddress": "0xc22067bb7845342a2e2b135c4fb03f47547f2091"
+    },
+    "V2LifeVerifier": {
+      "hash": "0xd6085a1115ce00fc0f7ec626462c5c7ef1d70b6934a42d40cea700a33c328209",
+      "blockNumber": "147236193",
+      "gasUsed": "5179283",
+      "contractAddress": "0x7620cde82d323074b102cfb8cf1c2fdd9999ee34"
+    },
+    "NEARlyHumanV2": {
+      "hash": "0x3825f762cbde972431cb79b51b530e00ff2ef1086ac00219198a1fef38dabe25",
+      "blockNumber": "147236210",
+      "gasUsed": "5520723",
+      "contractAddress": "0x30cb5213fa94020a95893ddb6b07470dbf7a9efc"
+    },
+    "relayFunding": {
+      "hash": "0x58c99a1ce5eaf59882ccd2f408ceb9aa7b9b43fbfa582d2bd14dc72a05662855",
+      "blockNumber": "147236243",
+      "gasUsed": "21000"
+    }
+  },
+  "decisionPolicyHistory": [
+    {
+      "decisionConfig": "0x46211735d92f705f14444dfde6f89ae8ca5b55056a03075afd220428b20297bd",
+      "mindPolicy": 4,
+      "fromUtc": "2026-11-02T19:26:56.294Z",
+      "untilUtc": "2026-11-02T19:53:06.532Z"
+    },
+    {
+      "decisionConfig": "0xecb71476156ba08e2c05b4ab036085f75a8540ce3b2dc82889c259e9cdf2ace2",
+      "mindPolicy": 5,
+      "fromUtc": "2026-11-02T19:53:06.532Z",
+      "reason": "Truthful remaining-care opportunities, explicit Quiet cost/history and nominal remaining-tick need forecasts; biological rules unchanged.",
+      "untilUtc": "2026-11-02T20:11:23.366Z"
+    },
+    {
+      "decisionConfig": "0x047da3d3246af856a8f89d4608e2a094170560ffbf75644d9035a5b3dd31f374",
+      "mindPolicy": 6,
+      "fromUtc": "2026-11-02T20:11:23.366Z",
+      "reason": "Explicit actual craft outputs and conditional NHC shipment/purse utility; no forced sale, choice weights or biological rule changes."
+    }
+  ],
+  "policyUpdatedAtUtc": "2026-11-02T20:11:23.366Z"
+}

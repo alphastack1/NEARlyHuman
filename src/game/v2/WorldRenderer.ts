@@ -302,6 +302,9 @@ class LifeScene extends Phaser.Scene {
     else if (working && f) pose = f.receipt.op === Op.Rest ? 'doze' : FOOD_OPS.has(f.receipt.op) ? 'eat' : GARDEN_OPS.has(f.receipt.op) ? 'garden' : WORK_OPS.has(f.receipt.op) ? 'repair' : f.receipt.op === Op.Treat ? 'treat' : f.receipt.op === Op.Quiet || f.receipt.op === Op.QuietMain ? Math.floor(this.elapsed / 200) % 16 > 11 ? v2Personality(this.state.seed).signature : 'breathe' : 'use';
     else if (this.attention > this.elapsed) pose = 'perk';
     else { const beat = Math.floor(this.elapsed / 150) % 64; pose = beat < 2 ? 'blink' : beat > 45 && beat < 54 ? v2Personality(this.state.seed).signature : 'breathe'; }
+    // The existing garden texture leans one pixel lower than use. Alternating
+    // those poses gives real contact a small reach/pat rhythm at the same route anchor.
+    if (working && f && (f.receipt.op === Op.Plant || f.receipt.op === Op.Harvest)) pose = Math.floor(this.elapsed / 240) % 2 ? 'garden' : 'use';
     const bob = traveling ? Math.floor(this.elapsed / 135) % 2 : pose === 'breathe' && Math.floor(this.elapsed / 650) % 2 ? 1 : 0;
     const inBed = this.point.x > 286 && this.point.x < 333 && this.point.y < 116;
     this.actor.setTexture(this.roosterTexture(pose)).setPosition(Math.round(this.point.x), Math.round(this.point.y - bob)).setFlipX(this.facing < 0).setDepth(inBed ? 114 : this.point.y + 1);
@@ -310,7 +313,7 @@ class LifeScene extends Phaser.Scene {
     if (working && f && FOOD_OPS.has(f.receipt.op)) item = f.receipt.op === Op.Drink ? f.receipt.arg : f.receipt.op === Op.Coffee ? 35 : f.receipt.arg || 2;
     if (working && f && WORK_OPS.has(f.receipt.op) && !f.impact) item = 37;
     if (working && f?.receipt.op === Op.EnjoyFlower) item = f.receipt.arg;
-    this.held.setVisible(item >= 0 && this.state.alive); if (item >= 0) this.held.setTexture(this.itemTexture(item)).setPosition(Math.round(this.point.x + this.facing * 13), Math.round(this.point.y - 17 - bob - (item === 37 ? Math.floor(this.elapsed / 170) % 2 * 4 : 0))).setFlipX(this.facing < 0 && (item === 36 || item === 37)).setDepth(this.point.y + 3);
+    this.held.setVisible(item >= 0 && this.state.alive); if (item >= 0) this.held.setTexture(this.itemTexture(item)).setScale(item >= 13 && item <= 21 ? .78 : 1.1).setPosition(Math.round(this.point.x + this.facing * 13), Math.round(this.point.y - 17 - bob - (item === 37 ? Math.floor(this.elapsed / 170) % 2 * 4 : 0))).setFlipX(this.facing < 0 && (item === 36 || item === 37)).setDepth(this.point.y + 3);
   }
   private drawEffects(): void {
     const g = this.effects, a = this.ambient; g.clear(); a.clear(); const px = (color: number, x: number, y: number, w = 1, h = 1, alpha = 1) => g.fillStyle(color, alpha).fillRect(Math.round(x), Math.round(y), w, h);
@@ -319,6 +322,7 @@ class LifeScene extends Phaser.Scene {
       const op = f.receipt.op, x = this.point.x, y = this.point.y;
       if (op === Op.Rest || this.sleeping) { px(0xe4e4c9, x + 13, y - 35 - t * 3, 5, 1); px(0xe4e4c9, x + 16 - t, y - 33 - t * 3, 2, 1); px(0xe4e4c9, x + 12, y - 31 - t * 3, 5, 1); }
       if (op === Op.Well) for (let i = 0; i < 5; i++) px(0x9bd2da, x + this.facing * (12 + i * 2), y - 22 + (i + t) % 5 * 3, 1, 2);
+      if (op === Op.Plant || op === Op.Harvest) { const color = op === Op.Plant ? 0xb29765 : 0x8ea765; px(color, x + this.facing * (10 + t * 2), y - 6 - t * 3, 2, 1, .75); px(op === Op.Plant ? 0x8a704d : 0xb3be82, x + this.facing * (15 - t), y - 3 - (t + 1) % 3 * 3, 1, 1, .65); }
       if (WORK_OPS.has(op) && !f.impact) for (let i = 0; i < 3; i++) if ((t + i) % 2) { px(0xf0d895, x + 17 + i * 3, y - 23 - i * 4, 1, 3); px(0xf0d895, x + 16 + i * 3, y - 22 - i * 4, 3, 1); }
       if (op === Op.Craft && !f.impact) { const progress = f.elapsed / Math.max(1, f.work * .56); px(0x8c633b, 420, 296, 23, 3); px(0xd6af70, 421, 296, 21, 1); if (progress > .3) { px(0xb28a50, 422, 291, 4, 8); px(0xc49b5e, 438, 291, 4, 8); } if (progress > .65) { px(0x805a34, 421, 289, 22, 3); px(0xe1ba77, 422, 289, 20, 1); } }
       if ([Op.Toast, Op.CookSteak, Op.Coffee].includes(op)) for (let i = 0; i < 3; i++) px(0xe4e4c6, (op === Op.Coffee ? 209 : 175) + i * 4 + Math.sin(this.elapsed / 190 + i), 48 - (this.elapsed / 130 + i * 3) % 14, 1, 3, .7);

@@ -1,0 +1,30 @@
+{
+  "scope": "Actual filesystem CAS across separate Node worker processes in an isolated TEMP store. No real ledger, keys, RPC or inference.",
+  "checks": [
+    {
+      "name": "two workers using the same etag have exactly one CAS winner",
+      "winners": [
+        true,
+        false
+      ]
+    },
+    {
+      "name": "two workers preserve all 80 increments",
+      "finalCount": 81,
+      "retries": [
+        2,
+        1
+      ]
+    },
+    {
+      "name": "delete waits for the exact same key mutation lock",
+      "passed": true
+    },
+    {
+      "name": "stale lock is not automatically unlinked and contention is bounded",
+      "elapsedMs": 5038,
+      "errorName": "StoreConflict"
+    }
+  ],
+  "passed": true
+}

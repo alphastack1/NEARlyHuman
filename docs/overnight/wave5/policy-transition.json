@@ -1,0 +1,16 @@
+{
+  "scope": "Offchain decision-policy update after previous accepted work drained; no contract/biological rule change or financial reset.",
+  "at": "2026-11-02T19:53:06.532Z",
+  "previousReadyDays": 16,
+  "before": "0x46211735d92f705f14444dfde6f89ae8ca5b55056a03075afd220428b20297bd",
+  "after": "0xecb71476156ba08e2c05b4ab036085f75a8540ce3b2dc82889c259e9cdf2ace2",
+  "campaign": {
+    "id": "nearlyhuman-v2-testnet-20261102",
+    "limitMicroUSD": 90000,
+    "chargedMicroUSD": 10561,
+    "halted": false,
+    "complete": 83,
+    "uncertain": 0,
+    "provenance": "Explicit allocation from the $0.10 outside the existing $0.90 V1 envelope. Neither live provider balance nor V1 spending is reset or inferred."
+  }
+}

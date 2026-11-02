@@ -1,0 +1,7 @@
+{
+  "scope": "Pure actual candidate facts against shared recipe/weight catalog; no inference, chain or ledger mutation.",
+  "crafts": 4,
+  "shippingUnits": 2,
+  "pressureMicro": "50000000000",
+  "passed": true
+}

@@ -27,7 +27,7 @@ const recipeName = (arg: number): string => RECIPES[arg]?.name || 'Something new
 
 export function receiptTitle(r: Receipt): string {
   switch (r.op) {
-    case Op.Quiet: return r.slot >= 60 ? 'Lights out.' : 'A little time to wander.';
+    case Op.Quiet: return r.slot >= 60 ? 'Lights out.' : 'Just a moment.';
     case Op.Pickup: return 'The morning post.';
     case Op.Breakfast: return 'Breakfast first.';
     case Op.Eat: return 'A bite to eat.';
@@ -103,7 +103,7 @@ export function filmBeats(receipts: Receipt[]): FilmBeat[] {
     let end = i;
     if (quiet(first)) while (end + 1 < receipts.length && quiet(receipts[end + 1]!)) end++;
     const r = receipts[end]!;
-    const duration = quiet(first) ? 850 : r.role === 'main' ? 4000 : r.op === Op.Rest && r.slot === 60 ? 1900 : r.role === 'acute' ? 2100 : 1600;
+    const duration = quiet(first) ? 850 : r.role === 'main' ? r.op === Op.QuietMain ? 2200 : 5600 : r.op === Op.Rest && r.slot === 60 ? 1900 : r.role === 'acute' ? 2100 : 1600;
     beats.push({ start: i, end, receipt: r, duration }); i = end;
   }
   return beats;

@@ -2,57 +2,68 @@
 
 A little life. A mind of its own.
 
-Hatch a rooster NFT, bring up to three supplies, and watch NEAR AI's Jev choose its own domestic routine. The rooster cooks, rests, gardens, repairs its home and tries to stay alive. Its completed state and compact action history are saved on Robinhood Chain before the film begins. Nothing ages while you are away. A life that ends remains in your wallet as a memorial.
+NEARlyHuman is a retro, phone-first life game powered by **NEAR AI Cloud's Jev model**. Hatch a rooster NFT, leave a few supplies, and watch it decide what to grow, make, use or send away. Its home, inventory, saved intentions and earned-token purse travel with the NFT. Nothing ages while you are away.
 
-**Play:** [nearlyhuman.netlify.app](https://nearlyhuman.netlify.app). The current collection uses Robinhood Chain Testnet, chain **46630**, and allows three saved days per rooster. Test ETH has no real-world value. The mainnet mint is designed around approximately $1 in ETH with fail-closed feed pricing; mainnet release requires its separately funded deployment.
+**Hackathon track:** `nfts` — **NFTs That Do Something**. The asset carries continuing behavior, a changing portrait, possessions and rights to real onchain token units.
 
-## Run locally
+**Release target:** [nearlyhuman.netlify.app](https://nearlyhuman.netlify.app). This branch contains the V2 candidate; hosted publication and verification follow the [overnight release sequence](docs/OVERNIGHT_REFINEMENT.md).
 
-Use Node 22.12 or later, install with `npm ci`, then run `npm run dev`. Open `http://127.0.0.1:5173`. Supply the server environment described in [.env.example](.env.example) and [the release guide](docs/release.md). The owner's Windows workstation can optionally unlock its existing encrypted credentials outside this checkout; credentials are never part of the game bundle.
+## A day in a little home
 
-`npm run build` checks TypeScript and creates the browser build. Netlify builds the API, background preparation worker and scheduled reconciler from `netlify/functions/`. Local durable records live outside the checkout; production uses site-wide Netlify Blobs with strong reads and conditional writes. No production source, asset or build depends on `TEMP/`.
+Choose up to three different supplies, with at most one seed packet or sapling. Jev plans one substantial undertaking and a morning order, then chooses smaller routines such as breakfast, watering, treatment, rest or leisure. The rooster walks through connected rooms, outside to the mailbox, into its garden and over to the workbench. The completed day is saved before its film plays.
 
-## How it works
+Four beds support four flowers, four fruits and one wood-tree variety, with three-, six- or eight-day initial growth. Repeat crops have finite yields. The workshop makes spoons, toy boats, birdhouses and large chests from accumulated wood. Jev may keep produce, enjoy it, eat it or carry finished goods to the outgoing mailbox. A harvest does not guarantee a sale.
 
-- The wallet authorizes a mint or next-day request using a short-lived signed quote. The service reserves AI budget, relay gas and a worker slot before issuing that quote.
-- Jev receives the actual state and finite legal choices through NEAR AI's `/v1/systemone` endpoint. It plans one substantial undertaking and a morning order, then chooses smaller care routines. The rooster walks outside to collect supplied items before using them. Quiet local time does not buy model calls.
-- A fenced, checkpointed worker prepares the complete day, stores its replay packet and commits the packed state, compact history and replay hash onchain.
-- The phone-first Phaser house follows the rooster through recorded activities. Pause, inspect, seek and skip affect presentation only.
-- Operational failures are recorded without advancing the biological save. A retry is a fresh request. Transactions are not deleted or refunded. Pending requests lock transfers; expired requests have a direct onchain release path.
+Touch objects to inspect them, revisit saved days, share an exact life, or prepare another day. Pause, seek and skip change only presentation.
 
-The service is a trusted relay. Jev is called through NEAR AI; this integration does not claim that offchain inference is trustless or attested. Pseudo-random game outcomes are intentionally suitable for a casual game.
+## Ownership with behavior
 
-## Project map
+Shipping earned finished goods can credit **NHC**, a six-decimal ERC-20 utility token. Gifted care supplies and raw wood cannot be shipped. Each NFT has its own allocation backed by actual units in the controller's vault. The current owner can withdraw, including while a day is preparing or after the rooster dies. A remembered life retains its NFT and purse.
 
-| Area | Location |
+An owner can burn **250 NHC** from one selected purse to hatch another NFT atomically. Wallet-token payment uses an exact approval followed by birth. Transferring the NFT transfers its saved life, inventory and remaining purse rights; pending days temporarily lock transfers.
+
+The contract verifies material consumption, growth, crafting, death and shipment points through a deterministic reducer. A shared reward bucket bounds issuance over time, and cumulative lifetime issuance reduces later shipment rewards. Birth burns do not reset that pressure. NHC has no promised cash redemption.
+
+## Testnet deployment and trust
+
+V2 is deployed on **Robinhood Chain Testnet, chain 46630**:
+
+| Asset | Address |
 | --- | --- |
-| React screens, wallet flow, HUD and care dock | `src/app/` |
-| Serializable simulation and compact codecs | `src/domain/` |
-| Connected house, camera, recorded animation and art | `src/game/`, `src/art/`, `public/assets/game/` |
-| NFT and request lifecycle | `contracts/`, `src/chain/` |
-| Quotes, authentication, real Jev calls and durable work | `server/`, `netlify/functions/` |
+| Collection/controller | [0x30cb5213fa94020a95893ddb6b07470dbf7a9efc](https://explorer.testnet.chain.robinhood.com/address/0x30cb5213fa94020a95893ddb6b07470dbf7a9efc) |
+| NHC token | [0x4DC12133f8B71E9FD7e3571d6FAda84a5DdBE5a2](https://explorer.testnet.chain.robinhood.com/address/0x4DC12133f8B71E9FD7e3571d6FAda84a5DdBE5a2) |
 
-The [service guide](docs/service.md), [contract guide](docs/chain.md), [domain notes](docs/domain-notes.md), [asset provenance](docs/assets.md) and [sprint record](docs/SPRINT_RECORD.md) explain decisions and verification. The [refinement audit](docs/UX_AUDIT.md), [screenshot gallery](docs/ux-audit/index.html), [UI coverage ledger](docs/UI_COVERAGE.md) and [recovery witnesses](docs/RECOVERY_AUDIT.md) record the later critique and repair loops. The [gameplay and animation review](docs/GAMEPLAY_REVIEW.md) and its [before/after motion gallery](docs/gameplay-review/index.html) cover the subsequent fun and presentation pass. The first actual day completed sixty slots using twelve Jev calls for a recorded **$0.000707**; this is one measured run, not a fixed future price or balance claim.
+The configured native hatch price is **0.0004 test ETH**. Native network/preparation fees are separate from NHC. Module hashes, receipts and policy history are in the [deployment record](contracts/v2/deployments/robinhood-testnet.json).
 
-## Design references
+Jev receives finite legal choices through NEAR AI's `/v1/systemone` endpoint. A signed quote reserves inference and relay capacity before a day is accepted. The durable worker caches choices, stores the replay packet and submits its trace for contract verification. Operational failures leave the biological save unchanged; retry is a fresh attempt, without deleting or refunding confirmed transactions.
 
-The selected [V2 garden, workshop and NFT-purse design](design/ECONOMY_V2.md) and [balancing research](docs/economy-v2/RESEARCH.md) define the next economy candidate. They are not deployed rules. The standalone research models have permanent inputs and generate only temporary outputs; the live V1 collection remains unchanged.
+The relay is trusted to call Jev and select delegated actions. Offchain inference is not claimed to be trustless or attested. The contract derives inventory and rewards rather than accepting an arbitrary supplied balance. Game randomness suits a casual game. Native NEAR custody experiments are documented [separately](docs/v2-feasibility/REVIEW.md); this deployment has its own chain-specific lives and supply.
 
-The [working feasibility review](docs/v2-feasibility/REVIEW.md) adds actual local EVM and native NEAR receipt evidence plus real-care experiments. [Transition boundaries](design/V2_TRANSITIONS.md) carry the fixes into the next kernel. The [six hourly refinement waves](docs/OVERNIGHT_REFINEMENT.md) track the owner-authorized implementation, visual/UX critique and final testnet publication.
+## Build and inspect
 
-The [Jev choice-variety review](docs/CHOICE_VARIETY_REVIEW.md) and [real-day comparison gallery](docs/choice-review/index.html) cover canonical prior-day memory, balanced useful menus, real model comparisons and the free MISO day 2 → day 3 → PEEP visit sequence.
+Use Node 22.12 or later:
 
-The [day-rhythm review](docs/RHYTHM_REVIEW.md) and [before/after gallery](docs/rhythm-review/index.html) cover the latest live critique: continuing rest, contextual quiet moments, continuous small gestures and reachable garden cameos, while preserving the recorded model choices and saved state.
+```sh
+npm ci
+npm run dev
+npm run build
+```
 
-The [continuous-day review](docs/DAILY_LIFE_REVIEW.md) and [current screenshot gallery](docs/daily-life-review/index.html) cover the front yard, physical mailbox trip, one main undertaking, smaller care moments and the verified six-call NORI day now used for the opening visit. The [contract and artwork review](docs/CONTRACT_AND_ART_REVIEW.md) records the fresh lifecycle/adversarial checks and explains seeded procedural appearances.
+Configure the V2 values in [.env.example](.env.example), then open `http://127.0.0.1:5173/?v2=1`. Paid routes also need server credentials, testnet gas and an explicitly funded durable campaign. Credentials stay outside the repository and browser bundle. Use one active funded worker store; the [cutover guide](docs/overnight/wave4/NETLIFY_CUTOVER.md) preserves accounting and seals a retired local allowance.
 
-The [cartridge opening review](docs/CARTRIDGE_OPENING_REVIEW.md) and [actual-build motion/screenshot gallery](docs/opening-review/index.html) cover the selected House Wakes Up sequence, full-browser room, responsive camera and input/startup refinement waves. Open the title explicitly with [the intro link](https://nearlyhuman.netlify.app/?intro=1), or Options → Title screen.
+| Area | Source |
+| --- | --- |
+| Life rules, catalog and codecs | `src/v2/` |
+| Player journey and physical world | `src/app/v2/`, `src/game/v2/`, `src/art/` |
+| Jev, quotes and durable workers | `server/v2/`, `netlify/functions/` |
+| Verifier, NFT, token and purse | `contracts/v2/`, `src/chain/v2-client.ts` |
 
-The [individuality and first-use review](docs/VARIETY_AND_FIRST_USE_REVIEW.md) and [comparison gallery](docs/variety-review/index.html) cover persistent preferences, genuine model timing comparisons, recorded-event clarity and the wallet-free first visit.
+No production build depends on ignored `TEMP/`. Pushing `main` triggers Netlify, so publication is deliberate and infrequent.
 
-The [NPC and house presence review](docs/HOUSE_PRESENCE_REVIEW.md) and [interactive-house evidence gallery](docs/house-review/index.html) cover the later care exploration, physical mannerisms, object responses and useful stock/plot readers.
+## Verification and design
 
-The [master guide](NEARlyHuman.md), [scene map](design/SCENE_MAP.md), [approved Moss & Cream reference](design/references/VR-01-approved-house-and-care.png) and [99-board mockup gallery](design/mockups/index.html) preserve the agreed vision. [Reference mapping](design/mockups/REFERENCE_MAP.md) assigns every planned screen and storyboard; construction references are in `design/reference-pack/`. Current implementation notes record intentional changes such as a larger portrait supply dock and shorter quiet-film beats.
+The [local controller/wallet proof](docs/overnight/wave4/CHAIN_REVIEW.md) advanced 100 accepted days with scripted legal choices, earned 521.964786 NHC, tested both 250-NHC birth routes and withdrew after death. These are isolated-chain authority tests, separate from paid Jev behavior.
 
-Temporary experiments, captures, logs and intermediate files belong in the ignored `TEMP/` folder. Production pushes remain infrequent: pushing `main` triggers Netlify and consumes deployment credits.
+The public-chain run saved39 real Jev days across two NPCs using199 sends for$0.028328, with zero uncertain sends. MISO made a Toy boat from earned wood and kept it; both purses remained0NHC. [The actual run](docs/overnight/wave5/JEV_REVIEW.md) separates observed behavior from the local earning proof. Drained policy transitions added truthful opportunity/need forecasts and explicit craft/purse facts without forcing sales or changing contracts. [Independent chain checks](docs/overnight/wave5/RELIABILITY_REVIEW.md) and [actual rendered playback](docs/overnight/wave5/PLAYER_REVIEW.md) distinguish receipts, model calls, controlled fixtures and screenshots.
 
+The [V2 design](design/ECONOMY_V2.md), [contract guide](contracts/v2/README.md), [approved visual reference](design/references/VR-01-approved-house-and-care.png) and [99-board mockup gallery](design/mockups/index.html) preserve the intended game and visual direction.

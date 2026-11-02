@@ -1,0 +1,264 @@
+{
+  "scope": "Actual RH testnet/Jev saved films through the local candidate; reviewer initiated no wallet transaction or inference. Historical connected-identity checks are separately controlled.",
+  "world": {
+    "chainId": "46630",
+    "collection": "0x30cb5213fa94020a95893ddb6b07470dbf7a9efc"
+  },
+  "fullDay1": {
+    "requestId": "0x32c75eebc5216a5f1cd3cba6309506bdbb67e8f25cf04258b0fc7f52f2d14790",
+    "commitment": "0x4ba4f509bec3bf0df1e510fae8e38a7ddb693190d5366aa32c8373e11743d6f7",
+    "observedCurrentLifeDay": 2,
+    "observedBlock": "147238071",
+    "normalPlaybackMs": 68645,
+    "nestedClose": "menu→purse→close→menu→close→home",
+    "errors": [],
+    "warnings": [],
+    "appPosts": [],
+    "frameClock": {
+      "count": 16481,
+      "median": 4.19999999999709,
+      "p95": 4.30000000000291,
+      "over50": 0,
+      "note": "Desktop Chrome requestAnimationFrame clock while rendering phone viewport; not a mobile hardware or engine-FPS claim."
+    },
+    "events": [
+      {
+        "elapsed": 524,
+        "caption": "A little time to wander.",
+        "complete": false
+      },
+      {
+        "elapsed": 2105,
+        "caption": "The morning post.\n\n···",
+        "complete": false
+      },
+      {
+        "elapsed": 12389,
+        "caption": "The morning post.",
+        "complete": false
+      },
+      {
+        "elapsed": 13443,
+        "caption": "The morning post.\n\n1 supplies collected",
+        "complete": false
+      },
+      {
+        "elapsed": 13985,
+        "caption": "The morning post.\n\n1 supplies collected\n···",
+        "complete": false
+      },
+      {
+        "elapsed": 25233,
+        "caption": "The morning post.\n\n1 supplies collected",
+        "complete": false
+      },
+      {
+        "elapsed": 25781,
+        "caption": "A cool drink.",
+        "complete": false
+      },
+      {
+        "elapsed": 28859,
+        "caption": "A bite to eat.",
+        "complete": false
+      },
+      {
+        "elapsed": 31468,
+        "caption": "Room for daisy.\n\n···",
+        "complete": false
+      },
+      {
+        "elapsed": 40189,
+        "caption": "Room for daisy.",
+        "complete": false
+      },
+      {
+        "elapsed": 42273,
+        "caption": "Room for daisy.\n\n3 growing days",
+        "complete": false
+      },
+      {
+        "elapsed": 45389,
+        "caption": "Feet up.\n\n···",
+        "complete": false
+      },
+      {
+        "elapsed": 50535,
+        "caption": "Feet up.",
+        "complete": false
+      },
+      {
+        "elapsed": 53649,
+        "caption": "A cool drink.\n\n···",
+        "complete": false
+      },
+      {
+        "elapsed": 57258,
+        "caption": "A cool drink.",
+        "complete": false
+      },
+      {
+        "elapsed": 60353,
+        "caption": "Lights out.\n\n···",
+        "complete": false
+      },
+      {
+        "elapsed": 65995,
+        "caption": "Lights out.",
+        "complete": false
+      },
+      {
+        "elapsed": 66537,
+        "caption": "Lights out.\n\n···",
+        "complete": false
+      },
+      {
+        "elapsed": 67081,
+        "caption": "Lights out.",
+        "complete": false
+      },
+      {
+        "elapsed": 68645,
+        "caption": "A little day, well lived.\n\nDay 1 · Level 1",
+        "complete": true
+      }
+    ],
+    "layouts": [
+      {
+        "name": "actual-1-d1-profile-390",
+        "width": 390,
+        "height": 844,
+        "scrollWidth": 390,
+        "scrollHeight": 844
+      },
+      {
+        "name": "actual-1-d1-home-390",
+        "width": 390,
+        "height": 844,
+        "scrollWidth": 390,
+        "scrollHeight": 844
+      },
+      {
+        "name": "actual-1-d1-complete-390",
+        "width": 390,
+        "height": 844,
+        "scrollWidth": 390,
+        "scrollHeight": 844
+      },
+      {
+        "name": "actual-1-d1-purse-390",
+        "width": 390,
+        "height": 844,
+        "scrollWidth": 390,
+        "scrollHeight": 844
+      },
+      {
+        "name": "actual-1-d1-complete-320",
+        "width": 320,
+        "height": 568,
+        "scrollWidth": 320,
+        "scrollHeight": 568
+      },
+      {
+        "name": "actual-1-d1-complete-430",
+        "width": 430,
+        "height": 932,
+        "scrollWidth": 430,
+        "scrollHeight": 932
+      }
+    ]
+  },
+  "day4Tail": {
+    "requestId": "0xb3d0b1168d79057a7f528e5b03bae88507ca77e1a621190531a345f2114f8390",
+    "commitment": "0x7d7ad82a4f68d12ca91c29c008b0446a337a890b38b82673dc13d294c5e4b470",
+    "observedCurrentLifeDay": 8,
+    "observedBlock": "147243729",
+    "explicitInitialSeek": true,
+    "subsequentNormalPlaybackMs": 50596,
+    "errors": [],
+    "warnings": [],
+    "appPosts": [],
+    "events": [
+      {
+        "elapsed": 461,
+        "caption": "Gathering the garden.\n\n···",
+        "done": false
+      },
+      {
+        "elapsed": 5550,
+        "caption": "Gathering the garden.",
+        "done": false
+      },
+      {
+        "elapsed": 8796,
+        "caption": "Gathering the garden.\n\nDaisy +1",
+        "done": false
+      },
+      {
+        "elapsed": 12496,
+        "caption": "A bite to eat.\n\n···",
+        "done": false
+      },
+      {
+        "elapsed": 20817,
+        "caption": "A bite to eat.",
+        "done": false
+      },
+      {
+        "elapsed": 23608,
+        "caption": "A drink for the garden.\n\n···",
+        "done": false
+      },
+      {
+        "elapsed": 31905,
+        "caption": "A drink for the garden.",
+        "done": false
+      },
+      {
+        "elapsed": 32399,
+        "caption": "A drink for the garden.\n\n···",
+        "done": false
+      },
+      {
+        "elapsed": 34275,
+        "caption": "A drink for the garden.",
+        "done": false
+      },
+      {
+        "elapsed": 34771,
+        "caption": "A drink for the garden.\n\n···",
+        "done": false
+      },
+      {
+        "elapsed": 36667,
+        "caption": "A drink for the garden.",
+        "done": false
+      },
+      {
+        "elapsed": 38079,
+        "caption": "A drink for the garden.\n\nWater for every growing bed",
+        "done": false
+      },
+      {
+        "elapsed": 39946,
+        "caption": "Lights out.\n\n···",
+        "done": false
+      },
+      {
+        "elapsed": 49171,
+        "caption": "Lights out.",
+        "done": false
+      },
+      {
+        "elapsed": 50596,
+        "caption": "A little day, well lived.\n\nDay 4 · Level 4",
+        "done": true
+      }
+    ],
+    "extraInspectionProbe": {
+      "initial": "The first additional tap at180,225 hit the sleeping avatar area rather than the lower blanket; it did not open an inspection. This was not an application exception.",
+      "followup": "A focused final-state seek and lower-blanket tap215,270 opened Bed and Close retained Resume.",
+      "record": "player-gesture-inspection.json"
+    }
+  }
+}

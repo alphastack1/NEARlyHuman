@@ -1,0 +1,95 @@
+{
+  "scope": "Independent read-only final-policy/actual craft and accounting check at one RH testnet block; no signing, provider calls or financial mutation.",
+  "block": "147260176",
+  "blockHash": "0x161894664201334ffdcffce4bed8f0d49729b13e0cb40d2f13d50dbae284b8b5",
+  "readyDays": 39,
+  "saved": [
+    {
+      "id": "2",
+      "day": 13,
+      "requestId": "0x74cbc6cd9c61473b3ad4e43c447d137e0c7da582d339f6c2bd1456cdfffad3ea",
+      "commitment": "0x6d2ac781f94679ca13b64d16dcc689c406a2b6df2641b984b9654b28a8cecb88",
+      "finalTx": "0xddd2e6f4089da9f40f3e8de74f9b06540e9cef1c640cfdbcde7a3442873f5a8e",
+      "decisionConfig": "0x047da3d3246af856a8f89d4608e2a094170560ffbf75644d9035a5b3dd31f374",
+      "project": "Plant Marigold",
+      "rewardMicro": "0",
+      "boat": 0,
+      "pass": true
+    },
+    {
+      "id": "1",
+      "day": 19,
+      "requestId": "0x6de34d03184f78d4ea363da739c18a351073b6d6baa8e655430096b529a4f205",
+      "commitment": "0x28cad0e52229da8275ef06166b848e7c6b1e19ef71b717e381e6d032464ff951",
+      "finalTx": "0xba710e15e01e05498b2e59e0a4d9ae2e7ef88f6609c08660e806f4f349f007d9",
+      "decisionConfig": "0xecb71476156ba08e2c05b4ab036085f75a8540ce3b2dc82889c259e9cdf2ace2",
+      "project": "Make Toy boat",
+      "rewardMicro": "0",
+      "boat": 1,
+      "pass": true
+    },
+    {
+      "id": "1",
+      "day": 25,
+      "requestId": "0x5e62fc8d213f07edf952511c03006cd23b0e6b9fac52c7410d622714cc7b7857",
+      "commitment": "0x3030ad8b5ff1d8f949f20cad961393266fb687246db5785bb83544018392929a",
+      "finalTx": "0xd2c0c52bf62a020f05d87ec794c76b908f9c2110e1041e7b2cc9b410bb38b71b",
+      "decisionConfig": "0x047da3d3246af856a8f89d4608e2a094170560ffbf75644d9035a5b3dd31f374",
+      "project": "Make a comfort bowl",
+      "rewardMicro": "0",
+      "boat": 1,
+      "pass": true
+    },
+    {
+      "id": "1",
+      "day": 26,
+      "requestId": "0xf4cda833194b8e5337ee518b8fa1d3e049fa3ff1b3746f4a6fbfb813ca674962",
+      "commitment": "0xc56993c82077a88b07c8ea60c85d401e23b570dca91f56997e7839639fe9fd02",
+      "finalTx": "0xddff848017164a48c4606e599fc9772bdf400701fe4880327f6de332e0e9926b",
+      "decisionConfig": "0x047da3d3246af856a8f89d4608e2a094170560ffbf75644d9035a5b3dd31f374",
+      "project": "Gather the ready garden",
+      "rewardMicro": "0",
+      "boat": 1,
+      "pass": true
+    }
+  ],
+  "lives": [
+    {
+      "id": "1",
+      "day": 26,
+      "alive": true,
+      "health": 100,
+      "morale": 89.42,
+      "wood": 4,
+      "toyBoat": 1,
+      "purseMicro": "0"
+    },
+    {
+      "id": "2",
+      "day": 13,
+      "alive": true,
+      "health": 100,
+      "morale": 35.68,
+      "wood": 0,
+      "toyBoat": 0,
+      "purseMicro": "0"
+    }
+  ],
+  "issued": "0",
+  "allocated": "0",
+  "supply": "0",
+  "burns": "0",
+  "vault": "0",
+  "quotesRetired": true,
+  "outboxClear": true,
+  "campaign": {
+    "id": "nearlyhuman-v2-testnet-20261102",
+    "limitMicroUSD": 90000,
+    "chargedMicroUSD": 28328,
+    "halted": false,
+    "complete": 199,
+    "uncertain": 0,
+    "provenance": "Explicit allocation from the $0.10 outside the existing $0.90 V1 envelope. Neither live provider balance nor V1 spending is reset or inferred."
+  },
+  "pass": true
+}

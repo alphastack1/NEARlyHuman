@@ -7,7 +7,7 @@ import {
   type State, type Step, type Candidate, type Certificate, type Context, type Trace, type Receipt,
 } from '../../src/v2';
 import { type V2FrozenInput, v2WorkerInputHash, validateV2FrozenInput, V2ContextError } from './context';
-import { v2PlanChoices, offerV2MindCandidates, V2_MIND_POLICY, type V2DailyPlan, type V2PlanChoices, type V2MindMemory } from './choices';
+import { v2PlanChoices, offerV2MindCandidates, v2OpportunityBudget, V2_MIND_POLICY, type V2DailyPlan, type V2PlanChoices, type V2MindMemory, type V2OpportunityBudget } from './choices';
 
 export const V2_PREPARATION_POLICY = 'v2-canonical-dawn-plan-memory-3';
 export const v2DecisionConfig = (rulesHash: Hex): Hex => keccak256(toHex(JSON.stringify({
@@ -28,6 +28,7 @@ export interface V2Decision {
   state: State;
   earlierToday: Step[];
   candidates: Candidate[];
+  opportunities?: V2OpportunityBudget;
   dailyFocus?: { key: string; label: string; status: 'planned' | 'completed' | 'failed' | 'unavailable'; inputs: Record<string, number>; recovery: number[]; chanceBps: number };
 }
 export interface V2RecordedDecision {
@@ -166,14 +167,15 @@ export async function prepareV2(rawInput: V2FrozenInput, provider: V2ChoiceProvi
       const suggested = chosen ? legal : (options.offer || offerV2MindCandidates)(structuredClone(ctx), structuredClone(legal));
       if (!suggested.length || suggested.length > 24 || new Set(suggested.map(a => a.key)).size !== suggested.length || suggested.some(a => !legal.some(l => l.key === a.key))) throw new Error('Invalid V2 choice menu.');
       const offered = suggested.map(a => legal.find(l => l.key === a.key)!);
-      const decisionHash = digest({ policy: V2_PREPARATION_POLICY, frozenHash, slot, mode, state: ctx.state, candidates: offered });
+      const opportunities = v2OpportunityBudget(ctx);
+      const decisionHash = digest({ policy: V2_PREPARATION_POLICY, frozenHash, slot, mode, state: ctx.state, candidates: offered, opportunities });
       let reply: V2Selection | undefined;
       if (!chosen) {
         if (offered.length === 1) { chosen = offered[0]!; source = 'single'; }
         else {
           if (++paidChoices > 8) throw new Error('The day exceeded its decision budget.');
           checkDeadline();
-          reply = await provider({ inputHash: decisionHash, requestId: input.requestId, day: ctx.day, slot, mode, state: structuredClone(ctx.state), earlierToday: structuredClone(trace.steps), candidates: structuredClone(offered),
+          reply = await provider({ inputHash: decisionHash, requestId: input.requestId, day: ctx.day, slot, mode, state: structuredClone(ctx.state), earlierToday: structuredClone(trace.steps), candidates: structuredClone(offered), opportunities,
             ...(plannedCandidate && dailyPlan ? { dailyFocus: { key: dailyPlan.mainKey, label: dailyPlan.mainLabel, status: focusStatus, inputs: structuredClone(plannedCandidate.inputs), recovery: [...plannedCandidate.recovery], chanceBps: plannedCandidate.chanceBps } } : {}) });
           checkDeadline();
           chosen = offered.find(a => a.key === reply?.key); source = 'provider';

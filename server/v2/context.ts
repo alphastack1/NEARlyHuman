@@ -1,4 +1,5 @@
-import { createPublicClient, http, isAddress, keccak256, parseAbi, toHex, type Address, type Hex, type PublicClient } from 'viem';
+import { createPublicClient, isAddress, keccak256, parseAbi, toHex, type Address, type Hex, type PublicClient } from 'viem';
+import { v2HttpTransport } from '../../src/chain/v2-transport';
 import { decodeState, kitItems } from '../../src/v2';
 
 export interface V2RuntimeIdentity {
@@ -105,7 +106,7 @@ export function v2PublicClient(rpcUrl: string, identity: V2RuntimeIdentity, allo
   validateV2Identity(identity, allowLocal);
   const url = new URL(rpcUrl);
   if (identity.chainId === 31337 && !['127.0.0.1', '[::1]'].includes(url.hostname)) throw new V2ContextError('connection', 'Local verification needs a local connection.');
-  return createPublicClient({ transport: http(rpcUrl, { retryCount: 2, timeout: 10_000 }), cacheTime: 0 });
+  return createPublicClient({ transport: v2HttpTransport(rpcUrl, { retryCount: 2, timeout: 10_000 }), cacheTime: 0 });
 }
 
 export function freezeV2Input(runtime: V2RuntimeIdentity, request: V2AcceptedRequest, base: Hex, acceptedBlock: bigint, acceptedBlockHash: Hex, allowLocal = false): V2FrozenInput {

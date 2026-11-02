@@ -58,7 +58,11 @@ export async function reconcileAdmission(player?:Address,requestedScope?:string)
 
 export async function issueQuote(input:QuoteInput, playerValue:string):Promise<QuoteView> {
   await verifyConnection();
-  const player=checkedAddress(playerValue), {cfg,client,address,chain}=connection(), account=serviceAccount();
+  const {cfg,client,address,chain}=connection();
+  // A paused original collection remains readable but must not create fresh
+  // legacy holds while its worker wallet is being handed to the new game.
+  if(await pinnedRead(()=>client.readContract({address,abi:nearlyHumanAbi,functionName:'admissionPaused'})))throw new ServiceError('This home is resting.','admission_paused',503);
+  const player=checkedAddress(playerValue), account=serviceAccount();
   if(!cfg.nearKey)throw new ServiceError('Preparation is resting. Try again shortly.','capacity',503);
   if(!input||!['mint','day'].includes(input.operation))throw new ServiceError('Choose a new life or prepare a day.','quote');
   let name='',stats:Stats={body:2,wits:2,spirit:1},tokenId=0n,baseRevision=0,delivery=0;
