@@ -5,10 +5,10 @@
   "timezone": "Asia/Bangkok",
   "intervalMinutes": 60,
   "scheduledWaveCount": 6,
-  "completedWaveCount": 2,
-  "nextWave": 3,
+  "completedWaveCount": 3,
+  "nextWave": 4,
   "activeWave": null,
-  "status": "waiting",
+  "status": "waiting_for_next_hourly_wave",
   "owner": "PM chat only",
   "preparation": {
     "wave": 0,
@@ -59,7 +59,20 @@
     {
       "number": 3,
       "focus": "Garden/workshop visuals and continuous animation",
-      "status": "pending"
+      "status": "complete",
+      "startedAtUtc": "2026-11-02T17:18:02Z",
+      "owners": {
+        "world": "wave3_world",
+        "player": "wave3_player",
+        "pixels": "wave3_pixels",
+        "entryAndBackend": "PM"
+      },
+      "question": "Can the verified V2 days become a readable tactile top-down world with continuous movement and a streamlined real-phone player?",
+      "completedAtUtc": "2026-11-02T17:46:00Z",
+      "evidence": "docs/overnight/wave3/README.md",
+      "result": "Connected V2 house/four-bed yard/workshop with physical receipt playback; 12 reviewed phone/desktop captures and scoped fixes. Authenticated durable owner/background API proved through actual isolated-chain failure, closed-tab recovery and quarantine expiry. Zero new paid AI or public-chain transactions; no deployment.",
+      "nextPriority": "Build the full first-use/owner/public-life/purse wrapper and bounded owner portfolio lookup; preserve the funding migration and final-policy actual testnet guest gates before release.",
+      "screenshots": "docs/overnight/wave3/images/manifest.json"
     },
     {
       "number": 4,

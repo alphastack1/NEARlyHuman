@@ -5,6 +5,7 @@ import { loadLocalSecrets } from './local-secrets';
 import { reconcile } from './jobs';
 import { cleanAuth } from './auth';
 import { devWallet } from './dev-wallet';
+import { reconcileV2Service } from './v2/service';
 
 for (const [key, value] of Object.entries(loadEnv('development', process.cwd(), ''))) process.env[key] ??= value;
 loadLocalSecrets();
@@ -28,7 +29,7 @@ const server = http.createServer(async (req, res) => {
 });
 server.listen(port, '127.0.0.1', () => console.log(`NEARlyHuman ready at http://127.0.0.1:${port}`));
 let reconciling = false;
-const timer = setInterval(() => { if (!reconciling) { reconciling = true; void reconcile().catch(() => {}).finally(() => { reconciling = false; }); } }, 45_000);
+const timer = setInterval(() => { if (!reconciling) { reconciling = true; void reconcile().catch(() => {}).then(() => reconcileV2Service()).catch(() => {}).finally(() => { reconciling = false; }); } }, 45_000);
 timer.unref();
 void cleanAuth().catch(() => {});
 for (const signal of ['SIGINT', 'SIGTERM'] as const) process.on(signal, () => { clearInterval(timer); void vite.close(); server.close(); });

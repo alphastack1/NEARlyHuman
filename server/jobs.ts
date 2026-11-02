@@ -184,7 +184,7 @@ export async function dispatchJob(id:Hex) {
   }
   await dispatchBackground({requestId:id});
 }
-async function dispatchBackground(body:unknown) {
+export async function dispatchBackground(body:unknown) {
   const secret=serverConfig().signingSecret,base=process.env.URL;
   if(!secret||!base)throw new ServiceError('Preparation is queued. Check again shortly.','queued',503);
   const response=await fetch(new URL('/.netlify/functions/prepare-background',base),{method:'POST',headers:{'Content-Type':'application/json','x-nearlyhuman-worker':secret},body:JSON.stringify(body),signal:AbortSignal.timeout(8_000)});

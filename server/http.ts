@@ -8,7 +8,7 @@ import { acceptTransaction, getJob, wakeJob, getReplay, getOutcome } from './job
 import { StoreConflict } from './storage';
 import { BaseError, ContractFunctionRevertedError } from 'viem';
 import { readSavedDays, readSavedOutcome } from './saved-days';
-import { handleV2PublicApi } from './v2/http';
+import { handleV2Api } from './v2/http';
 
 const json = (value: unknown, status = 200, extra: HeadersInit = {}) => new Response(JSON.stringify(value, (_, v) => typeof v === 'bigint' ? v.toString() : v), { status, headers: { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store', ...extra } });
 const notFound = () => new ServiceError('This page has wandered off.', 'not_found', 404);
@@ -17,7 +17,7 @@ export async function handleApi(request: Request): Promise<Response> {
   try {
     const url = new URL(request.url);
     const path = url.pathname.replace(/^\/\.netlify\/functions\/api(?:\/|$)/, '/api/');
-    if (path.startsWith('/api/v2/')) return handleV2PublicApi(request);
+    if (path.startsWith('/api/v2/')) return handleV2Api(request);
     if (path.length > 512) throw notFound();
     const post = request.method === 'POST';
     if (!post && request.method !== 'GET') return json({ error: { code: 'method', message: 'Please open this page again.' } }, 405);
