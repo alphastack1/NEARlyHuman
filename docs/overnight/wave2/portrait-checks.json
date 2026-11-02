@@ -1,0 +1,51 @@
+{
+  "scope": "Visual fixtures only, not claimed onchain NFT lives",
+  "dynamicSavedGarden": true,
+  "memorialPose": true,
+  "exactWorldLinks": true,
+  "escapedText": true,
+  "metadata": {
+    "name": "MISO #1",
+    "description": "A little life with a mind of its own, a home, belongings and an onchain purse.",
+    "image": "https://nearlyhuman.netlify.app/api/v2/nft/1/image.svg?chainId=46630&collection=0x1111111111111111111111111111111111111111",
+    "external_url": "https://nearlyhuman.netlify.app/?rooster=1&chainId=46630&collection=0x1111111111111111111111111111111111111111",
+    "attributes": [
+      {
+        "trait_type": "Life",
+        "value": "Alive"
+      },
+      {
+        "trait_type": "Level",
+        "value": 12
+      },
+      {
+        "trait_type": "Game day",
+        "value": 12
+      },
+      {
+        "trait_type": "Purse",
+        "value": "0"
+      },
+      {
+        "trait_type": "Body",
+        "value": 2
+      },
+      {
+        "trait_type": "Wits",
+        "value": 2
+      },
+      {
+        "trait_type": "Spirit",
+        "value": 1
+      },
+      {
+        "trait_type": "Ready beds",
+        "value": 2
+      },
+      {
+        "trait_type": "Headgear",
+        "value": 2
+      }
+    ]
+  }
+}

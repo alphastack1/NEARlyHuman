@@ -1,0 +1,61 @@
+{
+  "scope": "Independent controlled DurableStore/scripted-provider races; zero HTTP, credentials or credits.",
+  "report": [
+    {
+      "name": "campaign and complete-answer cache are idempotent",
+      "result": "pass"
+    },
+    {
+      "name": "two concurrent callers cannot buy the same request twice",
+      "result": "pass"
+    },
+    {
+      "name": "uncertain request stays charged and is not silently resent",
+      "result": "pass"
+    },
+    {
+      "name": "above-reserve cost records actual and halts later sends",
+      "result": "pass"
+    },
+    {
+      "name": "mismatched body is rejected before reservation/send",
+      "result": "pass"
+    },
+    {
+      "name": "missing normalized cost retains the conservative send reserve",
+      "result": "pass"
+    },
+    {
+      "name": "malformed persisted numeric accounting rejects before provider work",
+      "result": "pass"
+    },
+    {
+      "name": "V1 envelope raised to a dollar prevents overlapping V2 allocation",
+      "result": "pass"
+    },
+    {
+      "name": "whole-job holds block an unfunded third job and preserve spend when released",
+      "result": "pass"
+    },
+    {
+      "name": "non-job research calls cannot consume capacity reserved for active jobs",
+      "result": "pass"
+    },
+    {
+      "name": "finished job cannot send or reset its spent allowance",
+      "result": "pass"
+    },
+    {
+      "name": "missing campaign with an existing allocation cannot restart at zero",
+      "result": "pass"
+    },
+    {
+      "name": "missing pool with campaign history refuses bootstrap and paid work",
+      "result": "pass"
+    },
+    {
+      "name": "campaign limit must still match its fixed pool allocation",
+      "result": "pass"
+    }
+  ]
+}

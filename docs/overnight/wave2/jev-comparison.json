@@ -1,0 +1,377 @@
+{
+  "scope": "ActualJevmatchedscenario before/after prompt/menu refinement. Independent model samples, not isolatedcausalidentity experiment; initialsupplies differbetweenNPCs. Finalpolicy4safety/menu changes were pure-tested after parentstopped paid samples.",
+  "beforePolicy": "v2-mind-dawn-truthful-memory-1",
+  "matchedPolicy": "v2-mind-dawn-truthful-memory-2",
+  "finalPureTestedPolicy": "v2-mind-dawn-truthful-memory-4",
+  "rows": [
+    {
+      "name": "MISO",
+      "day": 1,
+      "before": {
+        "foodDrinkRoutines": 4,
+        "waterUnits": 3,
+        "breadUnits": 2,
+        "morale": 62.36
+      },
+      "after": {
+        "foodDrinkRoutines": 3,
+        "waterUnits": 2,
+        "breadUnits": 1,
+        "morale": 72.36
+      }
+    },
+    {
+      "name": "MISO",
+      "day": 2,
+      "before": {
+        "foodDrinkRoutines": 2,
+        "waterUnits": 1,
+        "breadUnits": 1,
+        "morale": 54.72
+      },
+      "after": {
+        "foodDrinkRoutines": 1,
+        "waterUnits": 1,
+        "breadUnits": 0,
+        "morale": 74.72
+      }
+    },
+    {
+      "name": "PEEP",
+      "day": 1,
+      "before": {
+        "foodDrinkRoutines": 4,
+        "waterUnits": 3,
+        "breadUnits": 3,
+        "morale": 62.36
+      },
+      "after": {
+        "foodDrinkRoutines": 3,
+        "waterUnits": 2,
+        "breadUnits": 1,
+        "morale": 72.36
+      }
+    },
+    {
+      "name": "PEEP",
+      "day": 2,
+      "before": {
+        "foodDrinkRoutines": 2,
+        "waterUnits": 1,
+        "breadUnits": 1,
+        "morale": 54.72
+      },
+      "after": {
+        "foodDrinkRoutines": 2,
+        "waterUnits": 1,
+        "breadUnits": 1,
+        "morale": 64.72
+      }
+    }
+  ],
+  "growthCompletion": [
+    {
+      "name": "MISO",
+      "day": 3,
+      "kit": [
+        "water",
+        "daisy_seed"
+      ],
+      "plan": {
+        "goal": 0,
+        "focus": {
+          "slot": 36,
+          "op": 18,
+          "arg": 2,
+          "variant": 1,
+          "goods": [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "morningBeforePickup": {
+          "slot": 1,
+          "op": 2,
+          "arg": 2,
+          "variant": 0,
+          "goods": [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "mainKey": "18:2:1:0,0,0,0",
+        "mainLabel": "Plant Daisy",
+        "morningKey": "breakfast-first",
+        "goalKey": "0",
+        "model": "typesafe/jev-1.13-20260917",
+        "responseId": "gen-dec-1793637455-xMaGMvcn1G8YeUJ7aBQE",
+        "status": "completed"
+      },
+      "actions": [
+        {
+          "slot": 1,
+          "op": "Breakfast",
+          "arg": 2,
+          "variant": 0,
+          "goods": [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "slot": 2,
+          "op": "Pickup",
+          "arg": 0,
+          "variant": 0,
+          "goods": [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "slot": 21,
+          "op": "Well",
+          "arg": 0,
+          "variant": 0,
+          "goods": [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "slot": 31,
+          "op": "Leisure",
+          "arg": 0,
+          "variant": 0,
+          "goods": [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "slot": 36,
+          "op": "Plant",
+          "arg": 2,
+          "variant": 1,
+          "goods": [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "slot": 41,
+          "op": "Breakfast",
+          "arg": 2,
+          "variant": 0,
+          "goods": [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "slot": 51,
+          "op": "Leisure",
+          "arg": 0,
+          "variant": 0,
+          "goods": [
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "alive": true,
+      "needs": [
+        10000,
+        9000,
+        8700,
+        10000,
+        7708
+      ],
+      "points": 0,
+      "rewardMicro": "0"
+    },
+    {
+      "name": "MISO",
+      "day": 4,
+      "kit": [
+        "water",
+        "bread",
+        "daisy_seed"
+      ],
+      "plan": {
+        "goal": 0,
+        "focus": {
+          "slot": 36,
+          "op": 19,
+          "arg": 0,
+          "variant": 0,
+          "goods": [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "morningBeforePickup": {
+          "slot": 1,
+          "op": 0,
+          "arg": 0,
+          "variant": 0,
+          "goods": [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "mainKey": "19:0:0:0,0,0,0",
+        "mainLabel": "Gather the ready garden",
+        "morningKey": "look-first",
+        "goalKey": "0",
+        "model": "typesafe/jev-1.13-20260917",
+        "responseId": "gen-dec-1793637457-wRjr8rTSyIqwCmB1wC4R",
+        "status": "completed"
+      },
+      "actions": [
+        {
+          "slot": 1,
+          "op": "Quiet",
+          "arg": 0,
+          "variant": 0,
+          "goods": [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "slot": 2,
+          "op": "Pickup",
+          "arg": 0,
+          "variant": 0,
+          "goods": [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "slot": 21,
+          "op": "Breakfast",
+          "arg": 2,
+          "variant": 0,
+          "goods": [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "slot": 31,
+          "op": "Leisure",
+          "arg": 0,
+          "variant": 0,
+          "goods": [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "slot": 36,
+          "op": "Harvest",
+          "arg": 0,
+          "variant": 0,
+          "goods": [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "slot": 41,
+          "op": "Well",
+          "arg": 0,
+          "variant": 0,
+          "goods": [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "slot": 51,
+          "op": "EnjoyFlower",
+          "arg": 22,
+          "variant": 0,
+          "goods": [
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "alive": true,
+      "needs": [
+        10000,
+        8000,
+        7300,
+        10000,
+        6484
+      ],
+      "points": 0,
+      "rewardMicro": "0"
+    }
+  ],
+  "budget": {
+    "id": "overnight-wave2-20261102",
+    "limitMicroUSD": 30000,
+    "chargedMicroUSD": 5413,
+    "halted": false,
+    "complete": 50,
+    "uncertain": 0,
+    "provenance": "Explicit allocation from the $0.10 outside the existing $0.90 V1 envelope. Neither live provider balance nor V1 spending is reset or inferred."
+  },
+  "paidBreakdown": [
+    {
+      "phase": "initial4days",
+      "sends": 20,
+      "chargedMicroUSD": 2024
+    },
+    {
+      "phase": "matched4days",
+      "sends": 20,
+      "chargedMicroUSD": 2108
+    },
+    {
+      "phase": "MISOdays3and4",
+      "sends": 10,
+      "chargedMicroUSD": 1281
+    }
+  ]
+}

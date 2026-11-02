@@ -3,13 +3,15 @@ import {
   Op, openDay, beginSlot, endSlot, finishDay, previewPrimary, legalActions, actionKey,
   decodeState, encodeState, encodeTrace, encodeCertificate, replayDay, shipmentPoints,
   buildCareCertificate,
+  CERTIFICATE_OPS,
   type State, type Step, type Candidate, type Certificate, type Context, type Trace, type Receipt,
 } from '../../src/v2';
 import { type V2FrozenInput, v2WorkerInputHash, validateV2FrozenInput, V2ContextError } from './context';
+import { v2PlanChoices, offerV2MindCandidates, V2_MIND_POLICY, type V2DailyPlan, type V2PlanChoices, type V2MindMemory } from './choices';
 
-export const V2_PREPARATION_POLICY = 'v2-canonical-prefix-role-budget-1';
+export const V2_PREPARATION_POLICY = 'v2-canonical-dawn-plan-memory-3';
 export const v2DecisionConfig = (rulesHash: Hex): Hex => keccak256(toHex(JSON.stringify({
-  policy: V2_PREPARATION_POLICY, rulesHash: rulesHash.toLowerCase(), model: 'typesafe/jev-1.13', maxChoices: 8,
+  policy: V2_PREPARATION_POLICY, mind: V2_MIND_POLICY, rulesHash: rulesHash.toLowerCase(), model: 'typesafe/jev-1.13', maxChoices: 8,
 })));
 export interface V2Selection {
   key: string;
@@ -26,6 +28,7 @@ export interface V2Decision {
   state: State;
   earlierToday: Step[];
   candidates: Candidate[];
+  dailyFocus?: { key: string; label: string; status: 'planned' | 'completed' | 'failed' | 'unavailable'; inputs: Record<string, number>; recovery: number[]; chanceBps: number };
 }
 export interface V2RecordedDecision {
   inputHash: Hex;
@@ -40,6 +43,10 @@ export interface V2RecordedDecision {
 }
 export interface V2PreparationOptions {
   allowLocal?: boolean;
+  memory?: V2MindMemory;
+  /** One cached/funded Dawn call chooses the afternoon intention, morning and goal. */
+  plan?: (choices: V2PlanChoices) => Promise<V2DailyPlan>;
+  onPlan?: (plan: V2DailyPlan) => Promise<void>;
   /** Optional already recorded Dawn intention. It never grants an extra turn. */
   goal?: number;
   focus?: Step;
@@ -93,10 +100,27 @@ export async function prepareV2(rawInput: V2FrozenInput, provider: V2ChoiceProvi
     || input.runtime.decisionConfig.toLowerCase() !== v2DecisionConfig(input.runtime.rulesHash)) throw new V2ContextError('context', 'This accepted day needs another check.');
   const now = options.nowSeconds || (() => Math.floor(Date.now() / 1000));
   const checkDeadline = () => { if (now() > Number(input.deadline)) throw new V2ContextError('expired', 'This attempt has expired. The saved day is unchanged.'); };
-  const frozenHash = v2WorkerInputHash(input), trace: Trace = { goal: options.goal ?? 255, steps: [] };
+  const frozenHash = v2WorkerInputHash(input);
+  let dailyPlan: V2DailyPlan | undefined, plannedCandidate: Candidate | undefined, paidChoices = 0;
+  if (options.plan) {
+    checkDeadline();
+    const choices = v2PlanChoices({ requestId: input.requestId, base, kit: BigInt(input.kitMask), seed: input.daySeed, shipping: input.shipping, memory: options.memory });
+    const selected = await options.plan(structuredClone(choices)); checkDeadline(); paidChoices++;
+    plannedCandidate = choices.main.find(a => a.key === selected.mainKey);
+    const morning = choices.morning.find(a => a.key === selected.morningKey);
+    const goal = choices.goals.length ? choices.goals.find(a => a.key === selected.goalKey) : undefined;
+    if (!plannedCandidate || !morning || choices.goals.length && (!goal || selected.goal !== goal.id) || !choices.goals.length && selected.goal !== 255) throw new Error('The day plan is unavailable.');
+    dailyPlan = { goal: goal?.id ?? 255, focus: { slot: 36, op: plannedCandidate.op, arg: plannedCandidate.arg, variant: plannedCandidate.variant, goods: [...plannedCandidate.goods] },
+      ...(morning.beforePickup ? { morningBeforePickup: structuredClone(morning.beforePickup) } : {}), mainKey: plannedCandidate.key, mainLabel: plannedCandidate.label,
+      morningKey: morning.key, ...(goal ? { goalKey: goal.key } : {}), ...(selected.model ? { model: selected.model.slice(0, 100) } : {}), ...(selected.responseId ? { responseId: selected.responseId.slice(0, 200) } : {}) };
+    await options.onPlan?.(structuredClone(dailyPlan));
+  }
+  const trace: Trace = { goal: dailyPlan?.goal ?? options.goal ?? 255, steps: [] };
   const ctx = openDay(base, BigInt(input.kitMask), input.daySeed, input.shipping, trace.goal);
   const receipts: Receipt[] = [], decisions: V2RecordedDecision[] = [];
-  let certificate: Certificate | undefined, morningDone = false, paidChoices = 0;
+  const intendedFocus = dailyPlan?.focus || options.focus, morningAction = dailyPlan?.morningBeforePickup || options.morningBeforePickup;
+  let focusStatus: 'planned' | 'completed' | 'failed' | 'unavailable' = 'planned';
+  let certificate: Certificate | undefined, morningDone = false;
   for (let slot = 1; slot <= 60 && ctx.state.alive; slot++) {
     checkDeadline();
     const proposal = previewPrimary(ctx, slot);
@@ -107,25 +131,39 @@ export async function prepareV2(rawInput: V2FrozenInput, provider: V2ChoiceProvi
     const available = () => all ||= legalActions(ctx).filter(a => a.op !== Op.Ship || reward(shipmentPoints(a.goods), BigInt(input.pressure)) > 0n);
     let chosen: Candidate | undefined, mode: V2Decision['mode'] | undefined, source: V2RecordedDecision['source'] | undefined;
     const immediate = available().filter(a => a.role === 'acute');
-    if (immediate.length) { all = immediate; mode = 'acute'; }
+    const clinical = ctx.state.conditions.some((c,i)=>c.severity&&!c.resolved&&i<5);
+    const scheduledDawnHarm = [ctx.primary,ctx.taskFire].some(e=>e&&!e.resolved&&e.deadline<=10&&(e.kind==='fire'||e.kind==='rain'));
+    const dawnDanger = slot <= 5 && (ctx.state.needs[1]!<=3000 || ctx.state.needs[2]!<=3000 || clinical || immediate.length>0 || scheduledDawnHarm);
+    // The parcel can contain the actual rescue. Pickup is free of ordinary/acute uses,
+    // and every eligible Dawn episode leaves time to act before its first boundary.
+    if (!ctx.pickup && dawnDanger) chosen = available().find(a=>a.op===Op.Pickup);
     else if (!ctx.pickup) {
-      if (!morningDone && options.morningBeforePickup && slot <= 5) {
-        const key = actionKey(options.morningBeforePickup);
+      if (!morningDone && morningAction && slot <= 5 && !ctx.state.conditions.some((c, i) => c.severity && !c.resolved && i < 5)
+        && ctx.state.needs[1]! > 3000 && ctx.state.needs[2]! > 3000) {
+        const key = actionKey(morningAction);
         chosen = available().find(a => a.key === key && a.role === 'routine');
         if (chosen) { mode = 'routine'; source = 'plan'; }
         morningDone = true;
       }
       if (!chosen) chosen = available().find(a => a.op === Op.Pickup);
     } else {
-      if (slot >= 11 && available().some(a => a.role === 'routine')) { all = available().filter(a => a.role === 'routine'); mode = 'routine'; }
+      if (immediate.length) {
+        const care = dawnDanger ? available().filter(a=>a.role==='routine'&&CERTIFICATE_OPS.has(a.op)) : [];
+        all = [...immediate,...care]; mode='acute';
+      }
+      else if ((slot >= 11 || dawnDanger) && available().some(a => a.role === 'routine')) { all = available().filter(a => a.role === 'routine'); mode = 'routine'; }
       else if (slot >= 36 && slot <= 40 && !ctx.mainUsed) {
         all = available().filter(a => a.role === 'main'); mode = 'focus';
-        if (options.focus) { chosen = all.find(a => a.key === actionKey(options.focus!)); if (chosen) source = 'plan'; }
+        if (intendedFocus) {
+          chosen = all.find(a => a.key === actionKey(intendedFocus));
+          if (!chosen && dailyPlan) { chosen = all.find(a => a.op === Op.QuietMain); focusStatus = 'unavailable'; }
+          if (chosen) source = 'plan';
+        }
       }
     }
     if (mode) {
       const legal = chosen ? [chosen] : all || [];
-      const suggested = chosen ? legal : (options.offer || offerV2Candidates)(structuredClone(ctx), structuredClone(legal));
+      const suggested = chosen ? legal : (options.offer || offerV2MindCandidates)(structuredClone(ctx), structuredClone(legal));
       if (!suggested.length || suggested.length > 24 || new Set(suggested.map(a => a.key)).size !== suggested.length || suggested.some(a => !legal.some(l => l.key === a.key))) throw new Error('Invalid V2 choice menu.');
       const offered = suggested.map(a => legal.find(l => l.key === a.key)!);
       const decisionHash = digest({ policy: V2_PREPARATION_POLICY, frozenHash, slot, mode, state: ctx.state, candidates: offered });
@@ -135,7 +173,8 @@ export async function prepareV2(rawInput: V2FrozenInput, provider: V2ChoiceProvi
         else {
           if (++paidChoices > 8) throw new Error('The day exceeded its decision budget.');
           checkDeadline();
-          reply = await provider({ inputHash: decisionHash, requestId: input.requestId, day: ctx.day, slot, mode, state: structuredClone(ctx.state), earlierToday: structuredClone(trace.steps), candidates: structuredClone(offered) });
+          reply = await provider({ inputHash: decisionHash, requestId: input.requestId, day: ctx.day, slot, mode, state: structuredClone(ctx.state), earlierToday: structuredClone(trace.steps), candidates: structuredClone(offered),
+            ...(plannedCandidate && dailyPlan ? { dailyFocus: { key: dailyPlan.mainKey, label: dailyPlan.mainLabel, status: focusStatus, inputs: structuredClone(plannedCandidate.inputs), recovery: [...plannedCandidate.recovery], chanceBps: plannedCandidate.chanceBps } } : {}) });
           checkDeadline();
           chosen = offered.find(a => a.key === reply?.key); source = 'provider';
           if (!chosen) throw new Error('The selected V2 action is unavailable.');
@@ -151,9 +190,11 @@ export async function prepareV2(rawInput: V2FrozenInput, provider: V2ChoiceProvi
       await options.onDecision?.(record); decisions.push(record);
     }
     if (chosen) trace.steps.push({ slot, op: chosen.op, arg: chosen.arg, variant: chosen.variant, goods: [...chosen.goods] });
-    receipts.push(endSlot(ctx, chosen));
+    const receipt = endSlot(ctx, chosen); receipts.push(receipt);
+    if (chosen?.role === 'main' && focusStatus !== 'unavailable') focusStatus = receipt.success ? 'completed' : 'failed';
   }
   const result = finishDay(ctx, receipts, trace);
+  if (dailyPlan && focusStatus === 'planned') focusStatus = 'unavailable';
   checkDeadline();
   const checked = replayDay(base, BigInt(input.kitMask), trace, input.daySeed, input.shipping, certificate);
   const state = encodeState(result.state), encodedTrace = encodeTrace(trace), encodedCertificate = encodeCertificate(certificate);
@@ -161,7 +202,7 @@ export async function prepareV2(rawInput: V2FrozenInput, provider: V2ChoiceProvi
   const tokenReward = reward(result.points, BigInt(input.pressure));
   if (tokenReward > BigInt(input.reservedReward) || result.points > 0 && tokenReward === 0n) throw new Error('The V2 shipment exceeds its accepted quote.');
   const packet = { version: 2 as const, policy: V2_PREPARATION_POLICY, inputHash: frozenHash, requestId: input.requestId,
-    decisionConfig: input.runtime.decisionConfig, result, decisions, trace: encodedTrace, certificate: encodedCertificate, state,
+    decisionConfig: input.runtime.decisionConfig, result, decisions, ...(dailyPlan ? { dailyPlan: { ...dailyPlan, status: focusStatus } } : {}), trace: encodedTrace, certificate: encodedCertificate, state,
     stateHash: keccak256(state), rewardMicro: tokenReward.toString() };
   return { packet, commitment: digest(packet) };
 }

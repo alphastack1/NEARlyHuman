@@ -5,8 +5,8 @@
   "timezone": "Asia/Bangkok",
   "intervalMinutes": 60,
   "scheduledWaveCount": 6,
-  "completedWaveCount": 1,
-  "nextWave": 2,
+  "completedWaveCount": 2,
+  "nextWave": 3,
   "activeWave": null,
   "status": "waiting",
   "owner": "PM chat only",
@@ -36,13 +36,25 @@
       "question": "Can a unified authoritative life/material kernel and contract-backed candidate replace the isolated feasibility slices without trusting supplied economic/death outcomes?",
       "completedAtUtc": "2026-11-02T16:13:45Z",
       "evidence": "docs/overnight/wave1/README.md",
-      "result": "UnifiedV2TS/Solauthority+signedcontrollercandidate;82cumulativeparityvectors;actualclosed57dayearning/birth;compacthistory/replayhash;canonicalpreparerandinputfences. No paidAIorpublicdeploy.",
+      "result": "Unified V2 TypeScript/Solidity authority and signed controller candidate; 82 parity vectors, actual closed 57-day earning/birth proof, compact history/replay hash, and preparation fences. No paid AI or public deployment.",
       "nextPriority": "CanonicalacceptanceRPCassertion,durableJevbudget/checkpoints,Dawnplan/goalbehavior;realmodelcomparisonsinwave2."
     },
     {
       "number": 2,
       "focus": "Jev choices, identity and day progression",
-      "status": "pending"
+      "status": "complete",
+      "startedAtUtc": "2026-11-02T16:18:01Z",
+      "owners": {
+        "mind": "wave2_mind",
+        "worker": "wave2_worker",
+        "critic": "wave2_critic",
+        "viewsAndGoalPort": "PM"
+      },
+      "question": "Can canonical Dawn plans, persistent intentions and real Jev choices remain varied and useful through funded resumable worker preparation?",
+      "completedAtUtc": "2026-11-02T17:14:48Z",
+      "evidence": "docs/overnight/wave2/README.md",
+      "result": "Real Jev Dawn/routine/goal integration; 50 sends for $0.005413, matched care improvement, actual Daisy harvest/use. Durable funded quote/worker/raw-relay flow proved locally; critical Dawn rescue scheduler fixed. No public deployment.",
+      "nextPriority": "Render actual V2 world/continuous animation on phones; integrate authenticated owner/background API around existing helpers; preserve budget migration gate before public use."
     },
     {
       "number": 3,

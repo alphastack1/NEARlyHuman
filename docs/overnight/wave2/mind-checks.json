@@ -1,0 +1,21 @@
+{
+  "scope": "NoHTTPpaidcalls; mockedtransport andactualV2kernelDawn/menu/fallback checks",
+  "passed": [
+    "savingChest has both waiting and realcraft options with no previewmutation",
+    "allthree useful existingpantry coffee variants covered",
+    "goal progress derivesactualwoodaftercost",
+    "deterministicreadywoodharvest addsactualgoalprogressinpreviewfacts",
+    "waitingparcel supportsfuturemain butneverbefore-pickupconsumption",
+    "redundantwholewaterinbreakfast omitted while usefulfood retained",
+    "memory excludesfuture andpickup withoutinventingsuccess",
+    "modelcriteria equalrecordedmenu andbodyhashincludesname memory",
+    "durablefence occursbeforetheonlyHTTPboundary",
+    "budget/cachefence exceptions neverbecometransport retries",
+    "mutatedbodyhash rejectedbeforefunding",
+    "modelsubstitution rejected",
+    "unavailableDawnproject fallsbackquiet withoutanotherpaidprojectchoice",
+    "terminalbeforeproject recordsunavailable notforeverplanned",
+    "acute waterdouse andfreecutoff remainseparate despite resource ranking"
+  ],
+  "count": 15
+}

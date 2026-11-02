@@ -1,0 +1,21 @@
+{
+  "scope": "Independent actual worker helpers with explicit synthetic accepted-input fixture and controlled CAS store. No RPC, HTTP, credentials or credits.",
+  "report": [
+    {
+      "name": "changed body for same logical slot rejects before a second send",
+      "result": "pass"
+    },
+    {
+      "name": "stale lease cannot spend; successor reuses exact cached answer",
+      "result": "pass"
+    },
+    {
+      "name": "reaccept without rereading memory retains frozen prior context",
+      "result": "pass"
+    },
+    {
+      "name": "explicit changed canonical memory quarantines the job",
+      "result": "pass"
+    }
+  ]
+}

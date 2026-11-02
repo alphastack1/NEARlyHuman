@@ -58,7 +58,7 @@ export function openDay(base:State,kit:bigint,seed:string,shipping=true,goal=255
  assertState(base);requireThat(base.alive&&base.day<MAX_STOCK,'This life cannot start another day.');const supplied=kitItems(kit);for(const id of supplied)requireThat(base.inventory[id]!<MAX_STOCK,'That supply is full.');
  const state=clone(base);state.day++;state.deathCause=0;
  requireThat(goal===255||Number.isInteger(goal)&&goal>=0&&goal<=6,'Invalid intention.');
- if(goal!==255&&goal!==state.goal){state.goal=goal;state.goalCreatedDay=state.day;state.goalReviewDay=goal?Math.min(MAX_STOCK,state.day+3):0;}
+ if(goal!==255){if(goal!==state.goal)state.goalCreatedDay=state.day;state.goal=goal;state.goalReviewDay=goal?Math.min(MAX_STOCK,state.day+3):0;}
  return{state,day:state.day,slot:0,open:false,seed:seedHex(seed),kit,shipping,pickup:kit===0n,ordinaryMask:0,ordinaryUses:0,mainUsed:false,acuteUses:0,restUses:0,leisureUses:0,lastRest:-100,lastLeisure:-100,minorUsed:false,chairMoved:false,shipped:false,points:0,primaryIntroduced:false,events:[],witness:false};
 }
 
@@ -225,7 +225,7 @@ export function replayDay(base:State,kit:bigint,trace:Trace,seed:string,shipping
  requireThat(trace.steps.length<=16,'Day trace is too long.');let previous=0;for(const a of trace.steps){requireThat(Number.isInteger(a.slot)&&a.slot>previous&&a.slot<=60,'Actions must be chronological.');previous=a.slot;}
  const ctx=openDay(base,kit,seed,shipping,trace.goal);const receipts:Receipt[]=[];let at=0;
  for(let slot=1;slot<=60&&ctx.state.alive;slot++){beginSlot(ctx,slot,certificate);let a:Step|undefined;if(ctx.state.alive&&trace.steps[at]?.slot===slot){a=trace.steps[at];at++;}receipts.push(endSlot(ctx,a));}
- requireThat(at===trace.steps.length,'Action follows this lifeÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¾Ãƒâ€šÃ‚Â¢s end.');return finishDay(ctx,receipts,trace);
+ requireThat(at===trace.steps.length,'An action followed the end of this life.');return finishDay(ctx,receipts,trace);
 }
 
 const LABELS:Partial<Record<Op,string>>={[Op.Quiet]:'Take a quiet moment',[Op.Pickup]:'Collect the parcel',[Op.Breakfast]:'Have breakfast',[Op.Eat]:'Eat',[Op.Drink]:'Have a drink',[Op.Treat]:'Treat the condition',[Op.Wash]:'Wash up',[Op.Rest]:'Take a nap',[Op.Leisure]:'Enjoy a little quiet',[Op.Well]:'Water the garden',[Op.Ship]:'Post a parcel',[Op.Coffee]:'Make a coffee',[Op.Tidy]:'Tidy the kitchen',[Op.Toast]:'Make toast',[Op.CookSteak]:'Cook a meal',[Op.Bowl]:'Make a comfort bowl',[Op.Sandwich]:'Make a sandwich',[Op.Repair]:'Repair the house',[Op.Plant]:'Plant',[Op.Harvest]:'Gather the ready garden',[Op.Craft]:'Make',[Op.RestoreSoil]:'Restore the soil',[Op.BuildChair]:'Build a chair',[Op.BuildShelter]:'Build garden cover',[Op.Patch]:'Patch the house',[Op.BackupHeat]:'Light backup heat',[Op.MoveChair]:'Move the chair',[Op.Abandon]:'Clear a planting',[Op.CoverPlot]:'Cover a bed',[Op.DeepClean]:'Deep-clean the kitchen',[Op.QuietMain]:'Have an unhurried afternoon',[Op.Douse]:'Douse the flare',[Op.Shutdown]:'Turn off the stove',[Op.BraceRain]:'Brace the window',[Op.CoverRain]:'Cover against the rain',[Op.Shoo]:'Shoo the visitor',[Op.Bait]:'Share with the visitor',[Op.RawSteak]:'Eat emergency food',[Op.EnjoyFlower]:'Enjoy a flower'};

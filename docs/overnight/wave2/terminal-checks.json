@@ -1,0 +1,13 @@
+{
+  "scope": "Independent mocked canonical RPC with actual runtime pins, frozen job and funded budget helpers. No actual transaction, network, provider, key or credits.",
+  "report": [
+    {
+      "name": "prepared packet adopts canonical failure without fresh relay",
+      "result": "pass"
+    },
+    {
+      "name": "prepared packet adopts canonical owner expiry without fresh relay",
+      "result": "pass"
+    }
+  ]
+}

@@ -59,8 +59,8 @@ export function roosterCanvas(seed:string, pose:RoosterPose='idle'):HTMLCanvasEl
   return c;
 }
 
-export function roosterSvg(seed:string,size=96):string {
-  const grid=roosterGrid(seed);const rows:string[]=[];
+export function roosterSvg(seed:string,size=96,pose:RoosterPose='idle'):string {
+  const grid=roosterGrid(seed,pose);const rows:string[]=[];
   for(let y=0;y<24;y++)for(let x=0;x<24;x++){const v=grid[y*24+x];if(v)rows.push(`<rect x="${x+4}" y="${y+12}" width="1" height="1" fill="${PALETTE[v]}"/>`);}
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 40" width="${size}" height="${size*1.25}" shape-rendering="crispEdges">${rows.join('')}</svg>`;
 }

@@ -206,5 +206,7 @@
       "bytes": 3876,
       "sha256": "ec9e5ec2680b8ce57d113aaefe249fd9b0cdd19f0cc43c6a07d3803e97e99507"
     }
-  ]
+  ],
+  "captureCommit": "44b0463",
+  "captureNote": "Source identities at the wave1 capture; later waves deliberately evolve the candidate."
 }

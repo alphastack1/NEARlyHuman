@@ -14,7 +14,7 @@ contract V2LifeVerifier is IV2LifeVerifier {
     V2ActionModule public immutable actionModule;
     constructor(address module_){_check(module_.code.length>0);actionModule=V2ActionModule(module_);}
     uint256 private constant MAX=10_000;
-    function rulesHash() external pure returns(bytes32){return keccak256("nearlyhuman-v2-kernel-1");}
+    function rulesHash() external pure returns(bytes32){return keccak256("nearlyhuman-v2-kernel-2");}
     function initialize(bytes32 seed,uint8[3] calldata stats) external pure returns(bytes memory){
         _check(stats[0]<=5&&stats[1]<=5&&stats[2]<=5&&uint256(stats[0])+stats[1]+stats[2]==5);
         T.State memory s;s.version=2;s.seed=seed;s.alive=true;s.stats=stats;s.needs=[uint16(10000),8000,8000,8000,8000];s.inventory[0]=3;s.inventory[2]=3;return abi.encode(s);
@@ -128,7 +128,7 @@ contract V2LifeVerifier is IV2LifeVerifier {
     function _finish(T.Context memory c) private pure{if(!c.pickup){for(uint8 i;i<34;++i)if(c.kit&(uint64(1)<<i)!=0)_give(c.state,i,1);c.pickup=true;}}
     function transition(bytes calldata saved,bytes calldata encodedTrace,bytes calldata cert,bytes32 seed,uint64 kit,bool shipping) external view returns(bytes memory result,uint16 points){
         T.State memory s=_decode(saved);_check(s.alive);_kitCheck(s,kit);T.Trace memory trace=abi.decode(encodedTrace,(T.Trace));_check(encodedTrace.length<=4608&&keccak256(encodedTrace)==keccak256(abi.encode(trace))&&trace.steps.length<=16);
-        T.Context memory c=_newContext(s,seed,kit,shipping);if(trace.goal!=255){_check(trace.goal<=6);if(trace.goal!=s.goal){s.goal=trace.goal;s.goalCreatedDay=c.day;s.goalReviewDay=trace.goal==0?0:c.day>type(uint32).max-3?type(uint32).max:c.day+3;}}
+        T.Context memory c=_newContext(s,seed,kit,shipping);if(trace.goal!=255){_check(trace.goal<=6);if(trace.goal!=s.goal)s.goalCreatedDay=c.day;s.goal=trace.goal;s.goalReviewDay=trace.goal==0?0:c.day>type(uint32).max-3?type(uint32).max:c.day+3;}
         uint256 at;uint8 primary=uint8(1+(uint32(uint256(seed))%5)*10);
         for(uint8 slot=1;slot<=60&&c.state.alive;++slot){c.slot=slot;if(slot==primary)c=_admit(c,cert);if(c.day>1&&slot==31&&uint256(_draw(c.seed,c.day,31,"structural-exception"))*4000<4294967296)_kill(c,7);
             if(c.state.alive){uint8 op;if(at<trace.steps.length&&trace.steps[at].slot==slot){T.Step memory a=trace.steps[at++];c=actionModule.applyAction(c,a);op=a.op;}else if(at<trace.steps.length)_check(trace.steps[at].slot>slot);
