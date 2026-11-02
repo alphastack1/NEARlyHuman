@@ -39,14 +39,28 @@ export interface Candidate {
   inputs:Partial<Inventory>; energy:number; successChance:number; urgent?:boolean; dueDay?:number; dueSlot?:number;
   /** Mechanical risk, separate from model choice probability. */
   possibleFailures:string[];
+  /** Query-only day-plan option. Its action key remains a normal legal action. */
+  plan?:{kind:'project'|'unhurried';actionKey:string;scheduledSlot:number};
 }
 export interface DecisionSituation { episodes:Episode[]; restUses:number; leisureUses:number; lastRest:number; lastLeisure:number; chairMoved:boolean; minorUsed:boolean }
 export interface ChoiceContext { state:GameState; day:number; slot:number; phase:Phase; candidates:Candidate[]; recent:RecentAction[]; situation:DecisionSituation;
   /** Exact completed nonquiet receipts earlier this day; presentation is not memory. */
   earlierToday?:RecentAction[];
+  mode?:'day-plan'|'routine'; morningOptions?:MorningOption[];
+  dailyFocus?:{label:string;key:string;status:DailyFocus['status'];scheduledSlot:number};
+  pendingDelivery?:ItemId[];
 }
-export interface ModelChoice { key:string; probabilities?:Record<string,number>; provider?:string; model?:string; requestId?:string; usage?:unknown }
+export interface ModelChoice { key:string; probabilities?:Record<string,number>; provider?:string; model?:string; requestId?:string; usage?:unknown; morningKey?:string;morningProbabilities?:Record<string,number> }
 export type ChoiceProvider = (context:ChoiceContext) => Promise<ModelChoice|string>;
+export interface MorningOption {key:string;label:string;beforeActionKey?:string}
+export interface RecordedChoice {selected:string;candidates:Candidate[];probabilities?:Record<string,number>;provider?:string;model?:string;requestId?:string;situation?:DecisionSituation}
+export interface DailyFocus {
+  version:1;kind:'project'|'unhurried';
+  goal:{key:string;action:ActionId;target:TargetId;variant:string;label:string;inputs:Partial<Inventory>};
+  scheduledSlot:number;status:'planned'|'completed'|'failed'|'unavailable';attemptedSlot?:number;completedSlot?:number;
+  morning:MorningOption&{attemptedSlot?:number;skipped?:boolean};choice?:RecordedChoice;
+  morningChoice?:{selected:string;candidates:MorningOption[];probabilities?:Record<string,number>;provider?:string;model?:string;requestId?:string};
+}
 export interface StateChange { field:string; before:number|string|boolean|null; after:number|string|boolean|null }
 export interface RecordedEvent { kind:string; target?:TargetId; message:string; source?:string }
 export interface Receipt {
@@ -55,7 +69,8 @@ export interface Receipt {
   inputs:Partial<Inventory>; success:boolean; outcome:number;
   message:string; lines:[string,string]; events:RecordedEvent[]; changes:StateChange[];
   before:GameState; decisionSnapshot?:GameState; snapshot:GameState;
-  choice?:{ selected:string; candidates:Candidate[]; probabilities?:Record<string,number>; provider?:string; model?:string; requestId?:string; situation?:DecisionSituation };
+  choice?:RecordedChoice;
+  role?:'focus'|'delivery'|'routine'|'interlude';plan?:'morning'|'focus'|'delivery';
 }
 export type EpisodeKind = 'quiet'|'rain'|'fire'|'outage'|'seedEater'|'visitor'|'fixtureBreak'|'mishap'|'sickness'|'mood'|'washout';
 export interface Episode { kind:EpisodeKind; startSlot:number; boundary:number; target:TargetId; resolved:boolean; stock?:ItemId; shooTried?:boolean; exposureCovered?:boolean; lossDiverted?:boolean }
@@ -64,6 +79,8 @@ export interface DayContext {
   restUses:number; leisureUses:number; lastRest:number; lastLeisure:number; chairMoved:boolean;
   minorUsed:boolean; primary?:Episode; primaryIntroduced:boolean; primarySlot:number;
   taskFire?:Episode; events:RecordedEvent[]; modelChoices:number;
+  dailyFocus?:DailyFocus;pendingDelivery?:ItemId[];deliveryCollectedSlot?:number;deliverySettled?:'collected'|'estate';
+  morningActionDone?:boolean;routineAnchor?:TargetId;
 }
 export interface DayCheckpoint { context:DayContext; receipts:Receipt[] }
 export interface PrepareOptions {
@@ -74,5 +91,5 @@ export interface PrepareOptions {
   /** Canonical accepted request seed when provided by the chain adapter. */
   daySeed?:string;
 }
-export interface DayResult { version:1; day:number; baseDay:number; survived:boolean; finalState:GameState; state:GameState; receipts:Receipt[]; decisions:number; history:string; delivery:ItemId[]; summary:string[] }
+export interface DayResult { version:1; day:number; baseDay:number; survived:boolean; finalState:GameState; state:GameState; receipts:Receipt[]; decisions:number; history:string; delivery:ItemId[]; summary:string[];dailyFocus?:DailyFocus;startTarget?:TargetId;deliveryCollectedSlot?:number;deliverySettled?:'collected'|'estate' }
 export interface Identity { seed:string|bigint|number; name?:string; stats?:Stats }

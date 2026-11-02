@@ -1,0 +1,12 @@
+{
+  "at": "2026-11-02T03:08:26.352Z",
+  "scope": "Exact deployment artifact on local Anvil chain1337 only",
+  "tuple": "T01/mailbox/default/success",
+  "firstBytes": "0x23120001",
+  "historyBytes": 240,
+  "day": 2,
+  "level": 2,
+  "delivery": 7,
+  "settled": true,
+  "limitation": "EVM acceptance proves codec compatibility; detailed pickup/credit semantics remain authorized-relayer responsibility."
+}

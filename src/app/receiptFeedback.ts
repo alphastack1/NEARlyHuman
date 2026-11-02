@@ -1,4 +1,4 @@
-import { CONDITION_IDS, ITEM_CATALOG, ITEM_IDS, conditionLabel, type DayResult, type GameState, type ItemId, type Receipt } from '../domain';
+import { CONDITION_IDS, ITEM_CATALOG, ITEM_IDS, conditionLabel, isDeliveryCollection, type DayResult, type GameState, type ItemId, type Receipt } from '../domain';
 import type { IconName } from './Icons';
 
 export type Need = keyof GameState['needs'];
@@ -31,6 +31,7 @@ export function recordedChanges(receipt:Receipt):RecordedChange[] {
 }
 
 export function receiptMark(receipt:Receipt):{item?:ItemId;icon?:IconName} {
+ if(isDeliveryCollection(receipt))return {icon:'mail'};
  const item=ITEM_IDS.find(id=>receipt.inputs[id]);if(item)return {item};
  if(receipt.action==='T01')return {};
  if(receipt.action.startsWith('G'))return {icon:'leaf'};
@@ -46,6 +47,10 @@ export function receiptMark(receipt:Receipt):{item?:ItemId;icon?:IconName} {
 export function dayHighlights(result?:DayResult):string[] {
  if(!result?.survived)return [];
  const highlights:string[]=[],add=(line:string|undefined)=>{if(line&&!highlights.includes(line)&&highlights.length<3)highlights.push(line);};
+ const focus=result.dailyFocus;
+ const main=focus?.kind==='project'&&focus.attemptedSlot!==undefined?result.receipts.find(receipt=>receipt.slot===focus.attemptedSlot):undefined;
+ if(main)add(main.lines[0]);
+ else if(focus?.status==='unavailable')add(result.receipts.flatMap(receipt=>receipt.events).find(event=>event.source==='focus')?.message);
  const successful=result.receipts.filter(receipt=>receipt.success&&receipt.snapshot.alive);
  const accomplishment=successful.find(receipt=>{
    const before=receipt.before.house,after=receipt.snapshot.house;

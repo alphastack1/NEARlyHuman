@@ -3,7 +3,7 @@ import { encodeAbiParameters, keccak256, toHex, type Address, type Hex } from 'v
 import { nearlyHumanAbi } from '../src/chain/abi';
 import { deployments } from '../src/chain/deployments';
 import { decodeDelivery } from '../src/chain/permit';
-import { ITEM_IDS, cloneState, packState, prepareDay, unpackState, type DayCheckpoint, type DayContext, type DayResult, type GameState, type ModelChoice, type Receipt } from '../src/domain';
+import { ITEM_IDS, cloneState, isDeliveryCollection, MAX_MODEL_DECISIONS, packState, PICKUP_BY_SLOT, prepareDay, unpackState, type DayCheckpoint, type DayContext, type DayResult, type GameState, type ModelChoice, type Receipt } from '../src/domain';
 import type { JobView } from '../src/app/api';
 import { acceptReservation, DECISION_CONFIG, DECISION_PARAMETERS, finishReservation, reconcileAdmission } from './admission';
 import { blockUnavailable, canonicalRequest, chainOutcome, checkedAddress, checkedRequest, checkedToken, connection, expiryIntent, failureIntent, finalizeIntent, pinnedRead, readAcceptedTransaction, readRawRooster, RelayBusy, terminalTransaction, ServiceError, verifyConnection, type RelayJournal } from './chain';
@@ -27,7 +27,7 @@ export interface JobControl {
   operation?:'mint'|'day';permitExpiresAt?:number;ownerNonce?:number;retrySafe?:boolean;orphanedAcceptance?:boolean;acceptanceConflict?:boolean;
   unacceptedProof?:{blockNumber:string;blockHash:Hex;timestamp:number;confirmedNonce?:number};
 }
-interface CheckpointBlob { context:DayContext; receipt:Receipt }
+interface CheckpointBlob { context:DayContext; receipt?:Receipt }
 interface ReplayPacket { version:1; requestId:Hex; inputDigest:Hex; seed:Hex; decisionConfig:Hex; result:DayResult; diagnostics:string[] }
 interface ReplayIndex { day:number; requestId:Hex; packet:string; commitment:Hex; supersededAt?:number }
 interface TokenPackets { latest?:number; days:Record<string,ReplayIndex> }
@@ -196,7 +196,7 @@ async function loadCheckpoint(c:JobControl):Promise<DayCheckpoint|undefined> {
   if(!c.checkpoint)return;
   const cp=await storage().get<CheckpointBlob>(c.checkpoint);if(!cp)throw new CanonicalChanged('Missing checkpoint.');
   const receipts:Receipt[]=[];
-  for(let i=0;i<c.receiptKeys.length;i+=10){const part=await Promise.all(c.receiptKeys.slice(i,i+10).map(k=>storage().get<CheckpointBlob>(k)));for(const p of part){if(!p)throw new CanonicalChanged('Missing receipt.');receipts.push(p.value.receipt);}}
+  for(let i=0;i<c.receiptKeys.length;i+=10){const part=await Promise.all(c.receiptKeys.slice(i,i+10).map(k=>storage().get<CheckpointBlob>(k)));for(const p of part){if(!p?.value.receipt)throw new CanonicalChanged('Missing receipt.');receipts.push(p.value.receipt);}}
   if(receipts.length!==c.slot||cp.value.context.slot!==c.slot||cp.value.context.seed!==c.seed)throw new CanonicalChanged('Checkpoint mismatch.');
   return {context:cp.value.context,receipts};
 }
@@ -244,6 +244,7 @@ export async function runJob(value:string) {
         if(Date.now()-started>530_000)throw new HandOff();
         const input=buildDecision(context),inputHash=createHash('sha256').update(JSON.stringify(input)).digest('hex');
         const cached=control.allowances[context.slot]?.answer;
+        if(control.spentMicroUSD>60_000)throw new InferenceError('provider_price_changed');
         if(cached){if(cached.inputHash!==inputHash)throw new CanonicalChanged('Decision inputs changed.');return cached.choice;}
         for(let attempt=0;attempt<3;attempt++){
           await assertPending(control,110);let sent=false;
@@ -254,7 +255,8 @@ export async function runJob(value:string) {
             });
             const exchangeKey=await immutable(`diagnostics/${id}/outputs`,{at:Date.now(),slot:context.slot,...reply.exchange});
             await edit(c=>{const a=c.allowances[context.slot]!;a.outputs.push(exchangeKey);a.answer={inputHash,choice:reply.choice,exchange:exchangeKey};
-              if(reply.exchange.inputTokens>0)c.spentMicroUSD+=Math.max(0,reply.exchange.costMicroUSD)-sendReserve;});
+              const cost=reply.exchange.inputTokens>0?Math.max(0,reply.exchange.costMicroUSD):Math.max(sendReserve,reply.exchange.costMicroUSD);
+              c.spentMicroUSD+=cost-sendReserve;});
             if(control.spentMicroUSD>60_000)throw new InferenceError('provider_price_changed');
             return reply.choice;
           }catch(error){
@@ -266,9 +268,12 @@ export async function runJob(value:string) {
         }
         throw new InferenceError('attempt_limit');
       },{...DECISION_PARAMETERS,daySeed:control.seed,resume,onCheckpoint:async checkpoint=>{
-        const receipt=checkpoint.receipts.at(-1)!;
-        const key=await immutable(`checkpoints/${id}`,{context:checkpoint.context,receipt});
-        await edit(c=>{if(checkpoint.context.slot!==c.slot+1)throw new CanonicalChanged('Checkpoint order changed.');c.checkpoint=key;c.receiptKeys.push(key);c.slot=checkpoint.context.slot;c.decisions=checkpoint.context.modelChoices;c.latestChoice=receipt.choice;});
+        const receipt=checkpoint.receipts.at(-1);
+        const key=await immutable(`checkpoints/${id}`,{context:checkpoint.context,...(receipt?{receipt}:{})});
+        await edit(c=>{
+          if(checkpoint.context.slot===0){if(c.slot!==0||c.receiptKeys.length||checkpoint.receipts.length||!checkpoint.context.dailyFocus)throw new CanonicalChanged('Plan checkpoint order changed.');c.checkpoint=key;c.decisions=checkpoint.context.modelChoices;c.latestChoice=checkpoint.context.dailyFocus.choice;return;}
+          if(checkpoint.context.slot!==c.slot+1||!receipt)throw new CanonicalChanged('Checkpoint order changed.');c.checkpoint=key;c.receiptKeys.push(key);c.slot=checkpoint.context.slot;c.decisions=checkpoint.context.modelChoices;c.latestChoice=receipt.choice;
+        });
         if(Date.now()-started>530_000&&checkpoint.context.state.alive&&checkpoint.context.slot<60)throw new HandOff();
       }});
       validateResult(control,result);
@@ -299,6 +304,12 @@ export async function runJob(value:string) {
 
 function validateResult(c:JobControl,result:DayResult) {
   if(result.baseDay!==c.base.day||result.day!==c.day||result.finalState.day!==c.day||result.finalState.seed!==c.base.seed||result.finalState.name!==c.base.name||digest(result.finalState.stats)!==digest(c.base.stats)||result.finalState.level!==c.base.level+(result.finalState.alive?1:0)||result.receipts.length<1||result.receipts.length>60||result.finalState.alive&&result.receipts.length!==60||result.history.length!==2+result.receipts.length*8)throw new CanonicalChanged('Prepared result mismatch.');
+  const pickups=result.receipts.filter(isDeliveryCollection),focus=result.dailyFocus,undertakings=result.receipts.filter(receipt=>receipt.role==='focus');
+  if(!focus||focus.version!==1||result.decisions>MAX_MODEL_DECISIONS||undertakings.length>1||undertakings.some(receipt=>receipt.action!==focus.goal.action||receipt.target!==focus.goal.target||receipt.variant!==focus.goal.variant))throw new CanonicalChanged('Prepared day-plan mismatch.');
+  if(result.delivery.length){
+    if(result.deliverySettled==='collected'){if(pickups.length!==1||result.deliveryCollectedSlot!==pickups[0]!.slot||result.deliveryCollectedSlot>PICKUP_BY_SLOT)throw new CanonicalChanged('Prepared pickup mismatch.');}
+    else if(result.deliverySettled!=='estate'||result.finalState.alive||pickups.length)throw new CanonicalChanged('Prepared delivery settlement mismatch.');
+  }else if(pickups.length||result.deliverySettled)throw new CanonicalChanged('Unexpected prepared delivery.');
   packState(result.finalState);
 }
 type Edit=(apply:(c:JobControl)=>void)=>Promise<JobControl>;

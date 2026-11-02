@@ -8,6 +8,7 @@ export const HOUSE_ROOMS = [
  { id:'living',label:'Living room',x:128,y:338 },
  { id:'wash',label:'Washroom',x:332,y:328 },
  { id:'garden',label:'Garden',x:432,y:336 },
+ { id:'yard',label:'Front yard',x:352,y:512 },
 ] as const;
 export type HouseRoom = typeof HOUSE_ROOMS[number]['id'];
 export interface HouseView { exploring:boolean; room?:HouseRoom }

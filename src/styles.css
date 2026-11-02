@@ -1251,11 +1251,6 @@ input::placeholder {
   margin: 0;
 }
 
-.progress-ceiling {
-  font-size: clamp(7px,1.6cqw,11px);
-  color: #96aeb8;
-}
-
 .leave-copy {
   font-size: clamp(8px,1.9cqw,13px);
   color: #b3c7ca;
@@ -2570,7 +2565,7 @@ input::placeholder {
   left: -3px;
   right: -3px;
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 3px;
   padding: 5px;
   background: #152e3e;
@@ -2596,6 +2591,11 @@ input::placeholder {
 
 .house-room-strip .selected { border-color: var(--yellow); background: #3d4a3c; color: #fff0ad; }
 .house-room-strip svg { color: #c0d39b; }
+.house-room-strip button>span { min-width: 0; max-width: 100%; overflow-wrap: anywhere; }
+
+@container (min-width: 600px) {
+  .house-room-strip { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+}
 
 .house-peek {
   display: flex;

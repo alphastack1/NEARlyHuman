@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { ACTION_IDS, ITEM_IDS, OUTCOME, VARIANT_IDS, applyAction, bedtime, condition, createDayContext, createInitialState, decodeHistory, fireResponseBoundary, initialPackedState, introduceEpisode, isActive, legalCandidates, packState, phaseBoundary, prepareDay, randomAt, rescueFeasible, seedHex, shortlistCandidates, starterGifts, unpackState, type ChoiceProvider, type DayCheckpoint } from './index';
+import { ACTION_IDS, ITEM_IDS, OUTCOME, VARIANT_IDS, applyAction, bedtime, condition, createDayContext, createInitialState, decodeHistory, fireResponseBoundary, focusOptions, initialPackedState, introduceEpisode, isActive, isDeliveryCollection, legalCandidates, packState, phaseBoundary, prepareDay, randomAt, rescueFeasible, seedHex, shortlistCandidates, starterGifts, unpackState, type ChoiceProvider, type DayCheckpoint } from './index';
 
 const idle:ChoiceProvider=async c=>(c.candidates.find(x=>x.action==='T01')||c.candidates[0]!).key;
 const care:ChoiceProvider=async c=>(c.candidates.find(x=>x.action==='H02')||c.candidates.find(x=>x.urgent)||c.candidates.find(x=>x.action==='H01')||c.candidates[0]!).key;
@@ -12,8 +12,8 @@ test('birth pack, distinct gifts and192-byte cold restoration agree',()=>{
 test('a provider failure cannot credit a delivery or change the canonical base',async()=>{
   const s=createInitialState(8);s.day=1;s.level=1;const before=JSON.stringify(s);await assert.rejects(prepareDay(s,['medicine'],async()=>{throw Error('provider down');}));assert.equal(JSON.stringify(s),before);
 });
-test('quiet sixty-slot days retain every boundary without fake extra inventory',async()=>{
-  const s=bare();const r=await prepareDay(s,[],idle,{incidentRate:0,blackSwanRate:0});assert.equal(r.receipts.length,60);assert.equal(r.finalState.day,1);assert.equal(r.finalState.level,1);assert.equal(r.finalState.needs.nutrition,7000);assert.equal(r.finalState.needs.hydration,6000);assert.equal(r.finalState.needs.morale,8380);assert.equal((r.history.length-2)/2,240);assert.equal(decodeHistory(r.history).length,60);assert.deepEqual(r.finalState.inventory,s.inventory);assert.ok(new Set(r.receipts.map(x=>x.target)).size>=4);assert.ok(r.receipts.every((x,i)=>i===0||x.target!==r.receipts[i-1]!.target));
+test('quiet sixty-slot days retain boundaries while uneventful time stays local',async()=>{
+  const s=bare();const r=await prepareDay(s,[],idle,{incidentRate:0,blackSwanRate:0});assert.equal(r.receipts.length,60);assert.equal(r.finalState.day,1);assert.equal(r.finalState.level,1);assert.equal(r.finalState.needs.nutrition,7000);assert.equal(r.finalState.needs.hydration,6000);assert.equal(r.finalState.needs.morale,8380);assert.equal((r.history.length-2)/2,240);assert.equal(decodeHistory(r.history).length,60);assert.deepEqual(r.finalState.inventory,s.inventory);assert.ok(r.decisions<=8);assert.ok(r.receipts.some((x,i)=>i>0&&x.target===r.receipts[i-1]!.target));assert.ok(r.receipts.filter(x=>x.role==='interlude').every(x=>!x.choice));assert.ok(r.receipts.some(x=>x.action==='T01'&&x.choice),'Jev still chooses mundane moments');
 });
 test('current-day milk rescue is protected from outage stock loss and does not need >30 at final bedtime',()=>{
   const s=bare();s.day=1;s.level=1;s.needs.nutrition=2000;s.inventory.milk=1;s.conditions=[{kind:'foodDeficit',severity:1,onsetDay:1,dueDay:2}];const ctx=createDayContext(s);ctx.slot=1;ctx.primarySlot=1;
@@ -62,4 +62,52 @@ test('active storm responses survive shortlist alongside treatment and fixed mod
   const s=bare();s.day=1;s.level=1;s.needs={health:100,nutrition:1000,hydration:1000,energy:5000,morale:1000};for(const id of ITEM_IDS)s.inventory[id]=1;s.house.damage.window=true;s.house.mess=2;
   s.conditions=[{kind:'wound',severity:2,onsetDay:1,dueDay:2},{kind:'illness',severity:1,onsetDay:1,dueDay:3},{kind:'infection',severity:1,onsetDay:1,dueDay:2},{kind:'contaminatedBody',severity:1,onsetDay:1,dueDay:0},{kind:'contaminatedSurface',severity:1,onsetDay:1,dueDay:0}];
   const ctx=createDayContext(s);ctx.slot=9;ctx.seed=seedHex(1);ctx.primary={kind:'rain',startSlot:1,boundary:10,target:'window',stock:'water',resolved:false};const offered=shortlistCandidates(ctx);assert.ok(offered.length<=24);for(const action of ['H08','H10','H12','H13','H14'])assert.ok(offered.some(c=>c.action===action&&(action==='H14'||c.target==='window')),action);assert.ok(offered.find(c=>c.action==='H14')?.dueSlot===10);for(const variant of ['wound','illness','infection'])assert.ok(offered.some(c=>c.action==='H02'&&c.variant===variant));
+});
+
+test('one planned undertaking follows a chosen existing-stock coffee and physical pickup',async()=>{
+  const s=bare();s.day=1;s.level=1;s.needs={health:10000,nutrition:7500,hydration:6700,energy:8500,morale:8000};s.inventory.coffee=1;s.inventory.bread=2;s.inventory.water=1;const original=JSON.stringify(s),calls:number[]=[];
+  const result=await prepareDay(s,['wood','toolkit','apple_seeds'],async context=>{
+    calls.push(context.slot);
+    if(context.mode==='day-plan'){
+      assert.equal(context.state.inventory.wood,0);assert.equal(context.state.inventory.toolkit,0);assert.deepEqual(context.pendingDelivery,['wood','toolkit','apple_seeds']);
+      assert.ok(context.morningOptions?.some(option=>option.key==='coffee-first'));
+      return{key:context.candidates.find(c=>c.action==='H09'&&c.target==='chairA')!.key,morningKey:'coffee-first',provider:'fixture'};
+    }
+    return{key:(context.candidates.find(c=>c.urgent)||context.candidates.find(c=>c.action==='T01')||context.candidates[0]!).key,provider:'fixture'};
+  },{incidentRate:0,blackSwanRate:0});
+  assert.equal(result.receipts[0]!.action,'K05');assert.equal(result.receipts[0]!.before.inventory.coffee,1);assert.equal(result.receipts[0]!.snapshot.inventory.wood,0);
+  const pickup=result.receipts.filter(isDeliveryCollection);assert.equal(pickup.length,1);assert.equal(pickup[0]!.slot,2);assert.equal(pickup[0]!.before.inventory.wood,0);assert.equal(pickup[0]!.snapshot.inventory.wood,1);assert.equal(result.deliveryCollectedSlot,2);assert.equal(result.deliverySettled,'collected');
+  assert.equal(result.receipts[2]!.target,'store');assert.equal(result.receipts[2]!.role,'interlude');assert.equal(result.receipts[2]!.choice,undefined);
+  const focus=result.receipts.filter(receipt=>receipt.role==='focus');assert.equal(focus.length,1);assert.equal(focus[0]!.action,'H09');assert.equal(focus[0]!.target,'chairA');assert.equal(result.dailyFocus?.attemptedSlot,focus[0]!.slot);assert.equal(result.dailyFocus?.status,focus[0]!.success?'completed':'failed');
+  assert.equal(result.finalState.inventory.wood,0);assert.equal(result.finalState.inventory.toolkit,0);assert.equal(result.finalState.inventory.apple_seeds,1);assert.equal(result.startTarget,'bed');assert.equal(calls.length,result.decisions);assert.ok(calls.length<=8);assert.equal(calls.filter(slot=>slot===0).length,1);assert.equal(JSON.stringify(s),original);
+});
+
+test('a slot-zero plan checkpoint resumes without buying or changing that plan',async()=>{
+  const s=bare();s.day=1;s.level=1;s.needs.morale=7500;s.inventory.coffee=1;
+  const provider:ChoiceProvider=async context=>({key:context.candidates[0]!.key,...(context.mode==='day-plan'?{morningKey:'look-first'}:{})});
+  const full=await prepareDay(s,['wood','toolkit'],provider,{incidentRate:0,blackSwanRate:0});let checkpoint:DayCheckpoint|undefined,plans=0;
+  await assert.rejects(prepareDay(s,['wood','toolkit'],async context=>{if(context.mode==='day-plan')plans++;return provider(context);},{incidentRate:0,blackSwanRate:0,onCheckpoint:value=>{if(value.context.slot===0){checkpoint=value;throw Error('stop after durable plan');}}}));
+  assert.ok(checkpoint);assert.equal(plans,1);assert.equal(checkpoint.receipts.length,0);assert.equal(checkpoint.context.state.inventory.wood,0);
+  const resumed=await prepareDay(s,['wood','toolkit'],async context=>{assert.notEqual(context.mode,'day-plan');return provider(context);},{incidentRate:0,blackSwanRate:0,resume:checkpoint});
+  assert.equal(resumed.history,full.history);assert.equal(packState(resumed.finalState),packState(full.finalState));assert.deepEqual(resumed.dailyFocus,full.dailyFocus);assert.equal(resumed.decisions,full.decisions);
+});
+
+test('unopened accepted supplies remain with a terminal estate without a collection claim',async()=>{
+  const s=bare();s.day=1;s.level=1;s.needs.health=0;
+  const result=await prepareDay(s,['medicine','wood'],async context=>({key:context.candidates[0]!.key,morningKey:'look-first'}),{incidentRate:0,blackSwanRate:0});
+  assert.equal(result.finalState.alive,false);assert.equal(result.finalState.level,1);assert.equal(result.deliverySettled,'estate');assert.equal(result.deliveryCollectedSlot,undefined);assert.equal(result.receipts.filter(isDeliveryCollection).length,0);assert.equal(result.finalState.inventory.medicine,1);assert.equal(result.finalState.inventory.wood,1);assert.ok(result.receipts[0]!.events.some(event=>event.kind==='delivery'&&event.source==='estate'&&event.message.includes('unopened')));
+});
+
+test('main undertakings use real ripe plants and do not shelter an empty garden',()=>{
+  const s=bare();s.inventory.wood=1;s.inventory.toolkit=1;s.inventory.umbrella=1;s.inventory.apple_seeds=1;s.needs.nutrition=5000;
+  let ctx=createDayContext(s),options=focusOptions(ctx);assert.ok(options.some(c=>c.action==='H09'&&c.target==='chairA'));assert.ok(!options.some(c=>c.action==='H09'&&c.target==='gardenShelter'));assert.ok(!options.some(c=>c.action==='G06'));assert.ok(!options.some(c=>c.action==='G05'));
+  ctx.state.plots[0]={plant:'apple',growth:3,moisture:0,dryDays:0,soilBlocked:false,pendingBonus:false};options=focusOptions(ctx);assert.ok(options.some(c=>c.action==='G05'&&c.variant==='apple'));
+  ctx.state.plots[0].growth=2;assert.ok(!focusOptions(ctx).some(c=>c.action==='G05'&&c.target==='plot1'));
+});
+
+test('an unexpected urgent fire can interrupt the morning pickup plan',async()=>{
+  const s=bare();s.day=1;s.level=1;s.inventory.water=1;s.recent=[{action:'K01',target:'stove',variant:'toast',success:true}];let seed='';
+  for(let value=5;value<5000;value+=5){const candidate=seedHex(value);if(Math.floor(randomAt(candidate,2,1,'primary-family')*10)===1){seed=candidate;break;}}assert.ok(seed);
+  const result=await prepareDay(s,['wood','toolkit'],async context=>({key:(context.mode==='day-plan'?context.candidates[0]:context.candidates.find(c=>c.action==='H16')||context.candidates.find(c=>c.urgent)||context.candidates.find(c=>c.action==='T01')||context.candidates[0])!.key,morningKey:'collect-first'}),{incidentRate:1,blackSwanRate:0,daySeed:seed});
+  assert.equal(result.receipts[0]!.action,'H16');assert.equal(result.receipts[0]!.decisionSnapshot?.house.fire,'flame');assert.equal(result.receipts[0]!.snapshot.house.fire,'none');assert.equal(result.deliveryCollectedSlot,2);assert.equal(result.receipts[1]!.role,'delivery');
 });

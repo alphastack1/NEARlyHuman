@@ -1,0 +1,15 @@
+{
+  "at": "2026-11-02T03:05:06.754Z",
+  "token": 1,
+  "onchainSeed": "0x0db2c4262ae582911e4a60723542392ce09385201e6af875f65a89d7da5ce508",
+  "metadataName": "BOK #1",
+  "imageURL": "https://nearlyhuman.netlify.app/api/nft/46630/1/image.svg",
+  "hostedSVGMatchesCurrentGenerator": true,
+  "svgSha256": "badc289fd9c45a799e672588c83da082812ab2bf3fa43ee160a6be7353e50f6e",
+  "traits": {
+    "body": 8,
+    "wing": 14,
+    "headgear": 4,
+    "accent": 5
+  }
+}

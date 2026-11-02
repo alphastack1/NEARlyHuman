@@ -1,0 +1,18 @@
+{
+  "at": "2026-11-02T03:04:37.012Z",
+  "chainId": 46630,
+  "collection": "0x998551395f8a0c4ebd1f883b8c18a41d2cecabfb",
+  "codeHash": "0xb0344d8faa4f4c47b56d40fb9126f41009593e7a26a66b3f7fea16ca2acb19f1",
+  "recordedHashMatches": true,
+  "compiledRuntimeMatchesOutsideImmutableFields": true,
+  "sourceHashMatches": true,
+  "owner": "0x131C15fD2d9151F361213d8e8BC2a188Dc0149c6",
+  "quoteSigner": "0x3c63FD61B244b3B3290c74993F603816c6144C26",
+  "relayer": "0x3c63FD61B244b3B3290c74993F603816c6144C26",
+  "treasury": "0x131C15fD2d9151F361213d8e8BC2a188Dc0149c6",
+  "testnet": true,
+  "totalSupply": "4",
+  "artSeed1": "0x0db2c4262ae582911e4a60723542392ce09385201e6af875f65a89d7da5ce508",
+  "name1": "BOK",
+  "readOnly": true
+}

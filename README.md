@@ -15,7 +15,7 @@ Use Node 22.12 or later, install with `npm ci`, then run `npm run dev`. Open `ht
 ## How it works
 
 - The wallet authorizes a mint or next-day request using a short-lived signed quote. The service reserves AI budget, relay gas and a worker slot before issuing that quote.
-- Jev receives the actual state and finite legal choices through NEAR AI's `/v1/systemone` endpoint. It can use supplied items as it chooses. Deterministic steps do not buy model calls.
+- Jev receives the actual state and finite legal choices through NEAR AI's `/v1/systemone` endpoint. It plans one substantial undertaking and a morning order, then chooses smaller care routines. The rooster walks outside to collect supplied items before using them. Quiet local time does not buy model calls.
 - A fenced, checkpointed worker prepares the complete day, stores its replay packet and commits the packed state, compact history and replay hash onchain.
 - The phone-first Phaser house follows the rooster through recorded activities. Pause, inspect, seek and skip affect presentation only.
 - Operational failures are recorded without advancing the biological save. A retry is a fresh request. Transactions are not deleted or refunded. Pending requests lock transfers; expired requests have a direct onchain release path.
@@ -35,6 +35,8 @@ The service is a trusted relay. Jev is called through NEAR AI; this integration 
 The [service guide](docs/service.md), [contract guide](docs/chain.md), [domain notes](docs/domain-notes.md), [asset provenance](docs/assets.md) and [sprint record](docs/SPRINT_RECORD.md) explain decisions and verification. The [refinement audit](docs/UX_AUDIT.md), [screenshot gallery](docs/ux-audit/index.html), [UI coverage ledger](docs/UI_COVERAGE.md) and [recovery witnesses](docs/RECOVERY_AUDIT.md) record the later critique and repair loops. The [gameplay and animation review](docs/GAMEPLAY_REVIEW.md) and its [before/after motion gallery](docs/gameplay-review/index.html) cover the subsequent fun and presentation pass. The first actual day completed sixty slots using twelve Jev calls for a recorded **$0.000707**; this is one measured run, not a fixed future price or balance claim.
 
 ## Design references
+
+The [continuous-day review](docs/DAILY_LIFE_REVIEW.md) and [current screenshot gallery](docs/daily-life-review/index.html) cover the front yard, physical mailbox trip, one main undertaking, smaller care moments and the verified six-call NORI day now used for the opening visit. The [contract and artwork review](docs/CONTRACT_AND_ART_REVIEW.md) records the fresh lifecycle/adversarial checks and explains seeded procedural appearances.
 
 The [cartridge opening review](docs/CARTRIDGE_OPENING_REVIEW.md) and [actual-build motion/screenshot gallery](docs/opening-review/index.html) cover the selected House Wakes Up sequence, full-browser room, responsive camera and input/startup refinement waves. Open the title explicitly with [the intro link](https://nearlyhuman.netlify.app/?intro=1), or Options → Title screen.
 

@@ -1,0 +1,242 @@
+{
+  "at": "2026-11-02T05:10:21.386Z",
+  "sourceStage": "Compiled candidate index-D6lyQZGL.js, before final renderer-only same-seat refinement.",
+  "provenance": "Actual compiled App, natural clock, canonical saved NORI#4 day3 preview; no packet override, renderer injection, controlled clock, seek, API writes or paid action. Log was opened only after full natural ending and a separate read-only replay restart.",
+  "preview": "/assets/preview/nori-day3-05de911accb2.json",
+  "expectedHash": "05de911accb2cf50cb519ae90722cfee084b7b808e38669c16bc2db956b6e721",
+  "loadedHash": "05de911accb2cf50cb519ae90722cfee084b7b808e38669c16bc2db956b6e721",
+  "viewport": [
+    390,
+    844
+  ],
+  "durationMs": 70257,
+  "final": {
+    "body": "NORI\nLV03\nVISIT\nSAVED03\nRooms\n▾\nSettled in for the night.\nNearly human.\nTESTNET\nHatch yours\nYour home",
+    "pips": {
+      "health": 5,
+      "nutrition": 2,
+      "hydration": 3,
+      "energy": 5,
+      "morale": 4
+    }
+  },
+  "status": {
+    "body": "NORI\nLV03\nVISIT\nSAVED03\nRooms\n▾\nSettled in for the night.\nNearly human.\nTESTNET\nHatch yours\nYour home\nSAVED DAY 3\n\nNORI\n\nHealth\n100\nFood\n45\nWater\n67\nEnergy\n100\nMorale\n87.66\n1\n1\n1\n1\n1\n1\nPlot 1\nRose\nGrowth 0/2 · Water 0/2\n›\nPlot 2\nEmpty\nWater 0/2\n›\nBack",
+    "needs": [
+      {
+        "label": "Health",
+        "value": "100"
+      },
+      {
+        "label": "Food",
+        "value": "45"
+      },
+      {
+        "label": "Water",
+        "value": "67"
+      },
+      {
+        "label": "Energy",
+        "value": "100"
+      },
+      {
+        "label": "Morale",
+        "value": "87.66"
+      }
+    ],
+    "stock": [
+      "Water: 1 stored. Details",
+      "Wood: 1 stored. Details",
+      "Hammer & Nails: 1 stored. Details",
+      "Umbrella: 1 stored. Details",
+      "Soap: 1 stored. Details",
+      "Compost: 1 stored. Details"
+    ],
+    "plots": [
+      "Plot 1RoseGrowth 0/2 · Water 0/2›",
+      "Plot 2EmptyWater 0/2›"
+    ]
+  },
+  "allOriginalIndices": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35,
+    36,
+    37,
+    38,
+    39,
+    40,
+    41,
+    42,
+    43,
+    44,
+    45,
+    46,
+    47,
+    48,
+    49,
+    50,
+    51,
+    52,
+    53,
+    54,
+    55,
+    56,
+    57,
+    58,
+    59,
+    60
+  ],
+  "meaningfulEventSequence": [
+    {
+      "t": 510,
+      "event": "Collecting the morning delivery "
+    },
+    {
+      "t": 7341,
+      "event": "Collected the delivery. All accounted for."
+    },
+    {
+      "t": 7915,
+      "event": "Bringing the delivery home. Back to the pantry."
+    },
+    {
+      "t": 14310,
+      "event": "Putting the supplies away. "
+    },
+    {
+      "t": 14821,
+      "event": "Supplies put away. "
+    },
+    {
+      "t": 15448,
+      "event": "A quiet stretch. The house carries on."
+    },
+    {
+      "t": 18070,
+      "event": "Drinking water "
+    },
+    {
+      "t": 19679,
+      "event": "Drank some water. A sensible little sip."
+    },
+    {
+      "t": 21210,
+      "event": "A quiet stretch. The house carries on."
+    },
+    {
+      "t": 23916,
+      "event": "Relaxing in the living room "
+    },
+    {
+      "t": 28131,
+      "event": "Sat like a human. Nearly."
+    },
+    {
+      "t": 29663,
+      "event": "A quiet stretch. The house carries on."
+    },
+    {
+      "t": 32223,
+      "event": "Relaxing in the living room "
+    },
+    {
+      "t": 33758,
+      "event": "Sat like a human. Nearly."
+    },
+    {
+      "t": 35295,
+      "event": "A quiet stretch. The house carries on."
+    },
+    {
+      "t": 37848,
+      "event": "Sit for a while "
+    },
+    {
+      "t": 38874,
+      "event": "Sat for a little while. Comfortably ordinary."
+    },
+    {
+      "t": 39389,
+      "event": "A quiet stretch. The house carries on."
+    },
+    {
+      "t": 41435,
+      "event": "Planting rose seeds in plot 1 "
+    },
+    {
+      "t": 53782,
+      "event": "Planted rose seeds. Something to look after."
+    },
+    {
+      "t": 56387,
+      "event": "A quiet stretch. The house carries on."
+    },
+    {
+      "t": 59457,
+      "event": "Resting in bed "
+    },
+    {
+      "t": 64110,
+      "event": "Had a little rest. Rest is important."
+    },
+    {
+      "t": 65647,
+      "event": "A quiet stretch. Resting at home."
+    },
+    {
+      "t": 68208,
+      "event": "Another little day. Nearly human."
+    },
+    {
+      "t": 70257,
+      "event": "Settled in for the night. Nearly human."
+    }
+  ],
+  "clip": {
+    "frames": 698,
+    "durationSeconds": 27.866739988327026,
+    "path": "../natural-morning.webm"
+  },
+  "images": {
+    "mailbox": "../images/natural-mailbox390.png",
+    "parcel": "../images/natural-parcel390.png",
+    "work": "../images/natural-work390.png",
+    "bed": "../images/natural-bed390.png"
+  },
+  "errors": [],
+  "writes": [],
+  "boundary": "Complete natural viewing witness from compiled index-D6lyQZGL.js, before the final seated-contact-only correction. Its morning, project and bed stills are unaffected by that correction. This is replay of a separately verified saved day, not a new inference or settlement and not a device performance benchmark."
+}

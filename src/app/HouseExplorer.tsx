@@ -3,7 +3,7 @@ import type { GameState, TargetId } from '../domain';
 import { houseInfo } from './houseInfo';
 import { Icon, type IconName } from './Icons';
 
-const roomIcons:Record<HouseRoom,IconName>={kitchen:'food',bedroom:'energy',living:'morale',wash:'water',garden:'leaf'};
+const roomIcons:Record<HouseRoom,IconName>={kitchen:'food',bedroom:'energy',living:'morale',wash:'water',garden:'leaf',yard:'leaf'};
 
 export function HouseExplorer({state,view,peek,lines,roomsOpen,onRoomsOpenChange,onRoom,onFollow,onDetails,onWatch}:{
  state:GameState;view:{exploring:boolean;room?:HouseRoom};peek?:TargetId;lines:[string,string];

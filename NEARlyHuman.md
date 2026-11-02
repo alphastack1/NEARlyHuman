@@ -2,6 +2,8 @@
 
 Status: design baseline revised after twelve full-guide critiques, with visual reference VR-01 selected by the owner. The scene map and 99-board/215-panel mockup package remain the design references. A working testnet build and subsequent UX/recovery audit are now recorded separately in [SPRINT_RECORD.md](docs/SPRINT_RECORD.md), [UI_COVERAGE.md](docs/UI_COVERAGE.md), [RECOVERY_AUDIT.md](docs/RECOVERY_AUDIT.md) and [assets.md](docs/assets.md). Those records distinguish actual hosted play, controlled authority scenarios and unexecuted boundaries; the mockups themselves are not execution evidence. The owner has deferred mainnet until testnet testing and refinement are finalized.
 
+Current owner-requested refinement: one Jev-chosen substantial undertaking per day, smaller care and mundane moments, continuous physical walking, and a front-yard mailbox trip before delivery is available. The [continuous-day review](docs/DAILY_LIFE_REVIEW.md), [actual screenshot gallery](docs/daily-life-review/index.html) and [contract/art review](docs/CONTRACT_AND_ART_REVIEW.md) describe the implementation and verified NORI day. Sixty logical history slots remain for biology; they are not sixty model calls or equally large player-facing actions. The original baseline below retains its historical design assumptions where those execution records document a change.
+
 Owner: Enzo Smith.
 
 Prepared: October 31, 2026, using the Asia/Bangkok calendar.

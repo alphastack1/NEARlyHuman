@@ -1,12 +1,12 @@
 # Domain implementation
 
-The serializable rules live in `src/domain/`, outside Phaser and DOM. `prepareDay` clones the canonical base, credits a legal delivery only provisionally, performs sixty logical slots unless death stops earlier, and returns a complete result for settlement. Provider/checkpoint errors throw without mutating the base. Watching receipts never runs these effects again.
+The serializable rules live in `src/domain/`, outside Phaser and DOM. `prepareDay` clones the canonical base, plans one daily undertaking and morning order, keeps delivery pending until physical pickup, performs sixty logical slots unless death stops earlier, and returns a complete result for settlement. Provider/checkpoint errors throw without mutating the base. Watching receipts never runs these effects again. The current policy and verified real day are recorded in the [continuous-day review](DAILY_LIFE_REVIEW.md); experiments below retain their original historical scope.
 
 Public integration API is `src/domain/index.ts`: `GameState`, `Receipt`, `Candidate`, `ChoiceProvider`, `createInitialState`, `createDayContext`, `prepareDay`, `legalCandidates`, `shortlistCandidates`, `packState`, `unpackState`, `encodeHistory`, and catalog/condition helpers.
 
-`ChoiceProvider` receives the exact ordered candidate map and returns one exact key plus optional actual telemetry. The domain does not resample probabilities, choose an argmax, or invent a response. A single-candidate slot can resolve without a provider call. `DayResult.decisions` counts genuine accepted provider choices, separately from its logical receipts.
+`ChoiceProvider` receives the exact ordered candidate map and returns one exact key plus optional actual telemetry. The domain does not resample probabilities, choose an argmax, or invent a response. Slot zero records the project and morning-order questions in one call; six phase openings offer routine choices, while urgent needs can interrupt. Quiet interludes resolve locally. A single-candidate slot can resolve without a provider call. `DayResult.decisions` counts genuine accepted provider choices, separately from its logical receipts.
 
-`PrepareOptions.onCheckpoint` is called after each accepted slot. The caller persists `{context,receipts}` with its own job fencing; `resume` continues at the next slot. Pass the accepted chain request's `daySeed` when available. The default is a deterministic versioned birth-seed/day derivation. Labeled random positions do not depend on renderer frames or telemetry.
+`PrepareOptions.onCheckpoint` records the receipt-free slot-zero plan and each accepted logical slot. The caller persists `{context,receipts}` with its own job fencing; `resume` continues from that boundary without purchasing a second plan or duplicating delivery. Pass the accepted chain request's `daySeed` when available. The default is a deterministic versioned birth-seed/day derivation. Labeled random positions do not depend on renderer frames or telemetry.
 
 ## Canonical encoding
 

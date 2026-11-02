@@ -1,0 +1,88 @@
+{
+  "at": "2026-11-02T03:04:36.282Z",
+  "scope": "Fresh local Anvil only, ports19545/19546; generated in-memory quote key; no public transactions or user credentials",
+  "compiler": "0.8.38+commit.1835d247.Emscripten.clang",
+  "sourceSha256": "9e4883591c5ab951619b04ae6bbd5fca6bd0d6cf93fa0e540c95eaa129f69418",
+  "artifactBytecodeHash": "0x8e967b38d501193ae62ce083a753a61b2fd60773e24fa91135374493666e99bd",
+  "propertiesPassed": 24,
+  "revertVariantsPassed": 74,
+  "checks": [
+    {
+      "name": "Fresh compiler output matches the shipped artifact and recorded source hash",
+      "detail": {
+        "compiler": "0.8.38+commit.1835d247.Emscripten.clang",
+        "runtimeBytes": 22663
+      }
+    },
+    {
+      "name": "Permits bind caller, domain, expiry, rules, policy and exact fee relation"
+    },
+    {
+      "name": "Mint identity and stat substitutions are rejected"
+    },
+    {
+      "name": "Payment and pause rejection roll back permit consumption"
+    },
+    {
+      "name": "Mint atomically derives its expected seed and opens the included first day"
+    },
+    {
+      "name": "An accepted permit cannot mint twice"
+    },
+    {
+      "name": "Pending transfer lock covers owner, approved operator and safe transfer"
+    },
+    {
+      "name": "Unauthorized accounts cannot fail or finalize an accepted request"
+    },
+    {
+      "name": "Malformed versions, lengths, days, levels and bounded state values cannot settle"
+    },
+    {
+      "name": "Malformed/incomplete/terminal-marked alive history and zero commitment are rejected"
+    },
+    {
+      "name": "Successful state/history/result hashes match and duplicate settlement is blocked"
+    },
+    {
+      "name": "Transfer preserves identity/save, updates enumeration/revision and invalidates old permits even after transfer back"
+    },
+    {
+      "name": "Delivery rejects more than three types and unsupported bits"
+    },
+    {
+      "name": "Failure is retained without biological progress; fresh retry keeps intended day/seed"
+    },
+    {
+      "name": "Deadline equality permits settlement but not expiry; strictly later expiry is permissionless and terminal"
+    },
+    {
+      "name": "Full uint16 stock cannot receive another unit and three saved testnet days cap admission"
+    },
+    {
+      "name": "Day-one retry adds no starter/delivery credit; terminal NFT is retained, cannot play, and remains transferable"
+    },
+    {
+      "name": "All nine economic/service/metadata admin mutations reject an unrelated player"
+    },
+    {
+      "name": "Admin multiplier/window bounds hold; metadata remains explicitly owner-mutable"
+    },
+    {
+      "name": "Failed treasury recipient does not silently lose a withdrawal"
+    },
+    {
+      "name": "Malicious ERC721 receiver cannot transfer during mint or reenter mint/request/failure even with relayer role"
+    },
+    {
+      "name": "Local chain4663 constructor rejects testnet mode and missing mainnet feed"
+    },
+    {
+      "name": "Mainnet pricing uses explicit feed and fails closed for zero/negative/stale/future/incomplete/bad-decimal/unavailable data"
+    },
+    {
+      "name": "Mainnet mint price rejects underpayment and signed drift beyond one-percent tolerance"
+    }
+  ],
+  "trustBoundary": "Only authorized relayer may settle; detailed game effects, stock provenance and actual Jev inference remain trusted service responsibilities. No formal/external-audit claim."
+}

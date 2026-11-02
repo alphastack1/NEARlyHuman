@@ -67,13 +67,23 @@ export function legalCandidates(ctx:DayContext):Candidate[] {
     if(p.plant&&(p.soilBlocked||p.dryDays>0||(p.plant==='rose'?s.inventory.apple_seeds:s.inventory.rose_seeds)>0))add('G07',target,'abandon',`Abandon plot ${i+1}`,'Remove planting and pending bonus with no reward; soil block remains.');
   }
   if(h.chairLife&&!ctx.chairMoved&&ctx.primary&&ctx.primary.kind!=='quiet')add('H20',h.chairAnchor?'chairA':'chairB',h.chairAnchor?'chairA':'chairB','Move the chair to the other corner','Move the same optional chair once today; age and damage unchanged.',{},300);
-  // One safe candidate stays free of inference when no useful choice remains.
-  // Its deterministic domestic destination keeps long quiet stretches alive.
+  if(ctx.pendingDelivery?.length){
+    add('T01','mailbox','default','Collect the morning delivery','Walk outside and collect the accepted supplies. They are not usable until this action.',{},0);
+    const pickup=out.at(-1)!;
+    if(n.nutrition<=3000||n.hydration<=3000||s.conditions.some(c=>!c.resolved&&['wound','illness','infection'].includes(c.kind)))pickup.urgent=true;
+  }
+  // New-policy interludes remain where the last actual activity happened. Real
+  // Jev routine decisions can still choose an ordinary stroll/look/sit.
   const ambientTargets:TargetId[]=['window','store','cupboard','gardenView','hall'];
+  const idleLabels:Partial<Record<TargetId,string>>={window:'Watch the window',store:'Check the supplies',cupboard:'Look through the cupboard',gardenView:'Visit the garden',hall:'Wander the house',baseSeat:'Sit for a while',bed:'Rest the eyes',mailbox:'Stay by the gate'};
+  if(ctx.dailyFocus){
+    const targets=[...ambientTargets,'baseSeat' as TargetId,...(ctx.routineAnchor?[ctx.routineAnchor]:[])];
+    for(const target of new Set(targets))add('T01',target,'idle',idleLabels[target]||'Stay here a moment','Ordinary quiet time. No supply use, benefit, energy cost or new roll.',{},0);
+    return out;
+  }
   const recentIdle=s.recent.filter(a=>a.action==='T01').slice(-2).map(a=>a.target);
   const ambient=ambientTargets.filter(t=>!recentIdle.includes(t));
   const idleTarget=ambient[Math.floor(randomAt(ctx.seed,ctx.day,ctx.slot,'ambient-v1')*ambient.length)]!;
-  const idleLabels:Partial<Record<TargetId,string>>={window:'Watch the window',store:'Check the supplies',cupboard:'Look through the cupboard',gardenView:'Visit the garden',hall:'Wander the house'};
   add('T01',idleTarget,'idle',idleLabels[idleTarget]!,'Quiet domestic routine. Advance this slot without supply, energy, benefit, cooldown use or new roll.',{},0);
   return out;
 }
@@ -150,7 +160,14 @@ export function applyAction(ctx:DayContext,c:Candidate):{success:boolean;outcome
       case'G07':{const p=s.plots[c.target==='plot2'?1:0];p.plant=null;p.growth=0;p.dryDays=0;p.pendingBonus=false;text='Cleared the planting.';detail='No reward or salvage.';break;}
       case'H20':h.chairAnchor=h.chairAnchor?0:1;ctx.chairMoved=true;text='Moved the same chair.';detail='Age unchanged.';break;
       case'T01':{
-        const quiet:Partial<Record<TargetId,[string,string]>>={window:['Watched the clouds.','No hurry.'],store:['Checked the supplies.','Still in their little places.'],cupboard:['Had a look in the cupboard.','A very ordinary cupboard.'],gardenView:['Visited the garden.','Some things take their time.'],hall:['Wandered through the house.','The usual little creaks.']};
+        if(c.target==='mailbox'&&c.variant==='default'){
+          const delivery=ctx.pendingDelivery||[];if(!delivery.length)throw Error('The delivery has already been collected.');
+          if(delivery.some(id=>s.inventory[id]>=65535))throw Error('Delivery exceeds inventory capacity.');
+          for(const id of delivery)s.inventory[id]++;
+          ctx.pendingDelivery=[];ctx.deliveryCollectedSlot=ctx.slot;ctx.deliverySettled='collected';
+          text='Collected the delivery.';detail='All accounted for.';event(ctx,'delivery',text,'mailbox','delivery');break;
+        }
+        const quiet:Partial<Record<TargetId,[string,string]>>={window:['Watched the clouds.','No hurry.'],store:['Checked the supplies.','Still in their little places.'],cupboard:['Had a look in the cupboard.','A very ordinary cupboard.'],gardenView:['Visited the garden.','Some things take their time.'],hall:['Wandered through the house.','The usual little creaks.'],baseSeat:['Sat for a little while.','Comfortably ordinary.'],bed:['Rested the eyes.','Just a moment.'],mailbox:['Stayed by the gate.','A little fresh air.']};
         [text,detail]=quiet[c.target]||['A quiet little moment.','Nothing needed doing.'];break;
       }
     }

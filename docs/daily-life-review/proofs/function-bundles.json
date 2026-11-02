@@ -1,0 +1,201 @@
+{
+  "at": "2026-11-02T05:10:19.951510+00:00",
+  "scope": "Read-only inspection of the freshly generated local Netlify function manifest and all three ZIP archives; no build/test rerun or deployment.",
+  "manifest": {
+    "filename": "manifest.json",
+    "sha256": "aec8edea620f7bec8303ff15a242ed7eacf8e8862c4310c442f47c8dfb0bb3fd",
+    "version": 1,
+    "buildTimestamp": 1793596107834,
+    "buildPlatform": {
+      "arch": "x64",
+      "platform": "win32"
+    }
+  },
+  "functions": [
+    {
+      "name": "api",
+      "archive": "api.zip",
+      "archiveBytes": 1636453,
+      "archiveSha256": "27216d061eeb8563f99f8a67fa4862eda3188401f382a1e299e4af134151a6c4",
+      "runtime": "js",
+      "runtimeVersion": "nodejs22.x",
+      "bundler": "nft",
+      "invocationMode": "stream",
+      "schedule": null,
+      "buildData": {
+        "bootstrapVersion": "2.14.0",
+        "runtimeAPIVersion": 2
+      },
+      "entryCount": 953,
+      "textEntriesScanned": 953,
+      "projectEntries": [
+        {
+          "filename": "netlify/functions/api.mjs",
+          "bytes": 280076,
+          "sha256": "2f23257de399e32fcf5da7ae5ede564fc1cd559f4b059988e1cb6abcfdd9e5aa"
+        }
+      ],
+      "bootstrapEntries": [
+        {
+          "filename": "___netlify-entry-point.mjs",
+          "bytes": 136,
+          "sha256": "b04a5f60bba1480c4e26fc844473a1c475da2797c356b121ceef0502b5739ca7"
+        },
+        {
+          "filename": "___netlify-metadata.json",
+          "bytes": 42,
+          "sha256": "0a3e347f91344c1ccb220dee4d0652d7aff7636b6d80e8c0e722fbe5ec3f2860"
+        },
+        {
+          "filename": "___netlify-bootstrap.mjs",
+          "bytes": 161256,
+          "sha256": "de4065a7a2d6cc6fe2fd2ef072049314bd34530940195f8088cddf781db64cb0"
+        }
+      ],
+      "checks": {
+        "node22": true,
+        "newDayPlanVersionPresent": true,
+        "newDecisionPolicyPresent": true,
+        "plannerCheckpointCodePresent": true,
+        "deliveryValidationCodePresent": true,
+        "noLocalLoaderOrQaBridge": true,
+        "noScratchRuntimeReferences": true,
+        "noScratchCredentialOrLocalBridgeEntries": true,
+        "ownerEnvNameOnlyInDefensiveRedaction": true
+      },
+      "ownerEnvironmentNameReference": {
+        "occurrences": 1,
+        "function": "internalException",
+        "purpose": "Defensive exception redaction only; no wallet bridge or key loader."
+      },
+      "unexpectedEntryNames": [],
+      "localLoaderOrBridgeReferences": [],
+      "scratchRuntimeReferences": []
+    },
+    {
+      "name": "prepare-background",
+      "archive": "prepare-background.zip",
+      "archiveBytes": 1624850,
+      "archiveSha256": "dc14c24db81b6fc0931762a8d906825eb7e2d25af09b9b7f307f55c0e84dfdd6",
+      "runtime": "js",
+      "runtimeVersion": "nodejs22.x",
+      "bundler": "nft",
+      "invocationMode": "background",
+      "schedule": null,
+      "buildData": {
+        "bootstrapVersion": "2.14.0",
+        "runtimeAPIVersion": 2
+      },
+      "entryCount": 953,
+      "textEntriesScanned": 953,
+      "projectEntries": [
+        {
+          "filename": "netlify/functions/prepare-background.mjs",
+          "bytes": 192318,
+          "sha256": "7371d73c8779b693ef2874a0c3fa3f362ca35a8aa8053676b40f6391d5ff5a18"
+        }
+      ],
+      "bootstrapEntries": [
+        {
+          "filename": "___netlify-entry-point.mjs",
+          "bytes": 151,
+          "sha256": "6606939c225d1e713d653deef2db084e3bb65b4719d9cc7976a5b8e9ea7116e2"
+        },
+        {
+          "filename": "___netlify-metadata.json",
+          "bytes": 42,
+          "sha256": "0a3e347f91344c1ccb220dee4d0652d7aff7636b6d80e8c0e722fbe5ec3f2860"
+        },
+        {
+          "filename": "___netlify-bootstrap.mjs",
+          "bytes": 161256,
+          "sha256": "de4065a7a2d6cc6fe2fd2ef072049314bd34530940195f8088cddf781db64cb0"
+        }
+      ],
+      "checks": {
+        "node22": true,
+        "newDayPlanVersionPresent": true,
+        "newDecisionPolicyPresent": true,
+        "plannerCheckpointCodePresent": true,
+        "deliveryValidationCodePresent": true,
+        "noLocalLoaderOrQaBridge": true,
+        "noScratchRuntimeReferences": true,
+        "noScratchCredentialOrLocalBridgeEntries": true,
+        "ownerEnvNameOnlyInDefensiveRedaction": true,
+        "backgroundInvocation": true
+      },
+      "ownerEnvironmentNameReference": {
+        "occurrences": 1,
+        "function": "internalException",
+        "purpose": "Defensive exception redaction only; no wallet bridge or key loader."
+      },
+      "unexpectedEntryNames": [],
+      "localLoaderOrBridgeReferences": [],
+      "scratchRuntimeReferences": []
+    },
+    {
+      "name": "reconcile",
+      "archive": "reconcile.zip",
+      "archiveBytes": 1624662,
+      "archiveSha256": "2ae612ba82d414fd6395bdef78f25b4b032244efcac4dec8ea43bdc00edbda95",
+      "runtime": "js",
+      "runtimeVersion": "nodejs22.x",
+      "bundler": "nft",
+      "invocationMode": "stream",
+      "schedule": "*/5 * * * *",
+      "buildData": {
+        "bootstrapVersion": "2.14.0",
+        "runtimeAPIVersion": 2
+      },
+      "entryCount": 953,
+      "textEntriesScanned": 953,
+      "projectEntries": [
+        {
+          "filename": "netlify/functions/reconcile.mjs",
+          "bytes": 191765,
+          "sha256": "5cdb04527b28becf86866f25e86baea1d71d17102dddeddcecdb5f189fb1fa76"
+        }
+      ],
+      "bootstrapEntries": [
+        {
+          "filename": "___netlify-entry-point.mjs",
+          "bytes": 142,
+          "sha256": "34e8938740769a361a7238dee6654a4802bfe1fabb55f88a63df7f3c4da47d17"
+        },
+        {
+          "filename": "___netlify-metadata.json",
+          "bytes": 42,
+          "sha256": "0a3e347f91344c1ccb220dee4d0652d7aff7636b6d80e8c0e722fbe5ec3f2860"
+        },
+        {
+          "filename": "___netlify-bootstrap.mjs",
+          "bytes": 161256,
+          "sha256": "de4065a7a2d6cc6fe2fd2ef072049314bd34530940195f8088cddf781db64cb0"
+        }
+      ],
+      "checks": {
+        "node22": true,
+        "newDayPlanVersionPresent": true,
+        "newDecisionPolicyPresent": true,
+        "plannerCheckpointCodePresent": true,
+        "deliveryValidationCodePresent": true,
+        "noLocalLoaderOrQaBridge": true,
+        "noScratchRuntimeReferences": true,
+        "noScratchCredentialOrLocalBridgeEntries": true,
+        "ownerEnvNameOnlyInDefensiveRedaction": true,
+        "fiveMinuteSchedule": true
+      },
+      "ownerEnvironmentNameReference": {
+        "occurrences": 1,
+        "function": "internalException",
+        "purpose": "Defensive exception redaction only; no wallet bridge or key loader."
+      },
+      "unexpectedEntryNames": [],
+      "localLoaderOrBridgeReferences": [],
+      "scratchRuntimeReferences": []
+    }
+  ],
+  "credentialAuditBoundary": "This structural inspection does not decrypt or compare private credential values. The PM separately owns the actual-value leak audit. The QA owner environment-variable name is expected only in error redaction; it is not an embedded key or an included development-wallet bridge.",
+  "findings": [],
+  "allChecksPassed": true
+}

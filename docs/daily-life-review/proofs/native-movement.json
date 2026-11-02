@@ -1,0 +1,168 @@
+{
+  "provenance": "Controlled local prepareDay provider, synthetic existing pantry coffee + pending wood/toolkit/bread; not a genuine Jev or onchain day.",
+  "clock": "Controlled16ms native Phaser driver, not natural-time/performance evidence.",
+  "titlePoint": {
+    "x": 312,
+    "y": 74
+  },
+  "spawnPoint": {
+    "x": 312,
+    "y": 74
+  },
+  "titleDepth": 113,
+  "maxStep": 2.8284271247461903,
+  "maxActorStep": 3.1622776601683795,
+  "maxCameraStep": 6.047828558591846,
+  "doorOut": true,
+  "doorBack": true,
+  "deliveryWoodRises": 1,
+  "unchanged": true,
+  "finalSnapshotExact": true,
+  "logicalDuration": 90480,
+  "checkpoints": [
+    {
+      "stage": "coffee",
+      "time": 7168,
+      "point": {
+        "x": 200,
+        "y": 89
+      },
+      "actor": {
+        "x": 200,
+        "y": 89,
+        "depth": 90,
+        "visible": true
+      },
+      "index": 0,
+      "role": "routine",
+      "action": "K05",
+      "effect": false
+    },
+    {
+      "stage": "outside",
+      "time": 17264,
+      "point": {
+        "x": 408,
+        "y": 521
+      },
+      "actor": {
+        "x": 409,
+        "y": 521,
+        "depth": 522,
+        "visible": true
+      },
+      "index": 1,
+      "role": "delivery",
+      "action": "T01",
+      "effect": true
+    },
+    {
+      "stage": "door-back",
+      "time": 19088,
+      "point": {
+        "x": 328,
+        "y": 443
+      },
+      "actor": {
+        "x": 329,
+        "y": 443,
+        "depth": 444,
+        "visible": true
+      },
+      "index": 1,
+      "role": "delivery",
+      "action": "T01",
+      "effect": true
+    },
+    {
+      "stage": "home",
+      "time": 24400,
+      "point": {
+        "x": 72,
+        "y": 89
+      },
+      "actor": {
+        "x": 73,
+        "y": 89,
+        "depth": 90,
+        "visible": true
+      },
+      "index": 1,
+      "role": "delivery",
+      "action": "T01",
+      "effect": true
+    },
+    {
+      "stage": "nap",
+      "time": 39024,
+      "point": {
+        "x": 312,
+        "y": 74
+      },
+      "actor": {
+        "x": 312,
+        "y": 74,
+        "depth": 113,
+        "visible": true
+      },
+      "index": 20,
+      "role": "routine",
+      "action": "H03",
+      "effect": false
+    },
+    {
+      "stage": "focus-work",
+      "time": 58800,
+      "point": {
+        "x": 168,
+        "y": 345
+      },
+      "actor": {
+        "x": 168,
+        "y": 345,
+        "depth": 346,
+        "visible": true
+      },
+      "index": 35,
+      "role": "focus",
+      "action": "H09",
+      "effect": false
+    },
+    {
+      "stage": "focus-result",
+      "time": 64464,
+      "point": {
+        "x": 168,
+        "y": 345
+      },
+      "actor": {
+        "x": 168,
+        "y": 345,
+        "depth": 346,
+        "visible": true
+      },
+      "index": 35,
+      "role": "focus",
+      "action": "H09",
+      "effect": true
+    },
+    {
+      "stage": "complete",
+      "time": 90480,
+      "point": {
+        "x": 312,
+        "y": 74
+      },
+      "actor": {
+        "x": 312,
+        "y": 74,
+        "depth": 113,
+        "visible": true
+      }
+    }
+  ],
+  "receiptCallbacks": 21,
+  "complete": 1,
+  "errors": [],
+  "writes": []
+}

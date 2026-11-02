@@ -12,13 +12,14 @@ import { SavedDaysPanel } from './SavedDaysPanel';
 import { HouseDetails } from './HouseDetails';
 import { HouseExplorer } from './HouseExplorer';
 import { WelcomeDock } from './WelcomeDock';
+import { DayFocusBadge, DayPlanDetails } from './DayFocus';
+import { DayLog } from './DayLog';
 import { CartridgeOpening, type CartridgePhase } from './CartridgeOpening';
-import { openingVisitorState } from './openingIdentity';
+import { openingVisitorState, OPENING_START_TARGET } from './openingIdentity';
 import { PREVIEW_DAY_URL } from './previewData';
 import { showSupplyTransfer } from './supplyTransfer';
-import { quietSpanAt } from '../game/quiet-spans';
 import { beforeActionBeat, afterActionBeat } from '../game/recorded-events';
-import { NEED_ICONS, NEED_KEYS, dayHighlights, recordedChanges, receiptMark, signedNeed, type Need } from './receiptFeedback';
+import { NEED_ICONS, NEED_KEYS, dayHighlights, recordedChanges, signedNeed, type Need } from './receiptFeedback';
 type Screen = 'entry' | 'discover' | 'visit' | 'mint' | 'care' | 'processing' | 'ready' | 'replay' | 'summary' | 'memorial' | 'trial' | 'firstRetry';
 interface GuestDay { rooster:Rooster; result:DayResult;source?:{chainId:number;collection:string} }
 interface FreshDayIntent { account:string;tokenId:string;requestId:string;readyDay?:number }
@@ -37,7 +38,8 @@ type ModalContent = {
     choice?: Receipt['choice'];
     receipt?: Receipt;
     preparing: boolean;
-} | {kind:'compactHistory';entries:CompactHistoryEntry[];day:number};
+    planPacket?:DayResult;planIndex?:number;atImpact?:boolean;
+} | {kind:'dayPlan';packet:DayResult;index:number;atImpact:boolean} | {kind:'compactHistory';entries:CompactHistoryEntry[];day:number};
 interface ReadingView { tokenId?: string; revision?: number; state?: GameState; readingDay?:number; delivery: ItemId[]; screen: Screen }
 type Modal = ModalContent & { view?: ReadingView };
 interface MenuFrame { modal: Modal; invoker?: string; scroll: number }
@@ -158,11 +160,11 @@ function RecordedEffect({receipt}:{receipt:Receipt}) {
     return <div className="recorded-result"><p className="recorded-target">{TARGET_LABELS[receipt.target]||'Home'}</p>{changes.length>0&&<div className="recorded-changes">{changes.map(change=><span className={'recorded-change '+change.tone} key={change.key} aria-label={change.label} title={change.label}>{change.item?<img src={itemImageUrl(change.item)} alt=""/>:change.icon?<Icon name={change.icon}/>:null}<span>{change.text}</span></span>)}</div>}</div>;
 }
 function RecordedEventLine({message,kind}:{message:string;kind:string}){
-    return <p className="recorded-event-line"><Icon name={kind==='weather'?'water':kind==='growth'||kind==='garden'?'leaf':'book'} size={14}/><span>{message}</span></p>;
+    return <p className="recorded-event-line"><Icon name={kind==='delivery'?'mail':kind==='weather'?'water':kind==='growth'||kind==='garden'?'leaf':'book'} size={14}/><span>{message}</span></p>;
 }
 function RecordedStory({receipt}:{receipt:Receipt}){
     const before=beforeActionBeat(receipt),after=afterActionBeat(receipt);
-    return <>{before&&<RecordedEventLine message={before.event.message} kind={before.event.kind}/>}<p className="recorded-effect">{receipt.lines.join(' ')}</p>{after&&<RecordedEventLine message={after.event.message} kind={after.event.kind}/>}<RecordedEffect receipt={receipt}/></>;
+    return <>{before&&<RecordedEventLine message={before.event.message} kind={before.event.kind}/>}<p className="recorded-effect">{receipt.lines.join(' ')}</p>{after&&<RecordedEventLine message={after.event.message} kind={after.event.kind}/>} {receipt.events.filter(event=>event.kind==='delivery'&&event.source==='estate'&&event!==before?.event&&event!==after?.event).map((event,index)=><RecordedEventLine message={event.message} kind={event.kind} key={index}/>)}<RecordedEffect receipt={receipt}/></>;
 }
 export default function App() {
     const host = useRef<HTMLDivElement>(null), world = useRef<WorldController | undefined>(undefined);
@@ -188,6 +190,7 @@ export default function App() {
     const [meterCue,setMeterCue]=useState<{sequence:number;changes:Partial<Record<Need,number>>}>();
     const [houseView,setHouseView]=useState<{exploring:boolean;room?:HouseRoom}>({exploring:false});
     const [roomsOpen,setRoomsOpen]=useState(false);
+    const [logGroups,setLogGroups]=useState<Record<string,boolean>>({});
     const [housePeek,setHousePeek]=useState<TargetId>();
     const [traveling,setTraveling]=useState(false);
     const [guest,setGuest]=useState<GuestDay>();
@@ -354,7 +357,7 @@ export default function App() {
             renderer.beginOpening(()=>{
                 const first=guestRef.current?.result.receipts[0];
                 return first?.decisionSnapshot||first?.before||openingVisitorState();
-            });
+            },()=>guestRef.current?.result.startTarget||OPENING_START_TARGET);
             if(openingPhase.current==='leaving')renderer.finishOpening();
         }
         renderer.setMuted(muted);renderer.setInputEnabled(openingPhase.current==='closed'&&!context.current.modal&&canInspect(context.current.screen));
@@ -877,7 +880,7 @@ export default function App() {
     const savedActions=()=>compactOutcome?.history.length?<button className="text-button" onClick={()=>open({kind:'compactHistory',entries:cloneState(compactOutcome.history),day:compactOutcome.savedDay?.day||compactOutcome.rooster.state.day})}>View saved actions</button>:null;
     function pause() { world.current?.pause(); setMeterCue(undefined);setPaused(true); }
     function resume() { menuTrail.current=[];setModal(null); world.current?.resume(); setPaused(false); }
-    function brain() { const c = context.current; open({ kind: 'brain', choice: (isFilm(c.screen) ? c.receipt?.choice : c.job?.latestChoice) ? cloneState(isFilm(c.screen) ? c.receipt!.choice : c.job!.latestChoice) : undefined, receipt: isFilm(c.screen) && c.receipt ? cloneState(c.receipt) : undefined, preparing: c.screen === 'processing' }); setChoiceNotice(false); }
+    function brain() { const c = context.current; open({ kind: 'brain', choice: (isFilm(c.screen) ? c.receipt?.choice : c.job?.latestChoice) ? cloneState(isFilm(c.screen) ? c.receipt!.choice : c.job!.latestChoice) : undefined, receipt: isFilm(c.screen) && c.receipt ? cloneState(c.receipt) : undefined, preparing: c.screen === 'processing',planPacket:isFilm(c.screen)?c.result:undefined,planIndex:replayIndex,atImpact:!!c.receipt&&c.hud===c.receipt.snapshot }); setChoiceNotice(false); }
     function beginMint() { freshDay.current=undefined;setTraitsOpen(false);setResult(undefined);setReceipt(undefined);setCompactOutcome(undefined);archiveReturn.current=undefined;setHistoricalDay(undefined);operationToken.current++;navigationGeneration.current++;setJobId(undefined);setJob(undefined);setBusy(false);setBusyLabel('');menuTrail.current=[];setError(''); setQuote(undefined); setScreen('mint'); setModal(null); setName(store.get('nh:name:' + context.current.account, '')); setStats(store.get('nh:stats:' + context.current.account, initialStats)); }
     const deadlineConditions=(selected?.state.conditions.filter(c=>!c.resolved&&c.dueDay>0)||[]).sort((a,b)=>a.dueDay-b.dueDay);
     const warnings:Array<{label:string;due?:number;item:ItemId}>=deadlineConditions.map(c=>({label:conditionLabel(c.kind,c.severity),due:c.dueDay,item:c.kind==='wound'?'bandage':c.kind==='illness'||c.kind==='infection'?'medicine':c.kind==='waterDeficit'?'water':'bread'}));
@@ -889,7 +892,7 @@ export default function App() {
  const mintIdentity=screen==='mint'||screen==='processing'&&submitted?.operation==='mint';
  const headerRooster=mintIdentity?undefined:selected||(visiting?guest?.rooster:undefined);
  const processTitle=submitted?(submitted.hash?'Checking transaction':busy?'Check your wallet':'Checking submission'):job?.phase==='queued'?'Waiting to begin':job?.phase==='checking'?'Checking saved day':job?.phase==='unaccepted'?'Checking request':job?.phase==='saving'?'Saving day':job?.phase==='recording_failure'?'Recording the attempt':'Preparing day '+((selected?.state.day||0)+1);
- const processCaption=submitted?(submitted.hash?'Waiting for confirmation':'Your request has not been confirmed'):job?.phase==='queued'?'Your request is saved':job?.phase==='checking'||job?.phase==='unaccepted'?'Checking the same request':job?.phase==='saving'?'Planning is complete':job?.phase==='recording_failure'?'Your last save is safe':job?.decisions?job.decisions+' choices made':'The day is taking shape';
+ const processCaption=submitted?(submitted.hash?'Waiting for confirmation':'Your request has not been confirmed'):job?.phase==='queued'?'Your request is saved':job?.phase==='checking'||job?.phase==='unaccepted'?'Checking the same request':job?.phase==='saving'?'Planning is complete':job?.phase==='recording_failure'?'Your last save is safe':'The day is taking shape';
     function primary(label: string, onClick: () => void, disabled = false) { return <button className="button primary main-action" disabled={disabled || busy} onClick={onClick}><FitText min={10}>{busy ? busyLabel || 'One moment…' : label}</FitText></button>; }
     function itemsRow(items: ItemId[], empty = true) { return <div className="delivery-slots" aria-label={'Delivery ' + items.length + ' of3'}>{[0, 1, 2].map(i => <button key={i} className={'delivery-slot ' + (items[i] ? 'filled' : '')} aria-label={items[i] ? 'Remove ' + catalog(items[i]).name : 'Add a supply to slot '+(i+1)} onClick={() => items[i] ? toggleItem(items[i]) : open({kind:'supplies'})} disabled={!eligible || screen !== 'care'}>{items[i] ? <><img src={itemImageUrl(items[i])} alt=""/><span>+1</span></> : empty ? <span className="empty-plus">+</span> : null}</button>)}</div>; }
     const savedDaysLink=()=>selected?.latestDay?<button className="text-button saved-days-link" onClick={()=>open({kind:'savedDays'})}>Saved days</button>:null;
@@ -909,7 +912,7 @@ export default function App() {
    </div><div className="care-hint"><span>{delivery.some(id=>selected!.state.inventory[id]>=65535)?'Remove a full supply':delivery.length === 0 ? 'Stored supplies only' : delivery.length + '/3 supplies'}</span>{config?.testnet && <span>{Math.max(0, 3 - (selected?.state.day || 0))} day{selected?.state.day===2?'':'s'} left</span>}</div>
   </Panel>;
         if (screen === 'processing')
-            return <Panel title={processTitle} kind="progress" footer={<><div className="progress-actions">{submitted || error || !job || ['queued', 'checking', 'unaccepted'].includes(job.phase) || Date.now() - job.updatedAt > 25000 ? <button className="button primary main-action" onClick={() => void checkStatus()} disabled={busy}>{!submitted && job && (['queued', 'checking', 'unaccepted'].includes(job.phase) || Date.now() - job.updatedAt > 25000) ? job.phase==='queued'?'Resume preparation':'Check status' : 'Check status'}</button> : <button className="text-button" onClick={brain}>Inspect choice</button>}<button className="button secondary" onClick={() => open({ kind: 'details' })}>Details</button></div>{expiryAvailable && primary('Release expired request', () => void release())}</>}><div className="phase-track">{['Request', 'Jev', 'Save'].map((p, i) => { const done = i === 0 && !submitted || i === 1 && ['saving', 'ready'].includes(job?.phase || ''); const current = submitted ? i === 0 : job?.phase === 'saving' ? i === 2 : job?.phase==='preparing' ? i === 1 : false; return <span className={(done ? 'done ' : '') + (current ? 'current' : '')} key={p}><i>{done ? '✓' : i + 1}</i>{p}</span>; })}</div><p className="progress-caption">{processCaption}</p>{job?.phase === 'preparing' && <small className="progress-ceiling">Up to60 choices</small>}<p className="leave-copy">You can leave and return.</p></Panel>;
+            return <Panel title={processTitle} kind="progress" footer={<><div className="progress-actions">{submitted || error || !job || ['queued', 'checking', 'unaccepted'].includes(job.phase) || Date.now() - job.updatedAt > 25000 ? <button className="button primary main-action" onClick={() => void checkStatus()} disabled={busy}>{!submitted && job && (['queued', 'checking', 'unaccepted'].includes(job.phase) || Date.now() - job.updatedAt > 25000) ? job.phase==='queued'?'Resume preparation':'Check status' : 'Check status'}</button> : <button className="text-button" onClick={brain}>Inspect choice</button>}<button className="button secondary" onClick={() => open({ kind: 'details' })}>Details</button></div>{expiryAvailable && primary('Release expired request', () => void release())}</>}><div className="phase-track">{['Request', 'Jev', 'Save'].map((p, i) => { const done = i === 0 && !submitted || i === 1 && ['saving', 'ready'].includes(job?.phase || ''); const current = submitted ? i === 0 : job?.phase === 'saving' ? i === 2 : job?.phase==='preparing' ? i === 1 : false; return <span className={(done ? 'done ' : '') + (current ? 'current' : '')} key={p}><i>{done ? '✓' : i + 1}</i>{p}</span>; })}</div><p className="progress-caption">{processCaption}</p><p className="leave-copy">You can leave and return.</p></Panel>;
         if (screen === 'firstRetry')
             return <Panel title="Day one is still yours" footer={<><div className="mint-meta">{config?.testnet&&<span>{3-(selected?.state.day||0)} days left</span>}<button className="fee-button" onClick={()=>open({kind:'fee'})}>{quote?fee(quote.totalEstimate):'Estimate'} <Icon name="info" size={12}/></button></div>{primary(canonicalStale?'Refresh saved day':'Retry day 1',()=>canonicalStale?void reconcileToken(selected!.id,'Saved day refreshed.'):void requestDay(),!eligible)}<button className="text-button" onClick={() => open({ kind: 'status' })}>Starting supplies</button></>}><p className="short-copy">Original starter supplies.<br />No new mint charge.</p></Panel>;
         if (screen === 'ready')
@@ -976,11 +979,19 @@ export default function App() {
                 <SavedStatus state={state} onItem={item=>open({kind:'item',item,view:modal.view})} onObject={target=>open({kind:'object',target,state,view:modal.view})}/>
             </Panel>;
         }
+        if(modal.kind==='dayPlan'){
+            const canResume=!!modal.view&&isFilm(modal.view.screen)&&isFilm(screen)&&result===modal.packet;
+            return <Panel title="Morning plan" kind="brain" back={close} footer={primary(canResume?'Resume':menuTrail.current.length?'Back':'Close',canResume?resume:close)}><DayPlanDetails packet={modal.packet} index={modal.index} atImpact={modal.atImpact}/></Panel>;
+        }
         if (modal.kind === 'brain') {
             const choice=modal.choice,canResume=!!modal.view&&isFilm(modal.view.screen)&&isFilm(screen);
+            const planPacket=modal.planPacket?.dailyFocus?modal.planPacket:undefined;
+            const planned=!!modal.receipt?.plan&&!!planPacket;
+            const beforePlannedImpact=planned&&(modal.planIndex??modal.receipt!.index)===modal.receipt!.index&&!modal.atImpact;
             return <Panel title={modal.preparing?'Jev is choosing':choice?'Recorded choice':modal.receipt?'Recorded moment':'Recorded choice'} kind="brain" back={close} footer={primary(canResume?'Resume':menuTrail.current.length?'Back':'Close',canResume?resume:close)}>
+                {planned&&<button className="planned-earlier-link" onClick={()=>open({kind:'dayPlan',packet:planPacket!,index:modal.planIndex??modal.receipt!.index,atImpact:!!modal.atImpact,view:modal.view})}><span>Planned earlier</span><Icon name="book" size={15}/></button>}
                 {choice?<><p className="brain-caption">{modal.preparing?'Day spoilers':'Paused'}</p><small className="probability-label">Model choice probability</small><div className="choice-list">{choice.candidates.map(candidate=><div className={'choice-row '+(choice.selected===candidate.key?'picked':'')} key={candidate.key}><Icon name={choice.selected===candidate.key?'check':'play'} size={12}/><span>{candidate.label}</span><b>{choice.probabilities?.[candidate.key]!==undefined?Math.round(choice.probabilities[candidate.key]*100)+'%':'—'}</b></div>)}</div>{modal.preparing&&<p className="newer-choice">{choiceNotice?'Newer choices available':'Preparation continues'}</p>}</>:!modal.receipt?<p className="short-copy">No recorded choice yet.</p>:null}
-                {modal.receipt&&<RecordedStory receipt={modal.receipt}/>}
+                {modal.receipt&&(beforePlannedImpact?<p className="plan-morning">{modal.receipt.label}</p>:<RecordedStory receipt={modal.receipt}/>)}
             </Panel>;
         }
         if (modal.kind === 'birth') {
@@ -997,9 +1008,7 @@ export default function App() {
             return <Panel title="Estimate details" back={close} footer={primary('Close', close)}>{quote ? <div className="fee-breakdown"><span>Network</span><b>{fee(quote.networkEstimate)}</b><span>Care</span><b>{fee(String(BigInt(quote.value) - BigInt(String(quote.permit.mintFee || 0))))}</b>{BigInt(String(quote.permit.mintFee||0))>0n&&<><span>Mint</span><b>{fee(String(quote.permit.mintFee))}</b></>}<span>Total</span><b>{fee(quote.totalEstimate)}</b></div> : <p className="short-copy">A fresh estimate is shown<br />before wallet approval.</p>}{config?.testnet && <p className="help-small">Test ETH has no real-world value.</p>}</Panel>;
         if(modal.kind==='compactHistory')return <Panel title={'Saved day '+modal.day} back={close} footer={primary('Back',close)}><ol className="compact-history">{modal.entries.map((entry,index)=>{const row=describeCompactAction(entry);return <li className={(row.terminal?'terminal ':row.failed?'failed ':'')+(row.quiet?'quiet':'')} key={index}><small>{index+1}</small><div><strong>{row.title}</strong><span>{row.detail}</span></div></li>;})}</ol></Panel>;
         if (modal.kind === 'history') {
-            const quietEntries=new Set<number>(),entries=result?.receipts||[];
-            for(let index=0;index<entries.length;){const span=quietSpanAt(entries,index);if(span){for(let i=span.start;i<=span.end;i++)quietEntries.add(i);index=span.end+1;}else index++;}
-            return <Panel title={'Day ' + result?.day} back={close} footer={primary('Resume', resume)}><div className="history-list">{entries.map((r, i) => {const mark=receiptMark(r),quiet=quietEntries.has(i),event=beforeActionBeat(r)?.event||afterActionBeat(r)?.event,headline=event?.message||r.lines[0];return <div className="history-entry" key={i}>{(!i||r.phase!==entries[i-1]?.phase)&&<h2 className="history-phase">{r.phase}</h2>}<button className={(i===replayIndex?'selected ':'')+(quiet?'quiet':'moment')} onClick={() => { world.current?.seek(i); setReceipt(r); open({ kind: 'brain', choice: r.choice ? cloneState(r.choice) : undefined, receipt: cloneState(r), preparing: false }); }}><small>{i + 1}</small><span className="history-mark" aria-hidden="true">{mark.item?<img src={itemImageUrl(mark.item)} alt=""/>:mark.icon?<Icon name={mark.icon}/>:<i/>}</span><span className="history-copy"><span>{headline}</span>{event&&headline!==r.lines[0]&&<small>{r.lines[0]}</small>}</span></button></div>;})}</div></Panel>;
+            return <Panel title={'Day ' + result?.day} back={close} footer={primary('Resume', resume)}>{result&&<DayLog packet={result} index={replayIndex} atImpact={hud===result.receipts[replayIndex]?.snapshot} openGroups={logGroups} onGroupChange={(key,value)=>setLogGroups(previous=>({...previous,[key]:value}))} onInspect={(r,i)=>{world.current?.seek(i);setReceipt(r);setReplayIndex(i);open({kind:'brain',choice:r.choice?cloneState(r.choice):undefined,receipt:cloneState(r),preparing:false,planPacket:result,planIndex:i,atImpact:true});}}/>}</Panel>;
         }
         if (modal.kind === 'owner')
             return <Panel title="A new owner" footer={primary('Choose rooster', () => open({ kind: 'selector' }))}><p className="short-copy">This rooster has a new owner.</p></Panel>;
@@ -1029,6 +1038,7 @@ export default function App() {
            <button className="needs-button" aria-label="Open health and needs" onClick={()=>{if(film)pause();open({kind:'status'});}}>{needs.map(k=>{const delta=meterCue?.changes[k];return <span className={'need-meter need-'+k+(delta?' has-change':'')} key={k}><Icon name={needIcons[k]}/><span className="meter-pips">{[1,2,3,4,5].map(i=><i key={i} className={displayState.needs[k]>=i*2000?'on':''}/>)}</span>{delta&&<span className={'need-change '+(delta>0?'up':'down')} key={meterCue.sequence} aria-hidden="true">{signedNeed(delta)}</span>}</span>;})}</button>
            <button className={'brain-button '+(job?.phase==='preparing'?'thinking':'')} onClick={brain} aria-label="Inspect Jev choice"><Icon name="brain" size={19}/></button>
           </div>}
+          {film&&result?.dailyFocus&&<DayFocusBadge packet={result} index={replayIndex} atImpact={hud===result.receipts[replayIndex]?.snapshot} onOpen={()=>{pause();open({kind:'dayPlan',packet:result,index:replayIndex,atImpact:hud===result.receipts[replayIndex]?.snapshot});}}/>}
          </header>
          {film&&!modal&&<div className="event-box">
           <button className="day-log-button" onClick={()=>{pause();open({kind:'history'});}}>Day log</button>

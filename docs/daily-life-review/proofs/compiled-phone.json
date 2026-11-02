@@ -1,0 +1,544 @@
+{
+  "states": [
+    {
+      "name": "00-delayed-fallback390",
+      "at": "2026-11-02T05:07:12.013Z",
+      "previewResponseStarted": false,
+      "elapsedSincePreviewRequest": 1050,
+      "viewport": [
+        390,
+        844
+      ],
+      "overflow": false,
+      "body": "Skip ▸▸",
+      "phase": "assembling",
+      "classes": "app-root screen-entry is-opening",
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 390,
+        "height": 844,
+        "top": 0,
+        "right": 390,
+        "bottom": 844,
+        "left": 0
+      },
+      "hud": {
+        "x": 8,
+        "y": 8,
+        "width": 374,
+        "height": 51,
+        "top": 8,
+        "right": 382,
+        "bottom": 59,
+        "left": 8
+      }
+    },
+    {
+      "name": "01-canonical-title390",
+      "at": "2026-11-02T05:07:12.681Z",
+      "previewResponseStarted": true,
+      "elapsedSincePreviewRequest": 1718,
+      "viewport": [
+        390,
+        844
+      ],
+      "overflow": false,
+      "body": "NEARlyHuman\nSTART\nSkip ▸▸",
+      "phase": "title",
+      "classes": "app-root screen-entry is-opening",
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 390,
+        "height": 844,
+        "top": 0,
+        "right": 390,
+        "bottom": 844,
+        "left": 0
+      },
+      "hud": {
+        "x": 8,
+        "y": 8,
+        "width": 374,
+        "height": 51,
+        "top": 8,
+        "right": 382,
+        "bottom": 59,
+        "left": 8
+      }
+    },
+    {
+      "name": "02-canonical-start390",
+      "at": "2026-11-02T05:07:13.585Z",
+      "previewResponseStarted": true,
+      "elapsedSincePreviewRequest": 2622,
+      "viewport": [
+        390,
+        844
+      ],
+      "overflow": false,
+      "body": "NORI\nLV02\nVISIT\nDAY03\nPlant rose seeds in plot 1\nEvening\nDay log\nCollecting the morning delivery\nTESTNET\nHatch yours\nYour home",
+      "phase": "closed",
+      "classes": "app-root screen-discover is-traveling",
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 390,
+        "height": 844,
+        "top": 0,
+        "right": 390,
+        "bottom": 844,
+        "left": 0
+      },
+      "hud": {
+        "x": 8,
+        "y": 8,
+        "width": 374,
+        "height": 113,
+        "top": 8,
+        "right": 382,
+        "bottom": 121,
+        "left": 8
+      },
+      "event": {
+        "x": 10,
+        "y": 619,
+        "width": 370,
+        "height": 100,
+        "top": 619,
+        "right": 380,
+        "bottom": 719,
+        "left": 10
+      }
+    },
+    {
+      "name": "03-mail-route-1",
+      "at": "2026-11-02T05:07:15.849Z",
+      "previewResponseStarted": true,
+      "elapsedSincePreviewRequest": 4886,
+      "viewport": [
+        390,
+        844
+      ],
+      "overflow": false,
+      "body": "NORI\nLV02\nVISIT\nDAY03\nPlant rose seeds in plot 1\nEvening\nDay log\nCollecting the morning delivery\nTESTNET\nHatch yours\nYour home",
+      "phase": "closed",
+      "classes": "app-root screen-discover is-traveling",
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 390,
+        "height": 844,
+        "top": 0,
+        "right": 390,
+        "bottom": 844,
+        "left": 0
+      },
+      "hud": {
+        "x": 8,
+        "y": 8,
+        "width": 374,
+        "height": 113,
+        "top": 8,
+        "right": 382,
+        "bottom": 121,
+        "left": 8
+      },
+      "event": {
+        "x": 10,
+        "y": 619,
+        "width": 370,
+        "height": 100,
+        "top": 619,
+        "right": 380,
+        "bottom": 719,
+        "left": 10
+      }
+    },
+    {
+      "name": "03-mail-route-2",
+      "at": "2026-11-02T05:07:18.105Z",
+      "previewResponseStarted": true,
+      "elapsedSincePreviewRequest": 7142,
+      "viewport": [
+        390,
+        844
+      ],
+      "overflow": false,
+      "body": "NORI\nLV02\nVISIT\nDAY03\nPlant rose seeds in plot 1\nEvening\nDay log\nCollecting the morning delivery\nTESTNET\nHatch yours\nYour home",
+      "phase": "closed",
+      "classes": "app-root screen-discover is-traveling",
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 390,
+        "height": 844,
+        "top": 0,
+        "right": 390,
+        "bottom": 844,
+        "left": 0
+      },
+      "hud": {
+        "x": 8,
+        "y": 8,
+        "width": 374,
+        "height": 113,
+        "top": 8,
+        "right": 382,
+        "bottom": 121,
+        "left": 8
+      },
+      "event": {
+        "x": 10,
+        "y": 619,
+        "width": 370,
+        "height": 100,
+        "top": 619,
+        "right": 380,
+        "bottom": 719,
+        "left": 10
+      }
+    },
+    {
+      "name": "03-mail-route-3",
+      "at": "2026-11-02T05:07:20.378Z",
+      "previewResponseStarted": true,
+      "elapsedSincePreviewRequest": 9415,
+      "viewport": [
+        390,
+        844
+      ],
+      "overflow": false,
+      "body": "NORI\nLV02\nVISIT\nDAY03\nPlant rose seeds in plot 1\nEvening\nDay log\nCollecting the morning delivery\nTESTNET\nHatch yours\nYour home",
+      "phase": "closed",
+      "classes": "app-root screen-discover",
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 390,
+        "height": 844,
+        "top": 0,
+        "right": 390,
+        "bottom": 844,
+        "left": 0
+      },
+      "hud": {
+        "x": 8,
+        "y": 8,
+        "width": 374,
+        "height": 113,
+        "top": 8,
+        "right": 382,
+        "bottom": 121,
+        "left": 8
+      },
+      "event": {
+        "x": 10,
+        "y": 619,
+        "width": 370,
+        "height": 100,
+        "top": 619,
+        "right": 380,
+        "bottom": 719,
+        "left": 10
+      }
+    },
+    {
+      "name": "03-mail-route-4",
+      "at": "2026-11-02T05:07:22.638Z",
+      "previewResponseStarted": true,
+      "elapsedSincePreviewRequest": 11675,
+      "viewport": [
+        390,
+        844
+      ],
+      "overflow": false,
+      "body": "NORI\nLV02\nVISIT\nDAY03\nPlant rose seeds in plot 1\nEvening\nDay log\nBringing the delivery home.\nBack to the pantry.\nTESTNET\nHatch yours\nYour home",
+      "phase": "closed",
+      "classes": "app-root screen-discover is-traveling",
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 390,
+        "height": 844,
+        "top": 0,
+        "right": 390,
+        "bottom": 844,
+        "left": 0
+      },
+      "hud": {
+        "x": 8,
+        "y": 8,
+        "width": 374,
+        "height": 113,
+        "top": 8,
+        "right": 382,
+        "bottom": 121,
+        "left": 8
+      },
+      "event": {
+        "x": 10,
+        "y": 619,
+        "width": 370,
+        "height": 100,
+        "top": 619,
+        "right": 380,
+        "bottom": 719,
+        "left": 10
+      }
+    },
+    {
+      "name": "03-mail-route-5",
+      "at": "2026-11-02T05:07:24.907Z",
+      "previewResponseStarted": true,
+      "elapsedSincePreviewRequest": 13944,
+      "viewport": [
+        390,
+        844
+      ],
+      "overflow": false,
+      "body": "NORI\nLV02\nVISIT\nDAY03\nPlant rose seeds in plot 1\nEvening\nDay log\nBringing the delivery home.\nBack to the pantry.\nTESTNET\nHatch yours\nYour home",
+      "phase": "closed",
+      "classes": "app-root screen-discover is-traveling",
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 390,
+        "height": 844,
+        "top": 0,
+        "right": 390,
+        "bottom": 844,
+        "left": 0
+      },
+      "hud": {
+        "x": 8,
+        "y": 8,
+        "width": 374,
+        "height": 113,
+        "top": 8,
+        "right": 382,
+        "bottom": 121,
+        "left": 8
+      },
+      "event": {
+        "x": 10,
+        "y": 619,
+        "width": 370,
+        "height": 100,
+        "top": 619,
+        "right": 380,
+        "bottom": 719,
+        "left": 10
+      }
+    },
+    {
+      "name": "03-mail-route-6",
+      "at": "2026-11-02T05:07:27.176Z",
+      "previewResponseStarted": true,
+      "elapsedSincePreviewRequest": 16213,
+      "viewport": [
+        390,
+        844
+      ],
+      "overflow": false,
+      "body": "NORI\nLV02\nVISIT\nDAY03\nPlant rose seeds in plot 1\nEvening\nDay log\nBringing the delivery home.\nBack to the pantry.\nTESTNET\nHatch yours\nYour home",
+      "phase": "closed",
+      "classes": "app-root screen-discover is-traveling",
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 390,
+        "height": 844,
+        "top": 0,
+        "right": 390,
+        "bottom": 844,
+        "left": 0
+      },
+      "hud": {
+        "x": 8,
+        "y": 8,
+        "width": 374,
+        "height": 113,
+        "top": 8,
+        "right": 382,
+        "bottom": 121,
+        "left": 8
+      },
+      "event": {
+        "x": 10,
+        "y": 619,
+        "width": 370,
+        "height": 100,
+        "top": 619,
+        "right": 380,
+        "bottom": 719,
+        "left": 10
+      }
+    },
+    {
+      "name": "04-canonical-plan390",
+      "at": "2026-11-02T05:07:27.274Z",
+      "previewResponseStarted": true,
+      "elapsedSincePreviewRequest": 16311,
+      "viewport": [
+        390,
+        844
+      ],
+      "overflow": false,
+      "body": "NORI\nLV02\nVISIT\nDAY03\nPlant rose seeds in plot 1\nEvening\nTESTNET\nHatch yours\nYour home\nMORNING PLAN\nPlant rose seeds in plot 1\nEvening\n\nChosen at dawn\n\nMain activity\nPlant rose seeds in plot 1 · Evening\n97%\nBuild a chair · Evening\n3%\nMorning\nMailbox first\n51%\nWindow → mailbox\n49%\nModel choice probability\nResume",
+      "phase": "closed",
+      "classes": "app-root screen-discover",
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 390,
+        "height": 844,
+        "top": 0,
+        "right": 390,
+        "bottom": 844,
+        "left": 0
+      },
+      "hud": {
+        "x": 8,
+        "y": 8,
+        "width": 374,
+        "height": 113,
+        "top": 8,
+        "right": 382,
+        "bottom": 121,
+        "left": 8
+      }
+    },
+    {
+      "name": "05-canonical-log390",
+      "at": "2026-11-02T05:07:27.412Z",
+      "previewResponseStarted": true,
+      "elapsedSincePreviewRequest": 16449,
+      "viewport": [
+        390,
+        844
+      ],
+      "overflow": false,
+      "body": "NORI\nLV02\nVISIT\nDAY03\nPlant rose seeds in plot 1\nEvening\nTESTNET\nHatch yours\nYour home\nDAY 3\nDawn\n1\nCollected the delivery.\nTaking it easy\nMorning\n11\nDrank some water.\nTaking it easy\nMidday\n21\nSat like a human.\nTaking it easy\nAfternoon\n31\nSat like a human.\nTaking it easy\nEvening\n41\nSat for a little while.\nTaking it easy\n46\nPlant rose seeds in plot 1\nMain activity\nTaking it easy\nBedtime\n51\nHad a little rest.\nTaking it easy\n60\nRested the eyes.\nResume",
+      "phase": "closed",
+      "classes": "app-root screen-discover",
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 390,
+        "height": 844,
+        "top": 0,
+        "right": 390,
+        "bottom": 844,
+        "left": 0
+      },
+      "hud": {
+        "x": 8,
+        "y": 8,
+        "width": 374,
+        "height": 113,
+        "top": 8,
+        "right": 382,
+        "bottom": 121,
+        "left": 8
+      }
+    },
+    {
+      "name": "06-canonical-rooms320",
+      "at": "2026-11-02T05:07:27.586Z",
+      "previewResponseStarted": true,
+      "elapsedSincePreviewRequest": 16623,
+      "viewport": [
+        320,
+        568
+      ],
+      "overflow": false,
+      "body": "NORI\nLV03\nVISIT\nSAVED03\nRooms\n▴\nKitchen\nBedroom\nLiving\nWash\nGarden\nFront yard\nSettled in for the night.\nNearly human.\nTESTNET\nHatch yours\nYour home",
+      "phase": "closed",
+      "classes": "app-root screen-visit",
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 320,
+        "height": 568,
+        "top": 0,
+        "right": 320,
+        "bottom": 568,
+        "left": 0
+      },
+      "hud": {
+        "x": 8,
+        "y": 8,
+        "width": 304,
+        "height": 73,
+        "top": 8,
+        "right": 312,
+        "bottom": 81,
+        "left": 8
+      },
+      "event": {
+        "x": 10,
+        "y": 355,
+        "width": 300,
+        "height": 88,
+        "top": 355,
+        "right": 310,
+        "bottom": 443,
+        "left": 10
+      }
+    },
+    {
+      "name": "07-canonical-yard320",
+      "at": "2026-11-02T05:07:28.017Z",
+      "previewResponseStarted": true,
+      "elapsedSincePreviewRequest": 17054,
+      "viewport": [
+        320,
+        568
+      ],
+      "overflow": false,
+      "body": "NORI\nLV03\nVISIT\nSAVED03\nNORI\nRooms\n▾\nSettled in for the night.\nNearly human.\nTESTNET\nHatch yours\nYour home",
+      "phase": "closed",
+      "classes": "app-root screen-visit",
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 320,
+        "height": 568,
+        "top": 0,
+        "right": 320,
+        "bottom": 568,
+        "left": 0
+      },
+      "hud": {
+        "x": 8,
+        "y": 8,
+        "width": 304,
+        "height": 73,
+        "top": 8,
+        "right": 312,
+        "bottom": 81,
+        "left": 8
+      },
+      "event": {
+        "x": 10,
+        "y": 355,
+        "width": 300,
+        "height": 88,
+        "top": 355,
+        "right": 310,
+        "bottom": 443,
+        "left": 10
+      }
+    }
+  ],
+  "errors": [],
+  "writes": [],
+  "preview": [
+    {
+      "url": "http://127.0.0.1:5180/assets/preview/nori-day3-05de911accb2.json",
+      "delayedMs": 1508
+    }
+  ]
+}

@@ -1,4 +1,4 @@
-import { OUTCOME, type ActionId, type TargetId } from '../domain';
+import { OUTCOME, isDeliveryCollection, type ActionId, type TargetId } from '../domain';
 import type { CompactHistoryEntry } from './api';
 
 const actionNames: Record<ActionId, string> = {
@@ -15,13 +15,15 @@ const targetNames: Record<TargetId, string> = {
   store:'Supplies', prep:'Kitchen counter', stove:'Stove', window:'Window', bed:'Bed', baseSeat:'Living room',
   chair:'Chair', chairA:'Chair corner', chairB:'Other chair corner', cupboard:'Cupboard', body:'Washroom',
   surface:'Kitchen counter', plot1:'Plot 1', plot2:'Plot 2', gardenShelter:'Garden shelter', gardenView:'Garden',
-  pest:'Visitor', cutoff:'Stove', mailbox:'Delivery box', hall:'Hall',
+  pest:'Visitor', cutoff:'Stove', mailbox:'Front-yard mailbox', hall:'Hall',
 };
 
 /** Describe only the compact chain facts: no reconstructed film, probabilities or numeric effects. */
 export function describeCompactAction(record: CompactHistoryEntry) {
   const { action, variant, target, outcome } = record;
+  const delivery=isDeliveryCollection(record);
   let title = actionNames[action];
+  if(delivery)title='Collect delivery';
   if (action === 'H01') title = ({water:'Drink water',milk:'Drink milk',bread:'Eat bread',quickCoffee:'Drink coffee'} as Record<string,string>)[variant] || title;
   if (action === 'H02') title = variant === 'wound' ? 'Bandage a wound' : variant === 'infection' ? 'Treat infection' : 'Treat illness';
   if (action === 'H04') title = variant === 'chair' ? 'Enjoy the crafted chair' : variant === 'garden' ? 'Enjoy the garden' : 'Relax in the living room';
@@ -31,10 +33,10 @@ export function describeCompactAction(record: CompactHistoryEntry) {
   if (action === 'G01') title = variant === 'apple' ? 'Plant apple seeds' : 'Plant rose seeds';
   if (action === 'G05') title = variant === 'apple' ? 'Harvest an apple' : 'Harvest a rose';
   const terminal = !!(outcome & OUTCOME.terminal);
-  const quiet = action === 'T01' && !terminal;
-  if (action === 'T01' && terminal) title = 'Final moment';
+  const quiet = action === 'T01' && !terminal && !delivery;
+  if (action === 'T01' && terminal && !delivery) title = 'Final moment';
   const details = [targetNames[target]];
-  if (!quiet && !(action === 'T01' && terminal)) details.push(record.success ? 'Completed' : 'Unsuccessful');
+  if (!quiet && !(action === 'T01' && terminal && !delivery)) details.push(record.success ? 'Completed' : 'Unsuccessful');
   if (outcome & OUTCOME.wound) details.push('Wound');
   if (outcome & OUTCOME.illness) details.push('Illness');
   if (outcome & OUTCOME.surfaceContamination) details.push('Counter contamination');

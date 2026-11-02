@@ -1,0 +1,32 @@
+{
+  "at": "2026-11-02T03:05:02.566Z",
+  "method": "4096 reproducible synthetic32-byte seeds; direct procedural generator, no AI, wallet or browser",
+  "bodyColors": 10,
+  "headgearGrids": 30,
+  "accentColors": 3,
+  "sampledSeeds": 4096,
+  "sampledTraitSets": 3193,
+  "sampledPixelImages": 2580,
+  "bodyColorsSeen": 10,
+  "headgearSeen": 30,
+  "stableRepeatedCalls": true,
+  "collision": {
+    "firstSeed": "0xf6ffc748646a514c9481ce1359385cb6aa7a83ab3f39fb6a8d6d660b83723594",
+    "secondSeed": "0x531f06bc2a853390bd3cfe78eca63a4e63c0ffb4776af52559a0ac46681e2fd6",
+    "gridSha256": "f88d5e439ca876f660c8d1b4e6502c52c629ab7d72eb26f4e1507b63d0426fe9",
+    "firstTraits": {
+      "body": 14,
+      "wing": 3,
+      "headgear": 28,
+      "accent": 9
+    },
+    "secondTraits": {
+      "body": 4,
+      "wing": 2,
+      "headgear": 28,
+      "accent": 12
+    }
+  },
+  "identity": "Current art uses body color, a different wing color, headgear and accent derived from birth seed. Same seed yields same art/pose basis. Different seeds can share a visible image; uniqueness is not enforced.",
+  "hosting": "The mint stores its seed onchain; tokenURI points to hosted JSON/SVG. Owner can change metadataBase, and a future renderer deployment can change image mapping."
+}

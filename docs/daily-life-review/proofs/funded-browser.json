@@ -1,0 +1,49 @@
+{
+  "at": "2026-11-02T05:04:01.913Z",
+  "tokenId": "4",
+  "day": 3,
+  "requestId": "0x0f68a12974c0c84793b7ad804ee1ef66b587ad3c741d547674347cae2118c2b2",
+  "policy": "0x31eaa17eed2526572050f27eb9987c5a9646f191c7957474197193df26f0413d",
+  "auto": true,
+  "methods": {
+    "eth_requestAccounts": 1,
+    "eth_chainId": 2,
+    "personal_sign": 1,
+    "eth_sendTransaction": 1
+  },
+  "posts": [
+    {
+      "path": "/api/auth/challenge",
+      "status": 200
+    },
+    {
+      "path": "/api/auth/verify",
+      "status": 200
+    },
+    {
+      "path": "/api/quote",
+      "status": 200
+    },
+    {
+      "path": "/api/accept",
+      "status": 200
+    }
+  ],
+  "errors": [],
+  "body": "NORI\nLV03\n▼\nSAVED03\nTRIAL COMPLETE\n\n3 of 3 days saved.\nNORI is still alive.\n\nWatch day 3\nVisit home\nView summary\nTESTNET",
+  "focus": {
+    "key": "G01_plot1_rose",
+    "action": "G01",
+    "target": "plot1",
+    "variant": "rose",
+    "label": "Plant rose seeds in plot 1",
+    "inputs": {
+      "rose_seeds": 1
+    }
+  },
+  "delivery": [
+    "water",
+    "wood",
+    "toolkit"
+  ]
+}
