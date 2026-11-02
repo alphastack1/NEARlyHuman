@@ -43,3 +43,12 @@ Only client presentation files changed. The service, domain rules, decision-poli
 [Live baseline](rhythm-review/proofs/live-before.json) · [routine comparison](rhythm-review/proofs/routine-after.json) · [timing witness](rhythm-review/proofs/timing-witness.json) · [caption witness](rhythm-review/proofs/quiet-presence-witness.json) · [cameo correction](rhythm-review/proofs/motion-changes.json) · [before/after counts](rhythm-review/proofs/comparison.json).
 
 Finished screenshots and proof records are permanent project files. Scratch scripts and intermediate captures remain in the ignored temporary workspace.
+
+
+## Published verification
+
+The single production push published source `e9c2d58ad3286d2e2792e37b5995d06c17d90e90` in Netlify deployment `6ae825a2a61db42ae5e03ce3`, Ready at **2026-11-02T05:55:09.721Z** (2 November 2026, Bangkok midday). The actual public website serves `index-Cck9PNd7.js`; its application bytes match the local release manifest, the canonical preview hash is unchanged, and the API retains the same decision-policy fingerprint.
+
+The public browser opened the title at 390×844, entered the real day, selected original record 21 through the log and watched continuing rest naturally at 320×568. Text and controls remained reachable, with no document overflow, page error or API write. This bounded public check is separate from the complete natural compiled-day watch. No model call, wallet transaction or admission change was needed.
+
+[Public browser proof](rhythm-review/proofs/published.json) · [release record](rhythm-review/proofs/publication.json) · [public phone screenshot](rhythm-review/images/live-quiet320.png). Final publication notes are committed locally after the release to avoid a second deployment.
