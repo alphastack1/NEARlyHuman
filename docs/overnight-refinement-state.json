@@ -1,0 +1,65 @@
+{
+  "schemaVersion": 1,
+  "automationId": "nearlyhuman-six-hourly-improvement-waves",
+  "authorizedAtUtc": "2026-11-02T14:17:36Z",
+  "timezone": "Asia/Bangkok",
+  "intervalMinutes": 60,
+  "scheduledWaveCount": 6,
+  "completedWaveCount": 0,
+  "nextWave": 1,
+  "activeWave": null,
+  "status": "scheduled",
+  "owner": "PM chat only",
+  "preparation": {
+    "wave": 0,
+    "status": "complete",
+    "scope": "Local biology, EVM and native NEAR feasibility; preserve verified evidence and overnight handoff before first hourly wakeup.",
+    "liveChanged": false,
+    "paidAiCalls": 0,
+    "externalTestnetTransactions": 0,
+    "completedAtUtc": "2026-11-02T14:32:31Z",
+    "evidence": "docs/v2-feasibility/REVIEW.md",
+    "nextPriority": "Build the unified owned-snapshot kernel and contract-backed candidate in scheduled wave1; do not repeat completed abstract research."
+  },
+  "waves": [
+    {
+      "number": 1,
+      "focus": "Unified authoritative V2 foundation",
+      "status": "pending"
+    },
+    {
+      "number": 2,
+      "focus": "Jev choices, identity and day progression",
+      "status": "pending"
+    },
+    {
+      "number": 3,
+      "focus": "Garden/workshop visuals and continuous animation",
+      "status": "pending"
+    },
+    {
+      "number": 4,
+      "focus": "Self-explanatory first use, public life and purse",
+      "status": "pending"
+    },
+    {
+      "number": 5,
+      "focus": "Integrated testnet/backend/gameplay refinement",
+      "status": "pending"
+    },
+    {
+      "number": 6,
+      "focus": "Final deep review, repairs and one verified testnet release",
+      "status": "pending"
+    }
+  ],
+  "release": {
+    "target": "https://nearlyhuman.netlify.app",
+    "network": "testnet",
+    "firstPublicChain": "Robinhood Chain testnet 46630",
+    "mainnetAuthorized": false,
+    "intermediateProductionPushesAllowed": false,
+    "finalTestnetPublicationAuthorized": true,
+    "status": "not_started"
+  }
+}

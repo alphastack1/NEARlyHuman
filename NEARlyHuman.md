@@ -8,6 +8,8 @@ The subsequent [Jev choice-variety review](docs/CHOICE_VARIETY_REVIEW.md) record
 
 The owner-selected NFT-track expansion is now specified in [ECONOMY_V2.md](design/ECONOMY_V2.md), supported by [integrated balance and settlement research](docs/economy-v2/RESEARCH.md). It supersedes older economy brainstorming for the next candidate: four slots, finite crops/wood, simple crafts, an NFT-bound token purse that survives death, token-funded births and separate RH/NEAR worlds. These are selected design defaults, not changes to the live V1 game.
 
+The subsequent [small-scale feasibility wave](docs/v2-feasibility/REVIEW.md) and [transition rules](design/V2_TRANSITIONS.md) add actual imported-biology, local EVM and native NEAR execution. The owner has authorized [five hourly improvement waves and a sixth final testnet release wave](docs/OVERNIGHT_REFINEMENT.md); progress is tracked separately, with no interim production pushes or mainnet deployment.
+
 Owner: Enzo Smith.
 
 Prepared: October 31, 2026, using the Asia/Bangkok calendar.

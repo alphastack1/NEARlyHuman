@@ -1,0 +1,33 @@
+{
+  "scope": "Independent PM replay using saved contexts and actual imported action/phase/bedtime helpers; no biology probe code imported, no future kit or extra care opportunity.",
+  "before": {
+    "survivingPaths": 2,
+    "paths": [
+      [
+        "H01_store_water",
+        "H02_body_wound"
+      ],
+      [
+        "H02_body_wound",
+        "H01_store_water"
+      ]
+    ]
+  },
+  "after": {
+    "survivingPaths": 0,
+    "paths": []
+  },
+  "guarded": {
+    "survivingPaths": 2,
+    "paths": [
+      [
+        "H01_store_water",
+        "H02_body_wound"
+      ],
+      [
+        "H02_body_wound",
+        "H01_store_water"
+      ]
+    ]
+  }
+}

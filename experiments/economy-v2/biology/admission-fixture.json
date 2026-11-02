@@ -1,0 +1,729 @@
+{
+  "result": {
+    "scope": "Constructed accepted Day2 fixture, then actual source Day3 prefix treats illness at11, eats bread21, leisure31, phase boundaries10/20/30/40. The NEW sickness is genuinely admitted by unchanged introduceEpisode at41. Two remaining ordinary opportunities, main36 already used as quiet, and no new kit before tonight. Source reactivation retains the treated illness deadline3. Local guard replaces only this destructive new episode with quiet; it does not grant supplies or extra actions.",
+    "seed": "0x0000000000000000000000000000000000000000000000000000000000000042",
+    "day": 3,
+    "slot": 41,
+    "beforeLegacyLogicalWitness": true,
+    "afterLegacyLogicalWitness": true,
+    "beforeActualTwoRoutines": {
+      "survivingPaths": 2,
+      "example": [
+        "H01_store_water",
+        "H02_body_wound"
+      ],
+      "branches": 27
+    },
+    "afterActualTwoRoutines": {
+      "survivingPaths": 0,
+      "branches": 38
+    },
+    "reactivatedIllness": {
+      "kind": "illness",
+      "severity": 2,
+      "onsetDay": 1,
+      "dueDay": 3,
+      "resolved": false
+    },
+    "guardWouldRejectNewIncident": true,
+    "guardedTwoRoutines": {
+      "survivingPaths": 2,
+      "example": [
+        "H01_store_water",
+        "H02_body_wound"
+      ],
+      "branches": 27
+    }
+  },
+  "acceptedBaseFixture": {
+    "version": 1,
+    "seed": "0x0000000000000000000000000000000000000000000000000000000000000042",
+    "name": "BOK",
+    "stats": {
+      "body": 2,
+      "wits": 2,
+      "spirit": 1
+    },
+    "day": 2,
+    "level": 2,
+    "alive": true,
+    "needs": {
+      "health": 6000,
+      "nutrition": 8000,
+      "hydration": 0,
+      "energy": 8000,
+      "morale": 8000
+    },
+    "inventory": {
+      "water": 1,
+      "milk": 0,
+      "bread": 1,
+      "steak": 0,
+      "medicine": 2,
+      "coffee": 0,
+      "wood": 0,
+      "toolkit": 0,
+      "umbrella": 0,
+      "rose_seeds": 0,
+      "apple_seeds": 0,
+      "matches": 0,
+      "soap": 0,
+      "bandage": 1,
+      "compost": 0
+    },
+    "conditions": [
+      {
+        "kind": "waterDeficit",
+        "severity": 1,
+        "onsetDay": 2,
+        "dueDay": 3
+      },
+      {
+        "kind": "wound",
+        "severity": 2,
+        "onsetDay": 2,
+        "dueDay": 3
+      },
+      {
+        "kind": "illness",
+        "severity": 2,
+        "onsetDay": 1,
+        "dueDay": 3
+      }
+    ],
+    "plots": [
+      {
+        "plant": null,
+        "growth": 0,
+        "moisture": 0,
+        "dryDays": 0,
+        "soilBlocked": false,
+        "pendingBonus": false
+      },
+      {
+        "plant": null,
+        "growth": 0,
+        "moisture": 0,
+        "dryDays": 0,
+        "soilBlocked": false,
+        "pendingBonus": false
+      }
+    ],
+    "house": {
+      "mess": 0,
+      "damage": {
+        "stove": false,
+        "window": false,
+        "chair": false
+      },
+      "chairLife": 0,
+      "chairAnchor": 0,
+      "shelterLife": 0,
+      "umbrellaLife": [
+        0,
+        0
+      ],
+      "stovePatch": 0,
+      "windowPatch": 0,
+      "chairBrace": false,
+      "windowBrace": false,
+      "dripDiverted": false,
+      "backupHeat": false,
+      "powerOut": false,
+      "fire": "none"
+    },
+    "recent": []
+  },
+  "prefixActions": [
+    {
+      "slot": 11,
+      "role": "routine",
+      "key": "H02_body_illness",
+      "success": true
+    },
+    {
+      "slot": 21,
+      "role": "routine",
+      "key": "H01_store_bread",
+      "success": true
+    },
+    {
+      "slot": 31,
+      "role": "routine",
+      "key": "H04_baseSeat_base",
+      "success": true
+    }
+  ],
+  "mainAlreadyUsedAt36": true,
+  "ordinaryUsed": 3,
+  "ordinarySlotsRemaining": [
+    41,
+    51
+  ],
+  "beforeAdmission": {
+    "state": {
+      "version": 1,
+      "seed": "0x0000000000000000000000000000000000000000000000000000000000000042",
+      "name": "BOK",
+      "stats": {
+        "body": 2,
+        "wits": 2,
+        "spirit": 1
+      },
+      "day": 3,
+      "level": 2,
+      "alive": true,
+      "needs": {
+        "health": 7500,
+        "nutrition": 9000,
+        "hydration": 0,
+        "energy": 7700,
+        "morale": 7824
+      },
+      "inventory": {
+        "water": 1,
+        "milk": 0,
+        "bread": 0,
+        "steak": 0,
+        "medicine": 1,
+        "coffee": 0,
+        "wood": 0,
+        "toolkit": 0,
+        "umbrella": 0,
+        "rose_seeds": 0,
+        "apple_seeds": 0,
+        "matches": 0,
+        "soap": 0,
+        "bandage": 1,
+        "compost": 0
+      },
+      "conditions": [
+        {
+          "kind": "waterDeficit",
+          "severity": 1,
+          "onsetDay": 2,
+          "dueDay": 3,
+          "resolved": false
+        },
+        {
+          "kind": "wound",
+          "severity": 2,
+          "onsetDay": 2,
+          "dueDay": 3
+        },
+        {
+          "kind": "illness",
+          "severity": 2,
+          "onsetDay": 1,
+          "dueDay": 3,
+          "resolved": true
+        }
+      ],
+      "plots": [
+        {
+          "plant": null,
+          "growth": 0,
+          "moisture": 0,
+          "dryDays": 0,
+          "soilBlocked": false,
+          "pendingBonus": false
+        },
+        {
+          "plant": null,
+          "growth": 0,
+          "moisture": 0,
+          "dryDays": 0,
+          "soilBlocked": false,
+          "pendingBonus": false
+        }
+      ],
+      "house": {
+        "mess": 0,
+        "damage": {
+          "stove": false,
+          "window": false,
+          "chair": false
+        },
+        "chairLife": 0,
+        "chairAnchor": 0,
+        "shelterLife": 0,
+        "umbrellaLife": [
+          0,
+          0
+        ],
+        "stovePatch": 0,
+        "windowPatch": 0,
+        "chairBrace": false,
+        "windowBrace": false,
+        "dripDiverted": false,
+        "backupHeat": false,
+        "powerOut": false,
+        "fire": "none"
+      },
+      "recent": [
+        {
+          "action": "T01",
+          "target": "hall",
+          "variant": "idle",
+          "success": true
+        },
+        {
+          "action": "T01",
+          "target": "hall",
+          "variant": "idle",
+          "success": true
+        },
+        {
+          "action": "T01",
+          "target": "hall",
+          "variant": "idle",
+          "success": true
+        },
+        {
+          "action": "T01",
+          "target": "hall",
+          "variant": "idle",
+          "success": true
+        },
+        {
+          "action": "T01",
+          "target": "hall",
+          "variant": "idle",
+          "success": true
+        },
+        {
+          "action": "T01",
+          "target": "hall",
+          "variant": "idle",
+          "success": true
+        }
+      ]
+    },
+    "day": 3,
+    "slot": 41,
+    "seed": "0x00000000000000000000000000000000000000000000000000000000d8536d15",
+    "restUses": 0,
+    "leisureUses": 1,
+    "lastRest": -100,
+    "lastLeisure": 31,
+    "chairMoved": false,
+    "minorUsed": false,
+    "primaryIntroduced": false,
+    "primarySlot": 41,
+    "events": [
+      {
+        "kind": "recovery",
+        "message": "Serious illness cleared.",
+        "target": "body",
+        "source": "illness"
+      },
+      {
+        "kind": "action",
+        "message": "Treated the illness.",
+        "target": "body",
+        "source": "H02"
+      },
+      {
+        "kind": "action",
+        "message": "Ate some bread.",
+        "target": "store",
+        "source": "H01"
+      },
+      {
+        "kind": "action",
+        "message": "Sat like a human.",
+        "target": "baseSeat",
+        "source": "H04"
+      }
+    ],
+    "modelChoices": 0,
+    "pendingDelivery": [],
+    "routineAnchor": "bed",
+    "previousDays": [],
+    "meaningfulToday": []
+  },
+  "afterAdmission": {
+    "state": {
+      "version": 1,
+      "seed": "0x0000000000000000000000000000000000000000000000000000000000000042",
+      "name": "BOK",
+      "stats": {
+        "body": 2,
+        "wits": 2,
+        "spirit": 1
+      },
+      "day": 3,
+      "level": 2,
+      "alive": true,
+      "needs": {
+        "health": 7500,
+        "nutrition": 9000,
+        "hydration": 0,
+        "energy": 7700,
+        "morale": 7824
+      },
+      "inventory": {
+        "water": 1,
+        "milk": 0,
+        "bread": 0,
+        "steak": 0,
+        "medicine": 1,
+        "coffee": 0,
+        "wood": 0,
+        "toolkit": 0,
+        "umbrella": 0,
+        "rose_seeds": 0,
+        "apple_seeds": 0,
+        "matches": 0,
+        "soap": 0,
+        "bandage": 1,
+        "compost": 0
+      },
+      "conditions": [
+        {
+          "kind": "waterDeficit",
+          "severity": 1,
+          "onsetDay": 2,
+          "dueDay": 3,
+          "resolved": false
+        },
+        {
+          "kind": "wound",
+          "severity": 2,
+          "onsetDay": 2,
+          "dueDay": 3
+        },
+        {
+          "kind": "illness",
+          "severity": 2,
+          "onsetDay": 1,
+          "dueDay": 3,
+          "resolved": false
+        }
+      ],
+      "plots": [
+        {
+          "plant": null,
+          "growth": 0,
+          "moisture": 0,
+          "dryDays": 0,
+          "soilBlocked": false,
+          "pendingBonus": false
+        },
+        {
+          "plant": null,
+          "growth": 0,
+          "moisture": 0,
+          "dryDays": 0,
+          "soilBlocked": false,
+          "pendingBonus": false
+        }
+      ],
+      "house": {
+        "mess": 0,
+        "damage": {
+          "stove": false,
+          "window": false,
+          "chair": false
+        },
+        "chairLife": 0,
+        "chairAnchor": 0,
+        "shelterLife": 0,
+        "umbrellaLife": [
+          0,
+          0
+        ],
+        "stovePatch": 0,
+        "windowPatch": 0,
+        "chairBrace": false,
+        "windowBrace": false,
+        "dripDiverted": false,
+        "backupHeat": false,
+        "powerOut": false,
+        "fire": "none"
+      },
+      "recent": [
+        {
+          "action": "T01",
+          "target": "hall",
+          "variant": "idle",
+          "success": true
+        },
+        {
+          "action": "T01",
+          "target": "hall",
+          "variant": "idle",
+          "success": true
+        },
+        {
+          "action": "T01",
+          "target": "hall",
+          "variant": "idle",
+          "success": true
+        },
+        {
+          "action": "T01",
+          "target": "hall",
+          "variant": "idle",
+          "success": true
+        },
+        {
+          "action": "T01",
+          "target": "hall",
+          "variant": "idle",
+          "success": true
+        },
+        {
+          "action": "T01",
+          "target": "hall",
+          "variant": "idle",
+          "success": true
+        }
+      ]
+    },
+    "day": 3,
+    "slot": 41,
+    "seed": "0x00000000000000000000000000000000000000000000000000000000d8536d15",
+    "restUses": 0,
+    "leisureUses": 1,
+    "lastRest": -100,
+    "lastLeisure": 31,
+    "chairMoved": false,
+    "minorUsed": false,
+    "primaryIntroduced": true,
+    "primarySlot": 41,
+    "events": [
+      {
+        "kind": "recovery",
+        "message": "Serious illness cleared.",
+        "target": "body",
+        "source": "illness"
+      },
+      {
+        "kind": "action",
+        "message": "Treated the illness.",
+        "target": "body",
+        "source": "H02"
+      },
+      {
+        "kind": "action",
+        "message": "Ate some bread.",
+        "target": "store",
+        "source": "H01"
+      },
+      {
+        "kind": "action",
+        "message": "Sat like a human.",
+        "target": "baseSeat",
+        "source": "H04"
+      },
+      {
+        "kind": "incident",
+        "message": "Feeling a little unwell.",
+        "target": "body",
+        "source": "sickness"
+      }
+    ],
+    "modelChoices": 0,
+    "pendingDelivery": [],
+    "routineAnchor": "bed",
+    "previousDays": [],
+    "meaningfulToday": [],
+    "primary": {
+      "kind": "sickness",
+      "startSlot": 41,
+      "boundary": 50,
+      "target": "body",
+      "resolved": true
+    }
+  },
+  "guardedAdmission": {
+    "state": {
+      "version": 1,
+      "seed": "0x0000000000000000000000000000000000000000000000000000000000000042",
+      "name": "BOK",
+      "stats": {
+        "body": 2,
+        "wits": 2,
+        "spirit": 1
+      },
+      "day": 3,
+      "level": 2,
+      "alive": true,
+      "needs": {
+        "health": 7500,
+        "nutrition": 9000,
+        "hydration": 0,
+        "energy": 7700,
+        "morale": 7824
+      },
+      "inventory": {
+        "water": 1,
+        "milk": 0,
+        "bread": 0,
+        "steak": 0,
+        "medicine": 1,
+        "coffee": 0,
+        "wood": 0,
+        "toolkit": 0,
+        "umbrella": 0,
+        "rose_seeds": 0,
+        "apple_seeds": 0,
+        "matches": 0,
+        "soap": 0,
+        "bandage": 1,
+        "compost": 0
+      },
+      "conditions": [
+        {
+          "kind": "waterDeficit",
+          "severity": 1,
+          "onsetDay": 2,
+          "dueDay": 3,
+          "resolved": false
+        },
+        {
+          "kind": "wound",
+          "severity": 2,
+          "onsetDay": 2,
+          "dueDay": 3
+        },
+        {
+          "kind": "illness",
+          "severity": 2,
+          "onsetDay": 1,
+          "dueDay": 3,
+          "resolved": true
+        }
+      ],
+      "plots": [
+        {
+          "plant": null,
+          "growth": 0,
+          "moisture": 0,
+          "dryDays": 0,
+          "soilBlocked": false,
+          "pendingBonus": false
+        },
+        {
+          "plant": null,
+          "growth": 0,
+          "moisture": 0,
+          "dryDays": 0,
+          "soilBlocked": false,
+          "pendingBonus": false
+        }
+      ],
+      "house": {
+        "mess": 0,
+        "damage": {
+          "stove": false,
+          "window": false,
+          "chair": false
+        },
+        "chairLife": 0,
+        "chairAnchor": 0,
+        "shelterLife": 0,
+        "umbrellaLife": [
+          0,
+          0
+        ],
+        "stovePatch": 0,
+        "windowPatch": 0,
+        "chairBrace": false,
+        "windowBrace": false,
+        "dripDiverted": false,
+        "backupHeat": false,
+        "powerOut": false,
+        "fire": "none"
+      },
+      "recent": [
+        {
+          "action": "T01",
+          "target": "hall",
+          "variant": "idle",
+          "success": true
+        },
+        {
+          "action": "T01",
+          "target": "hall",
+          "variant": "idle",
+          "success": true
+        },
+        {
+          "action": "T01",
+          "target": "hall",
+          "variant": "idle",
+          "success": true
+        },
+        {
+          "action": "T01",
+          "target": "hall",
+          "variant": "idle",
+          "success": true
+        },
+        {
+          "action": "T01",
+          "target": "hall",
+          "variant": "idle",
+          "success": true
+        },
+        {
+          "action": "T01",
+          "target": "hall",
+          "variant": "idle",
+          "success": true
+        }
+      ]
+    },
+    "day": 3,
+    "slot": 41,
+    "seed": "0x00000000000000000000000000000000000000000000000000000000d8536d15",
+    "restUses": 0,
+    "leisureUses": 1,
+    "lastRest": -100,
+    "lastLeisure": 31,
+    "chairMoved": false,
+    "minorUsed": false,
+    "primaryIntroduced": true,
+    "primarySlot": 41,
+    "events": [
+      {
+        "kind": "recovery",
+        "message": "Serious illness cleared.",
+        "target": "body",
+        "source": "illness"
+      },
+      {
+        "kind": "action",
+        "message": "Treated the illness.",
+        "target": "body",
+        "source": "H02"
+      },
+      {
+        "kind": "action",
+        "message": "Ate some bread.",
+        "target": "store",
+        "source": "H01"
+      },
+      {
+        "kind": "action",
+        "message": "Sat like a human.",
+        "target": "baseSeat",
+        "source": "H04"
+      }
+    ],
+    "modelChoices": 0,
+    "pendingDelivery": [],
+    "routineAnchor": "bed",
+    "previousDays": [],
+    "meaningfulToday": [],
+    "primary": {
+      "kind": "quiet",
+      "startSlot": 41,
+      "boundary": 50,
+      "target": "hall",
+      "resolved": true
+    }
+  }
+}

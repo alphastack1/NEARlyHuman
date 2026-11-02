@@ -1,0 +1,184 @@
+{
+  "date": "2026-11-02",
+  "capture": "Completed preparatory wave0, before six scheduled hourly waves",
+  "hashConvention": "SHA256 and bytes use UTF-8 text normalized to LF; identities describe this capture, not future edits.",
+  "liveGameSourceCommit": "3aa3c84b1ba80126a61fb8831ca35c590349e3c2",
+  "verification": {
+    "biologyMatchedCases": 84,
+    "biologyMatchedDays": 90,
+    "biologyTargetedLongCases": 4,
+    "biologyTargetedLongDays": 360,
+    "biologyEnergyGate": "Focused299energy/rest fixture passes; all earlier result objects unchanged",
+    "independentAdmissionReplay": "2survivingpaths before sourceonset /0after /2after conservativefallback; independentprobe code imports original helpers only",
+    "evmWitnesses": 37,
+    "evmSuccessfulReceipts": 394,
+    "evmIntentionalReverts": 20,
+    "evmPureCounterFixtures": 4,
+    "nearHostTests": 8,
+    "nearCampaignTransactions": 23,
+    "nearAdditionalStorageTransactions": 2,
+    "nearReceiptProtocol": 88,
+    "nearCallbackRecovery": "Unresolved; injected failure remains locked; default transfer-call OFF",
+    "paidAiCalls": 0,
+    "externalTestnetTransactions": 0,
+    "mainnetTransactions": 0,
+    "productionDeployments": 0,
+    "ownedLocalNodesStopped": true
+  },
+  "scopeLimits": [
+    "No unified complete V2 reducer or actual Jev proof",
+    "Biology uses explicit garden adapter and separate legacywood; cohort black swan disabled andseparatelywitnessed",
+    "Care-admission correction isconstructiveboundedproof; universalverifier remainsimplementationwork",
+    "EVMterminal/freefounderhelpers arelocalfixtures",
+    "NEARreceiptissuer isexplicitfeature; defaultbuilddifferent",
+    "Nativeprotocol88 localreceipts donotprovealltargetnetworkcompatibility",
+    "Fullgame gas/storage/size and fee calibration remainunmeasured"
+  ],
+  "files": [
+    {
+      "path": "design/ECONOMY_V2.md",
+      "bytes": 30385,
+      "sha256": "c14e30b28a2ff041591c6648be90b3526cbe2e36d68423bc569199cba88b644c"
+    },
+    {
+      "path": "design/V2_TRANSITIONS.md",
+      "bytes": 12822,
+      "sha256": "274d0df8d8359cecbbf1ecd3c7f45a6976984a8a08bf3300f77d666fa9d306e5"
+    },
+    {
+      "path": "docs/v2-feasibility/biology.json",
+      "bytes": 253104,
+      "sha256": "bc47402861d01187a195811e584968443ccb414741930fbfdd1a48de6c71f9ec"
+    },
+    {
+      "path": "docs/v2-feasibility/evm.json",
+      "bytes": 8202,
+      "sha256": "da03a43f3415393d2935b24682d19ff3106432426b123fc97626ea071d4d575d"
+    },
+    {
+      "path": "docs/v2-feasibility/independent-admission.json",
+      "bytes": 647,
+      "sha256": "b3c2a2c49824acb54551a93e8ce870b5cd3df689a7b9b9f0ad59a370111c11b2"
+    },
+    {
+      "path": "docs/v2-feasibility/near-gas.json",
+      "bytes": 15571,
+      "sha256": "860ba2d5e6e8c90a602df0d307819939479cab9caf03cc3602020576f6728f4b"
+    },
+    {
+      "path": "docs/v2-feasibility/near-receipts.json",
+      "bytes": 5836,
+      "sha256": "1981824c5990b83ee97ad56c4b6ccd452c4aef26b883dee1e916077db153cc99"
+    },
+    {
+      "path": "docs/v2-feasibility/near-storage.json",
+      "bytes": 653,
+      "sha256": "ac085c430a51ca3fe89fa4cb0b6f81c2118a93a49a4145b199221da2f1d59d22"
+    },
+    {
+      "path": "docs/v2-feasibility/near-transactions.json",
+      "bytes": 41419,
+      "sha256": "eab0764807662ecdb2a4788f0623b9ec07954a0ab6366264f06fe3882b6169f0"
+    },
+    {
+      "path": "docs/v2-feasibility/near.json",
+      "bytes": 9179,
+      "sha256": "f1c39052c931fbcf5efe0e85ffa2f4e9f4716e740739c5609c42caf8f1f8882e"
+    },
+    {
+      "path": "docs/v2-feasibility/REVIEW.md",
+      "bytes": 17918,
+      "sha256": "d2281fc5dd1a8cecbcb4f3ca44e075bb79f07ed599681b1c94d610033812dd47"
+    },
+    {
+      "path": "experiments/economy-v2/biology/admission-fixture.json",
+      "bytes": 16080,
+      "sha256": "00b71ee23bb732ef22a26de094ce21fc456d81cd145508cc5a8c3c760e00ea94"
+    },
+    {
+      "path": "experiments/economy-v2/biology/probe.ts",
+      "bytes": 26266,
+      "sha256": "e4b41501ded9b64418f6c7078bdb416f20a2766fc6736c67057e3fe1e132f29f"
+    },
+    {
+      "path": "experiments/economy-v2/biology/replay-admission.ts",
+      "bytes": 2192,
+      "sha256": "5237606dd93de0c10f20e723fb96deb401a3decf5cd466e8b13b0aa3f14ec8a9"
+    },
+    {
+      "path": "experiments/economy-v2/biology/source-hashes.json",
+      "bytes": 1480,
+      "sha256": "118f73d9fe57a42904d82e2683ea298c82148c4f4ed10ff5d18ba41f5934ae48"
+    },
+    {
+      "path": "experiments/economy-v2/evm/EconomySlice.sol",
+      "bytes": 12097,
+      "sha256": "e5b0743ae51d046b864b490138769e6d77f0774f28fca9a1ca5953c833a5420d"
+    },
+    {
+      "path": "experiments/economy-v2/evm/money-fixtures.json",
+      "bytes": 763,
+      "sha256": "74009fe2b410c587a888b71d60c5d7bd5a50b8cf574c417ec191f023f4ced4c1"
+    },
+    {
+      "path": "experiments/economy-v2/evm/run.cjs",
+      "bytes": 17997,
+      "sha256": "eabde880359427bdd2db264aaf0539306943cb07475fbb3d6d463c0afa151a77"
+    },
+    {
+      "path": "experiments/economy-v2/near/Cargo.lock",
+      "bytes": 69214,
+      "sha256": "8363792d4e26e990e6a2b9833c10da2fd90c9898ac30d5266f7ecd5cef9752a2"
+    },
+    {
+      "path": "experiments/economy-v2/near/Cargo.toml",
+      "bytes": 476,
+      "sha256": "0b8f74df45548db370799a82dbb05e29a869d289d588f9e4bea698e5871f5d54"
+    },
+    {
+      "path": "experiments/economy-v2/near/inspect_receipts.py",
+      "bytes": 1732,
+      "sha256": "e014fb08c55d90e165fa8c0eb4a9b62a9561c01c948e8053da58488965730c85"
+    },
+    {
+      "path": "experiments/economy-v2/near/receipts.py",
+      "bytes": 11049,
+      "sha256": "b059547050190a0002f0635cbb17e5ab0ffc5bac257b455e1591d9b7025fe67c"
+    },
+    {
+      "path": "experiments/economy-v2/near/receiver/Cargo.lock",
+      "bytes": 34587,
+      "sha256": "0a6841db0d12fd35ca6e80835b60e45e208c3b7788019466ecb3d6252a04a853"
+    },
+    {
+      "path": "experiments/economy-v2/near/receiver/Cargo.toml",
+      "bytes": 287,
+      "sha256": "926a776ff4ca031bd7333d2ae3f571ad7df6cbbaf66ac6cfbd0bb1985ae13a6b"
+    },
+    {
+      "path": "experiments/economy-v2/near/receiver/src/lib.rs",
+      "bytes": 1773,
+      "sha256": "b059ba1c15a9773ac1160cfd9d54f89ae2eba7a04557c020196885592594e9a5"
+    },
+    {
+      "path": "experiments/economy-v2/near/src/lib.rs",
+      "bytes": 13906,
+      "sha256": "29d6883a439c041c5973ed342ed7f51cf5807bda93783bb893928253aaba11c8"
+    },
+    {
+      "path": "experiments/economy-v2/near/src/tests.rs",
+      "bytes": 8009,
+      "sha256": "6ac4f8c537b6a6bcdccf0692bc7e74c266d57f3aec964a779dbed55d7947175a"
+    },
+    {
+      "path": "experiments/economy-v2/near/storage_receipt.py",
+      "bytes": 1959,
+      "sha256": "b0bf7320244bd6ad347bdea4d32684fc4838d91b579303b8c3e731c53bf7f320"
+    },
+    {
+      "path": "experiments/economy-v2/README.md",
+      "bytes": 4906,
+      "sha256": "b9b00e444312bc337b57420b8c50f02316902482d47c7874df49e83f96b23263"
+    }
+  ]
+}

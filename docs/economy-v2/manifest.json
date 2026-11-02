@@ -90,5 +90,7 @@
       "sha256": "db226e6f44d47ee6598b6b4146983d58687b07b56fe41365c017e7727a4d2873"
     }
   ],
-  "hashConvention": "SHA256 and byte counts use UTF-8 text with LF line endings, so Git autocrlf does not change the recorded identity."
+  "hashConvention": "SHA256 and byte counts use UTF-8 text with LF line endings, so Git autocrlf does not change the recorded identity.",
+  "captureCommit": "cd7ca79",
+  "captureNote": "File hashes describe the original research capture at cd7ca79; the selected design may evolve in later commits. Follow-up real-care/chain evidence is recorded separately in docs/v2-feasibility/manifest.json."
 }

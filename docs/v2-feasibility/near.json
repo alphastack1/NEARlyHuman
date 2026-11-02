@@ -1,0 +1,294 @@
+{
+  "scope": "Native NEAR combined NFT/FT custody/interface feasibility with actual LOCAL sandbox receipts. No production economy, canonical biology or day reducer.",
+  "toolchain": {
+    "rust": "1.95.0-x86_64-pc-windows-msvc",
+    "nearSdk": "5.30.0",
+    "nearContractStandards": "5.30.0",
+    "sandbox": "2.14.0-rc.4",
+    "protocol": 88,
+    "sandboxArchiveBytes": 35604113,
+    "sandboxArchiveSha256": "69aa0ff5c319b82757937d1afb4c6d83d898d025ee59b9b6db5af7be1fb0999b",
+    "wsl": "Existing Ubuntu24.04.3 x86_64",
+    "nativeWasmFlags": "--cfg near; build-std=std,panic_abort with existing rust-src"
+  },
+  "hostTests": {
+    "count": 8,
+    "names": [
+      "combined_interfaces_and_exact_quote",
+      "vault_cannot_use_public_token_methods_or_forged_refund",
+      "purse_funded_birth_is_local_burn_and_keeps_pressure",
+      "tentative_receiver_cannot_drain_spend_start_day_or_forward",
+      "dead_or_ai_pending_purse_stays_withdrawable_and_incremental",
+      "force_unregister_burn_cannot_rewind_pressure_or_erase_purse",
+      "immediate_owner_not_signer_or_nft_operator_controls_purse",
+      "receiver_accept_failure_and_malformed_results_preserve_standard_resolution"
+    ],
+    "kind": "Actual Rust methods with near-sdk mock context; distinct from receipt evidence"
+  },
+  "artifacts": {
+    "default": {
+      "file": "default-probe.wasm",
+      "bytes": 493649,
+      "sha256": "203a032fa51966dccd205a2650c65323beeafd94f9f5ade81da6e8a1804ed9f7",
+      "validWebAssembly": true,
+      "exports": [
+        "memory",
+        "allocated",
+        "begin_day_probe",
+        "contract_source_metadata",
+        "ft_balance_of",
+        "ft_metadata",
+        "ft_resolve_transfer",
+        "ft_total_supply",
+        "ft_transfer",
+        "ft_transfer_call",
+        "lifetime_issued",
+        "mint_from_purse",
+        "new",
+        "nft_metadata",
+        "nft_resolve_transfer",
+        "nft_token",
+        "nft_transfer",
+        "nft_transfer_call",
+        "purse_of",
+        "quote_decipoints",
+        "storage_balance_bounds",
+        "storage_balance_of",
+        "storage_deposit",
+        "storage_unregister",
+        "storage_withdraw",
+        "transfer_call_enabled",
+        "transfer_in_flight",
+        "withdraw",
+        "__data_end",
+        "__heap_base"
+      ]
+    },
+    "receiptFeature": {
+      "file": "receipt-probe.wasm",
+      "bytes": 534261,
+      "sha256": "9b5f38c46a56f1b39b3fa6e3673015e67e008968849594799458156203fa1dce",
+      "validWebAssembly": true,
+      "exports": [
+        "memory",
+        "allocated",
+        "begin_day_probe",
+        "contract_source_metadata",
+        "ft_balance_of",
+        "ft_metadata",
+        "ft_resolve_transfer",
+        "ft_total_supply",
+        "ft_transfer",
+        "ft_transfer_call",
+        "lifetime_issued",
+        "mint_from_purse",
+        "new",
+        "nft_metadata",
+        "nft_resolve_transfer",
+        "nft_token",
+        "nft_transfer",
+        "nft_transfer_call",
+        "probe_configure",
+        "probe_seed",
+        "probe_status",
+        "purse_of",
+        "quote_decipoints",
+        "storage_balance_bounds",
+        "storage_balance_of",
+        "storage_deposit",
+        "storage_unregister",
+        "storage_withdraw",
+        "transfer_call_enabled",
+        "transfer_in_flight",
+        "withdraw",
+        "__data_end",
+        "__heap_base"
+      ]
+    },
+    "receiver": {
+      "file": "receiver-probe.wasm",
+      "bytes": 107376,
+      "sha256": "7f091c9a46692d953b0780524fcc3972463a7d2b709dec1493d72180b20f1422",
+      "validWebAssembly": true,
+      "exports": [
+        "memory",
+        "after_attack",
+        "attack_failed",
+        "contract_source_metadata",
+        "new",
+        "nft_on_transfer",
+        "__data_end",
+        "__heap_base"
+      ]
+    }
+  },
+  "actualLocalReceipts": {
+    "transactions": 25,
+    "campaignTransactions": 23,
+    "externalTestNearSpent": 0,
+    "mainnetTransactions": 0,
+    "paidAiCalls": 0,
+    "callbackMeasurements": [
+      {
+        "label": "receiver-reject",
+        "gasBurnt": 3477411068431,
+        "gasAttached": 30000000000000,
+        "status": {
+          "SuccessValue": "ZmFsc2U="
+        }
+      },
+      {
+        "label": "receiver-panic",
+        "gasBurnt": 3467092550236,
+        "gasAttached": 30000000000000,
+        "status": {
+          "SuccessValue": "ZmFsc2U="
+        }
+      },
+      {
+        "label": "receiver-drain-reject",
+        "gasBurnt": 3477411068431,
+        "gasAttached": 30000000000000,
+        "status": {
+          "SuccessValue": "ZmFsc2U="
+        }
+      },
+      {
+        "label": "receiver-accept",
+        "gasBurnt": 2105514671403,
+        "gasAttached": 30000000000000,
+        "status": {
+          "SuccessValue": "dHJ1ZQ=="
+        }
+      },
+      {
+        "label": "injected-private-resolver-failure",
+        "gasBurnt": 1702880534910,
+        "gasAttached": 30000000000000,
+        "status": {
+          "Failure": {
+            "ActionError": {
+              "index": 0,
+              "kind": {
+                "FunctionCallError": {
+                  "ExecutionError": "Smart contract panicked: injected resolver failure"
+                }
+              }
+            }
+          }
+        }
+      }
+    ],
+    "gasExamples": [
+      {
+        "label": "withdraw-while-ai-pending",
+        "gasBurnt": 2960180645297
+      },
+      {
+        "label": "birth-while-ai-pending",
+        "gasBurnt": 4729546757450
+      },
+      {
+        "label": "birth-from-dead-purse",
+        "gasBurnt": 5239972339176
+      },
+      {
+        "label": "birth-storage-measurement",
+        "gasBurnt": 6139935969479
+      }
+    ],
+    "newbornStorage": {
+      "scope": "Actual local custody-probe newborn storage delta, excludes full biological/garden state",
+      "beforeBytes": 537681,
+      "afterBytes": 538076,
+      "addedBytes": 395,
+      "yoctoNearPerByte": "10000000000000000000",
+      "storageStakeDeltaYoctoNear": "3950000000000000000000",
+      "gasBurnt": 6139935969479,
+      "child": "7",
+      "sourceAfter": {
+        "owner": "test.near",
+        "purse": "0",
+        "alive": true,
+        "ai_pending": false,
+        "nonce": 1,
+        "transfer_pending": false,
+        "vault": "198000000",
+        "allocated": "198000000",
+        "supply": "200000000",
+        "issued": "950000000",
+        "mint_burns": "750000000"
+      },
+      "externalTestNearSpent": 0
+    },
+    "rollbackVerified": true,
+    "birthEventsVerified": true,
+    "defaultTransferCallOffVerified": true,
+    "receiverAcceptRejectPanicDrainVerified": true,
+    "forcedResolverFailure": "Purse remains backed and guard remains locked; recovery deliberately unresolved",
+    "processStopped": true
+  },
+  "sharedMoneyWitness": {
+    "unit": 1000000,
+    "K": 50000000000,
+    "M": 250000000,
+    "hostFourChestsAtHalfFactor": 68000000,
+    "pendingOrDeadPurseBirth": "Burn250debitsallocation/vault/supply once; incrementsmintburns; issuedunchanged; newNFTtosameowner"
+  },
+  "corrections": [
+    "Public vault FT transfer/call/forged vault callback rejected",
+    "Exact-onceFtBurn onbirth andforcedunregister; FtMint/NftMintfixtureevents",
+    "SDK5.30requires --cfg near forproperNEARhostpanic/crypto paths; fixed afteractualreceiptfailure",
+    "Immediateoutcomecapture avoidsfastsandboxGC deletingproof beforeinspection"
+  ],
+  "sources": [
+    {
+      "path": "Cargo.toml",
+      "sha256": "0b8f74df45548db370799a82dbb05e29a869d289d588f9e4bea698e5871f5d54"
+    },
+    {
+      "path": "Cargo.lock",
+      "sha256": "8363792d4e26e990e6a2b9833c10da2fd90c9898ac30d5266f7ecd5cef9752a2"
+    },
+    {
+      "path": "src/lib.rs",
+      "sha256": "8bd8e6f4f0a00249422295e16c5987722f5fcc02d0ff97d158d6060e5ffbd82d"
+    },
+    {
+      "path": "src/tests.rs",
+      "sha256": "6ac4f8c537b6a6bcdccf0692bc7e74c266d57f3aec964a779dbed55d7947175a"
+    },
+    {
+      "path": "receiver/Cargo.toml",
+      "sha256": "926a776ff4ca031bd7333d2ae3f571ad7df6cbbaf66ac6cfbd0bb1985ae13a6b"
+    },
+    {
+      "path": "receiver/Cargo.lock",
+      "sha256": "0a6841db0d12fd35ca6e80835b60e45e208c3b7788019466ecb3d6252a04a853"
+    },
+    {
+      "path": "receiver/src/lib.rs",
+      "sha256": "b059ba1c15a9773ac1160cfd9d54f89ae2eba7a04557c020196885592594e9a5"
+    },
+    {
+      "path": "receipts.py",
+      "sha256": "7d177f35c729443ed012061eac952c4a2a321b0c316c74a5137247e00e49fcb7"
+    },
+    {
+      "path": "storage_receipt.py",
+      "sha256": "b0bf7320244bd6ad347bdea4d32684fc4838d91b579303b8c3e731c53bf7f320"
+    },
+    {
+      "path": "inspect_receipts.py",
+      "sha256": "2ddf25389e82301f122a0e97153e98a9456a812bf590afae5de530503466f1ee"
+    }
+  ],
+  "remainingGates": [
+    "Fullauthoritativebiological/material reducer andissuancebucket",
+    "Complete day admission/completion/expiry; begin_day_probe onlytestslock",
+    "Worst-casecallbackgas/optionalapprovalandenumerationextensions/marketplacecompatibility",
+    "General callbackfailure recovery; defaulttransfer-call remainsOFF",
+    "Fullgame statestorage/gascost; measured395B iscustody-onlynewbornfloor",
+    "Productionbuild/toolchainworkflowanddeployednetworkcompatibility"
+  ]
+}

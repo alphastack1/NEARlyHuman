@@ -1,0 +1,579 @@
+{
+  "scope": "Measured actual local sandbox receipt gas and recorded contract storage; narrowed custody probe, not full game estimates",
+  "rows": [
+    {
+      "label": "receiver-reject",
+      "gasBurnt": 9643205517785,
+      "receipts": [
+        {
+          "id": "81NPY4F4SSYEhdNLWUrktTcZCb6Z2LurLKKiqytBphnd",
+          "executor": "game77509240.test.near",
+          "methods": [
+            "nft_transfer_call"
+          ],
+          "gasAttached": [
+            180000000000000
+          ],
+          "gasBurnt": 4208929927519,
+          "status": {
+            "SuccessReceiptId": "FJmhaZexkh22m5q2kaK38aHWQor7NWTb5j65tvNQaB5S"
+          }
+        },
+        {
+          "id": "2QEqLMvukHKjSDmsZsqxRepAZtP3TC4D7x2uBPbSDVrR",
+          "executor": "recv77509240.test.near",
+          "methods": [
+            "nft_on_transfer"
+          ],
+          "gasAttached": [
+            144902748968203
+          ],
+          "gasBurnt": 1196813218465,
+          "status": {
+            "SuccessValue": "dHJ1ZQ=="
+          }
+        },
+        {
+          "id": "4Kr48YYQvYTQ2nccazeB5p2u7sCXexDmCPAJ8i7LL4AQ",
+          "executor": "test.near",
+          "methods": [],
+          "gasAttached": [],
+          "gasBurnt": 223182562500,
+          "status": {
+            "SuccessValue": ""
+          }
+        },
+        {
+          "id": "FJmhaZexkh22m5q2kaK38aHWQor7NWTb5j65tvNQaB5S",
+          "executor": "game77509240.test.near",
+          "methods": [
+            "nft_resolve_transfer"
+          ],
+          "gasAttached": [
+            30000000000000
+          ],
+          "gasBurnt": 3477411068431,
+          "status": {
+            "SuccessValue": "ZmFsc2U="
+          }
+        },
+        {
+          "id": "7bmY18Drj2DEUkZ3AwMMakisbLHwXsaHkwhkw8UMPgFt",
+          "executor": "test.near",
+          "methods": [],
+          "gasAttached": [],
+          "gasBurnt": 223182562500,
+          "status": {
+            "SuccessValue": ""
+          }
+        }
+      ]
+    },
+    {
+      "label": "receiver-panic",
+      "gasBurnt": 9561749649303,
+      "receipts": [
+        {
+          "id": "SqFxcxs4qqLMFENs1kgRFmBcpuGecxLdhKL65DBktx3",
+          "executor": "game77509240.test.near",
+          "methods": [
+            "nft_transfer_call"
+          ],
+          "gasAttached": [
+            180000000000000
+          ],
+          "gasBurnt": 4223473436650,
+          "status": {
+            "SuccessReceiptId": "6vLS2AxNkAD56xyyZ39bLopxANtEHFK5JMnsw9o7FJqW"
+          }
+        },
+        {
+          "id": "5kM6UaZjVThxfU6DYJKN9ABQuAvMuWbQFHXGb1KFPkDn",
+          "executor": "recv77509240.test.near",
+          "methods": [
+            "nft_on_transfer"
+          ],
+          "gasAttached": [
+            144888205459072
+          ],
+          "gasBurnt": 1111180042762,
+          "status": {
+            "Failure": {
+              "ActionError": {
+                "index": 0,
+                "kind": {
+                  "FunctionCallError": {
+                    "ExecutionError": "Smart contract panicked: injected receiver failure"
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "id": "HRNpDKoifeHbL7LmzAkPtvJyUF2UHZYanHeUY2LG5wnA",
+          "executor": "test.near",
+          "methods": [],
+          "gasAttached": [],
+          "gasBurnt": 223182562500,
+          "status": {
+            "SuccessValue": ""
+          }
+        },
+        {
+          "id": "6vLS2AxNkAD56xyyZ39bLopxANtEHFK5JMnsw9o7FJqW",
+          "executor": "game77509240.test.near",
+          "methods": [
+            "nft_resolve_transfer"
+          ],
+          "gasAttached": [
+            30000000000000
+          ],
+          "gasBurnt": 3467092550236,
+          "status": {
+            "SuccessValue": "ZmFsc2U="
+          }
+        },
+        {
+          "id": "DxCnSu53oPZ8LdSCEtftpUW1ytR5q511jwjHkRUarZq9",
+          "executor": "test.near",
+          "methods": [],
+          "gasAttached": [],
+          "gasBurnt": 223182562500,
+          "status": {
+            "SuccessValue": ""
+          }
+        }
+      ]
+    },
+    {
+      "label": "receiver-drain-reject",
+      "gasBurnt": 14113589127166,
+      "receipts": [
+        {
+          "id": "7XFKqXCT5ZKduosWBuookGaJwG41cGi9FHXhomVkzeRQ",
+          "executor": "game77509240.test.near",
+          "methods": [
+            "nft_transfer_call"
+          ],
+          "gasAttached": [
+            180000000000000
+          ],
+          "gasBurnt": 4224250175890,
+          "status": {
+            "SuccessReceiptId": "BWhQrJdHUq7TVjK1cSHG3bwdKSHCTMt6SnLTfjAhoZCN"
+          }
+        },
+        {
+          "id": "4HAm6Ly8m9gQNWKEUoXjb76BvTMx3fT6zFdJHjD5hnvi",
+          "executor": "recv77509240.test.near",
+          "methods": [
+            "nft_on_transfer"
+          ],
+          "gasAttached": [
+            144887428719832
+          ],
+          "gasBurnt": 1961971437912,
+          "status": {
+            "SuccessReceiptId": "FExjMz64nxbhsaNbLMTwwZfTgp1iEsJ4wymw7dfx1UXD"
+          }
+        },
+        {
+          "id": "C2fDVs5jnvV7abTdmnU19M9tZ5ciQPB1Va6msLAMjXkk",
+          "executor": "game77509240.test.near",
+          "methods": [
+            "withdraw"
+          ],
+          "gasAttached": [
+            74518758143211
+          ],
+          "gasBurnt": 1818848562821,
+          "status": {
+            "Failure": {
+              "ActionError": {
+                "index": 0,
+                "kind": {
+                  "FunctionCallError": {
+                    "ExecutionError": "Smart contract panicked: transfer unresolved"
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "id": "Frc1txZwsjWzspBCytCZw5bvkkwZ8hqNK8iNKw93E3p9",
+          "executor": "recv77509240.test.near",
+          "methods": [],
+          "gasAttached": [],
+          "gasBurnt": 223182562500,
+          "status": {
+            "SuccessValue": ""
+          }
+        },
+        {
+          "id": "3wKzdAZH57ApmMVr744AwgvJCNWjZ2wZvtDFZdqAEX13",
+          "executor": "test.near",
+          "methods": [],
+          "gasAttached": [],
+          "gasBurnt": 223182562500,
+          "status": {
+            "SuccessValue": ""
+          }
+        },
+        {
+          "id": "FExjMz64nxbhsaNbLMTwwZfTgp1iEsJ4wymw7dfx1UXD",
+          "executor": "recv77509240.test.near",
+          "methods": [
+            "after_attack"
+          ],
+          "gasAttached": [
+            67518758143211
+          ],
+          "gasBurnt": 1201222788952,
+          "status": {
+            "SuccessValue": "dHJ1ZQ=="
+          }
+        },
+        {
+          "id": "FNUf99Nxag2QrRWi2ArxTa5Yw72Si9eiFCAvnzJjYces",
+          "executor": "test.near",
+          "methods": [],
+          "gasAttached": [],
+          "gasBurnt": 223182562500,
+          "status": {
+            "SuccessValue": ""
+          }
+        },
+        {
+          "id": "9zmiCCDKgmxS5xp9VobsxzUEUTFpKkFiDfQVmUEyWASr",
+          "executor": "test.near",
+          "methods": [],
+          "gasAttached": [],
+          "gasBurnt": 223182562500,
+          "status": {
+            "SuccessValue": ""
+          }
+        },
+        {
+          "id": "BWhQrJdHUq7TVjK1cSHG3bwdKSHCTMt6SnLTfjAhoZCN",
+          "executor": "game77509240.test.near",
+          "methods": [
+            "nft_resolve_transfer"
+          ],
+          "gasAttached": [
+            30000000000000
+          ],
+          "gasBurnt": 3477411068431,
+          "status": {
+            "SuccessValue": "ZmFsc2U="
+          }
+        },
+        {
+          "id": "6gXpHhhgZfKBf29FWhPK1GywYa3J5MC3DdAAHhfWsT8A",
+          "executor": "test.near",
+          "methods": [],
+          "gasAttached": [],
+          "gasBurnt": 223182562500,
+          "status": {
+            "SuccessValue": ""
+          }
+        }
+      ]
+    },
+    {
+      "label": "receiver-accept",
+      "gasBurnt": 8286001730187,
+      "receipts": [
+        {
+          "id": "Cj2ErKwEQqiMiVtezUXLRtHKDfMYit4ihqXWjRHaYgLn",
+          "executor": "game77509240.test.near",
+          "methods": [
+            "nft_transfer_call"
+          ],
+          "gasAttached": [
+            180000000000000
+          ],
+          "gasBurnt": 4223618837614,
+          "status": {
+            "SuccessReceiptId": "3fsFrMxSFzfm9ZYxqo3E7wreF5Sr7R9GFiQFXjWmioTR"
+          }
+        },
+        {
+          "id": "2AQRVqjz1rym3bdB1CkrXn6DiwhBcJFfkuYtPamjDmKP",
+          "executor": "recv77509240.test.near",
+          "methods": [
+            "nft_on_transfer"
+          ],
+          "gasAttached": [
+            144888060058108
+          ],
+          "gasBurnt": 1196816917800,
+          "status": {
+            "SuccessValue": "ZmFsc2U="
+          }
+        },
+        {
+          "id": "76y25nZpH7TFw5Z6WjaVrD2a45Brg52xqpQCbaMFUiUh",
+          "executor": "test.near",
+          "methods": [],
+          "gasAttached": [],
+          "gasBurnt": 223182562500,
+          "status": {
+            "SuccessValue": ""
+          }
+        },
+        {
+          "id": "3fsFrMxSFzfm9ZYxqo3E7wreF5Sr7R9GFiQFXjWmioTR",
+          "executor": "game77509240.test.near",
+          "methods": [
+            "nft_resolve_transfer"
+          ],
+          "gasAttached": [
+            30000000000000
+          ],
+          "gasBurnt": 2105514671403,
+          "status": {
+            "SuccessValue": "dHJ1ZQ=="
+          }
+        },
+        {
+          "id": "CtBRbPjcHXkQcEC33KahZC6uywrXufBxhudfN1PyM7CB",
+          "executor": "test.near",
+          "methods": [],
+          "gasAttached": [],
+          "gasBurnt": 223182562500,
+          "status": {
+            "SuccessValue": ""
+          }
+        }
+      ]
+    },
+    {
+      "label": "birth-insufficient-storage-rollback",
+      "gasBurnt": 3782208974402,
+      "receipts": [
+        {
+          "id": "4S1NNFoPo8szCHyDJENzWwqFoY5taLo4XuPZGEty3YNn",
+          "executor": "game77509240.test.near",
+          "methods": [
+            "mint_from_purse"
+          ],
+          "gasAttached": [
+            100000000000000
+          ],
+          "gasBurnt": 3471765288652,
+          "status": {
+            "Failure": {
+              "ActionError": {
+                "index": 0,
+                "kind": {
+                  "FunctionCallError": {
+                    "ExecutionError": "Smart contract panicked: attach birth storage deposit"
+                  }
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "label": "withdraw-while-ai-pending",
+      "gasBurnt": 2960180645297,
+      "receipts": [
+        {
+          "id": "EJYeKMhGbtSnH4CpjXhsYQErXFcUKn6ttXrAToEpnnC7",
+          "executor": "game77509240.test.near",
+          "methods": [
+            "withdraw"
+          ],
+          "gasAttached": [
+            100000000000000
+          ],
+          "gasBurnt": 2650070745552,
+          "status": {
+            "SuccessValue": ""
+          }
+        }
+      ]
+    },
+    {
+      "label": "birth-while-ai-pending",
+      "gasBurnt": 4729546757450,
+      "receipts": [
+        {
+          "id": "3WCNFfCHZa4dhLgYdCihqzYf9ycpCvQVdsNeYa12mRHT",
+          "executor": "game77509240.test.near",
+          "methods": [
+            "mint_from_purse"
+          ],
+          "gasAttached": [
+            100000000000000
+          ],
+          "gasBurnt": 3972737946700,
+          "status": {
+            "SuccessValue": "IjIi"
+          }
+        },
+        {
+          "id": "2859DH4gyHbhk7WAcVT8cwQjz4tx3ngDGv9vKq6XRsiB",
+          "executor": "test.near",
+          "methods": [],
+          "gasAttached": [],
+          "gasBurnt": 223182562500,
+          "status": {
+            "SuccessValue": ""
+          }
+        },
+        {
+          "id": "4rYi4htpez9wssKLoFb5gAjmwrBAsxgjCDJGA6dDrwfF",
+          "executor": "test.near",
+          "methods": [],
+          "gasAttached": [],
+          "gasBurnt": 223182562500,
+          "status": {
+            "SuccessValue": ""
+          }
+        }
+      ]
+    },
+    {
+      "label": "withdraw-dead",
+      "gasBurnt": 2964740645297,
+      "receipts": [
+        {
+          "id": "6gYTrvJ89tp1jEQfrHEJvNS1c8FgYHZEiEt89xtTwC2Q",
+          "executor": "game77509240.test.near",
+          "methods": [
+            "withdraw"
+          ],
+          "gasAttached": [
+            100000000000000
+          ],
+          "gasBurnt": 2654630745552,
+          "status": {
+            "SuccessValue": ""
+          }
+        }
+      ]
+    },
+    {
+      "label": "birth-from-dead-purse",
+      "gasBurnt": 5239972339176,
+      "receipts": [
+        {
+          "id": "6pJ4qAbCBoJmaW4aUfQWiVPkrrV5YaP6XhGp6ZrKKemS",
+          "executor": "game77509240.test.near",
+          "methods": [
+            "mint_from_purse"
+          ],
+          "gasAttached": [
+            100000000000000
+          ],
+          "gasBurnt": 4483163528426,
+          "status": {
+            "SuccessValue": "IjQi"
+          }
+        },
+        {
+          "id": "7MbyqMgJNMFC3oNVcNpDzb9x2TrcF3uz7LbDCYuJWQFA",
+          "executor": "test.near",
+          "methods": [],
+          "gasAttached": [],
+          "gasBurnt": 223182562500,
+          "status": {
+            "SuccessValue": ""
+          }
+        },
+        {
+          "id": "6Gha1W6RdkeGyn6peh51aEhi8744GzFAZTuvmFmQ7wQV",
+          "executor": "test.near",
+          "methods": [],
+          "gasAttached": [],
+          "gasBurnt": 223182562500,
+          "status": {
+            "SuccessValue": ""
+          }
+        }
+      ]
+    },
+    {
+      "label": "injected-private-resolver-failure",
+      "gasBurnt": 7979668823106,
+      "receipts": [
+        {
+          "id": "6jzuf7ezkcQsqFXp7qDNEgmErmPdUEQfZPYeEZBhi7KC",
+          "executor": "game77509240.test.near",
+          "methods": [
+            "nft_transfer_call"
+          ],
+          "gasAttached": [
+            180000000000000
+          ],
+          "gasBurnt": 4319920067026,
+          "status": {
+            "SuccessReceiptId": "C25c8mAbnxLujTdXXhgr2U3ALnsCLayjkivzVRP52TBq"
+          }
+        },
+        {
+          "id": "76YTA2yLpwPPCA8rLSmAP6wLsp8dcEhJNZskdxyekfVU",
+          "executor": "recv77509240.test.near",
+          "methods": [
+            "nft_on_transfer"
+          ],
+          "gasAttached": [
+            144791758828696
+          ],
+          "gasBurnt": 1196816917800,
+          "status": {
+            "SuccessValue": "ZmFsc2U="
+          }
+        },
+        {
+          "id": "8z5TXufktHGr7ZjBrMtuYxYfieVLqtRoLeFi1NYfAiEp",
+          "executor": "test.near",
+          "methods": [],
+          "gasAttached": [],
+          "gasBurnt": 223182562500,
+          "status": {
+            "SuccessValue": ""
+          }
+        },
+        {
+          "id": "C25c8mAbnxLujTdXXhgr2U3ALnsCLayjkivzVRP52TBq",
+          "executor": "game77509240.test.near",
+          "methods": [
+            "nft_resolve_transfer"
+          ],
+          "gasAttached": [
+            30000000000000
+          ],
+          "gasBurnt": 1702880534910,
+          "status": {
+            "Failure": {
+              "ActionError": {
+                "index": 0,
+                "kind": {
+                  "FunctionCallError": {
+                    "ExecutionError": "Smart contract panicked: injected resolver failure"
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "id": "BFMmVTMBGr3PjyCX5nFcaDSghAes2hWtNrY8UcouVA8w",
+          "executor": "test.near",
+          "methods": [],
+          "gasAttached": [],
+          "gasBurnt": 223182562500,
+          "status": {
+            "SuccessValue": ""
+          }
+        }
+      ]
+    }
+  ]
+}

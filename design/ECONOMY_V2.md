@@ -4,6 +4,8 @@ Design decision: 2 November 2026. This is the recommended next version, selected
 
 This document is the authority for the next design pass where it differs from earlier economy brainstorming. The original guide and mockups still define the game's character and visual quality. Supporting calculations, experiment limits and reproduction instructions are in [the research record](../docs/economy-v2/RESEARCH.md).
 
+The subsequent [working feasibility review](../docs/v2-feasibility/REVIEW.md) and [transition boundaries](V2_TRANSITIONS.md) add actual care/incident experiments, EVM transactions and native NEAR receipts. The [six-wave overnight sprint](../docs/OVERNIGHT_REFINEMENT.md) now owns implementation and the final testnet publication.
+
 ## The player experience
 
 Bring a few supplies. Watch a particular little mind make something of them. Its garden, workshop, possessions, memories and earned tokens belong to that NFT. The player helps; Jev decides how the day goes.
@@ -24,7 +26,7 @@ Jev chooses planting, watering, breakfast, other care, the day's main project, k
 ### The first few days
 
 1. The free visitor experience shows an actual saved day. An exact-NFT link opens that life immediately and preserves visitor context; it must not substitute the default demonstration rooster.
-2. Minting creates a procedurally varied rooster and home with **3 bread, 3 drinking water and four empty plots**. No wood, finished saleable products or hidden token grant. Keep seed choice out of the mint form.
+2. Minting creates a procedurally varied rooster and home with **3 bread, 3 drinking water and four empty plots**. Start health at100 and food/water/energy/morale at80, matching the existing biological baseline. No wood, finished saleable products or hidden token grant. Keep seed choice out of the mint form.
 3. The first Prepare day dock makes a bread/water/quick-flower-seed kit the obvious starting arrangement, editable with one tap. The morning parcel and a visibly empty bed establish the connection through the rooster's actions.
 4. If Jev plants the quick seed on Day 1, its three wet bedtimes make it first collectable on Day 4. Seedling stages and moist/dry soil communicate progress. The rooster may enjoy the flower or ship it; either outcome has an obvious local animation.
 5. The first actual shipment briefly shows the parcel leaving and the purse increasing by the committed amount. No financial tutorial, exchange chart, extra currency meter over the playfield or automatic wallet prompt.
@@ -44,7 +46,7 @@ These are logical commitments, not extra buttons the player has to schedule. Ani
 
 There is **one shipping round per completed day, up to four finished units total**. Extra goods stay in the cupboard. A main harvest cannot also be a main craft. Harvested fruit can still be used or shipped in a later ordinary routine that day. All travel remains continuous; no teleport between plot, workshop, pantry and mailbox.
 
-Emergency responses must have explicit bounded rules in the canonical day trace. They cannot quietly create additional planting, crafting or shipping turns. Preserve room for the existing varied small routines; do not turn five opportunities into five compulsory production chores.
+Allow at most two acute nonproductive responses per day, one per eligible primary/task episode and before its deadline, with actual costs. Fire/rain responses cannot become emergency medicine or extra planting, crafting or shipping turns. A pre-pickup recovering routine shares the five ordinary opportunities. The deadline-aware incident guard and exact timing are specified in the transition boundaries. Preserve room for the existing varied small routines; do not turn five opportunities into five compulsory production chores.
 
 Nothing ages, grows, regrows or earns while the player is away. Rewatching, seeking, skipping, API waiting, failed attempts and wallet transfers advance no biological clock. No arbitrary wall-clock cooldown is added to an otherwise valid game day.
 
@@ -75,6 +77,7 @@ Four slots means four total plants, including trees. Daisy and marigold intentio
 - A ready plant holds exactly one output. It waits without producing more or rotting. There is no hidden stack of repeat fruit or wood.
 - Collection creates one output, decrements the remaining lifetime count and starts the two-tick repeat timer, if any. The collection day's bedtime may supply its first repeat tick. The final pickup clears the slot.
 - No fertilizer acceleration, bonus yield, saleable loot event or free raw-wood delivery is included in this baseline. Any later productive bonus must be added to the conservation rules, reward bound and balance evidence first.
+- Soil damage belongs to the bed and persists after harvest, wilt or abandonment. One real compost and one main restore one blocked bed. Compost has no growth-acceleration effect, and water alone cannot clear blocked soil.
 
 A Day 1 planting is first collectable on Day 4, 7 or 9. With immediate pickup and uninterrupted wet growth, a tree gives wood on Days 7, 9, …, 25; grape/apple give fruit on Days 9, 11, …, 19. Delaying a pickup delays regrowth. A failed day applies no tick.
 
@@ -92,6 +95,8 @@ Care deliveries have no direct sale/transfer/recipe-conversion route. Persistent
 | Large chest | 10 | 1 | 34 |
 
 One craft consumes its wood once and makes one object. No additional toolkit, ingredient tree or multi-day work-in-progress system is required. Small crafts conserve wood; larger crafts use fewer workshop days per wood. Main-action competition means neither advantage establishes a universal winning recipe.
+
+Legal planting, harvesting and these crafts are deterministic. Each productive main requires and consumes3 energy. Exhaustion leaves rest/quiet available rather than allowing output after clamping an unaffordable cost. Explicitly tagged domestic cooking/repairs retain their own competence rules; safe ordinary care stays certain.
 
 Wood collection itself mints no currency. Finished objects are stored or shipped. Personal household placement, if later allowed for these objects, must consume/reserve the real unit and block simultaneous shipping; permanent buffs are outside this baseline. Existing decorative/comfort work can remain non-saleable where that keeps the rules honest.
 
@@ -193,7 +198,7 @@ Share game semantics, catalog IDs, public-life presentation and contract fixture
 
 - **Robinhood/EVM:** an ERC-721/game controller plus a separate controlled ERC-20 and backed purse ledger. Controller minting follows the verified reducer and issuance bucket. Safe token handling and reentrancy protection cover withdrawal, token-funded births and NFT receiver callbacks.
 - **NEAR:** first prototype a single account holding NEP-171 NFT, NEP-141 token, game and purse ledgers. This may allow reward credit, withdrawal to the owner's registered FT ledger and token-funded birth to be local atomic mutations. Distinct storage namespaces, events, registration and storage payments still need implementation. No storage-unregister path may burn vault backing allocated to purses. This is a preferred design to validate, not a claim of completed standards compatibility.
-- NEAR's transfer-call can provisionally move an NFT and later return it. Block purse/game mutations during that provisional ownership and require a private resolver with reserved gas and explicit recovery. Test the reject/return/failure paths before enabling that route. Do not promise marketplace compatibility until it works. Direct transfer is the simpler initial path.
+- NEAR's transfer-call can provisionally move an NFT and later return it. Actual local receipts now verify normal accept/reject/panic, protected temporary-owner drain attempts and storage rollback. An injected failed resolver still leaves the ownership lock, so this route stays off by default until recovery is resolved. Direct transfer is the initial path. Do not promise full marketplace compatibility from the narrowed probe.
 - These are separate worlds with independent tokens, pressure and budgets. No bridge, global supply counter or duplicated purse claim. Show the current world quietly and switch deliberately; never copy an RH owner proof to NEAR.
 
 The funded NEAR developer account is recorded in [NEAR testnet preparation](../docs/NEAR_TESTNET_PREPARATION.md). No new key per rooster is required. Mainnet remains deferred until the whole candidate is tested and finalized.
@@ -212,10 +217,10 @@ The integrated study covers 350 constructed 365-day schedules. Competent baselin
 
 In an otherwise empty economy, one fixed NFT saving all proceeds reaches 250 tokens on illustrative Days 57 / 58 / 105 / 127 for best-observed / mixed-treatment / personal-use / personal-use-treatment policies. Other issuance slows these thresholds. These are active game days, not calendar durations or financial payback claims.
 
-The next implementation order is selected:
+The small working feasibility wave is complete for its declared economic/custody/care slices. The next implementation order is selected:
 
-1. Freeze the smallest complete canonical V2 care/incident/action specification and bound the serialized state/trace. Retain the studied production rules; measure, rather than assume, what fits on each chain.
-2. Make a small Solidity/Rust feasibility prototype with matching fixtures: finite harvests, craft/ship conservation, failure/retry, reserved quotes, zero-shipping care, dead/pending withdrawals, token-funded birth and NEAR transfer-call recovery. Check gas/storage/latency before committing to the full contracts.
+1. Build one unified owned-snapshot V2 kernel from the transition boundaries: a single material ledger, complete care/incident chronology, bounded positive care certificates, typed IDs and matching state/draw/trace fixtures. Retain the studied production rules and keep the certificate's conservative softening trust explicit.
+2. Connect that full kernel to the contract-backed candidate using the tested economic/custody slices. Measure full size, gas and storage; keep prototype founder/terminal/issuer helpers out of production. Do not repeat the completed abstract sweeps as a substitute for implementation parity.
 3. Mock up the revised yard, workshop, public life and purse flows together, with first-use progression and small feedback. Review against real phone dimensions before extending the full game.
 4. Build the V2 candidate in isolation from V1, then run several actual Jev personalities across enough committed days to show a full tree life, repeat fruit, long craft and first token-funded birth. Use logical simulation for long horizons; do not spend inference calls just to replicate a deterministic arithmetic check.
 5. Resolve observed gameplay balance, native-fee coverage and UI critiques, then make one planned testnet release. No mainnet release until the owner-requested tested/finalized stage.
