@@ -1,0 +1,41 @@
+{
+  "date": "2026-11-02",
+  "status": "Provisional research, not implemented V2 rules or launch prices",
+  "scope": "Read-only source/receipt research and hypothetical deterministic arithmetic. No production game, contracts, token settings, wallets or deployments changed.",
+  "confirmedOwnerDirections": [
+    "Earned NFT purse tokens remain withdrawable by the owner after biological death.",
+    "Careful repeat play is welcome; idle roosters do not age or produce.",
+    "Four total growing slots, with a tree consuming one slot.",
+    "Crop maturation tiers of three, six and eight game-growth days.",
+    "Flowers, strawberries and blueberries have a single harvest and clear their slot.",
+    "Grapes and apples mature at eight growth days, regrow every two days and yield six times in total.",
+    "The wood tree matures at six growth days, regrows every two days and yields ten wood in total.",
+    "Craft wood quantities are spoon3, toy boat6, birdhouse8 and large chest10.",
+    "Sellable products must be produced by the NPC rather than chosen as free deliveries.",
+    "The token NFT mint price is fixed for a season; native gas/processing fees remain separate from play-token accounting."
+  ],
+  "proposedAssumptionsNotYetOwnerApproved": [
+    "One bed is planted per main undertaking; one main harvest round may collect all ready slots.",
+    "A nontradeable garden well supplies a single watering round for up to four slots, separate from drinking bottles.",
+    "A natural breakfast routine groups actual food and drink while preserving both item and energy costs.",
+    "Ready produce waits, and regrowth begins after pickup; the initial yield counts toward six or ten.",
+    "All four crafts initially use one main undertaking; no multi-day work-in-progress system is assumed.",
+    "Relative base-point prices and the pressure index are research candidates, not accepted token denomination or financial promises."
+  ],
+  "studies": [
+    {"file": "care-capacity.json", "scope": "100-day constructed care schedules, including a retained tight/failing naive stress policy. Treatment stock and deterministic policy are assumptions, not actual Jev outcomes."},
+    {"file": "valuation-reference.json", "scope": "Time/work-aware gross base points and optional paid-seed illustrations. Costs, batching and rounding assumptions are explicit."},
+    {"file": "production-timing.json", "scope": "Earliest isolated harvest/craft schedules and four-slot allocation comparisons."},
+    {"file": "plot-frontier.json", "scope": "Exhaustive best-harvest-count schedules inside a simplified monoculture model over30/60/90 game days. Excludes care costs, seed costs, mixed crops, crafting, mortality, token prices and AI."},
+    {"file": "currency-flow.json", "scope": "Optimistic mechanism witnesses comparing supply pressure, burns and producer expansion; not calibrated crop returns or population forecasts."},
+    {"file": "observed-fees.json", "scope": "Three historical testnet processing fees versus relay execution-gas components; no mainnet or USD valuation. Kept separate from token economics."}
+  ],
+  "openInputs": [
+    "Exact mapping of four flower variants to the three maturation tiers.",
+    "Seed/sapling acquisition and productive-input grant or purchase rules.",
+    "Whether raw wood is sellable; the recommended reference treats it as crafting material.",
+    "Final gross/net product values and fruit/flower self-use benefits.",
+    "Supply/pressure definition, quote period, issuance backstop and season token mint price.",
+    "Real economic opportunity cadence, independent of animation length."
+  ]
+}

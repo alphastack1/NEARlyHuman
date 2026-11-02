@@ -1,0 +1,507 @@
+{
+  "at": "2026-11-02T11:23:11.863Z",
+  "scope": "Proposed-mechanic arithmetic only. Not the current live game, biological simulation, observed Jev behavior, token valuation, launch prices or guaranteed returns.",
+  "assumptions": [
+    "All planted/growing slots remain alive and wet. No missed growth, resource grants, interruptions or exports before production.",
+    "Plant during day1; its completed bedtime counts growth tick1. A ready resource is collected by a subsequent actual action.",
+    "Regrowth starts after actual collection, with at most one ready unit per slot; waiting never accumulates unseen outputs.",
+    "First harvest counts toward total6 fruit/10 wood. Slots clear after last harvest.",
+    "For schedule comparison, all requested trees are planted first, one per day. Other main work and body care are omitted: earliest optimistic scenarios.",
+    "Craft stages are an illustrative1/1/2/2 work hypothesis, not user-fixed final durations.",
+    "Base-point ceilings are long-run minimum-resource accounting bounds, not daily payout caps; stored goods may ship in a later burst."
+  ],
+  "cropTimings": [
+    {
+      "growthTicks": 3,
+      "plantDay": 1,
+      "firstReadyAtEndOfDay": 3,
+      "firstHarvestDay": 4,
+      "minimumSlotDays": 4,
+      "majorWorkActions": 2
+    },
+    {
+      "growthTicks": 6,
+      "plantDay": 1,
+      "firstReadyAtEndOfDay": 6,
+      "firstHarvestDay": 7,
+      "minimumSlotDays": 7,
+      "majorWorkActions": 2
+    },
+    {
+      "growthTicks": 8,
+      "plantDay": 1,
+      "firstReadyAtEndOfDay": 8,
+      "firstHarvestDay": 9,
+      "minimumSlotDays": 9,
+      "majorWorkActions": 2
+    }
+  ],
+  "fruit": {
+    "name": "grape/apple",
+    "maturityTicks": 8,
+    "cycleTicks": 2,
+    "yields": 6,
+    "firstReadyAtEndOfDay": 8,
+    "harvestDays": [
+      9,
+      11,
+      13,
+      15,
+      17,
+      19
+    ],
+    "lastHarvestDay": 19,
+    "minimumSlotDays": 19,
+    "majorWorkActions": 7
+  },
+  "wood": {
+    "name": "wood",
+    "maturityTicks": 6,
+    "cycleTicks": 2,
+    "yields": 10,
+    "firstReadyAtEndOfDay": 6,
+    "harvestDays": [
+      7,
+      9,
+      11,
+      13,
+      15,
+      17,
+      19,
+      21,
+      23,
+      25
+    ],
+    "lastHarvestDay": 25,
+    "minimumSlotDays": 25,
+    "majorWorkActions": 11
+  },
+  "craftSchedules": [
+    {
+      "trees": 1,
+      "slotsLeftForOtherCrops": 3,
+      "harvestIsMajor": [
+        {
+          "name": "spoon",
+          "wood": 3,
+          "stages": 1,
+          "lastInputGatheredDay": 11,
+          "earliestFinishDay": 12
+        },
+        {
+          "name": "toy boat",
+          "wood": 6,
+          "stages": 1,
+          "lastInputGatheredDay": 17,
+          "earliestFinishDay": 18
+        },
+        {
+          "name": "birdhouse",
+          "wood": 8,
+          "stages": 2,
+          "lastInputGatheredDay": 21,
+          "earliestFinishDay": 23
+        },
+        {
+          "name": "large chest",
+          "wood": 10,
+          "stages": 2,
+          "lastInputGatheredDay": 25,
+          "earliestFinishDay": 27
+        }
+      ],
+      "batchHarvestIsRoutine": [
+        {
+          "name": "spoon",
+          "wood": 3,
+          "stages": 1,
+          "lastInputGatheredDay": 11,
+          "earliestFinishDay": 11
+        },
+        {
+          "name": "toy boat",
+          "wood": 6,
+          "stages": 1,
+          "lastInputGatheredDay": 17,
+          "earliestFinishDay": 17
+        },
+        {
+          "name": "birdhouse",
+          "wood": 8,
+          "stages": 2,
+          "lastInputGatheredDay": 21,
+          "earliestFinishDay": 22
+        },
+        {
+          "name": "large chest",
+          "wood": 10,
+          "stages": 2,
+          "lastInputGatheredDay": 25,
+          "earliestFinishDay": 26
+        }
+      ]
+    },
+    {
+      "trees": 2,
+      "slotsLeftForOtherCrops": 2,
+      "harvestIsMajor": [
+        {
+          "name": "spoon",
+          "wood": 3,
+          "stages": 1,
+          "lastInputGatheredDay": 9,
+          "earliestFinishDay": 10
+        },
+        {
+          "name": "toy boat",
+          "wood": 6,
+          "stages": 1,
+          "lastInputGatheredDay": 12,
+          "earliestFinishDay": 13
+        },
+        {
+          "name": "birdhouse",
+          "wood": 8,
+          "stages": 2,
+          "lastInputGatheredDay": 14,
+          "earliestFinishDay": 16
+        },
+        {
+          "name": "large chest",
+          "wood": 10,
+          "stages": 2,
+          "lastInputGatheredDay": 16,
+          "earliestFinishDay": 18
+        }
+      ],
+      "batchHarvestIsRoutine": [
+        {
+          "name": "spoon",
+          "wood": 3,
+          "stages": 1,
+          "lastInputGatheredDay": 9,
+          "earliestFinishDay": 9
+        },
+        {
+          "name": "toy boat",
+          "wood": 6,
+          "stages": 1,
+          "lastInputGatheredDay": 12,
+          "earliestFinishDay": 12
+        },
+        {
+          "name": "birdhouse",
+          "wood": 8,
+          "stages": 2,
+          "lastInputGatheredDay": 14,
+          "earliestFinishDay": 15
+        },
+        {
+          "name": "large chest",
+          "wood": 10,
+          "stages": 2,
+          "lastInputGatheredDay": 16,
+          "earliestFinishDay": 17
+        }
+      ]
+    },
+    {
+      "trees": 3,
+      "slotsLeftForOtherCrops": 1,
+      "harvestIsMajor": [
+        {
+          "name": "spoon",
+          "wood": 3,
+          "stages": 1,
+          "lastInputGatheredDay": 9,
+          "earliestFinishDay": 10
+        },
+        {
+          "name": "toy boat",
+          "wood": 6,
+          "stages": 1,
+          "lastInputGatheredDay": 12,
+          "earliestFinishDay": 13
+        },
+        {
+          "name": "birdhouse",
+          "wood": 8,
+          "stages": 2,
+          "lastInputGatheredDay": 14,
+          "earliestFinishDay": 16
+        },
+        {
+          "name": "large chest",
+          "wood": 10,
+          "stages": 2,
+          "lastInputGatheredDay": 16,
+          "earliestFinishDay": 18
+        }
+      ],
+      "batchHarvestIsRoutine": [
+        {
+          "name": "spoon",
+          "wood": 3,
+          "stages": 1,
+          "lastInputGatheredDay": 9,
+          "earliestFinishDay": 9
+        },
+        {
+          "name": "toy boat",
+          "wood": 6,
+          "stages": 1,
+          "lastInputGatheredDay": 11,
+          "earliestFinishDay": 11
+        },
+        {
+          "name": "birdhouse",
+          "wood": 8,
+          "stages": 2,
+          "lastInputGatheredDay": 12,
+          "earliestFinishDay": 13
+        },
+        {
+          "name": "large chest",
+          "wood": 10,
+          "stages": 2,
+          "lastInputGatheredDay": 13,
+          "earliestFinishDay": 14
+        }
+      ]
+    },
+    {
+      "trees": 4,
+      "slotsLeftForOtherCrops": 0,
+      "harvestIsMajor": [
+        {
+          "name": "spoon",
+          "wood": 3,
+          "stages": 1,
+          "lastInputGatheredDay": 9,
+          "earliestFinishDay": 10
+        },
+        {
+          "name": "toy boat",
+          "wood": 6,
+          "stages": 1,
+          "lastInputGatheredDay": 12,
+          "earliestFinishDay": 13
+        },
+        {
+          "name": "birdhouse",
+          "wood": 8,
+          "stages": 2,
+          "lastInputGatheredDay": 14,
+          "earliestFinishDay": 16
+        },
+        {
+          "name": "large chest",
+          "wood": 10,
+          "stages": 2,
+          "lastInputGatheredDay": 16,
+          "earliestFinishDay": 18
+        }
+      ],
+      "batchHarvestIsRoutine": [
+        {
+          "name": "spoon",
+          "wood": 3,
+          "stages": 1,
+          "lastInputGatheredDay": 9,
+          "earliestFinishDay": 9
+        },
+        {
+          "name": "toy boat",
+          "wood": 6,
+          "stages": 1,
+          "lastInputGatheredDay": 10,
+          "earliestFinishDay": 10
+        },
+        {
+          "name": "birdhouse",
+          "wood": 8,
+          "stages": 2,
+          "lastInputGatheredDay": 11,
+          "earliestFinishDay": 12
+        },
+        {
+          "name": "large chest",
+          "wood": 10,
+          "stages": 2,
+          "lastInputGatheredDay": 12,
+          "earliestFinishDay": 13
+        }
+      ]
+    }
+  ],
+  "candidates": [
+    {
+      "name": "time-only",
+      "slotPoint": 1,
+      "workPoint": 0,
+      "oneShotCrops": [
+        {
+          "growth": 3,
+          "basePoints": 4
+        },
+        {
+          "growth": 6,
+          "basePoints": 7
+        },
+        {
+          "growth": 8,
+          "basePoints": 9
+        }
+      ],
+      "recurringFruitPerHarvest": 3.1666666666666665,
+      "woodShadowPoints": 2.5,
+      "crafts": [
+        {
+          "name": "spoon",
+          "wood": 3,
+          "stages": 1,
+          "basePoints": 7.5,
+          "perWood": 2.5,
+          "perCraftStage": 7.5
+        },
+        {
+          "name": "toy boat",
+          "wood": 6,
+          "stages": 1,
+          "basePoints": 15,
+          "perWood": 2.5,
+          "perCraftStage": 15
+        },
+        {
+          "name": "birdhouse",
+          "wood": 8,
+          "stages": 2,
+          "basePoints": 20,
+          "perWood": 2.5,
+          "perCraftStage": 10
+        },
+        {
+          "name": "large chest",
+          "wood": 10,
+          "stages": 2,
+          "basePoints": 25,
+          "perWood": 2.5,
+          "perCraftStage": 12.5
+        }
+      ],
+      "longRunClosedResourcePointCeilingPerDay": 4
+    },
+    {
+      "name": "work-aware reference",
+      "slotPoint": 1,
+      "workPoint": 2,
+      "oneShotCrops": [
+        {
+          "growth": 3,
+          "basePoints": 8
+        },
+        {
+          "growth": 6,
+          "basePoints": 11
+        },
+        {
+          "growth": 8,
+          "basePoints": 13
+        }
+      ],
+      "recurringFruitPerHarvest": 5.5,
+      "woodShadowPoints": 4.7,
+      "crafts": [
+        {
+          "name": "spoon",
+          "wood": 3,
+          "stages": 1,
+          "basePoints": 16.1,
+          "perWood": 5.3667,
+          "perCraftStage": 16.1
+        },
+        {
+          "name": "toy boat",
+          "wood": 6,
+          "stages": 1,
+          "basePoints": 30.2,
+          "perWood": 5.0333,
+          "perCraftStage": 30.2
+        },
+        {
+          "name": "birdhouse",
+          "wood": 8,
+          "stages": 2,
+          "basePoints": 41.6,
+          "perWood": 5.2,
+          "perCraftStage": 20.8
+        },
+        {
+          "name": "large chest",
+          "wood": 10,
+          "stages": 2,
+          "basePoints": 51,
+          "perWood": 5.1,
+          "perCraftStage": 25.5
+        }
+      ],
+      "longRunClosedResourcePointCeilingPerDay": 6
+    },
+    {
+      "name": "action-emphasis",
+      "slotPoint": 0.5,
+      "workPoint": 3,
+      "oneShotCrops": [
+        {
+          "growth": 3,
+          "basePoints": 8
+        },
+        {
+          "growth": 6,
+          "basePoints": 9.5
+        },
+        {
+          "growth": 8,
+          "basePoints": 10.5
+        }
+      ],
+      "recurringFruitPerHarvest": 5.083333333333333,
+      "woodShadowPoints": 4.55,
+      "crafts": [
+        {
+          "name": "spoon",
+          "wood": 3,
+          "stages": 1,
+          "basePoints": 16.65,
+          "perWood": 5.55,
+          "perCraftStage": 16.65
+        },
+        {
+          "name": "toy boat",
+          "wood": 6,
+          "stages": 1,
+          "basePoints": 30.3,
+          "perWood": 5.05,
+          "perCraftStage": 30.3
+        },
+        {
+          "name": "birdhouse",
+          "wood": 8,
+          "stages": 2,
+          "basePoints": 42.4,
+          "perWood": 5.3,
+          "perCraftStage": 21.2
+        },
+        {
+          "name": "large chest",
+          "wood": 10,
+          "stages": 2,
+          "basePoints": 51.5,
+          "perWood": 5.15,
+          "perCraftStage": 25.75
+        }
+      ],
+      "longRunClosedResourcePointCeilingPerDay": 5
+    }
+  ]
+}
