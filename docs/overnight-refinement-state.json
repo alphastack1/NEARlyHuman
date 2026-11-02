@@ -5,10 +5,16 @@
   "timezone": "Asia/Bangkok",
   "intervalMinutes": 60,
   "scheduledWaveCount": 6,
-  "completedWaveCount": 5,
-  "nextWave": 6,
-  "activeWave": 6,
-  "status": "running_final_wave",
+  "completedWaveCount": 6,
+  "nextWave": null,
+  "activeWave": null,
+  "status": "complete",
+  "completedAtUtc": "2026-11-02T21:56:14Z",
+  "automation": {
+    "status": "deleted",
+    "stoppedAtUtc": "2026-11-02T21:56:14Z",
+    "evidence": "Codex automation_update delete returned deleteStatus=deleted; six requested waves complete."
+  },
   "owner": "PM chat only",
   "preparation": {
     "wave": 0,
@@ -113,7 +119,7 @@
     {
       "number": 6,
       "focus": "Final deep review, repairs and one verified testnet release",
-      "status": "running",
+      "status": "complete",
       "startedAtUtc": "2026-11-02T20:38:04Z",
       "owners": {
         "publicationAndPM": "PM",
@@ -121,7 +127,12 @@
         "player": "wave6_ui_final",
         "operations": "wave6_ops_final"
       },
-      "question": "Can the final actual game, choice menus, cloud financial cutover and hosted owner journey pass independent deep review before one verified testnet publication?"
+      "question": "Can the final actual game, choice menus, cloud financial cutover and hosted owner journey pass independent deep review before one verified testnet publication?",
+      "completedAtUtc": "2026-11-02T21:56:14Z",
+      "evidence": "docs/overnight/wave6/README.md",
+      "screenshots": "docs/overnight/wave6/README.md#actual-pixels-and-player-flows",
+      "result": "Shipped bounded shipment choices, wallet-operation/material/history fixes and quote funding/latency repairs. Sealed/imported127 exact V2 Cloud records without resetting ledgers. One main push published commitc3895b0; actual hosted SUNNY#3 mint, Day1 acceptance, Jev background finalization and saved playback passed. Total42 ready V2 days;214 public sends/$0.030778 plus50 preserved research sends/$0.005413; aggregate264/$0.036191. Real phone/cold visitor/owner views pass with0appJSerrors. Public purses honestly0NHC; positive earning/token-birth/death-withdrawal proved separately locally. All jobs terminal, holds/outbox clear. Owned tabs/host stopped; automation deleted.",
+      "nextPriority": "Owner playtest of the completed RH testnet release. A future sprint can refine initial exact-link error retry and observe voluntary Jev shipping; mainnet and native NEAR game publication remain separate work."
     }
   ],
   "release": {
@@ -131,7 +142,16 @@
     "mainnetAuthorized": false,
     "intermediateProductionPushesAllowed": false,
     "finalTestnetPublicationAuthorized": true,
-    "status": "publishing_testnet",
+    "status": "verified_live_testnet",
+    "publishedAtUtc": "2026-11-02T21:38:26.368Z",
+    "commit": "c3895b037fd328f7992a6d78de034fbb4d4ec264",
+    "netlifyDeployment": "6ae902a644516a4b38892dce",
+    "productionPushCount": 1,
+    "hostedOwnerProof": "docs/overnight/wave6/hosted-owner-day.json",
+    "closeoutProof": "docs/overnight/wave6/cloud-closeout.json",
+    "publicV2ReadyDays": 42,
+    "sprintV2PaidSends": 264,
+    "sprintV2ChargedMicroUSD": 36191,
     "collection": "0x30cb5213fa94020a95893ddb6b07470dbf7a9efc",
     "guest": {
       "id": "1",

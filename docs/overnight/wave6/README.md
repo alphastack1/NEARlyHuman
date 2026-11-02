@@ -1,6 +1,8 @@
 # Final wave: reviewed testnet release
 
-This wave performs the final independent choice, operations and player reviews, then one production publication. The source below records the verified **pre-publication** boundary. Hosted results are added only after observing the actual deployment; local fixtures or read-only RPC calls are not treated as hosted completion.
+Wave6 is complete. The independent choice, operations and player reviews produced focused repairs, followed by **one publication** and verification of the actual hosted testnet game at [nearlyhuman.netlify.app](https://nearlyhuman.netlify.app). Mainnet remains deferred.
+
+Question: does the complete game remain clear, coherent and financially bounded through a real hosted owner journey? Evidence: the final build, deployed rules, preserved Cloud records, actual mint/admission/Jev/finalization receipts, saved playback and reviewed phone screenshots all agree. Decision: release this tested candidate; preserve the remaining observations below for a later improvement sprint.
 
 ## Final repairs
 
@@ -26,8 +28,42 @@ The source was verified quiescent with all accepted jobs ready, no in-flight sen
 
 The final fresh release check confirms original admissions paused, no active cloud legacy hold and no pending relay transaction. Environment configuration itself did not publish a build. Mainnet remains outside this sprint.
 
-## Publication verification boundary
+## Actual publication and hosted owner journey
 
-The intended live target is https://nearlyhuman.netlify.app on Robinhood testnet46630, collection `0x30cb5213fa94020a95893ddb6b07470dbf7a9efc`. The final main push follows the reviewed build/configuration and remote fast-forward check. Actual hosted native birth, signed acceptance, background Jev completion, exact-world pages and phone screenshots must be observed before this wave is marked complete.
+The remote main branch and actual ready Netlify deployment both identify commit `c3895b037fd328f7992a6d78de034fbb4d4ec264`. Deployment `6ae902a644516a4b38892dce` published at **21:38:26 UTC on 2 November 2026**. The [final read-only deployment check](release-deployment.json) confirms the bare root serves the reviewed bundle, configuration is V2/Robinhood testnet 46630, and the exact Mind7 guest commitment matches. There was one main push; subsequent evidence and this completion record are retained locally without another credit-consuming deployment.
 
-The temporary hosted-wallet bridge defaults to a keyless guard proof. Its explicitly authorized actual mode keeps the developer key in Node, validates the exact hosted world before unlocking, restricts chain/method/value/nonce, journals raw signatures privately and uses one owned Codex Browser tab. Its eventual outcome must be recorded separately; [the preparation proof](hosted-wallet-guard.json) is not a live wallet transaction.
+The actual site minted **SUNNY #3**, accepted its first day, completed a real hosted Jev job and played its immutable saved film. Exactly one mint and one day admission were submitted; recovered tooling attempts resumed the same life without duplicate payment. The [canonical Cloud/chain proof](hosted-owner-day.json) verifies the ready job, packet and all state/trace/certificate/reward commitments against the onchain Day1 record. The recorded project was **Plant Daisy**.
+
+| Actual operation | Transaction |
+| --- | --- |
+| Native mint | `0x27933bc681bea39d38b93599fd9a124334ceba02718cc8d4c8bbdf7a07091d72` |
+| Day admission | `0x6feab49b373464acf0b5b2d12abf09310e82d38f3ca4ae2bfb99b6e6b734431d` |
+| Hosted background finalization | `0xfcd302444d40932d144c43d57c93d2b7817e1ba467b48b9d1bd7686b4fa83c3c` |
+
+This hosted day used five completed Jev sends costing **$0.000576**. Its quote retired and both AI/gas holds cleared. The browser recorded zero application JavaScript errors. [The operations review](OPS_REVIEW.md) distinguishes the actual outcome from the controlled Node wallet bridge, earlier harness-only failures and the keyless preparation proof; no private key or raw signature is in these reports.
+
+## Actual pixels and player flows
+
+The public hosted pass covers cold title/start/home, an exact NFT link, portrait, saved days, belongings, zero purse and hatch at 320/390/430 phone widths. The short 320×360 form keeps its action reachable through its own scroll area. All nine views had zero horizontal overflow or application write requests. The owner pass adds hatch, new home, accepted/saved day, playback, completion and settled next-day supplies. PM inspected actual hosted pixels beside VR-01: the wood/moss/navy/gold palette, large continuous house and concise cards remain coherent. See [player evidence](UI_REVIEW.md), [hosted public report](ui-hosted-readonly.json) and [owner return checks](hosted-readonly-captures.json).
+
+Selected actual 390×844 screenshots:
+
+- [Public home](images/ui-hosted-home-390.png) and [SUNNY playback](hosted-playing-390.png).
+- [Public NFT portrait](hosted-public-profile-390.png) and [next-day parcel](hosted-care-settled-390.png).
+- [Day complete](hosted-day-complete-390.png) and [zero purse](hosted-zero-purse-390.png).
+
+One transient exact-life read failed during the public reviewer follow-up; subsequent public reads and settled recaptures passed. Its welcome error lacks an in-app retry of that original life, so a refresh is currently the recovery. This isolated UX edge is recorded without attributing an unretained response status or treating it as a persistent outage. A second release was not made for this edge.
+
+## Final accounting and scope
+
+[The final Cloud-only closeout](cloud-closeout.json) records **42 ready V2 jobs, 42 retired quotes, 0 active AI allowances, 0 incomplete provider entries, 0 gas holds, 0 worker leases and 0 pending shared relay transactions**. All 15 legacy jobs remain terminal and their active holds are 0. The campaign/pool audit passes; no ledger was reset.
+
+| AI scope | Paid sends | Actual charge |
+| --- | ---: | ---: |
+| Public V2 campaign, including SUNNY | 214 | $0.030778 |
+| Preserved closed research campaign | 50 | $0.005413 |
+| Sprint V2 total | **264** | **$0.036191** |
+
+All three actual public purses remain **0 NHC**. The observed Jev lives kept their goods; selective shipment options did not force a sale. No positive hosted withdrawal or token-paid birth is claimed. Actual local contract experiments separately proved productive earning, two 250 NHC births and withdrawal after death; those remain explicitly local evidence, not invented public gameplay.
+
+Owner signing control was returned to PM, run-owned browser tabs closed, and the final temporary read-only host stopped. The source financial store remains sealed; Cloud is the sole funded V2 store. Permanent application/build code has no TEMP dependency. The six-wave automation is stopped at completion, with no further hourly waves or mainnet work authorized by this sprint.
