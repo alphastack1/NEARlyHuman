@@ -5,6 +5,7 @@ import { storage, type DurableStore } from '../storage';
 import { reserveV2JobBudget, finishV2JobBudget, updateV2Record } from './budget';
 import { verifyV2Runtime, type V2RuntimeIdentity, V2ContextError } from './context';
 import { v2DecisionConfig } from './preparation';
+import { ServiceError } from '../chain';
 
 const abi = parseAbi([
   'function ownerOf(uint256 id) view returns(address)', 'function life(uint256 id) view returns(bytes)',
@@ -43,7 +44,7 @@ export async function issueV2DayQuote(client: PublicClient, runtime: V2RuntimeId
   const store = options.store || storage(), block = await verifyV2Runtime(client, runtime, options.allowLocal);
   if (!equal(signer.address, runtime.quoteSigner) || runtime.decisionConfig !== v2DecisionConfig(runtime.rulesHash)) throw new V2ContextError('context', 'The preparation policy needs another check.');
   const at = { address: runtime.collection, abi, blockNumber: block.number! };
-  const [owner, base, revision, attempts, pending, multiplier, paused, market, gasPrice, balance] = await Promise.all([
+  const [owner, base, revision, attempts, pending, multiplier, paused, market, gasPrice, balance, playerBalance] = await Promise.all([
     client.readContract({ ...at, functionName: 'ownerOf', args: [input.tokenId] }),
     client.readContract({ ...at, functionName: 'life', args: [input.tokenId] }),
     client.readContract({ ...at, functionName: 'revisions', args: [input.tokenId] }),
@@ -51,17 +52,22 @@ export async function issueV2DayQuote(client: PublicClient, runtime: V2RuntimeId
     client.readContract({ ...at, functionName: 'pending', args: [input.tokenId] }),
     client.readContract({ ...at, functionName: 'gasMultiplier' }), client.readContract({ ...at, functionName: 'admissionsPaused' }),
     client.readContract({ ...at, functionName: 'quoteDay', args: [input.tokenId] }), client.getGasPrice(), client.getBalance({ address: runtime.relayer, blockNumber: block.number! }),
+    client.getBalance({ address: input.player, blockNumber: block.number! }),
   ]);
   const state = decodeState(base); const supplied = kitItems(input.kitMask);
   if ((await client.getBlock({ blockNumber: block.number! })).hash !== block.hash) throw new V2ContextError('connection', 'Checking this quote again.');
   if (!equal(owner, input.player) || !state.alive || pending !== zero || paused || supplied.some(i => state.inventory[i]! >= 0xffffffff)) throw new V2ContextError('context', 'This life cannot accept another day yet.');
+  const fees = calculateV2ProcessingFee({ requestGas: options.requestGas ?? 1_200_000n, relayGas: options.relayGas ?? 6_000_000n, gasPrice, multiplier,
+    inferenceReserveWei: options.inferenceReserveWei ?? 0n, hostingReserveWei: options.hostingReserveWei });
+  // Reject an ordinary unfunded wallet before creating a scarce unused permit.
+  // Request gas keeps the same two-price headroom as the owner's wallet check.
+  if (playerBalance < fees.processingFee + fees.networkEstimate * 2n) throw new ServiceError('This wallet needs test ETH.', 'funds');
   // V1 and V2 use the same signer nonce. Public migration must drain old obligations.
   const legacy = (await store.get<{ holds: Record<string, { status: string }> }>('control/admission-v1'))?.value;
   const oldRelay = (await store.get<{ pending?: unknown }>(`control/relay-${runtime.chainId}-${runtime.relayer.toLowerCase()}`))?.value;
   if (oldRelay?.pending || Object.values(legacy?.holds || {}).some(h => h.status === 'held' || h.status === 'accepted')) throw new V2ContextError('connection', 'An earlier preparation is still finishing.');
-  await reconcileV2QuoteFunding(client, runtime, options.campaignId, store, options.allowLocal);
-  const fees = calculateV2ProcessingFee({ requestGas: options.requestGas ?? 1_200_000n, relayGas: options.relayGas ?? 6_000_000n, gasPrice, multiplier,
-    inferenceReserveWei: options.inferenceReserveWei ?? 0n, hostingReserveWei: options.hostingReserveWei });
+  // Historical retirement belongs to the background reconciler. Foreground
+  // admission touches only this scope and its funded accounting records.
   const scope = `${runtime.chainId}:${runtime.collection.toLowerCase()}:${input.player.toLowerCase()}:${input.tokenId}:${revision}:${attempts}`;
   const key = `v2/quotes/${keccak256(toHex(scope))}`;
   const record = await updateV2Record<QuoteRecord>(store, key, () => ({ scope, campaignId: options.campaignId, generation: 0, id: keccak256(encodeAbiParameters([{ type: 'string' }, { type: 'uint32' }], [scope, 0])), expiresAt: '0', status: 'held' }), q => {

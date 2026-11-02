@@ -6,7 +6,7 @@ NEARlyHuman is a retro, phone-first life game powered by **NEAR AI Cloud's Jev m
 
 **Hackathon track:** `nfts` — **NFTs That Do Something**. The asset carries continuing behavior, a changing portrait, possessions and rights to real onchain token units.
 
-**Release target:** [nearlyhuman.netlify.app](https://nearlyhuman.netlify.app). This branch contains the V2 candidate; hosted publication and verification follow the [overnight release sequence](docs/OVERNIGHT_REFINEMENT.md).
+**Play on testnet:** [nearlyhuman.netlify.app](https://nearlyhuman.netlify.app). Visit [MISO's exact life](https://nearlyhuman.netlify.app/?rooster=1&chainId=46630&collection=0x30cb5213fa94020a95893ddb6b07470dbf7a9efc), or hatch your own. The [release sequence](docs/OVERNIGHT_REFINEMENT.md) records the implementation and verification boundaries.
 
 ## A day in a little home
 
@@ -64,6 +64,6 @@ No production build depends on ignored `TEMP/`. Pushing `main` triggers Netlify,
 
 The [local controller/wallet proof](docs/overnight/wave4/CHAIN_REVIEW.md) advanced 100 accepted days with scripted legal choices, earned 521.964786 NHC, tested both 250-NHC birth routes and withdrew after death. These are isolated-chain authority tests, separate from paid Jev behavior.
 
-The public-chain run saved39 real Jev days across two NPCs using199 sends for$0.028328, with zero uncertain sends. MISO made a Toy boat from earned wood and kept it; both purses remained0NHC. [The actual run](docs/overnight/wave5/JEV_REVIEW.md) separates observed behavior from the local earning proof. Drained policy transitions added truthful opportunity/need forecasts and explicit craft/purse facts without forcing sales or changing contracts. [Independent chain checks](docs/overnight/wave5/RELIABILITY_REVIEW.md) and [actual rendered playback](docs/overnight/wave5/PLAYER_REVIEW.md) distinguish receipts, model calls, controlled fixtures and screenshots.
+Before publication, the public-chain run saved41 real Jev days across two NPCs using209 sends for$0.030202, with zero uncertain sends. MISO made a Toy boat from earned wood and kept it; both purses remained0NHC. [The earlier checkpoint](docs/overnight/wave5/JEV_REVIEW.md) separates observed behavior from the local earning proof. Drained policy transitions added truthful care/economy facts and [bounded produce/surplus shipping choices](docs/overnight/wave6/SHIPMENT_REVIEW.md) without forcing sales or changing contracts. [Independent chain checks](docs/overnight/wave5/RELIABILITY_REVIEW.md) and [actual rendered playback](docs/overnight/wave5/PLAYER_REVIEW.md) distinguish receipts, model calls, controlled fixtures and screenshots.
 
 The [V2 design](design/ECONOMY_V2.md), [contract guide](contracts/v2/README.md), [approved visual reference](design/references/VR-01-approved-house-and-care.png) and [99-board mockup gallery](design/mockups/index.html) preserve the intended game and visual direction.

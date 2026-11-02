@@ -1,0 +1,24 @@
+{
+  "scope": "Controlled quote-input proof; no actual quote/RPC/provider/wallet/financial-store operation.",
+  "cases": [
+    {
+      "playerBalance": "0",
+      "required": "174400000000000",
+      "code": "funds",
+      "pinnedPlayerBalance": true,
+      "storeOperations": 0,
+      "signatures": 0,
+      "pass": true
+    },
+    {
+      "playerBalance": "174399999999999",
+      "required": "174400000000000",
+      "code": "funds",
+      "pinnedPlayerBalance": true,
+      "storeOperations": 0,
+      "signatures": 0,
+      "pass": true
+    }
+  ],
+  "pass": true
+}

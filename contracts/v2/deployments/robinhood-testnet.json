@@ -8,7 +8,7 @@
     "verifierCodeHash": "0xe094d738ac772a2c0e0d1fbcadf84db0b2f8d9fbd6afb049086cc2d51c3f5fd7",
     "actionModuleCodeHash": "0xa826c7f09afc4ea32d557d12ccc9e43f483fed57a0ecbbf4ca12fbac3c62fc3c",
     "rulesHash": "0xdbba15bd27ab533240cf3d24e0df997d850ca3c4ba598e7d222b3061216d5363",
-    "decisionConfig": "0x047da3d3246af856a8f89d4608e2a094170560ffbf75644d9035a5b3dd31f374",
+    "decisionConfig": "0x5f8f7f1d79381d02783c3960fa2b8f12da19cac75f6b483aece39f0f73766892",
     "relayer": "0x3c63FD61B244b3B3290c74993F603816c6144C26",
     "quoteSigner": "0x3c63FD61B244b3B3290c74993F603816c6144C26"
   },
@@ -65,8 +65,15 @@
       "decisionConfig": "0x047da3d3246af856a8f89d4608e2a094170560ffbf75644d9035a5b3dd31f374",
       "mindPolicy": 6,
       "fromUtc": "2026-11-02T20:11:23.366Z",
-      "reason": "Explicit actual craft outputs and conditional NHC shipment/purse utility; no forced sale, choice weights or biological rule changes."
+      "reason": "Explicit actual craft outputs and conditional NHC shipment/purse utility; no forced sale, choice weights or biological rule changes.",
+      "untilUtc": "2026-11-02T20:46:58.114Z"
+    },
+    {
+      "decisionConfig": "0x5f8f7f1d79381d02783c3960fa2b8f12da19cac75f6b483aece39f0f73766892",
+      "mindPolicy": 7,
+      "fromUtc": "2026-11-02T20:46:58.114Z",
+      "reason": "Bounded produce/surplus alternatives expose already-permitted shipment baskets, without changing mechanics, prices, turns, contracts or forcing a sale."
     }
   ],
-  "policyUpdatedAtUtc": "2026-11-02T20:11:23.366Z"
+  "policyUpdatedAtUtc": "2026-11-02T20:46:58.114Z"
 }

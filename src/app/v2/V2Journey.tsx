@@ -50,7 +50,8 @@ export default function V2Journey() {
   const [packet, setPacket] = useState<V2FilmPacket | undefined>(filmPacket(preview?.packet));
   const [screen, setScreen] = useState<Screen>(preview?.pending || preview?.job ? 'pending' : preview?.life ? exactId ? 'profile' : 'home' : 'welcome');
   const [opening, setOpening] = useState<CartridgePhase>(() => exactId || preview ? 'closed' : sessionStorage.getItem('nh:v2:opening') ? 'closed' : 'assembling');
-  const [busy, setBusy] = useState(false), [message, setMessage] = useState('');
+  const [readBusy, setBusy] = useState(false), [walletBusy, setWalletBusy] = useState(false), [message, setMessage] = useState('');
+  const busy = readBusy || walletBusy;
   const [errorCode, setErrorCode] = useState('');
   const [boot, setBoot] = useState(0);
   const [account, setAccount] = useState<Address | undefined>(preview?.account);
@@ -67,6 +68,7 @@ export default function V2Journey() {
   const [walletIntent, setWalletIntent] = useState<Action>('connect');
   const wallet = useRef<Wallet | undefined>(undefined), activeProvider = useRef<Provider | undefined>(undefined), authenticated = useRef('');
   const pendingRef = useRef<Pending | undefined>(preview?.pending), operation = useRef<Action>('connect'), generation = useRef(0);
+  const walletOperation = useRef<symbol | undefined>(undefined);
   const quoteRef = useRef<V2OwnerQuote | undefined>(undefined);
   const operationContext = useRef<{ tokenId?: string; requestId?: Hex; birthDraft?: BirthDraft }>({});
   const returnScreen = useRef<Screen>('home');
@@ -81,11 +83,18 @@ export default function V2Journey() {
   const world = life ? { chainId: life.chainId, collection: life.collection } : config;
   const pendingKey = (who = account) => config && who ? `nh:v2:submitted:${config.chainId}:${config.collection.toLowerCase()}:${who.toLowerCase()}` : undefined;
   function remember(p?: Pending) { const k = pendingKey(p?.intent?.account || pendingRef.current?.intent?.account || wallet.current?.account || account); pendingRef.current = p; setPending(p); if (k) p ? storage.set(k, p) : storage.remove(k); }
+  function claimWalletOperation() { if (walletOperation.current) return; const token = Symbol('wallet-operation'); walletOperation.current = token; setWalletBusy(true); return token; }
+  function releaseWalletOperation(token: symbol) { if (walletOperation.current !== token) return false; walletOperation.current = undefined; setWalletBusy(false); return true; }
   function restoreBirth(draft?: BirthDraft) { if (!draft || typeof draft.name !== 'string' || draft.name.length > 8 || !['native', 'purse', 'wallet'].includes(draft.payment) || !Array.isArray(draft.stats) || draft.stats.length !== 3 || draft.stats.some(n => !Number.isInteger(n) || n < 0 || n > 5) || draft.stats.reduce((a, b) => a + b, 0) !== 5) return; setName(draft.name); setStats([...draft.stats]); setPayment(draft.payment); }
   function go(next: Screen) { setMessage(''); setErrorCode(''); setScreen(next); }
   function overlay(next: Screen) { if (next !== screen) returnScreen.current = screen; go(next); }
   function close() { const destination = returnScreen.current; returnScreen.current = 'home'; go(destination === 'wallet' || destination === screen ? 'home' : destination); }
-  useLayoutEffect(() => { if (screen === 'history' && sheetBody.current) sheetBody.current.scrollTop = historyCache.current.get(historyKey)?.scroll || 0; }, [screen, days, historyKey]);
+  useLayoutEffect(() => {
+    if (screen !== 'history' || !sheetBody.current) return;
+    const cached = historyCache.current.get(historyKey), body = sheetBody.current;
+    body.scrollTop = cached?.scroll || 0;
+    if (cached?.selected !== undefined) { body.querySelector<HTMLElement>('button[aria-current="true"]')?.scrollIntoView({ block: 'nearest' }); cached.scroll = body.scrollTop; }
+  }, [screen, days, historyKey]);
   useEffect(() => {
     const viewport = window.visualViewport;
     const fit = () => { if (!root.current) return; root.current.style.setProperty('--v2-visible-height', `${viewport?.height || window.innerHeight}px`); root.current.style.setProperty('--v2-visible-top', `${viewport?.offsetTop || 0}px`); };
@@ -162,7 +171,8 @@ export default function V2Journey() {
     return accepted;
   }
   async function attach(choice: WalletChoice, action: Action) {
-    if (!config) return; setBusy(true); setMessage('');
+    if (!config) return; const token = claimWalletOperation(); if (!token) return;
+    operation.current = action; writeScreen.current = screen === 'wallet' ? returnScreen.current : screen; setBusy(true); setMessage('');
     try {
       const w = await connectV2Wallet(choice.provider, config, intent => { const next = { kind: operation.current, ...operationContext.current, intent } satisfies Pending; pendingRef.current = next; setPending(next); const key = `nh:v2:submitted:${config.chainId}:${config.collection.toLowerCase()}:${intent.account.toLowerCase()}`; storage.set(key, next); });
       wallet.current = w; activeProvider.current = choice.provider; setAccount(w.account);
@@ -174,10 +184,12 @@ export default function V2Journey() {
         const accepted = (action === 'withdraw' || action === 'expire') ? await retireAcceptedDayJournal(unfinished, w.account) : undefined;
         if (!accepted) { setScreen('pending'); return; }
       }
-      if (action === 'connect') { go('lives'); await listLives(w.account); } else await perform(action, w);
-    } catch (e) { handleWriteError(e); } finally { setBusy(false); }
+      if (action === 'connect') { go('lives'); await listLives(w.account); } else await perform(action, w, token);
+    } catch (e) { handleWriteError(e); } finally { if (releaseWalletOperation(token)) setBusy(false); }
   }
   async function run(action: Action) {
+    const token = claimWalletOperation(); if (!token) return;
+    try {
     operation.current = action; setMessage('');
     writeScreen.current = screen === 'wallet' ? returnScreen.current : screen;
     if (pendingRef.current && action !== 'resume') {
@@ -189,8 +201,9 @@ export default function V2Journey() {
       } catch (e) { handleWriteError(e); return; }
     }
     if (pendingRef.current?.intent && !same(pendingRef.current.intent.account, wallet.current?.account)) { wallet.current = undefined; authenticated.current = ''; setV2Session(''); }
-    if (!wallet.current) { setWalletIntent(action); returnScreen.current = screen; setScreen('wallet'); if (wallets.length === 1) void attach(wallets[0]!, action); return; }
-    setBusy(true); try { await perform(action, wallet.current); } catch (e) { handleWriteError(e); } finally { setBusy(false); }
+    if (!wallet.current) { setWalletIntent(action); returnScreen.current = screen; setScreen('wallet'); setBusy(false); releaseWalletOperation(token); if (wallets.length === 1) void attach(wallets[0]!, action); return; }
+    setBusy(true); await perform(action, wallet.current, token);
+    } catch (e) { handleWriteError(e); } finally { if (releaseWalletOperation(token)) setBusy(false); }
   }
   function handleWriteError(e: unknown) {
     const code = (e as { code?: unknown })?.code;
@@ -202,12 +215,12 @@ export default function V2Journey() {
     if (code === 'price') setScreen('hatch');
     setMessage(errorText(e));
   }
-  async function perform(action: Action, w: Wallet) {
+  async function perform(action: Action, w: Wallet, token: symbol) {
     operation.current = action;
     operationContext.current = { tokenId: life?.id, requestId: life?.pendingRequest || (job?.tokenId === life?.id ? job?.requestId : undefined), ...(action === 'mint' ? { birthDraft: { name, stats: [...stats], payment, sourceId: payment === 'purse' ? life?.id : undefined } } : {}) };
     if (action === 'connect') { go('lives'); await listLives(w.account); return; }
     if (action === 'resume') {
-      if (pendingRef.current) { await checkPayment(w); return; }
+      if (pendingRef.current) { await checkPayment(w, token); return; }
       await signIn(w); const id = life?.pendingRequest || (job?.tokenId === life?.id ? job?.requestId : undefined);
       if (!id) throw Error('Choose a day to open.');
       const next = await v2Api.wake(id); await showJob(next); return;
@@ -220,7 +233,7 @@ export default function V2Journey() {
       else if (payment === 'wallet') {
         if (await w.tokenBalance() < 250000000n) throw Error('Your wallet needs 250 NHC for this little life.');
         if (BigInt((await w.tokenAllowance()).toString()) < 250000000n) {
-          operation.current = 'approve'; hash = await w.approveBirthTokens(); remember({ ...pendingRef.current, kind: 'approve', hash }); setScreen('pending'); await checkPayment(w); return;
+          operation.current = 'approve'; hash = await w.approveBirthTokens(); remember({ ...pendingRef.current, kind: 'approve', hash }); setScreen('pending'); await checkPayment(w, token); return;
         }
         hash = await w.birthFromWallet(clean, stats as [number, number, number]);
       }
@@ -231,13 +244,14 @@ export default function V2Journey() {
       const q = await v2Api.quote(life.id, kitMask(kit.map(i => ITEMS[i]!)).toString(), true); setQuote(q); operationContext.current.requestId = q.admission.id;
       hash = await w.accept(q);
       remember({ ...pendingRef.current, kind: 'day', tokenId: life.id, requestId: q.admission.id, hash });
-      setScreen('pending'); await checkPayment(w); return;
+      setScreen('pending'); await checkPayment(w, token); return;
     } else if (action === 'withdraw') { if (!currentWorld || !life || !same(life.owner, w.account)) throw Error('Choose your own purse.'); hash = await w.withdraw(life.id, life.purseMicro); }
     else { const id = life?.pendingRequest || (job?.tokenId === life?.id ? job?.requestId : undefined); if (!currentWorld || !id) throw Error('No day needs releasing.'); hash = await w.expire(id); }
-    remember({ ...pendingRef.current, kind: action, tokenId: life?.id, hash }); setScreen('pending'); await checkPayment(w);
+    remember({ ...pendingRef.current, kind: action, tokenId: life?.id, hash }); setScreen('pending'); await checkPayment(w, token);
   }
-  async function checkPayment(w = wallet.current) {
+  async function checkPayment(w = wallet.current, ownerToken?: symbol) {
     if (!config || !pendingRef.current) return;
+    const token = ownerToken || claimWalletOperation(); if (!token || walletOperation.current !== token) return;
     const p = pendingRef.current; setBusy(true); setMessage('');
     try {
       if (p.intent && w && !same(p.intent.account, w.account)) throw Error(`Reconnect ${p.intent.account.slice(0, 6)}…${p.intent.account.slice(-4)} to finish this payment.`);
@@ -265,7 +279,7 @@ export default function V2Journey() {
       }
       if (p.kind === 'approve') { restoreBirth(p.birthDraft); remember(); setAllowance('250000000'); setScreen('hatch'); return; }
       remember(); if (p.tokenId) await loadLife(p.tokenId, config); setScreen(p.kind === 'withdraw' ? 'purse' : 'home');
-    } catch (e) { handleWriteError(e); } finally { setBusy(false); }
+    } catch (e) { handleWriteError(e); } finally { if (!ownerToken && releaseWalletOperation(token)) setBusy(false); }
   }
   useEffect(() => {
     if (screen !== 'pending' || !job || ['failed', 'expired', 'ready'].includes(job.phase)) return;
@@ -274,21 +288,36 @@ export default function V2Journey() {
   }, [screen, job?.requestId, job?.phase, config]);
   function adoptJob(next: V2OwnerJob) { setJob(next); if (next.retrySafe) setLife(current => current?.id === next.tokenId ? { ...current, pendingRequest: undefined } : current); }
   async function showJob(next: V2OwnerJob) { adoptJob(next); await loadLife(next.tokenId, config, undefined, next.phase === 'ready' ? 'home' : 'pending'); }
-  function retryDay() { const target = job?.tokenId || pendingRef.current?.tokenId || pending?.tokenId; if (!target) { setMessage('Choose the original life to try again.'); return; } remember(); setJob(undefined); void loadLife(target, config, undefined, 'care'); }
+  function retryDay() { if (walletOperation.current) return; const target = job?.tokenId || pendingRef.current?.tokenId || pending?.tokenId; if (!target) { setMessage('Choose the original life to try again.'); return; } remember(); setJob(undefined); void loadLife(target, config, undefined, 'care'); }
   async function listLives(who = account, cursor?: string) { if (!who) { await run('connect'); return; } setBusy(true); try { if (preview?.lives) { setOwned(preview.lives); return; } const page = await v2Api.lives(who, cursor); setOwned(cursor ? [...owned, ...page.lives] : page.lives); setNextCursor(page.nextCursor); } catch (e) { setMessage(errorText(e)); } finally { setBusy(false); } }
+  function changeWallet() {
+    if (walletOperation.current) return;
+    if (pendingRef.current) { void run('connect'); return; }
+    wallet.current = undefined; activeProvider.current = undefined; authenticated.current = ''; setV2Session('');
+    setAccount(undefined); setOwned([]); setWalletBalance('0'); setAllowance('0'); setJob(undefined); setQuote(undefined);
+    setWalletIntent('connect'); returnScreen.current = 'lives'; go('wallet');
+  }
   async function showHistory(older?: number) {
     if (!life) return; overlay('history');
     const cached = historyCache.current.get(historyKey);
-    if (!older && cached) { setDays(cached.days); setBefore(cached.before); return; }
+    if (!older && cached && (cached.days[0]?.day || 0) >= life.state.day) { setDays(cached.days); setBefore(cached.before); return; }
+    const reading = generation.current;
     setBusy(true);
     try {
       const page = preview?.days ? { days: preview.days, nextBefore: undefined } : await v2Api.days(life.id, older, world);
-      const combined = older ? [...days, ...page.days] : page.days;
-      setDays(combined); setBefore(page.nextBefore); historyCache.current.set(historyKey, { days: combined, before: page.nextBefore, scroll: cached?.scroll || 0, selected: cached?.selected });
-    } catch (e) { setMessage(errorText(e)); } finally { setBusy(false); }
+      if (reading !== generation.current) return;
+      const combined = [...new Map([...(cached?.days || []), ...page.days].map(day => [day.day, day])).values()].sort((a, b) => b.day - a.day);
+      // Keep already-read pages, including a complete older history. If several
+      // new pages appeared, the next cursor fills the first actual gap instead.
+      let missing = combined[0]?.day || 0;
+      for (const day of combined) { if (day.day !== missing) break; missing--; }
+      const nextBefore = missing > 0 ? missing + 1 : undefined;
+      setDays(combined); setBefore(nextBefore); historyCache.current.set(historyKey, { days: combined, before: nextBefore, scroll: cached?.scroll || 0, selected: cached?.selected });
+    } catch (e) { if (reading === generation.current) setMessage(errorText(e)); } finally { if (reading === generation.current) setBusy(false); }
   }
-  function hatch(source: 'native' | 'purse' | 'wallet' = 'native') { setPayment(source); overlay('hatch'); }
-  function choose(index: number) { setQuote(undefined); setKit(current => { if (current.includes(index)) return current.filter(i => i !== index); if (index >= 13 && current.some(i => i >= 13)) return current.map(i => i >= 13 ? index : i); return current.length < 3 ? [...current, index] : current; }); }
+  function hatch(source: 'native' | 'purse' | 'wallet' = 'native') { if (busy || walletOperation.current) return; setPayment(source); overlay('hatch'); }
+  function selectPayment(source: 'native' | 'purse' | 'wallet') { if (busy || walletOperation.current) return; setPayment(source); }
+  function choose(index: number) { if (busy || walletOperation.current) return; setQuote(undefined); setKit(current => { if (current.includes(index)) return current.filter(i => i !== index); if (index >= 13 && current.some(i => i >= 13)) return current.map(i => i >= 13 ? index : i); return current.length < 3 ? [...current, index] : current; }); }
   async function prepare() { if (!life) return; if (life.pendingRequest) { await run('resume'); return; } setReadingDay(undefined); overlay('care'); setQuote(undefined); }
   async function share() { if (!life) return; const url = new URL(location.origin + '/'); url.search = new URLSearchParams({ rooster: life.id, chainId: String(life.chainId), collection: life.collection }).toString(); try { await navigator.clipboard.writeText(url.href); setCopied(true); setTimeout(() => setCopied(false), 1800); } catch { setMessage('Copy this page address to share this life.'); } }
   const stageLife = life, stagePacket = packet;
@@ -298,17 +327,17 @@ export default function V2Journey() {
   const pendingDayJob = !pending || pending.kind === 'day' && pending.requestId === job?.requestId ? job : undefined;
   const title: Record<Exclude<Screen, 'home'>, string> = { welcome: 'A little life of its own.', profile: life?.state.alive === false ? `${life.name} · remembered` : life?.name || 'A little life', hatch: 'A new little life', care: "Tomorrow's post", pending: pendingDayJob?.retrySafe ? 'Another little try' : 'A little day is taking shape', purse: `${life?.name || 'A little life'}’s purse`, history: 'A life in little days', lives: 'Your little lives', menu: 'Home', wallet: 'Choose your wallet', stock: 'Belongings' };
   let body: ReactNode;
-  if (screen === 'welcome') body = <><div className="v2-egg"><img src={itemImage(38)} alt=""/></div><p>Raise a rooster with a mind of its own.</p><button className="v2-primary" disabled={busy || (!config && !message)} onClick={() => exactId && malformedWorld ? location.assign(location.pathname + '?v2=1') : message && !config ? (setMessage(''), setBoot(v => v + 1)) : hatch()}>{exactId && malformedWorld ? 'Back home' : message && !config ? 'Try again' : 'Hatch a life'}</button>{account ? <button className="v2-text-button" onClick={() => { go('lives'); void listLives(); }}>Your lives</button> : <button className="v2-text-button" disabled={!config} onClick={() => void run('connect')}>I already have one</button>}</>;
+  if (screen === 'welcome') body = <><div className="v2-egg"><img src={itemImage(38)} alt=""/></div><p>Raise a rooster with a mind of its own.</p><button className="v2-primary" disabled={busy || (!config && !message)} onClick={() => exactId && malformedWorld ? location.assign(location.pathname + '?v2=1') : message && !config ? (setMessage(''), setBoot(v => v + 1)) : hatch()}>{exactId && malformedWorld ? 'Back home' : message && !config ? 'Try again' : 'Hatch a life'}</button>{account ? <button className="v2-text-button" onClick={() => void run('connect')}>Your lives</button> : <button className="v2-text-button" disabled={!config} onClick={() => void run('connect')}>I already have one</button>}</>;
   else if (screen === 'profile' && life) body = <><div className="v2-life-portrait"><img className="v2-dynamic-portrait" src={`/api/v2/nft/${life.id}/image.svg?${new URLSearchParams({ chainId: String(life.chainId), collection: life.collection })}`} alt={`${life.name} and their saved home`}/></div><div className="v2-life-facts"><span>DAY {life.state.day}</span><span>LV{String(life.state.level).padStart(2, '0')}</span><span><Icon name="wallet" size={13}/>{coins(life.purseMicro)} NHC</span></div><button className="v2-primary" onClick={() => go('home')}><Icon name="house" size={15}/>Visit home</button><div className="v2-secondary-row"><button onClick={() => void showHistory()}><Icon name="book" size={16}/>Days</button><button onClick={() => void share()}><Icon name="mail" size={16}/>{copied ? 'Copied' : 'Share'}</button>{owner && <button onClick={() => overlay('purse')}><Icon name="wallet" size={16}/>Purse</button>}</div>{!owner && <button className="v2-text-button" onClick={() => hatch()}>Hatch your own</button>}</>;
-  else if (screen === 'hatch') body = <><div className="v2-egg small"><img src={itemImage(38)} alt=""/></div><label className="v2-name-field"><span>A name</span><input value={name} disabled={busy} maxLength={8} placeholder="BOK" autoComplete="off" autoCapitalize="characters" onChange={e => setName(e.target.value.toUpperCase().replace(/[^A-Z0-9 ]/g, ''))}/></label><div className="v2-stat-picker">{(['Body', 'Wits', 'Spirit'] as const).map((label, i) => <div key={label}><span>{label}</span><button aria-label={`Less ${label.toLowerCase()}`} disabled={stats[i] === 0 || busy} onClick={() => setStats(stats.map((n, j) => i === j ? n - 1 : n))}>−</button><b>{stats[i]}</b><button aria-label={`More ${label.toLowerCase()}`} disabled={sum >= 5 || busy} onClick={() => setStats(stats.map((n, j) => i === j ? n + 1 : n))}>+</button></div>)}</div>{sum < 5 && <p className="v2-small-note">{5 - sum} {5 - sum === 1 ? 'point' : 'points'} to place</p>}<div className="v2-payment"><button aria-pressed={payment === 'native'} onClick={() => setPayment('native')}>{config ? eth(config.nativeMintPrice) + ' ETH' : 'ETH'}</button><button aria-pressed={payment !== 'native'} onClick={() => setPayment(owner && purse >= 250000000n ? 'purse' : 'wallet')}>250 NHC</button></div>{payment !== 'native' && <p className="v2-small-note">{payment === 'purse' ? `From ${life?.name}’s purse` : 'From your wallet'}{owner && purse >= 250000000n && <button className="v2-inline-button" onClick={() => setPayment(payment === 'wallet' ? 'purse' : 'wallet')}>Change</button>}</p>}<button className="v2-primary" disabled={!config || busy || !nameValid || sum !== 5} onClick={() => void run('mint')}><Icon name="leaf" size={15}/>{busy ? 'Opening a little life…' : payment === 'wallet' && BigInt(allowance) < 250000000n ? 'Approve 250 NHC' : 'Hatch this life'}</button><span className="v2-fee-note">{payment === 'native' && config ? `${eth(config.nativeMintPrice)} test ETH · ` : ''}network fee applies</span></>;
-  else if (screen === 'care' && life) { const choices = category === 0 ? [0, 2, 1, 4, 5, 3] : category === 1 ? [13, 14, 15, 16, 17, 18, 19, 20, 21] : [7, 8, 9, 10, 11, 12]; body = <><div className="v2-post-tray">{[0, 1, 2].map(i => <button key={i} aria-label={kit[i] === undefined ? `Empty parcel slot ${i + 1}` : `Remove ${itemName(kit[i]!)}`} disabled={kit[i] === undefined} onClick={() => choose(kit[i]!)}>{kit[i] === undefined ? <Icon name="leaf" size={18}/> : <><img src={itemImage(kit[i]!)} alt=""/><i>×1</i></>}</button>)}</div><div className="v2-supply-tabs">{(['Care', 'Seeds', 'House'] as const).map((label, i) => <button key={label} aria-pressed={category === i} onClick={() => setCategory(i)}>{label}</button>)}</div><div className="v2-supplies">{choices.map(i => <button key={i} className={kit.includes(i) ? 'selected' : ''} aria-pressed={kit.includes(i)} disabled={!kit.includes(i) && kit.length >= 3 && !(i >= 13 && kit.some(k => k >= 13))} onClick={() => choose(i)}><img src={itemImage(i)} alt=""/><span>{i >= 13 ? PLANTS[i - 12]?.name : itemName(i)}</span><small>{i >= 13 ? `${PLANTS[i - 12]?.ticks} days` : life.state.inventory[i] ? `At home ×${life.state.inventory[i]}` : '×1'}</small></button>)}</div><button className="v2-primary" disabled={busy} onClick={() => void run('day')}><Icon name="mail" size={15}/>{busy ? 'Checking the post…' : 'Prepare day ' + (life.state.day + 1)}</button><span className="v2-fee-note">{quote ? `Est. ${eth(quote.totalEstimate)} test ETH` : 'Supplies included · network + preparation fee'}</span></>; }
-  else if (screen === 'pending') body = <><div className={'v2-mail-working' + (pendingDayJob?.retrySafe ? ' is-still' : '')}><Icon name="mail" size={44}/>{!pendingDayJob?.retrySafe && <><i/><i/><i/></>}</div><p>{pendingDayJob?.retrySafe ? 'Your saved day is safe.' : pending?.kind === 'withdraw' ? 'Sending your tokens home.' : pending?.kind === 'mint' ? 'A new little life is on its way.' : pendingDayJob?.phase === 'saving' || pendingDayJob?.phase === 'prepared' ? 'Putting the day safely away.' : 'A few plans. A little thought.'}</p>{pendingDayJob && !pendingDayJob.retrySafe && !['ready', 'quarantined'].includes(pendingDayJob.phase) && <div className="v2-day-progress"><i style={{ width: `${Math.max(8, Math.min(90, pendingDayJob.decisions * 10))}%` }}/></div>}{pendingDayJob?.retrySafe ? <button className="v2-primary" onClick={retryDay}>Try another day</button> : <button className="v2-primary" disabled={busy} onClick={() => void (pending?.intent && !same(pending.intent.account, wallet.current?.account) ? run('resume') : !wallet.current && pending?.kind === 'day' ? run('resume') : pendingDayJob ? v2Api.wake(pendingDayJob.requestId).then(async next => { adoptJob(next); if (next.phase === 'ready') { remember(); await loadLife(next.tokenId, config); } }).catch(e => setMessage(errorText(e))) : checkPayment())}>{busy ? 'Checking…' : pending?.intent && !same(pending.intent.account, wallet.current?.account) ? 'Reconnect wallet' : !wallet.current && pending?.kind === 'day' ? 'Connect wallet' : pendingDayJob ? 'Check day' : 'Check payment'}</button>}{pendingDayJob?.phase === 'quarantined' && <button className="v2-text-button" onClick={() => void run('expire')}>Release expired attempt</button>}</>;
-  else if (screen === 'purse' && life) body = <><div className="v2-purse-total"><Icon name="wallet" size={34}/><strong>{coins(life.purseMicro)}</strong><span>NHC</span></div>{!life.state.alive && <p className="v2-small-note">Still yours to take home.</p>}{owner && purse === 0n ? <><p className="v2-small-note">Flowers, fruit and crafts can fill this purse.</p><button className="v2-primary" onClick={() => life.state.alive ? go('home') : hatch() }>{life.state.alive ? 'Back home' : 'Hatch another'}</button></> : owner ? <><button className="v2-primary" disabled={busy || purse === 0n} onClick={() => void run('withdraw')}>Withdraw to wallet</button><button className="v2-text-button" disabled={purse < 250000000n} onClick={() => hatch('purse')}>Hatch another · 250 NHC</button></> : <button className="v2-primary" onClick={() => go('home')}>Visit home</button>}</>;
+  else if (screen === 'hatch') body = <><div className="v2-egg small"><img src={itemImage(38)} alt=""/></div><label className="v2-name-field"><span>A name</span><input value={name} disabled={busy} maxLength={8} placeholder="BOK" autoComplete="off" autoCapitalize="characters" onChange={e => setName(e.target.value.toUpperCase().replace(/[^A-Z0-9 ]/g, ''))}/></label><div className="v2-stat-picker">{(['Body', 'Wits', 'Spirit'] as const).map((label, i) => <div key={label}><span>{label}</span><button aria-label={`Less ${label.toLowerCase()}`} disabled={stats[i] === 0 || busy} onClick={() => setStats(stats.map((n, j) => i === j ? n - 1 : n))}>−</button><b>{stats[i]}</b><button aria-label={`More ${label.toLowerCase()}`} disabled={sum >= 5 || busy} onClick={() => setStats(stats.map((n, j) => i === j ? n + 1 : n))}>+</button></div>)}</div>{sum < 5 && <p className="v2-small-note">{5 - sum} {5 - sum === 1 ? 'point' : 'points'} to place</p>}<div className="v2-payment"><button disabled={busy} aria-pressed={payment === 'native'} onClick={() => selectPayment('native')}>{config ? eth(config.nativeMintPrice) + ' ETH' : 'ETH'}</button><button disabled={busy} aria-pressed={payment !== 'native'} onClick={() => selectPayment(owner && purse >= 250000000n ? 'purse' : 'wallet')}>250 NHC</button></div>{payment !== 'native' && <p className="v2-small-note">{payment === 'purse' ? `From ${life?.name}’s purse` : 'From your wallet'}{owner && purse >= 250000000n && <button className="v2-inline-button" disabled={busy} onClick={() => selectPayment(payment === 'wallet' ? 'purse' : 'wallet')}>Change</button>}</p>}<button className="v2-primary" disabled={!config || busy || !nameValid || sum !== 5} onClick={() => void run('mint')}><Icon name="leaf" size={15}/>{busy ? 'Opening a little life…' : payment === 'wallet' && BigInt(allowance) < 250000000n ? 'Approve 250 NHC' : 'Hatch this life'}</button><span className="v2-fee-note">{payment === 'native' && config ? `${eth(config.nativeMintPrice)} test ETH · ` : ''}network fee applies</span></>;
+  else if (screen === 'care' && life) { const choices = category === 0 ? [0, 2, 1, 4, 5, 3] : category === 1 ? [13, 14, 15, 16, 17, 18, 19, 20, 21] : [7, 8, 9, 10, 11, 12]; body = <><div className="v2-post-tray">{[0, 1, 2].map(i => <button key={i} aria-label={kit[i] === undefined ? `Empty parcel slot ${i + 1}` : `Remove ${itemName(kit[i]!)}`} disabled={busy || kit[i] === undefined} onClick={() => choose(kit[i]!)}>{kit[i] === undefined ? <Icon name="leaf" size={18}/> : <><img src={itemImage(kit[i]!)} alt=""/><i>×1</i></>}</button>)}</div><div className="v2-supply-tabs">{(['Care', 'Seeds', 'House'] as const).map((label, i) => <button key={label} aria-pressed={category === i} onClick={() => setCategory(i)}>{label}</button>)}</div><div className="v2-supplies">{choices.map(i => <button key={i} className={kit.includes(i) ? 'selected' : ''} aria-pressed={kit.includes(i)} disabled={busy || (!kit.includes(i) && kit.length >= 3 && !(i >= 13 && kit.some(k => k >= 13)))} onClick={() => choose(i)}><img src={itemImage(i)} alt=""/><span>{i >= 13 ? PLANTS[i - 12]?.name : itemName(i)}</span><small>{i >= 13 ? `${PLANTS[i - 12]?.ticks} days` : life.state.inventory[i] ? `At home ×${life.state.inventory[i]}` : '×1'}</small></button>)}</div><button className="v2-primary" disabled={busy} onClick={() => void run('day')}><Icon name="mail" size={15}/>{busy ? 'Checking the post…' : 'Prepare day ' + (life.state.day + 1)}</button><span className="v2-fee-note">{quote ? `Est. ${eth(quote.totalEstimate)} test ETH` : 'Supplies included · network + preparation fee'}</span></>; }
+  else if (screen === 'pending') body = <><div className={'v2-mail-working' + (pendingDayJob?.retrySafe ? ' is-still' : '')}><Icon name="mail" size={44}/>{!pendingDayJob?.retrySafe && <><i/><i/><i/></>}</div><p>{pendingDayJob?.retrySafe ? 'Your saved day is safe.' : pending?.kind === 'withdraw' ? 'Sending your tokens home.' : pending?.kind === 'mint' ? 'A new little life is on its way.' : pendingDayJob?.phase === 'saving' || pendingDayJob?.phase === 'prepared' ? 'Putting the day safely away.' : 'A few plans. A little thought.'}</p>{pendingDayJob && !pendingDayJob.retrySafe && !['ready', 'quarantined'].includes(pendingDayJob.phase) && <div className="v2-day-progress"><i style={{ width: `${Math.max(8, Math.min(90, pendingDayJob.decisions * 10))}%` }}/></div>}{pendingDayJob?.retrySafe ? <button className="v2-primary" disabled={busy} onClick={retryDay}>Try another day</button> : <button className="v2-primary" disabled={busy} onClick={() => void (pending?.intent && !same(pending.intent.account, wallet.current?.account) ? run('resume') : !wallet.current && pending?.kind === 'day' ? run('resume') : pendingDayJob ? v2Api.wake(pendingDayJob.requestId).then(async next => { adoptJob(next); if (next.phase === 'ready') { remember(); await loadLife(next.tokenId, config); } }).catch(e => setMessage(errorText(e))) : checkPayment())}>{busy ? 'Checking…' : pending?.intent && !same(pending.intent.account, wallet.current?.account) ? 'Reconnect wallet' : !wallet.current && pending?.kind === 'day' ? 'Connect wallet' : pendingDayJob ? 'Check day' : 'Check payment'}</button>}{pendingDayJob?.phase === 'quarantined' && <button className="v2-text-button" disabled={busy} onClick={() => void run('expire')}>Release expired attempt</button>}</>;
+  else if (screen === 'purse' && life) body = <><div className="v2-purse-total"><Icon name="wallet" size={34}/><strong>{coins(life.purseMicro)}</strong><span>NHC</span></div>{!life.state.alive && <p className="v2-small-note">Still yours to take home.</p>}{owner && purse === 0n ? <><p className="v2-small-note">Flowers, fruit and crafts can fill this purse.</p><button className="v2-primary" onClick={() => life.state.alive ? go('home') : hatch() }>{life.state.alive ? 'Back home' : 'Hatch another'}</button></> : owner ? <><button className="v2-primary" disabled={busy || purse === 0n} onClick={() => void run('withdraw')}>Withdraw to wallet</button><button className="v2-text-button" disabled={busy || purse < 250000000n} onClick={() => hatch('purse')}>Hatch another · 250 NHC</button></> : <button className="v2-primary" onClick={() => go('home')}>Visit home</button>}</>;
   else if (screen === 'history') body = <><div className="v2-history-list">{days.map(d => <button key={d.day} aria-current={historyCache.current.get(historyKey)?.selected === d.day ? 'true' : undefined} onClick={() => { const cached = historyCache.current.get(historyKey); if (cached) cached.selected = d.day; if (life) void loadLife(life.id, world, d.day); }}><span>DAY {String(d.day).padStart(2, '0')}</span><small>{d.rewardMicro && BigInt(d.rewardMicro) > 0n ? `+${coins(d.rewardMicro)} NHC` : 'A little day'}</small><Icon name="play" size={13}/></button>)}</div>{!days.length && <p>So many little days ahead.</p>}{before && <button className="v2-text-button" onClick={() => void showHistory(before)}>Earlier days</button>}{life && <button className="v2-primary" onClick={() => void loadLife(life.id, world)}>Latest home</button>}</>;
-  else if (screen === 'lives') body = <><div className="v2-owned-lives">{owned.map(l => <button key={l.id} onClick={() => void loadLife(l.id, l)}><img src={roosterImage(l.state.seed)} alt=""/><span>{l.name}<small>DAY {l.state.day} · {l.state.alive ? `LV${l.state.level}` : 'Remembered'}</small></span><Icon name="play" size={14}/></button>)}</div>{!owned.length && <p>A little home is waiting for someone.</p>}{nextCursor && <button className="v2-text-button" onClick={() => void listLives(account, nextCursor)}>More lives</button>}<button className="v2-primary" onClick={() => hatch()}>Hatch a life</button></>;
+  else if (screen === 'lives') body = <><div className="v2-owned-lives">{owned.map(l => <button key={l.id} onClick={() => void loadLife(l.id, l)}><img src={roosterImage(l.state.seed)} alt=""/><span>{l.name}<small>DAY {l.state.day} · {l.state.alive ? `LV${l.state.level}` : 'Remembered'}</small></span><Icon name="play" size={14}/></button>)}</div>{!owned.length && <p>A little home is waiting for someone.</p>}{nextCursor && <button className="v2-text-button" onClick={() => void listLives(account, nextCursor)}>More lives</button>}<button className="v2-primary" onClick={() => hatch()}>Hatch a life</button><button className="v2-text-button" disabled={busy} onClick={changeWallet}>Change wallet</button></>;
   else if (screen === 'stock' && life) { const state = historical && packet ? packet.result.state : life.state; body = <><div className="v2-belongings">{state.inventory.flatMap((n, i) => n > 0 ? [<div key={i}><img src={itemImage(i)} alt=""/><span>{itemName(i)}</span><b>×{n.toLocaleString()}</b></div>] : [])}</div>{!state.inventory.some(n => n > 0) && <p>A little room for future things.</p>}</>; }
   else if (screen === 'wallet') body = <><Icon name="wallet" size={38}/>{wallets.length ? <div className="v2-wallet-choices">{wallets.map(w => <button className="v2-primary" disabled={busy} key={w.id} onClick={() => void attach(w, walletIntent)}>{busy ? 'Opening wallet…' : w.name}</button>)}</div> : <><p>Open this game in your wallet’s browser to bring a life home.</p><a className="v2-primary" href="https://metamask.io/download/" target="_blank" rel="noreferrer">Get a wallet</a></>}</>;
-  else body = <div className="v2-menu-list">{life && <button onClick={() => go('profile')}><Icon name="house"/>{life.name}</button>}{life && <button onClick={() => void showHistory()}><Icon name="book"/>Days</button>}{life && <button onClick={() => overlay('stock')}><Icon name="book"/>Belongings</button>}{life && <button onClick={() => overlay('purse')}><Icon name="wallet"/>Purse</button>}<button onClick={() => { go('lives'); void listLives(); }}><Icon name="leaf"/>Your lives</button>{life && <button onClick={() => void share()}><Icon name="mail"/>{copied ? 'Link copied' : 'Share this life'}</button>}<button onClick={() => hatch()}><Icon name="leaf"/>Hatch a life</button></div>;
+  else body = <div className="v2-menu-list">{life && <button onClick={() => go('profile')}><Icon name="house"/>{life.name}</button>}{life && <button onClick={() => void showHistory()}><Icon name="book"/>Days</button>}{life && <button onClick={() => overlay('stock')}><Icon name="book"/>Belongings</button>}{life && <button onClick={() => overlay('purse')}><Icon name="wallet"/>Purse</button>}<button onClick={() => void run('connect')}><Icon name="leaf"/>Your lives</button>{life && <button onClick={() => void share()}><Icon name="mail"/>{copied ? 'Link copied' : 'Share this life'}</button>}<button onClick={() => hatch()}><Icon name="leaf"/>Hatch a life</button></div>;
 
   return <div ref={root} className={`v2-journey${opening !== 'closed' ? ' is-booting' : ''}`}>
     {stageLife || stagePacket ? <V2Player key={`${stageLife?.collection}:${stageLife?.id}:${stagePacket?.requestId || stageLife?.revision}`} packet={stagePacket} life={stageLife} suspended={overlayOpen || opening !== 'closed'} opening={opening} onMenu={() => overlay('menu')} onProfile={() => overlay('profile')} onExit={() => historyControls ? void showHistory() : overlay('menu')} onPrepare={owner && !historical ? prepare : undefined} prepareLabel={life?.pendingRequest ? 'Open day ' + (life.state.day + 1) : life?.state.day === 0 ? 'Prepare day 1' : undefined} onHatch={!owner ? () => hatch() : !life?.state.alive ? () => hatch(purse >= 250000000n ? 'purse' : 'native') : undefined} onPurse={owner ? () => overlay('purse') : undefined} onLatest={historyControls && life ? () => void loadLife(life.id, world) : undefined}/> : <TitleScenery opening={opening}/>}

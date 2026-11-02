@@ -1,0 +1,16 @@
+{
+  "scope": "Operational choice-policy update after all39 prior actual jobs/quotes/outbox drained; no ledger reset or onchain rule change.",
+  "before": "0x047da3d3246af856a8f89d4608e2a094170560ffbf75644d9035a5b3dd31f374",
+  "after": "0x5f8f7f1d79381d02783c3960fa2b8f12da19cac75f6b483aece39f0f73766892",
+  "at": "2026-11-02T20:46:58.114Z",
+  "previousReadyDays": 39,
+  "campaign": {
+    "id": "nearlyhuman-v2-testnet-20261102",
+    "limitMicroUSD": 90000,
+    "chargedMicroUSD": 28328,
+    "halted": false,
+    "complete": 199,
+    "uncertain": 0,
+    "provenance": "Explicit allocation from the $0.10 outside the existing $0.90 V1 envelope. Neither live provider balance nor V1 spending is reset or inferred."
+  }
+}

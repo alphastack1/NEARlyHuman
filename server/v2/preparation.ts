@@ -76,7 +76,7 @@ const rank = (c: Context, a: Candidate) => {
   if (a.op === Op.Plant) return 200;
   return a.op === Op.Quiet || a.op === Op.QuietMain ? -100 : 0;
 };
-const family = (a: Candidate) => a.op === Op.Plant ? `${a.op}:${a.variant}` : a.op === Op.Craft || a.op === Op.Treat || a.op === Op.Wash || a.op === Op.Repair ? `${a.op}:${a.arg}` : String(a.op);
+const family = (a: Candidate) => a.op === Op.Ship ? `${a.op}:${a.goods.join(',')}` : a.op === Op.Plant ? `${a.op}:${a.variant}` : a.op === Op.Craft || a.op === Op.Treat || a.op === Op.Wash || a.op === Op.Repair ? `${a.op}:${a.arg}` : String(a.op);
 
 /** Finite coverage keeps all clinical choices and avoids four identical beds filling a menu. */
 export function offerV2Candidates(context: Context, candidates: Candidate[]): Candidate[] {

@@ -20,6 +20,15 @@ export const MAIN_OPS=new Set([Op.Toast,Op.CookSteak,Op.Bowl,Op.Sandwich,Op.Repa
 export const ACUTE_OPS=new Set([Op.Douse,Op.Shutdown,Op.BraceRain,Op.CoverRain]);
 export const CERTIFICATE_OPS=new Set([Op.Quiet,Op.Pickup,Op.Breakfast,Op.Eat,Op.Drink,Op.Treat,Op.Wash,Op.Rest,Op.Leisure,Op.Coffee,Op.Douse,Op.Shutdown,Op.BraceRain,Op.CoverRain,Op.EnjoyFlower]);
 export function topShipment(stock:readonly number[]):number[]{const out:number[]=[];const remaining=stock.slice();for(let i=0;i<4;i++){let at=-1;for(let k=22;k<34;k++)if(remaining[k]!>0&&(at<0||WEIGHTS[k-22]!>WEIGHTS[at-22]!))at=k;if(at<0)break;remaining[at]!--;out.push(at+1);}return out;}
+/** Bounded views of already permitted shipments; none creates stock or a new turn. */
+export function shipmentBaskets(stock:readonly number[]):{kind:'combined'|'produce'|'surplus';goods:number[]}[]{
+ const baskets:{kind:'combined'|'produce'|'surplus';goods:number[]}[]=[
+  {kind:'combined',goods:topShipment(stock)},
+  {kind:'produce',goods:topShipment(stock.map((n,i)=>i>=22&&i<30?n:0))},
+  {kind:'surplus',goods:topShipment(stock.map((n,i)=>i>=22&&i<34?Math.max(0,n-1):0))},
+ ];
+ const seen=new Set<string>();return baskets.filter(b=>{const key=b.goods.join(',');if(!b.goods.length||seen.has(key))return false;seen.add(key);return true;});
+}
 export function shipmentPoints(goods:readonly number[]):number{return goods.reduce((s,id)=>s+(id?WEIGHTS[id-23]||0:0),0);}
 export function maxShipmentPoints(s:State):number{
  let best=shipmentPoints(topShipment(s.inventory));const harvested=s.inventory.slice();let valid=true;

@@ -1,0 +1,76 @@
+{
+  "mode": "apply",
+  "siteId": "15eabb4e-7828-4019-a628-2da95c19d2bd",
+  "store": "nearlyhuman-v1",
+  "sourceRecords": 127,
+  "sourceBytes": 9513305,
+  "manifestHash": "8d73c97037e8034aa14b47dbc1b9fad7067f15c5a1155a70bbd3a48d798a32ad",
+  "identicalCloudRecords": 0,
+  "missingCloudRecords": 127,
+  "campaigns": [
+    {
+      "id": "nearlyhuman-v2-testnet-20261102",
+      "limitMicroUSD": 90000,
+      "chargedMicroUSD": 30202,
+      "halted": false,
+      "complete": 209,
+      "uncertain": 0,
+      "provenance": "Explicit allocation from the $0.10 outside the existing $0.90 V1 envelope. Neither live provider balance nor V1 spending is reset or inferred."
+    },
+    {
+      "id": "overnight-wave2-20261102",
+      "limitMicroUSD": 30000,
+      "chargedMicroUSD": 5413,
+      "halted": true,
+      "complete": 50,
+      "uncertain": 0,
+      "provenance": "Explicit allocation from the $0.10 outside the existing $0.90 V1 envelope. Neither live provider balance nor V1 spending is reset or inferred.",
+      "closed": {
+        "at": 1793643944380,
+        "chargedMicroUSD": 5413,
+        "entryCount": 50,
+        "snapshotHash": "9f7508619fb51e1cd54ca2725f3609210c5cd5c5ffe532770b006eed49618353",
+        "reason": "Completed diagnostic research; preserve all 50 sends and their actual charges."
+      }
+    }
+  ],
+  "pool": {
+    "providerInitialCeilingMicroUSD": 1000000,
+    "preservedV1AllocationMicroUSD": 900000,
+    "v2PoolCeilingMicroUSD": 100000,
+    "committedMicroUSD": 95413,
+    "unallocatedMicroUSD": 4587,
+    "campaigns": [
+      {
+        "id": "overnight-wave2-20261102",
+        "limitMicroUSD": 30000,
+        "chargedMicroUSD": 5413,
+        "closed": true,
+        "activeJobs": 0,
+        "uncertain": 0,
+        "releasedMicroUSD": 24587
+      },
+      {
+        "id": "nearlyhuman-v2-testnet-20261102",
+        "limitMicroUSD": 90000,
+        "chargedMicroUSD": 30202,
+        "closed": false,
+        "activeJobs": 0,
+        "uncertain": 0,
+        "releasedMicroUSD": 0
+      }
+    ]
+  },
+  "v1Paused": true,
+  "v1PauseObservedBlock": "147279656",
+  "drainedCloudV1Jobs": 15,
+  "readyForApply": true,
+  "blockers": [],
+  "cloudV1Preserved": true,
+  "cloudOutboxPreserved": true,
+  "environmentWrites": 0,
+  "deployments": 0,
+  "created": 127,
+  "checkedAt": "2026-11-02T21:06:34.968Z",
+  "complete": true
+}

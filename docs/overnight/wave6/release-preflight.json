@@ -1,0 +1,65 @@
+{
+  "mode": "check-release",
+  "siteId": "15eabb4e-7828-4019-a628-2da95c19d2bd",
+  "chainId": 46630,
+  "collection": "0x30cb5213fa94020a95893ddb6b07470dbf7a9efc",
+  "guest": {
+    "id": "1",
+    "day": 28,
+    "commitment": "0xd17903f931ec0917ed8fa59fae2d53af9fd54c52967d8b9c1af987de10292277"
+  },
+  "checkedAt": "2026-11-02T21:34:39.678Z",
+  "keys": [
+    {
+      "key": "VITE_NEARLYHUMAN_V2",
+      "scopes": [
+        "builds"
+      ],
+      "changed": false
+    },
+    {
+      "key": "NEARLYHUMAN_V2_RUNTIME_JSON",
+      "scopes": [
+        "functions"
+      ],
+      "changed": false
+    },
+    {
+      "key": "NEARLYHUMAN_V2_RPC_URL",
+      "scopes": [
+        "functions"
+      ],
+      "changed": false
+    },
+    {
+      "key": "NEARLYHUMAN_V2_CAMPAIGN",
+      "scopes": [
+        "functions"
+      ],
+      "changed": false
+    },
+    {
+      "key": "NEARLYHUMAN_V2_GUEST_ID",
+      "scopes": [
+        "functions"
+      ],
+      "changed": false
+    },
+    {
+      "key": "NEARLYHUMAN_V2_GUEST_DAY",
+      "scopes": [
+        "functions"
+      ],
+      "changed": false
+    }
+  ],
+  "legacyFence": {
+    "observedBlock": "147294523",
+    "admissionPaused": true,
+    "activeHolds": 0,
+    "relayPending": false
+  },
+  "environmentWrites": 0,
+  "deployments": 0,
+  "secretsChanged": 0
+}

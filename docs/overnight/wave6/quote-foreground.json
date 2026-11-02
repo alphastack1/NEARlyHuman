@@ -1,0 +1,12 @@
+{
+  "scope": "Controlled in-memory funded admission with41 retired quote records. Dummy signature only; no actual quote/RPC/provider/key/financial-store operation.",
+  "historyRecords": 41,
+  "foregroundHistoryLists": 0,
+  "foregroundHistoryGets": 0,
+  "repeatedScopeSameId": true,
+  "renewedExpiryAtPinnedTime": true,
+  "activeJobHolds": 1,
+  "chargedMicroUSD": 0,
+  "dummySignatures": 2,
+  "pass": true
+}

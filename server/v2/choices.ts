@@ -6,7 +6,7 @@ import {
 import { v2Personality, v2DayInclination, V2_PERSONALITY_VERSION, type V2Interest } from '../../src/v2/personality';
 import type { V2Decision, V2Selection } from './preparation';
 
-export const V2_MIND_POLICY = 'v2-mind-dawn-truthful-memory-6';
+export const V2_MIND_POLICY = 'v2-mind-dawn-truthful-memory-7';
 export interface V2PastAction extends Step { success?: boolean }
 export interface V2PreviousDay { day: number; actions: V2PastAction[] }
 export interface V2MindMemory { name?: string; previousDays?: V2PreviousDay[]; pressureMicro?: string }
@@ -125,6 +125,9 @@ export function offerV2MindCandidates(context: Pick<Context, 'state' | 'day'>, c
   for (const a of ordered) if (selected.length < limit && a.role!=='acute' && !seen.has(category(a))) { selected.push(a); seen.add(category(a)); }
   const quiet = ordered.find(a => a.op === Op.Quiet || a.op === Op.QuietMain);
   if (quiet && !selected.some(a => a.key === quiet.key)) selected.length < limit ? selected.push(quiet) : selected.splice(-1, 1, quiet);
+  // Choose care coverage first. Only expand the already selected shipping family;
+  // at most two extra baskets are appended, never replacing a clinical option.
+  if(selected.some(a=>a.op===Op.Ship))for(const a of ordered.filter(a=>a.op===Op.Ship))if(selected.length<Math.min(14,limit+2)&&!selected.some(b=>b.key===a.key))selected.push(a);
   return selected;
 }
 function facts(a: Candidate, s: State, memory: V2MindMemory, today: Step[]) {

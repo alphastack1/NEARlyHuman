@@ -1,0 +1,823 @@
+{
+  "scope": "Actual final-policy RH testnet guest and local candidate phone/card review, GET-only. No key, quote, inference, signature or transaction. No full-film repeat.",
+  "errors": [],
+  "posts": [],
+  "responses": [
+    {
+      "kind": "guest",
+      "status": 200,
+      "id": "1",
+      "day": 28,
+      "requestId": "0x0a11268acafbd6a709eaa5bb8cb965dc41a82430eb330ed4a2dddc6eb625d98b",
+      "commitment": "0xd17903f931ec0917ed8fa59fae2d53af9fd54c52967d8b9c1af987de10292277",
+      "decisionConfig": "0x5f8f7f1d79381d02783c3960fa2b8f12da19cac75f6b483aece39f0f73766892",
+      "currentDay": 28,
+      "purseMicro": "0"
+    }
+  ],
+  "screens": [
+    {
+      "name": "actual-title-390",
+      "text": "NEARlyHuman\nSTART\nSkip ▸▸",
+      "layout": {
+        "viewport": [
+          390,
+          844
+        ],
+        "size": [
+          390,
+          844
+        ],
+        "buttons": [
+          {
+            "name": "",
+            "rect": [
+              34,
+              477.5,
+              322,
+              46
+            ]
+          },
+          {
+            "name": "",
+            "rect": [
+              34,
+              537.5,
+              322,
+              44
+            ]
+          },
+          {
+            "name": "START",
+            "rect": [
+              89.984375,
+              468.703125,
+              210,
+              58
+            ]
+          },
+          {
+            "name": "Skip ▸▸",
+            "rect": [
+              254.40625,
+              782,
+              117.59375,
+              44
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "actual-home-390",
+      "text": "MISO\nLV27\nDAY 28\nGather the ready garden\n\nA day with MISO.\n\nWatch day",
+      "layout": {
+        "viewport": [
+          390,
+          844
+        ],
+        "size": [
+          390,
+          844
+        ],
+        "buttons": [
+          {
+            "name": "Back",
+            "rect": [
+              14,
+              12,
+              42,
+              42
+            ]
+          },
+          {
+            "name": "Open menu",
+            "rect": [
+              340,
+              12,
+              34,
+              42
+            ]
+          },
+          {
+            "name": "Watch day",
+            "rect": [
+              23,
+              780,
+              344,
+              46
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "actual-profile-390",
+      "text": "MISO\nLV27\nDAY 28\nGather the ready garden\n\nA day with MISO.\n\nWatch day\nMISO\nDAY 28\nLV28\n0 NHC\nVisit home\nDays\nShare\nHatch your own",
+      "layout": {
+        "viewport": [
+          390,
+          844
+        ],
+        "size": [
+          390,
+          844
+        ],
+        "buttons": [
+          {
+            "name": "Back",
+            "rect": [
+              14,
+              12,
+              42,
+              42
+            ]
+          },
+          {
+            "name": "Open menu",
+            "rect": [
+              340,
+              12,
+              34,
+              42
+            ]
+          },
+          {
+            "name": "Watch day",
+            "rect": [
+              23,
+              780,
+              344,
+              46
+            ]
+          },
+          {
+            "name": "Close",
+            "rect": [
+              325,
+              182.703125,
+              42,
+              42
+            ]
+          },
+          {
+            "name": "Visit home",
+            "rect": [
+              34,
+              490.296875,
+              322,
+              46
+            ]
+          },
+          {
+            "name": "Days",
+            "rect": [
+              34,
+              550.296875,
+              157,
+              44
+            ]
+          },
+          {
+            "name": "Share",
+            "rect": [
+              199,
+              550.296875,
+              157,
+              44
+            ]
+          },
+          {
+            "name": "Hatch your own",
+            "rect": [
+              34,
+              608.296875,
+              322,
+              44
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "actual-profile-320",
+      "text": "MISO\nLV27\nDAY 28\nGather the ready garden\n\nA day with MISO.\n\nWatch day\nMISO\nDAY 28\nLV28\n0 NHC\nVisit home\nDays\nShare\nHatch your own",
+      "layout": {
+        "viewport": [
+          320,
+          568
+        ],
+        "size": [
+          320,
+          568
+        ],
+        "buttons": [
+          {
+            "name": "Back",
+            "rect": [
+              11,
+              9,
+              42,
+              42
+            ]
+          },
+          {
+            "name": "Open menu",
+            "rect": [
+              273,
+              9,
+              34,
+              42
+            ]
+          },
+          {
+            "name": "Watch day",
+            "rect": [
+              21,
+              505,
+              278,
+              46
+            ]
+          },
+          {
+            "name": "Close",
+            "rect": [
+              260,
+              55.203125,
+              42,
+              42
+            ]
+          },
+          {
+            "name": "Visit home",
+            "rect": [
+              29,
+              350.796875,
+              262,
+              46
+            ]
+          },
+          {
+            "name": "Days",
+            "rect": [
+              29,
+              406.796875,
+              127,
+              44
+            ]
+          },
+          {
+            "name": "Share",
+            "rect": [
+              164,
+              406.796875,
+              127,
+              44
+            ]
+          },
+          {
+            "name": "Hatch your own",
+            "rect": [
+              29,
+              460.796875,
+              262,
+              44
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "actual-hatch-320",
+      "text": "MISO\nLV27\nDAY 28\nGather the ready garden\n\nA day with MISO.\n\nWatch day\nA new little life\nA name\nBody\n−\n2\n+\nWits\n−\n2\n+\nSpirit\n−\n1\n+\n0.0004 ETH\n250 NHC\nHatch this life\n0.0004 test ETH · network fee applies",
+      "layout": {
+        "viewport": [
+          320,
+          568
+        ],
+        "size": [
+          320,
+          568
+        ],
+        "buttons": [
+          {
+            "name": "Back",
+            "rect": [
+              11,
+              9,
+              42,
+              42
+            ]
+          },
+          {
+            "name": "Open menu",
+            "rect": [
+              273,
+              9,
+              34,
+              42
+            ]
+          },
+          {
+            "name": "Watch day",
+            "rect": [
+              21,
+              505,
+              278,
+              46
+            ]
+          },
+          {
+            "name": "Close",
+            "rect": [
+              260,
+              83.9375,
+              42,
+              42
+            ]
+          },
+          {
+            "name": "Less body",
+            "rect": [
+              171,
+              220.71875,
+              40,
+              36
+            ]
+          },
+          {
+            "name": "More body",
+            "rect": [
+              251,
+              221.21875,
+              40,
+              35
+            ]
+          },
+          {
+            "name": "Less wits",
+            "rect": [
+              171,
+              263.71875,
+              40,
+              36
+            ]
+          },
+          {
+            "name": "More wits",
+            "rect": [
+              251,
+              264.21875,
+              40,
+              35
+            ]
+          },
+          {
+            "name": "Less spirit",
+            "rect": [
+              171,
+              306.71875,
+              40,
+              36
+            ]
+          },
+          {
+            "name": "More spirit",
+            "rect": [
+              251,
+              307.21875,
+              40,
+              35
+            ]
+          },
+          {
+            "name": "0.0004 ETH",
+            "rect": [
+              34,
+              357.71875,
+              123.5,
+              39
+            ]
+          },
+          {
+            "name": "250 NHC",
+            "rect": [
+              162.5,
+              357.71875,
+              123.5,
+              39
+            ]
+          },
+          {
+            "name": "Hatch this life",
+            "rect": [
+              29,
+              411.71875,
+              262,
+              46
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "actual-hatch-short320",
+      "text": "MISO\nLV27\nDAY 28\nGather the ready garden\n\nA day with MISO.\n\nWatch day\nA new little life\nA name\nBody\n−\n2\n+\nWits\n−\n2\n+\nSpirit\n−\n1\n+\n0.0004 ETH\n250 NHC\nHatch this life\n0.0004 test ETH · network fee applies",
+      "layout": {
+        "viewport": [
+          320,
+          360
+        ],
+        "size": [
+          320,
+          360
+        ],
+        "buttons": [
+          {
+            "name": "Back",
+            "rect": [
+              11,
+              9,
+              42,
+              42
+            ]
+          },
+          {
+            "name": "Open menu",
+            "rect": [
+              273,
+              9,
+              34,
+              42
+            ]
+          },
+          {
+            "name": "Watch day",
+            "rect": [
+              21,
+              297,
+              278,
+              46
+            ]
+          },
+          {
+            "name": "Close",
+            "rect": [
+              260,
+              14,
+              42,
+              42
+            ]
+          },
+          {
+            "name": "Less body",
+            "rect": [
+              161,
+              67.78125,
+              40,
+              36
+            ]
+          },
+          {
+            "name": "More body",
+            "rect": [
+              241,
+              68.28125,
+              40,
+              35
+            ]
+          },
+          {
+            "name": "Less wits",
+            "rect": [
+              161,
+              110.78125,
+              40,
+              36
+            ]
+          },
+          {
+            "name": "More wits",
+            "rect": [
+              241,
+              111.28125,
+              40,
+              35
+            ]
+          },
+          {
+            "name": "Less spirit",
+            "rect": [
+              161,
+              153.78125,
+              40,
+              36
+            ]
+          },
+          {
+            "name": "More spirit",
+            "rect": [
+              241,
+              154.28125,
+              40,
+              35
+            ]
+          },
+          {
+            "name": "0.0004 ETH",
+            "rect": [
+              34,
+              204.78125,
+              118.5,
+              39
+            ]
+          },
+          {
+            "name": "250 NHC",
+            "rect": [
+              157.5,
+              204.78125,
+              118.5,
+              39
+            ]
+          },
+          {
+            "name": "Hatch this life",
+            "rect": [
+              29,
+              258.78125,
+              252,
+              46
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "actual-profile-430",
+      "text": "MISO\nLV27\nDAY 28\nGather the ready garden\n\nA day with MISO.\n\nWatch day\nMISO\nDAY 28\nLV28\n0 NHC\nVisit home\nDays\nShare\nHatch your own",
+      "layout": {
+        "viewport": [
+          430,
+          932
+        ],
+        "size": [
+          430,
+          932
+        ],
+        "buttons": [
+          {
+            "name": "Back",
+            "rect": [
+              14,
+              12,
+              42,
+              42
+            ]
+          },
+          {
+            "name": "Open menu",
+            "rect": [
+              380,
+              12,
+              34,
+              42
+            ]
+          },
+          {
+            "name": "Watch day",
+            "rect": [
+              23,
+              868,
+              384,
+              46
+            ]
+          },
+          {
+            "name": "Close",
+            "rect": [
+              365,
+              226.703125,
+              42,
+              42
+            ]
+          },
+          {
+            "name": "Visit home",
+            "rect": [
+              34,
+              534.296875,
+              362,
+              46
+            ]
+          },
+          {
+            "name": "Days",
+            "rect": [
+              34,
+              594.296875,
+              177,
+              44
+            ]
+          },
+          {
+            "name": "Share",
+            "rect": [
+              219,
+              594.296875,
+              177,
+              44
+            ]
+          },
+          {
+            "name": "Hatch your own",
+            "rect": [
+              34,
+              652.296875,
+              362,
+              44
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "actual-history-430",
+      "text": "MISO\nLV27\nDAY 28\nGather the ready garden\n\nA day with MISO.\n\nWatch day\nA life in little days\nDAY 28\nA little day\nDAY 27\nA little day\nDAY 26\nA little day\nDAY 25\nA little day\nDAY 24\nA little day\nDAY 23\nA little day\nDAY 22\nA little day\nDAY 21\nA little day\nDAY 20\nA little day\nDAY 19\nA little day\nDAY 18\nA little day\nDAY 17\nA little day\nEarlier days\nLatest home",
+      "layout": {
+        "viewport": [
+          430,
+          932
+        ],
+        "size": [
+          430,
+          932
+        ],
+        "buttons": [
+          {
+            "name": "Back",
+            "rect": [
+              14,
+              12,
+              42,
+              42
+            ]
+          },
+          {
+            "name": "Open menu",
+            "rect": [
+              380,
+              12,
+              34,
+              42
+            ]
+          },
+          {
+            "name": "Watch day",
+            "rect": [
+              23,
+              868,
+              384,
+              46
+            ]
+          },
+          {
+            "name": "Close",
+            "rect": [
+              365,
+              23,
+              42,
+              42
+            ]
+          },
+          {
+            "name": "DAY 28\nA little day",
+            "rect": [
+              34,
+              79,
+              352,
+              57
+            ]
+          },
+          {
+            "name": "DAY 27\nA little day",
+            "rect": [
+              34,
+              144,
+              352,
+              57
+            ]
+          },
+          {
+            "name": "DAY 26\nA little day",
+            "rect": [
+              34,
+              209,
+              352,
+              57
+            ]
+          },
+          {
+            "name": "DAY 25\nA little day",
+            "rect": [
+              34,
+              274,
+              352,
+              57
+            ]
+          },
+          {
+            "name": "DAY 24\nA little day",
+            "rect": [
+              34,
+              339,
+              352,
+              57
+            ]
+          },
+          {
+            "name": "DAY 23\nA little day",
+            "rect": [
+              34,
+              404,
+              352,
+              57
+            ]
+          },
+          {
+            "name": "DAY 22\nA little day",
+            "rect": [
+              34,
+              469,
+              352,
+              57
+            ]
+          },
+          {
+            "name": "DAY 21\nA little day",
+            "rect": [
+              34,
+              534,
+              352,
+              57
+            ]
+          },
+          {
+            "name": "DAY 20\nA little day",
+            "rect": [
+              34,
+              599,
+              352,
+              57
+            ]
+          },
+          {
+            "name": "DAY 19\nA little day",
+            "rect": [
+              34,
+              664,
+              352,
+              57
+            ]
+          },
+          {
+            "name": "DAY 18\nA little day",
+            "rect": [
+              34,
+              729,
+              352,
+              57
+            ]
+          },
+          {
+            "name": "DAY 17\nA little day",
+            "rect": [
+              34,
+              794,
+              352,
+              57
+            ]
+          },
+          {
+            "name": "Earlier days",
+            "rect": [
+              34,
+              865,
+              352,
+              44
+            ]
+          },
+          {
+            "name": "Latest home",
+            "rect": [
+              34,
+              923,
+              352,
+              46
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

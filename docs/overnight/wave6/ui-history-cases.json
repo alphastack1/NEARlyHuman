@@ -1,0 +1,23 @@
+{
+  "scope": "Controlled read-only history refresh/paging around actual public Day26 and Day1 films. FutureDay27/currentDay0→1 metadata are explicit synthetic presentation boundaries, not onchain progression. No wallet, inference, quote or transaction.",
+  "errors": [],
+  "posts": [],
+  "checks": [
+    {
+      "name": "complete26→27refresh",
+      "rows": 27,
+      "historyCalls": 4,
+      "beforeScroll": 947,
+      "afterScroll": 1012,
+      "olderCursorComplete": true,
+      "selectionRetained": true,
+      "pass": true
+    },
+    {
+      "name": "empty0→1refresh",
+      "rows": 1,
+      "historyCalls": 2,
+      "pass": true
+    }
+  ]
+}

@@ -9,6 +9,7 @@ import {createPublicClient,http,parseAbi} from 'viem';
 import {robinhoodTestnet} from '../../src/chain/config';
 import {deployments} from '../../src/chain/deployments';
 import {isHosted} from '../../server/config';
+import {v2HttpTransport} from '../../src/chain/v2-transport';
 
 // Deliberately no dotenv/local-secret loader, environment mutation or deployment.
 if(isHosted())throw Error('Run this cutover from the private local workstation store, without a hosted runtime environment.');
@@ -75,7 +76,7 @@ const site=await siteResponse.json() as {id:string;name:string;ssl_url:string};
 if(site.id!==SITE||site.name!=='nearlyhuman'||site.ssl_url!=='https://nearlyhuman.netlify.app')throw Error('The target is not the authorized production site.');
 const target=getStore({name:STORE,siteID:SITE,token:access,consistency:'strong'}),source=await snapshot(),{campaigns,pool}=await validateSource(source);
 if(await target.get(V2_STORE_CUTOVER_KEY,{type:'json',consistency:'strong'}))throw Error('The hosted target has a spending fence. Inspect that record without deleting or overwriting it.');
-const chain=createPublicClient({chain:robinhoodTestnet,transport:http(robinhoodTestnet.rpcUrls.default.http[0],{timeout:20000,retryCount:2}),cacheTime:0});
+const chain=createPublicClient({chain:robinhoodTestnet,transport:v2HttpTransport(robinhoodTestnet.rpcUrls.default.http[0],{timeout:20000,retryCount:2}),cacheTime:0});
 if(await chain.getChainId()!==46630)throw Error('The admission-pause check is not on Robinhood testnet.');
 const block=await chain.getBlock(),v1Paused=await chain.readContract({address:deployments[46630]!.address,abi:parseAbi(['function admissionPaused() view returns(bool)']),functionName:'admissionPaused',blockNumber:block.number!});
 if((await chain.getBlock({blockNumber:block.number!})).hash!==block.hash)throw Error('The V1 admission-pause check changed.');

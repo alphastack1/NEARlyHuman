@@ -1,0 +1,10 @@
+{
+  "scope": "Original observed read-only UI reproduction before the assigned fix; actual Day26 film with explicitly synthetic current-Day27 metadata. Copied from the captured first probe result, not a real Day27 transaction.",
+  "errors": [],
+  "posts": [],
+  "historyCalls": 1,
+  "before": "A life in little days\nDAY 26\nA little day\nLatest home",
+  "after": "A life in little days\nDAY 26\nA little day\nLatest home",
+  "currentHud": "MISO\nLV27\nDAY 27",
+  "stale": true
+}

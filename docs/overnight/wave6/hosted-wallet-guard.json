@@ -1,0 +1,8 @@
+{
+  "scope": "Keyless hosted-wallet harness preparation only. No credentials, browser, network, signing, chain transaction or financial ledger operation.",
+  "validMint": true,
+  "rejected": 6,
+  "checks": ["wrong chain", "arbitrary recipient", "wrong owner", "excessive native value", "excessive gas", "arbitrary login message"],
+  "strictTypeCheck": "passed",
+  "actualHostedFlow": "not yet run; explicit Root gate required"
+}

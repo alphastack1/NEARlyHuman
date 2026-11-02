@@ -1,0 +1,28 @@
+{
+  "scope": "Controlled synchronous React callback stress test of double run and attach invocation, plus single-provider auto-attach lease handoff. Mocked public wallet identity, actual read-only role/portfolio verification. No key, signatures, wallet sends, quotes or inference.",
+  "errors": [],
+  "appPosts": [],
+  "providerCalls": [
+    "eth_accounts",
+    "eth_requestAccounts",
+    "wallet_switchEthereumChain"
+  ],
+  "runCallbackInvocations": 2,
+  "pendingChoices": [
+    {
+      "text": "Opening wallet…",
+      "disabled": true
+    }
+  ],
+  "attachCallbackInvocations": 2,
+  "pendingCallCounts": {
+    "requests": 1,
+    "switches": 1
+  },
+  "owned": [
+    "MISODAY 28 · LV28",
+    "PEEPDAY 13 · LV13"
+  ],
+  "handoffCompleted": true,
+  "signaturesOrSends": []
+}

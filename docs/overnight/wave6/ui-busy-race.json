@@ -1,0 +1,48 @@
+{
+  "scope": "Controlled delayed read and mocked network-selection wait with actual public config/life/history data. No signatures, wallet sends, quotes or inference.",
+  "errors": [],
+  "appPosts": [],
+  "providerCalls": [
+    "eth_requestAccounts",
+    "wallet_switchEthereumChain",
+    "eth_requestAccounts",
+    "wallet_switchEthereumChain"
+  ],
+  "before": [
+    {
+      "text": "Opening wallet…",
+      "disabled": true
+    },
+    {
+      "text": "Opening wallet…",
+      "disabled": true
+    },
+    {
+      "text": "Opening wallet…",
+      "disabled": true
+    },
+    {
+      "text": "Opening wallet…",
+      "disabled": true
+    }
+  ],
+  "after": [
+    {
+      "text": "Opening wallet…",
+      "disabled": true
+    },
+    {
+      "text": "Opening wallet…",
+      "disabled": true
+    },
+    {
+      "text": "Opening wallet…",
+      "disabled": true
+    },
+    {
+      "text": "Opening wallet…",
+      "disabled": true
+    }
+  ],
+  "busyWasClearedByStaleRead": false
+}
