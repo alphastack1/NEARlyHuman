@@ -1,0 +1,12 @@
+{
+  "at": "2026-11-02T06:48:42.277Z",
+  "key": "NEARLYHUMAN_WALLET_ATTEMPTS",
+  "value": 15,
+  "scopes": [
+    "functions"
+  ],
+  "context": "production",
+  "status": 201,
+  "ledgerReset": false,
+  "purpose": "Three authorized final testnet days across existing MISO and PEEP NFTs; explicit operator allocation increase from fallback12, applied to hosted runtime on next deployment."
+}

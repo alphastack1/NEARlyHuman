@@ -1,0 +1,93 @@
+{
+  "at": "2026-11-02T07:00:17.841Z",
+  "scope": "Read-only paused release-boundary snapshot after all three funded new-policy days settled; old records and packets inspected without mutation.",
+  "checks": {
+    "admissionsPaused": true,
+    "noPending": true,
+    "allJobsTerminal": true,
+    "threeNewReady": true,
+    "oldQuotesStrictlyExpired": true,
+    "newQuotesStrictlyExpired": true,
+    "noActiveHold": true,
+    "oldJobsPreserved": true,
+    "oldPacketsValid": true,
+    "operatorCountPreserved": true,
+    "oldReleasedHoldPreserved": true,
+    "ledgerChargesRecount": true,
+    "noRelayIntent": true
+  },
+  "allPassed": true,
+  "chainId": 46630,
+  "collection": "0x998551395f8a0c4ebd1f883b8c18a41d2cecabfb",
+  "block": "146915255",
+  "chainTimestamp": 1793602797,
+  "policy": "0x52eee4417a3f649141ce3f329e761902ebbfaea8300f84702c95673fb752fca3",
+  "lives": [
+    {
+      "tokenId": "1",
+      "day": 3,
+      "alive": true,
+      "pendingRequest": "0x0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    {
+      "tokenId": "2",
+      "day": 3,
+      "alive": true,
+      "pendingRequest": "0x0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    {
+      "tokenId": "3",
+      "day": 3,
+      "alive": true,
+      "pendingRequest": "0x0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    {
+      "tokenId": "4",
+      "day": 3,
+      "alive": true,
+      "pendingRequest": "0x0000000000000000000000000000000000000000000000000000000000000000"
+    }
+  ],
+  "ledger": {
+    "holds": 16,
+    "counted": 15,
+    "operatorCount": 15,
+    "statusCounts": {
+      "done": 15,
+      "released": 1
+    },
+    "spentMicroUSD": 33423,
+    "doneCharges": 33423,
+    "active": 0
+  },
+  "maxOldQuoteExpiry": 1793595766,
+  "maxNewQuoteExpiry": 1793602533,
+  "jobsByPhase": {
+    "ready": 12,
+    "failed": 2,
+    "expired": 1
+  },
+  "newRequests": [
+    {
+      "requestId": "0x4294894ea3e67b27eba809c82260b9ada9a48732f403ecef8ee5586f853dcf48",
+      "tokenId": "3",
+      "day": 2,
+      "ownerTx": "0x5f5ea7373bdce1f7a7e7d81b432d9d70fcb95d81d118ca02695032e8e4f4f6c2",
+      "finalTx": "0xf3c68409b6cba209dea1f4ec8769a229815fecd3e994974fb3c703de07a4d5e7"
+    },
+    {
+      "requestId": "0xcbac22d9b714bd1d177e933b1a83e9887bf1e060cfa7da8a522925736b19f7a9",
+      "tokenId": "2",
+      "day": 3,
+      "ownerTx": "0x428779fec1202e1cbdcfe851027cdca0b3a2c0d20cf543c744b1c3ab8c996494",
+      "finalTx": "0x8f0cb85693b9eb236a99f35c01e6456af96a55f66080185bc2a3fa668faf6432"
+    },
+    {
+      "requestId": "0x6fc9c688793d7e9b04ddbc262337f28fb5fd3cf829d518a67174004ae1bc7844",
+      "tokenId": "3",
+      "day": 3,
+      "ownerTx": "0xa53975a65dec42de4cface5f85015f8ddc4501f9af3da1c708ca8515ee367939",
+      "finalTx": "0x14a3c441bd2f9e2189dfcae50bfbcf9326cfa9e2598ce98c552bf2091192d8d4"
+    }
+  ]
+}

@@ -16,7 +16,7 @@ import { DayFocusBadge, DayPlanDetails } from './DayFocus';
 import { DayLog } from './DayLog';
 import { CartridgeOpening, type CartridgePhase } from './CartridgeOpening';
 import { openingVisitorState, OPENING_START_TARGET } from './openingIdentity';
-import { PREVIEW_DAY_URL } from './previewData';
+import { PREVIEW_DAYS, PREVIEW_DAY_URL, type PreviewDay } from './previewData';
 import { showSupplyTransfer } from './supplyTransfer';
 import { beforeActionBeat, afterActionBeat } from '../game/recorded-events';
 import { NEED_ICONS, NEED_KEYS, dayHighlights, recordedChanges, signedNeed, type Need } from './receiptFeedback';
@@ -194,7 +194,9 @@ export default function App() {
     const [housePeek,setHousePeek]=useState<TargetId>();
     const [traveling,setTraveling]=useState(false);
     const [guest,setGuest]=useState<GuestDay>();
+    const [guestLoading,setGuestLoading]=useState(false);
     const guestRef=useRef<GuestDay|undefined>(undefined),guestRequest=useRef(0),guestPlaybackTicket=useRef(0),connectionIntent=useRef<'mint'|'home'>('home'),freshDay=useRef<FreshDayIntent|undefined>(undefined);
+    const nextGuestRead=useRef<{ticket:number;request:AbortController}|undefined>(undefined);
     const [traitsOpen,setTraitsOpen]=useState(false);
     const supplyFlight=useRef<(()=>void)|undefined>(undefined);
     const playbackPacket=useRef<DayResult|undefined>(undefined),snapshotCursor=useRef<{packet:DayResult|undefined;index:number;state:GameState}|undefined>(undefined),cueSequence=useRef(0);
@@ -270,6 +272,7 @@ export default function App() {
     useEffect(()=>{if(modal||!isFilm(screen))setMeterCue(undefined);},[modal,screen]);
     useEffect(()=>{supplyFlight.current?.();world.current?.setExploreEnabled(screen==='care'&&!!selected?.state.alive||screen==='visit'&&!!guest?.rooster.state.alive);setHousePeek(undefined);setRoomsOpen(false);if(!isFilm(screen))setTraveling(false);},[screen,selected?.id,selected?.revision,guest?.rooster.id]);
     useEffect(()=>()=>supplyFlight.current?.(),[]);
+    useEffect(()=>()=>{nextGuestRead.current?.request.abort();nextGuestRead.current=undefined;guestRequest.current++;guestPlaybackTicket.current++;},[]);
     useEffect(()=>{
         const intent=freshDay.current;if(!intent?.readyDay||screen!=='ready'||!result||result.day!==intent.readyDay)return;
         if(document.hidden||account?.toLowerCase()!==intent.account||selected?.id!==intent.tokenId||network!==config?.chainId){freshDay.current=undefined;return;}
@@ -411,13 +414,13 @@ export default function App() {
     },[opening,screen,modal,roomsOpen,housePeek,traitsOpen,guest?.rooster.id,selected?.id]);
     useEffect(() => { world.current?.setMuted(muted); store.set('nh:sound', muted); }, [muted]);
     useEffect(() => { if (!provider)
-        return; const changed = (addresses: string[]) => { freshDay.current=undefined;operationToken.current++;setBusy(false);setBusyLabel('');walletGeneration.current++;navigationGeneration.current++;setOwnershipRead('unknown');setSession(''); session.current = undefined; setOwnerLost(false); setSelected(undefined); setOwned([]); setJobId(undefined); setResult(undefined); setSubmitted(undefined); setJob(undefined); setDelivery([]); setError('');if(!context.current.modal?.view){menuTrail.current=[];setModal(null);}setScreen('entry'); setQuote(undefined); if (addresses?.[0]) {
+        return; const changed = (addresses: string[]) => { cancelNextGuestRead();freshDay.current=undefined;operationToken.current++;setBusy(false);setBusyLabel('');walletGeneration.current++;navigationGeneration.current++;setOwnershipRead('unknown');setSession(''); session.current = undefined; setOwnerLost(false); setSelected(undefined); setOwned([]); setJobId(undefined); setResult(undefined); setSubmitted(undefined); setJob(undefined); setDelivery([]); setError('');if(!context.current.modal?.view){menuTrail.current=[];setModal(null);}setScreen('entry'); setQuote(undefined); if (addresses?.[0]) {
         const a = getAddress(addresses[0]);
         setAccount(a);
         void loadOwned(a);
     }
     else
-        setAccount(undefined); }; const chainChanged = (chain: string) => { setNetwork(parseInt(chain, 16)); setSession(''); session.current = undefined; setQuote(undefined); world.current?.pause(); if (isFilm(context.current.screen))
+        setAccount(undefined); }; const chainChanged = (chain: string) => { cancelNextGuestRead();setNetwork(parseInt(chain, 16)); setSession(''); session.current = undefined; setQuote(undefined); world.current?.pause(); if (isFilm(context.current.screen))
         setPaused(true); }; provider.on?.('accountsChanged', changed); provider.on?.('chainChanged', chainChanged); return () => { provider.removeListener?.('accountsChanged', changed); provider.removeListener?.('chainChanged', chainChanged); }; }, [provider, config]);
     useEffect(()=>{
         const viewport=window.visualViewport;
@@ -511,7 +514,7 @@ export default function App() {
         }catch(e){if(relevant()){setOwnershipRead('error');setError(humanError(e));}}
         finally{if(generation===walletGeneration.current&&context.current.account?.toLowerCase()===address.toLowerCase())setOwnedLoading(false);}
     }
-    async function chooseRooster(r: Rooster) { freshDay.current=undefined;archiveReturn.current=undefined;setHistoricalDay(undefined);setCanonicalStale(false);operationToken.current++;setBusy(false);setBusyLabel('');setCompactOutcome(undefined);navigationGeneration.current++;menuTrail.current=[];setJobId(undefined); setSelected(r); setOwnerLost(false); setResult(undefined); setPacketMissing(false); setJob(undefined); setModal(null); setQuote(undefined); setReceipt(undefined); setReplayIndex(0); setDelivery(r.state.day ? store.get<ItemId[]>(scope(r.id) + ':kit', []).filter((id, i, a) => ITEM_IDS.includes(id) && a.indexOf(id) === i && r.state.inventory[id] < 65535).slice(0, 3) : []); setPage(0); store.set('nh:selected:' + config?.chainId, r.id); if (r.pending) {
+    async function chooseRooster(r: Rooster) { cancelNextGuestRead();freshDay.current=undefined;archiveReturn.current=undefined;setHistoricalDay(undefined);setCanonicalStale(false);operationToken.current++;setBusy(false);setBusyLabel('');setCompactOutcome(undefined);navigationGeneration.current++;menuTrail.current=[];setJobId(undefined); setSelected(r); setOwnerLost(false); setResult(undefined); setPacketMissing(false); setJob(undefined); setModal(null); setQuote(undefined); setReceipt(undefined); setReplayIndex(0); setDelivery(r.state.day ? store.get<ItemId[]>(scope(r.id) + ':kit', []).filter((id, i, a) => ITEM_IDS.includes(id) && a.indexOf(id) === i && r.state.inventory[id] < 65535).slice(0, 3) : []); setPage(0); store.set('nh:selected:' + config?.chainId, r.id); if (r.pending) {
         setJobId(r.pending.id);
         setScreen('processing');
     }
@@ -580,10 +583,33 @@ export default function App() {
         setBusyLabel('');
     } }
     function startGuestDay(){
-        const visit=guestRef.current,renderer=world.current;if(openingPhase.current!=='closed'||!visit||!renderer)return;const ticket=++guestPlaybackTicket.current;
-        void renderer.ready.then(()=>{const c=context.current;if(openingPhase.current!=='closed'||ticket!==guestPlaybackTicket.current||c.selected||c.modal||!['entry','discover','visit'].includes(c.screen))return;
-            freshDay.current=undefined;archiveReturn.current=undefined;setHistoricalDay(undefined);playbackPacket.current=visit.result;snapshotCursor.current=undefined;setMeterCue(undefined);setResult(visit.result);setReceipt(undefined);setReplayIndex(0);setHud(visit.result.receipts[0]?.decisionSnapshot||visit.result.receipts[0]?.before||visit.result.finalState);setPaused(false);setModal(null);setScreen('discover');renderer.playDay(visit.result,{startIndex:0,skipDelivery:true});
-        });
+        const visit=guestRef.current;if(visit)void playGuestVisit(visit);
+    }
+    async function playGuestVisit(visit:GuestDay,replaceGuest=false){
+        const previous=guestRef.current,renderer=world.current;if(openingPhase.current!=='closed'||!renderer)return;
+        const ticket=++guestPlaybackTicket.current,generation=navigationGeneration.current,player=context.current.account;
+        await renderer.ready;const c=context.current;
+        if(openingPhase.current!=='closed'||ticket!==guestPlaybackTicket.current||generation!==navigationGeneration.current||c.account!==player||guestRef.current!==previous||c.selected||c.modal||!['entry','discover','visit'].includes(c.screen))return;
+        if(replaceGuest){guestRef.current=visit;setGuest(visit);}
+        freshDay.current=undefined;archiveReturn.current=undefined;menuTrail.current=[];setHistoricalDay(undefined);playbackPacket.current=visit.result;snapshotCursor.current=undefined;setMeterCue(undefined);setResult(visit.result);setReceipt(undefined);setReplayIndex(0);setHud(visit.result.receipts[0]?.decisionSnapshot||visit.result.receipts[0]?.before||visit.result.finalState);setPaused(false);setModal(null);setScreen('discover');renderer.playDay(visit.result,{startIndex:0,skipDelivery:true});
+    }
+    function cancelNextGuestRead(){
+        const active=nextGuestRead.current;if(!active)return;nextGuestRead.current=undefined;active.request.abort();guestRequest.current++;guestPlaybackTicket.current++;setGuestLoading(false);
+    }
+    async function openGuestPreview(entry:PreviewDay){
+        if(screen!=='visit'||selected||submitted||modal||busy||ownedLoading||ownershipRead==='loading'||nextGuestRead.current||!guestRef.current)return;
+        const previous=guestRef.current,player=context.current.account,generation=++navigationGeneration.current,ticket=++guestRequest.current,playbackTicket=++guestPlaybackTicket.current,request=new AbortController();
+        nextGuestRead.current={ticket,request};setGuestLoading(true);setError('');
+        const stillHere=()=>nextGuestRead.current?.ticket===ticket&&guestRequest.current===ticket&&navigationGeneration.current===generation&&context.current.account===player&&guestRef.current===previous&&!context.current.selected&&!context.current.modal&&context.current.screen==='visit';
+        const timeout=window.setTimeout(()=>request.abort(),12000);let starting=false;
+        try{
+            const response=await fetch(entry.url,{signal:request.signal});if(!response.ok)throw Error('Visit unavailable');const packet=await response.json() as GuestDay;
+            if(packet.rooster?.id!==entry.tokenId||packet.result?.day!==entry.day||packet.result.finalState?.day!==entry.day||packet.result.finalState?.seed!==entry.seed||!packet.result.receipts?.length)throw Error('Visit does not match this day');
+            if(!stillHere()||guestPlaybackTicket.current!==playbackTicket)return;
+            const visit={...packet,rooster:{...packet.rooster,state:packet.result.finalState,latestDay:packet.result.day}};
+            starting=true;await playGuestVisit(visit,true);
+        }catch{if(stillHere()&&(starting||guestPlaybackTicket.current===playbackTicket))setError('Could not open that day. Try again.');}
+        finally{window.clearTimeout(timeout);if(nextGuestRead.current?.ticket===ticket){nextGuestRead.current=undefined;setGuestLoading(false);}}
     }
     function startOpeningGame(){
         if(openingPhase.current==='closed'||openingPhase.current==='leaving')return;
@@ -592,7 +618,7 @@ export default function App() {
         if(openingStarted.current)world.current?.finishOpening();
     }
     function enterHome(intent:'mint'|'home'){
-        guestPlaybackTicket.current++;connectionIntent.current=intent;freshDay.current=undefined;world.current?.pause();if(isFilm(context.current.screen))setPaused(true);
+        cancelNextGuestRead();guestPlaybackTicket.current++;connectionIntent.current=intent;freshDay.current=undefined;world.current?.pause();if(isFilm(context.current.screen))setPaused(true);
         if(account&&ownershipRead==='ready'){
             connectionIntent.current='home';if(intent==='mint')beginMint();else void loadOwned(account);return;
         }
@@ -881,7 +907,7 @@ export default function App() {
     function pause() { world.current?.pause(); setMeterCue(undefined);setPaused(true); }
     function resume() { menuTrail.current=[];setModal(null); world.current?.resume(); setPaused(false); }
     function brain() { const c = context.current; open({ kind: 'brain', choice: (isFilm(c.screen) ? c.receipt?.choice : c.job?.latestChoice) ? cloneState(isFilm(c.screen) ? c.receipt!.choice : c.job!.latestChoice) : undefined, receipt: isFilm(c.screen) && c.receipt ? cloneState(c.receipt) : undefined, preparing: c.screen === 'processing',planPacket:isFilm(c.screen)?c.result:undefined,planIndex:replayIndex,atImpact:!!c.receipt&&c.hud===c.receipt.snapshot }); setChoiceNotice(false); }
-    function beginMint() { freshDay.current=undefined;setTraitsOpen(false);setResult(undefined);setReceipt(undefined);setCompactOutcome(undefined);archiveReturn.current=undefined;setHistoricalDay(undefined);operationToken.current++;navigationGeneration.current++;setJobId(undefined);setJob(undefined);setBusy(false);setBusyLabel('');menuTrail.current=[];setError(''); setQuote(undefined); setScreen('mint'); setModal(null); setName(store.get('nh:name:' + context.current.account, '')); setStats(store.get('nh:stats:' + context.current.account, initialStats)); }
+    function beginMint() { cancelNextGuestRead();freshDay.current=undefined;setTraitsOpen(false);setResult(undefined);setReceipt(undefined);setCompactOutcome(undefined);archiveReturn.current=undefined;setHistoricalDay(undefined);operationToken.current++;navigationGeneration.current++;setJobId(undefined);setJob(undefined);setBusy(false);setBusyLabel('');menuTrail.current=[];setError(''); setQuote(undefined); setScreen('mint'); setModal(null); setName(store.get('nh:name:' + context.current.account, '')); setStats(store.get('nh:stats:' + context.current.account, initialStats)); }
     const deadlineConditions=(selected?.state.conditions.filter(c=>!c.resolved&&c.dueDay>0)||[]).sort((a,b)=>a.dueDay-b.dueDay);
     const warnings:Array<{label:string;due?:number;item:ItemId}>=deadlineConditions.map(c=>({label:conditionLabel(c.kind,c.severity),due:c.dueDay,item:c.kind==='wound'?'bandage':c.kind==='illness'||c.kind==='infection'?'medicine':c.kind==='waterDeficit'?'water':'bread'}));
     if(selected?.state.needs.nutrition!==undefined&&selected.state.needs.nutrition<=3000&&!deadlineConditions.some(c=>c.kind==='foodDeficit'))warnings.push({label:'Low food',item:'bread'});
@@ -1021,6 +1047,8 @@ export default function App() {
 
     }
     const welcome=screen==='entry'||visiting;
+    const previewIndex=guest?PREVIEW_DAYS.findIndex(entry=>entry.tokenId===guest.rooster.id&&entry.day===guest.result.day):-1;
+    const nextPreview=screen==='visit'&&guest&&!selected&&!submitted&&PREVIEW_DAYS.length>1?PREVIEW_DAYS[(previewIndex+1)%PREVIEW_DAYS.length]:undefined;
     const sceneState=screen==='visit'?guest?.rooster.state:selected?.state;
     const dayLabel=film?'DAY':(screen==='care'&&!homeVisit)||screen==='processing'||screen==='firstRetry'?'NEXT':'SAVED';
     const dayNumber=film?receipt?.day||result?.day:(screen==='care'&&!homeVisit)||screen==='processing'||screen==='firstRetry'?(headerRooster?.state.day||0)+1:headerRooster?.state.day;
@@ -1051,7 +1079,7 @@ export default function App() {
          {config?.testnet&&headerRooster&&<span className="corner-network">TESTNET</span>}
          {opening!=='closed'&&<CartridgeOpening phase={opening} onStart={startOpeningGame}/>}
         </div>
-        {welcome&&<div className="welcome-wrap" inert={!!modal}><WelcomeDock busy={busy||ownedLoading} label={busyLabel} error={error} onHatch={()=>enterHome('mint')} onHome={()=>enterHome('home')}/></div>}
+        {welcome&&<div className="welcome-wrap" inert={!!modal}><WelcomeDock busy={busy||ownedLoading} label={busyLabel} error={error} onHatch={()=>enterHome('mint')} onHome={()=>enterHome('home')} next={nextPreview?{label:nextPreview.tokenId===guest?.rooster.id?'Watch day '+nextPreview.day:'Visit '+nextPreview.name,loading:guestLoading,onClick:()=>void openGuestPreview(nextPreview)}:undefined}/></div>}
         {screen==='care'&&<div className="care-dock" inert={!!modal}>{renderScreen()}</div>}
         {screen==='mint'&&<div className="mint-dock" inert={!!modal}>{renderScreen()}</div>}
         {modal&&createPortal(<div className="modal-backdrop" onClick={e=>{if(e.target===e.currentTarget)close();}}><div className="composition-modal" role="dialog" aria-modal="true" aria-label="Game details" onClick={e=>{if(e.target===e.currentTarget)close();}}>{renderModal()}</div></div>,document.body)}

@@ -1,8 +1,8 @@
 import { createHash } from 'node:crypto';
-import type { ChoiceContext, ModelChoice } from '../src/domain/types';
+import type { Candidate, ChoiceContext, ModelChoice } from '../src/domain/types';
 import { deriveIndividuality, dayInclination, INDIVIDUALITY_VERSION } from '../src/domain/individuality';
 import { candidateRecovery } from '../src/domain/actions';
-import { DAY_PLAN_VERSION, MAX_MODEL_DECISIONS } from '../src/domain/day-plan';
+import { candidateActivityFamily, candidateInterest, DAY_PLAN_VERSION, MAX_MODEL_DECISIONS } from '../src/domain/day-plan';
 import { serverConfig } from './config';
 
 export class InferenceError extends Error {
@@ -14,20 +14,37 @@ export interface Exchange {
   choice: string; probabilities?: Record<string, number>; confidence?: number;
   morningChoice?:string;morningProbabilities?:Record<string,number>;
 }
-export const DECISION_POLICY_VERSION='one-focus-six-beats-local-quiet-physical-pickup-v1';
+export const DECISION_POLICY_VERSION='one-focus-six-beats-useful-variety-prior-memory-v2';
+function recoveryFacts(c:Candidate,s:ChoiceContext['state']) {
+ const nominal={food:candidateRecovery(c,'nutrition'),water:candidateRecovery(c,'hydration'),energy:candidateRecovery(c,'energy'),morale:candidateRecovery(c,'morale')};
+ const gains={food:Math.min(10000-s.needs.nutrition,nominal.food)/100,water:Math.min(10000-s.needs.hydration,nominal.water)/100,energy:Math.min(10000-Math.max(0,s.needs.energy-c.energy),nominal.energy)/100,morale:Math.min(10000-s.needs.morale,nominal.morale)/100};
+ return{gains,hasRecovery:Object.values(nominal).some(n=>n>0),tiny:Math.max(...Object.values(gains))<10};
+}
 export function buildDecision(context: ChoiceContext) {
   if (context.candidates.length < 2 || context.candidates.length > 24) throw new InferenceError('candidate_count');
   const s = context.state,planning=context.mode==='day-plan',available={...s.inventory};
+  const profile=deriveIndividuality(s.seed),today=dayInclination(s.seed,context.day);
+  const matches=(a:{action:string;target:string;variant:string},b:{action:string;target:string;variant:string})=>a.action===b.action&&a.target===b.target&&a.variant===b.variant;
+  const prior=context.previousDays||[],earlier=context.earlierToday||[];
+  const focus=context.dailyFocus;
+  const plannedAction=focus?.status==='planned'&&focus.action?{key:focus.key,action:focus.action,target:focus.target||'hall',variant:focus.variant||'',label:focus.label,description:'',inputs:focus.inputs||{},energy:0,successChance:1,possibleFailures:[]} as Candidate:undefined;
+  const plannedGain=plannedAction?{food:candidateRecovery(plannedAction,'nutrition')/100,water:candidateRecovery(plannedAction,'hydration')/100,energy:candidateRecovery(plannedAction,'energy')/100,morale:candidateRecovery(plannedAction,'morale')/100}:undefined;
+  const failureScenarios:Record<string,string[]>={};
+  const failureScenario=(failures:string[])=>{const known=Object.entries(failureScenarios).find(([,values])=>values.length===failures.length&&values.every((value,index)=>value===failures[index]));if(known)return known[0];const key='risk'+(Object.keys(failureScenarios).length+1);failureScenarios[key]=failures;return key;};
   if(planning)for(const item of context.pendingDelivery||[])available[item]++;
   const nextAction={type:'choice',
-      instructions:planning?'Choose one meaningful, feasible main undertaking for this day. Each offered project has real materials and a real target; scheduled alternatives are genuine timing choices. Prefer a useful project matching this individual and today’s inclination. An unhurried option means no genuine substantial project is available: choose an ordinary place/time, not imaginary work. This is a plan, not an immediate action. Urgent needs may interrupt or postpone it. The delivery is outside until collected. Do not invent ripe fruit, furniture, materials, benefits or a second project.'
-        :'Choose one small moment in an otherwise continuous day. Urgent food, water, treatment and incident deadlines come first. Otherwise choose a useful modest refreshment, nap, short leisure or a genuinely ordinary look/sit/stroll; not every decision needs productive work. The planned main undertaking is handled separately, once. Do not chase a different project. Read clipped gains and costs: avoid wasting scarce supplies for tiny top-ups, but a useful ordinary refreshment need not wait for an emergency. Let this individual’s preferences and earlier_today influence the small routine. Choose only an offered action; never invent benefits or supplies.',
-      criteria:Object.fromEntries(context.candidates.map(c=>{const food=candidateRecovery(c,'nutrition'),water=candidateRecovery(c,'hydration'),foodGain=Math.min(10000-s.needs.nutrition,food)/100,waterGain=Math.min(10000-s.needs.hydration,water)/100;return[c.key,{
-        action:c.label,target:c.target,variant:c.variant,use:c.inputs,energy:c.energy/100,success_chance:c.successChance,urgent:!!c.urgent,due_game_day:c.dueDay,due_slot:c.dueSlot,effect:c.description,possible_failure:c.possibleFailures,
+      instructions:planning?'Choose one meaningful, feasible main undertaking for this day. Each project has real materials and a real target. At similarly useful choices, prefer today’s interest and this individual’s lasting tastes, with a fresh use of the home rather than automatically repeating a successful recent project. A needed repair, harvest or meal may sensibly repeat. Prior days contain bounded executed records, not a complete biography. An unhurried option means no substantial project is feasible; do not invent work. This is one plan, not an immediate action. Urgent needs can interrupt it. Delivery stays outside until collected. Never invent ripe fruit, materials, benefits or a second project.'
+        :'Choose one small moment in a continuous day. Urgent survival, treatment and incident deadlines come first. Otherwise compare useful care with an ordinary look, sit or short stroll. Let lasting tastes, meal style, today’s interest and actual recent actions distinguish similarly useful choices. Consider a different kind of moment after the morning habit; a different recipe is not automatically a different habit. Needed food, water, rest and treatment may always repeat. Consider an upcoming planned meal before an optional top-up, without treating its success as guaranteed or delaying urgent care. Try a useful new home affordance when offered. Do not top every need up to100 reflexively: energy does not decay each phase and surviving bedtime restores35 energy. A healthy rooster can do something ordinary. Preserve scarce stock for useful care. Never chase a second project or invent effects. Choose only an offered action.',
+      criteria:Object.fromEntries(context.candidates.map(c=>{
+        const {gains,hasRecovery,tiny}=recoveryFacts(c,s);
+        const repeatedToday=earlier.filter(a=>matches(a,c)).length,priorSuccesses=prior.flatMap(day=>day.actions).filter(a=>a.success&&matches(a,c)).length;
+        const family=candidateActivityFamily(c),familyToday=earlier.filter(a=>candidateActivityFamily(a)===family).length;
+        return[c.key,{
+        action:c.label,target:c.target,variant:c.variant,use:c.inputs,energy:c.energy/100,success_chance:c.successChance,...(c.urgent?{urgent:true}:{}),due_game_day:c.dueDay,due_slot:c.dueSlot,effect:c.description,...(c.possibleFailures.length?{failure_scenario:failureScenario(c.possibleFailures)}:{}),
+        ...(!c.urgent?{activity_family:family,interest:candidateInterest(c),...(repeatedToday||priorSuccesses||familyToday?{familiarity:{today:repeatedToday,family_today:familyToday,prior_successes:priorSuccesses}}:{})}:{}),
         ...(c.plan?{project_kind:c.plan.kind,planned_slot:c.plan.scheduledSlot,materials_after_collection:true}:{}),
-        ...(food||water?{clipped_gain_on_success:{food:foodGain,water:waterGain,before_phase_boundary:true}}:{}),
-        ...(Object.keys(c.inputs).length?{stock_after_use:Object.fromEntries(Object.entries(c.inputs).map(([item,count])=>[item,available[item as keyof typeof available]-(count||0)]))}:{}),
-        ...(!c.urgent&&food>0&&foodGain===0?{resource_caution:'Food is full; no food gain fits now.'}:!c.urgent&&c.action==='H01'&&c.variant==='water'&&waterGain<10?{resource_caution:`Only ${waterGain} water fits; one whole bottle is spent.`}:{}),
+        ...(hasRecovery?{clipped_gain_on_success:{...gains,before_phase_boundary:true}}:{}),
+        ...(!c.urgent&&Object.keys(c.inputs).length&&hasRecovery&&tiny?{resource_caution:'Only small recovery fits. A whole item is spent; compare useful care or a free ordinary moment.'}:{}),
       }];}))};
   return {
     model: serverConfig().model,
@@ -35,15 +52,19 @@ export function buildDecision(context: ChoiceContext) {
       role: 'A nearly-human rooster living one continuous domestic day. Stay alive, pursue one meaningful undertaking, and have a few small ordinary moments around it. Preferences are soft, never new rules.',
       decision_kind:planning?'day_plan':'small_routine',day_plan_version:DAY_PLAN_VERSION,
       day: context.day, slot: context.slot, phase: context.phase,
-      individuality:{version:INDIVIDUALITY_VERSION,...deriveIndividuality(s.seed),today:dayInclination(s.seed,context.day)},
+      individuality:{version:INDIVIDUALITY_VERSION,...profile,today},
       traits: s.stats, needs: Object.fromEntries(Object.entries(s.needs).map(([k, v]) => [k, v / 100])),
       stock: s.inventory, delivery_waiting_outside:context.pendingDelivery||[],...(planning?{project_stock_after_collection:available}:{}), conditions: s.conditions.filter(c => !c.resolved), plots: s.plots, house: s.house,
-      recent: context.recent.slice(-6), earlier_today:context.earlierToday?.slice(-8)||[], situation: context.situation,
-      ...(context.dailyFocus?{main_undertaking:context.dailyFocus}:{}),
-      pacing:{remaining_phase_boundaries:6-Math.floor((Math.max(1,context.slot)-1)/10),scheduled_loss_per_boundary:{food:5,water:7},rest_allowance:2,leisure_allowance:2,ordinary_decision_beats:6,maximum_successful_model_calls:MAX_MODEL_DECISIONS},
-      rule: 'No offline aging. Supplied items are single-use. A due game-day deadline is serious. Choose one offered action; supplies do not force a choice. Task success chance is not choice probability.',
+      recent: context.recent.slice(-6), earlier_today:earlier.slice(-8),
+      previous_days:{source:'Bounded executed non-idle records from completed days; not all choices or quiet time.',days:prior},
+      task_failure_scenarios:failureScenarios,
+      preference_guide:{primary:profile.interest,secondary:profile.secondaryInterest,today:today.interest,meal:profile.mealStyle==='ritual'?'When useful, enjoy preparation over the quickest consumption.':'When useful, prefer a simple meal or drink.',resources:profile.resourceStyle==='save-specials'?'Keep special stock when a modest or free option suffices.':'A useful new recipe or home affordance is welcome; never sacrifice necessary care.'},
+      situation: context.situation,
+      ...(focus?{main_undertaking:{...focus,...(plannedGain&&Object.values(plannedGain).some(n=>n>0)?{slots_until_plan:Math.max(0,focus.scheduledSlot-context.slot),nominal_gain_if_success:plannedGain,success_is_not_guaranteed:true}:{})}}:{}),
+      pacing:{remaining_phase_boundaries:6-Math.floor((Math.max(1,context.slot)-1)/10),scheduled_loss_per_boundary:{food:5,water_by_phase:[7,6,7,7,6,7],energy:0,morale:Math.round(300*(1-.02*s.stats.spirit))/100},bedtime_if_alive:{energy_gain:35,cap:100,healing:'Conditional, never a guaranteed rescue.'},rest_allowance:2,leisure_allowance:2,ordinary_decision_beats:6,maximum_successful_model_calls:MAX_MODEL_DECISIONS},
+      rule: 'No offline aging. Supplied items are single-use; use lists whole items spent. A due deadline is serious. Choose one offered action; supplies do not force it. Task success chance is not choice probability. failure_scenario refers to task_failure_scenarios. Nonurgent familiarity counts exact actions today, same-family actions today, and exact prior successes; absent means zero. Urgent care omits this optional metadata.',
     },
-    questions: {next_action:nextAction,...(planning&&(context.morningOptions?.length||0)>1?{morning_order:{type:'choice',instructions:'Choose the preferred morning order from these feasible options. Before-pickup food/coffee uses existing pantry stock, never the uncollected parcel. Collection follows the chosen small step during Dawn. Urgent care can change that order. These choices already preserve the materials required by every offered project.',criteria:Object.fromEntries(context.morningOptions!.map(option=>[option.key,{action:option.label,before_pickup_action:option.beforeActionKey||null}]))}}:{})},
+    questions: {next_action:nextAction,...(planning&&(context.morningOptions?.length||0)>1?{morning_order:{type:'choice',instructions:'Choose a feasible morning habit matching this individual. Compare real clipped effects and whole-item costs; useful ritual, simple breakfast or a quiet look may fit different tastes. Before-pickup food/coffee uses existing pantry stock, never the parcel. Collection follows during Dawn; urgent care can change the order. All options preserve project materials.',criteria:Object.fromEntries(context.morningOptions!.map(option=>{const action=option.beforeAction?{...option.beforeAction,key:option.beforeActionKey||'',label:option.label,possibleFailures:[]}:undefined;return[option.key,{action:option.label,before_pickup_action:option.beforeActionKey||null,...(action?{use:action.inputs,energy:action.energy/100,success_chance:action.successChance,effect:action.description,clipped_gain_on_success:recoveryFacts(action,s).gains}:{})}];}))}}:{})},
   };
 }
 export async function infer(context: ChoiceContext, beforeSend: (hash: string, input: unknown) => Promise<void>): Promise<{ choice: ModelChoice; exchange: Exchange }> {

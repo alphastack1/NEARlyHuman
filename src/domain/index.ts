@@ -6,3 +6,4 @@ export * from './actions';
 export * from './director';
 export * from './prepare';
 export * from './day-plan';
+export * from './behavior-memory';

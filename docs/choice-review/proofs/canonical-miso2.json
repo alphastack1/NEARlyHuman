@@ -1,0 +1,563 @@
+{
+  "at": "2026-11-02T06:56:15.050Z",
+  "scope": "Independent read-only canonical, durable packet, compact prior history and actual recorded model input/output verification. No worker/reconcile/inference/wallet/chain/storage mutation.",
+  "checks": {
+    "phaseReady": true,
+    "canonicalSettled": true,
+    "policy": true,
+    "acceptedBlockUnchanged": true,
+    "packetContext": true,
+    "packetCommitment": true,
+    "stateHash": true,
+    "history": true,
+    "combinedResult": true,
+    "latestPackedState": true,
+    "identity": true,
+    "ownerTransaction": true,
+    "settlementTransaction": true,
+    "receipts": true,
+    "frozenMemory": true,
+    "checkpointMemory": true,
+    "allActualInputsCarryFrozenMemory": true,
+    "inputHashesMatch": true,
+    "noInventedJevHistory": true,
+    "earlierTodayExecutedFacts": true,
+    "logicalRecentPreserved": true,
+    "actualProviderChoices": true,
+    "successfulModelBound": true,
+    "totalSends": true,
+    "costRecount": true,
+    "ledgerCharge": true,
+    "oneFocus": true,
+    "onePickup": true,
+    "pickupCreditOnce": true,
+    "delivery": true,
+    "replayIndex": true,
+    "publicReplay": true
+  },
+  "allPassed": true,
+  "requestId": "0x4294894ea3e67b27eba809c82260b9ada9a48732f403ecef8ee5586f853dcf48",
+  "tokenId": "3",
+  "name": "MISO",
+  "day": 2,
+  "decisionConfig": "0x52eee4417a3f649141ce3f329e761902ebbfaea8300f84702c95673fb752fca3",
+  "block": "146913897",
+  "chainTimestamp": 1793602562,
+  "currentCanonicalDay": 2,
+  "historical": false,
+  "ownerTx": "0x5f5ea7373bdce1f7a7e7d81b432d9d70fcb95d81d118ca02695032e8e4f4f6c2",
+  "finalTx": "0xf3c68409b6cba209dea1f4ec8769a229815fecd3e994974fb3c703de07a4d5e7",
+  "commitment": "0xdf73d128d0191bab6f3c2848caff17d2845cb35988ff473246228f22e00fb06a",
+  "stateHash": "0xe4eae6b17c459fc4f89eb206db378cc0a78aff9c72633332f757bf4a77fad90f",
+  "historyHash": "0x0637be53e48f411fa6ddfc31af5fb667dca1b16d666b6d6e93cb79c18024d244",
+  "resultHash": "0xa1d1815cc57d3013878d87ef5fc45bd680013f0ae128132d32c7818b8106c2f0",
+  "historyBytes": 240,
+  "calls": 6,
+  "decisions": 6,
+  "spentMicroUSD": 788,
+  "recountedMicroUSD": 788,
+  "durableElapsedMs": 157456,
+  "previousDays": [
+    {
+      "day": 1,
+      "actions": [
+        {
+          "action": "H01",
+          "target": "store",
+          "variant": "bread",
+          "success": true
+        },
+        {
+          "action": "H04",
+          "target": "baseSeat",
+          "variant": "base",
+          "success": true
+        },
+        {
+          "action": "H04",
+          "target": "baseSeat",
+          "variant": "base",
+          "success": true
+        },
+        {
+          "action": "H01",
+          "target": "store",
+          "variant": "bread",
+          "success": true
+        },
+        {
+          "action": "H01",
+          "target": "store",
+          "variant": "water",
+          "success": true
+        },
+        {
+          "action": "H03",
+          "target": "bed",
+          "variant": "bed",
+          "success": true
+        }
+      ]
+    }
+  ],
+  "prior": [
+    {
+      "day": 1,
+      "requestId": "0xa71ce6037bc026f083c99b00d48ee894f594d4efe08e4c34ccb0d0c0dc95ec5c",
+      "stateHash": "0xc8504980d2b5f37292ef0a239f88c79dadb111e9470145a12e7ab9fd9219fdd8",
+      "historyHash": "0x81f9bd00981c8fa1cc84013e6f3c260dbe4a6b03f5ac2690408e3b7a52b9ba75",
+      "historyBytes": 240,
+      "alive": true,
+      "dayMatches": true,
+      "latestBaseMatches": true,
+      "actions": [
+        {
+          "action": "H01",
+          "target": "store",
+          "variant": "bread",
+          "success": true
+        },
+        {
+          "action": "H04",
+          "target": "baseSeat",
+          "variant": "base",
+          "success": true
+        },
+        {
+          "action": "H04",
+          "target": "baseSeat",
+          "variant": "base",
+          "success": true
+        },
+        {
+          "action": "H01",
+          "target": "store",
+          "variant": "bread",
+          "success": true
+        },
+        {
+          "action": "H01",
+          "target": "store",
+          "variant": "water",
+          "success": true
+        },
+        {
+          "action": "H03",
+          "target": "bed",
+          "variant": "bed",
+          "success": true
+        }
+      ]
+    }
+  ],
+  "diagnostic": [
+    {
+      "slot": 0,
+      "model": "typesafe/jev-1.13-20260917",
+      "requestedModel": "typesafe/jev-1.13",
+      "responseId": "gen-dec-1793602222-11D19eQQAFrTvjz8afQI",
+      "inputTokens": 2803,
+      "outputTokens": 114,
+      "reportedMicroUSD": 118,
+      "chargedMicroUSD": 118,
+      "latencyMs": 1042,
+      "selected": "H09_chairA_chair__at36",
+      "probabilities": {
+        "H09_chairA_chair__at36": 0.96,
+        "G01_plot2_rose__at36": 0.03,
+        "K01_stove_toast__at36": 0.01
+      },
+      "morningChoice": "look-first",
+      "morningProbabilities": {
+        "collect-first": 0.2,
+        "look-first": 0.8
+      },
+      "inputBytes": 6604,
+      "individuality": {
+        "version": "individuality-v1",
+        "interest": "gardening",
+        "secondaryInterest": "making",
+        "mealStyle": "ritual",
+        "rhythm": "late",
+        "signature": "preen",
+        "tempo": "measured",
+        "curiosity": "reserved",
+        "resourceStyle": "experiment",
+        "today": {
+          "interest": "making",
+          "phase": "Afternoon"
+        }
+      }
+    },
+    {
+      "slot": 11,
+      "model": "typesafe/jev-1.13-20260917",
+      "requestedModel": "typesafe/jev-1.13",
+      "responseId": "gen-dec-1793602246-y3foB5CDndOwwT93rgIy",
+      "inputTokens": 3160,
+      "outputTokens": 98,
+      "reportedMicroUSD": 133,
+      "chargedMicroUSD": 133,
+      "latencyMs": 434,
+      "selected": "H01_store_water",
+      "probabilities": {
+        "K01_stove_toast": 0.25,
+        "H01_store_water": 0.39,
+        "K05_prep_ritual": 0.19,
+        "H04_baseSeat_base": 0.1,
+        "T01_store_idle": 0.02,
+        "T01_cupboard_idle": 0.05
+      },
+      "inputBytes": 7236,
+      "individuality": {
+        "version": "individuality-v1",
+        "interest": "gardening",
+        "secondaryInterest": "making",
+        "mealStyle": "ritual",
+        "rhythm": "late",
+        "signature": "preen",
+        "tempo": "measured",
+        "curiosity": "reserved",
+        "resourceStyle": "experiment",
+        "today": {
+          "interest": "making",
+          "phase": "Afternoon"
+        }
+      }
+    },
+    {
+      "slot": 21,
+      "model": "typesafe/jev-1.13-20260917",
+      "requestedModel": "typesafe/jev-1.13",
+      "responseId": "gen-dec-1793602268-a5R0NPdC8OmGoFGIUetu",
+      "inputTokens": 3196,
+      "outputTokens": 102,
+      "reportedMicroUSD": 135,
+      "chargedMicroUSD": 135,
+      "latencyMs": 1036,
+      "selected": "K01_stove_toast",
+      "probabilities": {
+        "K01_stove_toast": 0.56,
+        "K05_prep_ritual": 0.22,
+        "H04_baseSeat_base": 0.14,
+        "H03_bed_bed": 0.02,
+        "T01_store_idle": 0.02,
+        "T01_cupboard_idle": 0.04
+      },
+      "inputBytes": 7309,
+      "individuality": {
+        "version": "individuality-v1",
+        "interest": "gardening",
+        "secondaryInterest": "making",
+        "mealStyle": "ritual",
+        "rhythm": "late",
+        "signature": "preen",
+        "tempo": "measured",
+        "curiosity": "reserved",
+        "resourceStyle": "experiment",
+        "today": {
+          "interest": "making",
+          "phase": "Afternoon"
+        }
+      }
+    },
+    {
+      "slot": 31,
+      "model": "typesafe/jev-1.13-20260917",
+      "requestedModel": "typesafe/jev-1.13",
+      "responseId": "gen-dec-1793602290-VdXag3pbb1toowEjKONo",
+      "inputTokens": 3231,
+      "outputTokens": 106,
+      "reportedMicroUSD": 136,
+      "chargedMicroUSD": 136,
+      "latencyMs": 920,
+      "selected": "K05_prep_ritual",
+      "probabilities": {
+        "K05_prep_ritual": 0.48,
+        "H04_baseSeat_base": 0.3,
+        "H01_store_quickCoffee": 0.02,
+        "H03_bed_bed": 0.02,
+        "T01_stove_idle": 0.09,
+        "T01_cupboard_idle": 0.09
+      },
+      "inputBytes": 7395,
+      "individuality": {
+        "version": "individuality-v1",
+        "interest": "gardening",
+        "secondaryInterest": "making",
+        "mealStyle": "ritual",
+        "rhythm": "late",
+        "signature": "preen",
+        "tempo": "measured",
+        "curiosity": "reserved",
+        "resourceStyle": "experiment",
+        "today": {
+          "interest": "making",
+          "phase": "Afternoon"
+        }
+      }
+    },
+    {
+      "slot": 41,
+      "model": "typesafe/jev-1.13-20260917",
+      "requestedModel": "typesafe/jev-1.13",
+      "responseId": "gen-dec-1793602312-D9XQ0IDmQGUH779nGeza",
+      "inputTokens": 3126,
+      "outputTokens": 90,
+      "reportedMicroUSD": 132,
+      "chargedMicroUSD": 132,
+      "latencyMs": 978,
+      "selected": "H04_chair_chair",
+      "probabilities": {
+        "H04_chair_chair": 0.75,
+        "H04_baseSeat_base": 0.04,
+        "H03_bed_bed": 0.06,
+        "T01_chairA_idle": 0.06,
+        "T01_cupboard_idle": 0.09
+      },
+      "inputBytes": 7094,
+      "individuality": {
+        "version": "individuality-v1",
+        "interest": "gardening",
+        "secondaryInterest": "making",
+        "mealStyle": "ritual",
+        "rhythm": "late",
+        "signature": "preen",
+        "tempo": "measured",
+        "curiosity": "reserved",
+        "resourceStyle": "experiment",
+        "today": {
+          "interest": "making",
+          "phase": "Afternoon"
+        }
+      }
+    },
+    {
+      "slot": 51,
+      "model": "typesafe/jev-1.13-20260917",
+      "requestedModel": "typesafe/jev-1.13",
+      "responseId": "gen-dec-1793602333-rRtJPN42ZYN59Qc9PWu7",
+      "inputTokens": 3183,
+      "outputTokens": 89,
+      "reportedMicroUSD": 134,
+      "chargedMicroUSD": 134,
+      "latencyMs": 940,
+      "selected": "H03_bed_bed",
+      "probabilities": {
+        "H03_bed_bed": 0.46,
+        "H04_baseSeat_base": 0.06,
+        "H04_chair_chair": 0.39,
+        "T01_chair_idle": 0.04,
+        "T01_cupboard_idle": 0.05
+      },
+      "inputBytes": 7218,
+      "individuality": {
+        "version": "individuality-v1",
+        "interest": "gardening",
+        "secondaryInterest": "making",
+        "mealStyle": "ritual",
+        "rhythm": "late",
+        "signature": "preen",
+        "tempo": "measured",
+        "curiosity": "reserved",
+        "resourceStyle": "experiment",
+        "today": {
+          "interest": "making",
+          "phase": "Afternoon"
+        }
+      }
+    }
+  ],
+  "focus": {
+    "version": 1,
+    "kind": "project",
+    "goal": {
+      "key": "H09_chairA_chair",
+      "action": "H09",
+      "target": "chairA",
+      "variant": "chair",
+      "label": "Build a chair",
+      "inputs": {
+        "wood": 1,
+        "toolkit": 1
+      }
+    },
+    "scheduledSlot": 36,
+    "status": "completed",
+    "morning": {
+      "key": "look-first",
+      "label": "Look out of the window, then collect the delivery",
+      "beforeActionKey": "T01_window_idle",
+      "attemptedSlot": 1
+    },
+    "choice": {
+      "selected": "H09_chairA_chair__at36",
+      "candidates": [
+        {
+          "key": "H09_chairA_chair__at36",
+          "action": "H09",
+          "target": "chairA",
+          "variant": "chair",
+          "label": "Build a chair · Afternoon",
+          "description": "Spend wood and toolkit. Optional chair lasts5 living bedtimes including today.",
+          "inputs": {
+            "wood": 1,
+            "toolkit": 1
+          },
+          "energy": 300,
+          "successChance": 0.9400000000000001,
+          "possibleFailures": [
+            "Started inputs spent; no success benefit",
+            "Bounded house mess",
+            "Minor wound"
+          ],
+          "plan": {
+            "kind": "project",
+            "actionKey": "H09_chairA_chair",
+            "scheduledSlot": 36
+          }
+        },
+        {
+          "key": "G01_plot2_rose__at36",
+          "action": "G01",
+          "target": "plot2",
+          "variant": "rose",
+          "label": "Plant rose seeds in plot 2 · Afternoon",
+          "description": "Spend one rose packet. Growth0, retain actual moisture.",
+          "inputs": {
+            "rose_seeds": 1
+          },
+          "energy": 100,
+          "successChance": 1,
+          "possibleFailures": [],
+          "plan": {
+            "kind": "project",
+            "actionKey": "G01_plot2_rose",
+            "scheduledSlot": 36
+          }
+        },
+        {
+          "key": "K01_stove_toast__at36",
+          "action": "K01",
+          "target": "stove",
+          "variant": "toast",
+          "label": "Make toast · Afternoon",
+          "description": "Spend one bread. Restore35 nutrition and8 morale on success.",
+          "inputs": {
+            "bread": 1
+          },
+          "energy": 100,
+          "successChance": 0.99,
+          "possibleFailures": [
+            "Started inputs spent; no success benefit",
+            "Bounded house mess",
+            "Minor wound"
+          ],
+          "plan": {
+            "kind": "project",
+            "actionKey": "K01_stove_toast",
+            "scheduledSlot": 36
+          }
+        }
+      ],
+      "probabilities": {
+        "H09_chairA_chair__at36": 0.96,
+        "G01_plot2_rose__at36": 0.03,
+        "K01_stove_toast__at36": 0.01
+      },
+      "provider": "NEAR AI",
+      "model": "typesafe/jev-1.13-20260917",
+      "requestId": "gen-dec-1793602222-11D19eQQAFrTvjz8afQI",
+      "situation": {
+        "episodes": [],
+        "restUses": 0,
+        "leisureUses": 0,
+        "lastRest": -100,
+        "lastLeisure": -100,
+        "chairMoved": false,
+        "minorUsed": false
+      }
+    },
+    "morningChoice": {
+      "selected": "look-first",
+      "candidates": [
+        {
+          "key": "collect-first",
+          "label": "Collect the waiting delivery first"
+        },
+        {
+          "key": "look-first",
+          "label": "Look out of the window, then collect the delivery",
+          "beforeActionKey": "T01_window_idle"
+        }
+      ],
+      "probabilities": {
+        "collect-first": 0.2,
+        "look-first": 0.8
+      },
+      "provider": "NEAR AI",
+      "model": "typesafe/jev-1.13-20260917",
+      "requestId": "gen-dec-1793602222-11D19eQQAFrTvjz8afQI"
+    },
+    "attemptedSlot": 36,
+    "completedSlot": 36
+  },
+  "morning": {
+    "key": "look-first",
+    "label": "Look out of the window, then collect the delivery",
+    "beforeActionKey": "T01_window_idle",
+    "attemptedSlot": 1
+  },
+  "smallRoutines": [
+    {
+      "slot": 1,
+      "action": "T01",
+      "target": "window",
+      "variant": "idle",
+      "choice": false
+    },
+    {
+      "slot": 11,
+      "action": "H01",
+      "target": "store",
+      "variant": "water",
+      "choice": true
+    },
+    {
+      "slot": 21,
+      "action": "K01",
+      "target": "stove",
+      "variant": "toast",
+      "choice": true
+    },
+    {
+      "slot": 31,
+      "action": "K05",
+      "target": "prep",
+      "variant": "ritual",
+      "choice": true
+    },
+    {
+      "slot": 41,
+      "action": "H04",
+      "target": "chair",
+      "variant": "chair",
+      "choice": true
+    },
+    {
+      "slot": 51,
+      "action": "H03",
+      "target": "bed",
+      "variant": "bed",
+      "choice": true
+    }
+  ],
+  "delivery": [
+    "coffee",
+    "wood",
+    "rose_seeds"
+  ],
+  "deliveryCollectedSlot": 2,
+  "latestProtected": true,
+  "publicReplayStatus": 200
+}

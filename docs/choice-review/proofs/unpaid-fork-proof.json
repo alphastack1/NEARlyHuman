@@ -1,0 +1,18 @@
+{
+  "scope": "Focused mocked acceptTransaction regression after all three funded days settled; no real worker dispatch, inference or transaction",
+  "targetedTest": {"passed": 1, "failed": 0},
+  "checks": {
+    "pristineRemineAdoptsNewCanonicalContext": true,
+    "pristineRemineClearsOldFrozenMemory": true,
+    "pristineRemineKeepsZeroPaidSends": true,
+    "onePreviousSendPreventsAdoption": true,
+    "fundedMismatchRemainsQuarantined": true,
+    "fundedMismatchRetainsOriginalMemoryAndBase": true,
+    "fundedMismatchDoesNotDispatch": true,
+    "noTransactionSendingRpc": true,
+    "typescript": true,
+    "scopedWhitespace": true
+  },
+  "sourceCorrection": "Delete previousDays only in the verified pristine fork-adoption branch before assigning the new base/context. Normal paid preparation semantics are unchanged.",
+  "fixtureCorrections": ["Initialize the isolated local store before mocked hosted dispatch", "Compare persisted bases after ordinary JSON omission of undefined optional fields"]
+}

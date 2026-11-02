@@ -3,7 +3,7 @@ import { encodeAbiParameters, keccak256, toHex, type Address, type Hex } from 'v
 import { nearlyHumanAbi } from '../src/chain/abi';
 import { deployments } from '../src/chain/deployments';
 import { decodeDelivery } from '../src/chain/permit';
-import { ITEM_IDS, cloneState, isDeliveryCollection, MAX_MODEL_DECISIONS, packState, PICKUP_BY_SLOT, prepareDay, unpackState, type DayCheckpoint, type DayContext, type DayResult, type GameState, type ModelChoice, type Receipt } from '../src/domain';
+import { ITEM_IDS, cloneState, decodeHistory, isDeliveryCollection, MAX_MODEL_DECISIONS, normalizePreviousDays, packState, PICKUP_BY_SLOT, prepareDay, previousDayMemory, unpackState, type DayCheckpoint, type DayContext, type DayResult, type GameState, type ModelChoice, type PreviousDayMemory, type Receipt } from '../src/domain';
 import type { JobView } from '../src/app/api';
 import { acceptReservation, DECISION_CONFIG, DECISION_PARAMETERS, finishReservation, reconcileAdmission } from './admission';
 import { blockUnavailable, canonicalRequest, chainOutcome, checkedAddress, checkedRequest, checkedToken, connection, expiryIntent, failureIntent, finalizeIntent, pinnedRead, readAcceptedTransaction, readRawRooster, RelayBusy, terminalTransaction, ServiceError, verifyConnection, type RelayJournal } from './chain';
@@ -25,6 +25,8 @@ export interface JobControl {
   latestChoice?:Receipt['choice']; failure?:string; exceptionKey?:string; updatedAt:number; createdAt:number; terminalAt?:number; compactedAt?:number;
   canonicalResultHash?:Hex; priorTerminalPhase?:'ready'|'failed'|'expired';
   operation?:'mint'|'day';permitExpiresAt?:number;ownerNonce?:number;retrySafe?:boolean;orphanedAcceptance?:boolean;acceptanceConflict?:boolean;
+  /** Canonical compact history frozen before the first model send, including an explicit genesis []. */
+  previousDays?:PreviousDayMemory[];
   unacceptedProof?:{blockNumber:string;blockHash:Hex;timestamp:number;confirmedNonce?:number};
 }
 interface CheckpointBlob { context:DayContext; receipt?:Receipt }
@@ -91,6 +93,8 @@ export async function acceptTransaction(hashValue:Hex,playerValue:string) {
           // birth seed/deadline. Only untouched work can adopt that new context.
           c.generation++;delete c.lease;
           if(r.status===1&&canon.raw&&canon.owner&&equal(canon.owner,player)&&reservation.status==='accepted'&&pristineAcceptance(c)){
+            // Even unpaid memory belongs to the old fork/base and must be read again.
+            delete c.previousDays;
             Object.assign(c,{inputDigest:r.inputDigest,seed:toHex(r.seed,{size:32}),decisionConfig:r.decisionConfig,rulesVersion:r.rulesVersion,deadline:Number(r.deadline),baseRevision:r.baseRevision,day:r.day,delivery:r.delivery,
               ownerTx:accepted.ownerTx,ownerNonce:accepted.ownerNonce,acceptedBlock:accepted.blockNumber.toString(),acceptedHash:accepted.blockHash,
               base:unpackState(canon.raw.state,{seed:canon.raw.seed,name:canon.raw.name,stats:{body:canon.raw.body,wits:canon.raw.wits,spirit:canon.raw.spirit}}),
@@ -213,6 +217,21 @@ async function assertPendingAt(c:JobControl,current:CanonicalRequest,minimumSeco
   return current;
 }
 
+async function readPreviousDays(c:JobControl,current:CanonicalRequest):Promise<PreviousDayMemory[]> {
+  if(c.base.day===0)return [];
+  const {client,address}=connection(),days=Array.from({length:Math.min(2,c.base.day)},(_,i)=>c.base.day-i).reverse();
+  const saved=await pinnedRead(()=>Promise.all(days.map(day=>client.readContract({address,abi:nearlyHumanAbi,functionName:'getDay',args:[BigInt(c.tokenId),day],blockNumber:current.block.number}))));
+  const memories:PreviousDayMemory[]=[];
+  for(let i=0;i<days.length;i++){
+    const day=days[i]!,[summary,history]=saved[i]!;
+    if(summary.day!==day||!summary.alive||day===c.base.day&&summary.stateHash!==keccak256(packState(c.base)))throw new CanonicalChanged('Canonical day memory changed.');
+    try{memories.push(previousDayMemory(day,decodeHistory(history)));}catch{throw new CanonicalChanged('Canonical day history is invalid.');}
+  }
+  const verified=await pinnedRead(()=>client.getBlock({blockNumber:current.block.number}));
+  if(verified.hash!==current.block.hash)throw new CanonicalChanged('Canonical day memory block changed.');
+  return normalizePreviousDays(memories,c.day);
+}
+
 /** A lease, checkpoint head and lifecycle are advanced by the same CAS record. */
 export async function runJob(value:string) {
   await verifyConnection();
@@ -236,10 +255,22 @@ export async function runJob(value:string) {
     // A later release must not silently prepare an earlier accepted configuration with new rules.
     // Fully prepared immutable packets and saved historical replays need no new inference.
     if(!control.packet&&(control.decisionConfig!==DECISION_CONFIG||(control.rulesVersion??1)!==1)){await edit(c=>{c.phase='checking';});return;}
-    await assertPending(control,control.packet?25:110);
+    const pending=await assertPending(control,control.packet?25:110);
     if(!control.packet){
       await edit(c=>{c.phase='preparing';});
+      if(control.previousDays===undefined){
+        if(control.sent||control.checkpoint||control.receiptKeys.length)throw new CanonicalChanged('Funded work is missing its frozen day memory.');
+        const memory=await readPreviousDays(control,pending);
+        await edit(c=>{c.previousDays=memory;});
+      }
+      let previousDays:PreviousDayMemory[];
+      try{previousDays=normalizePreviousDays(control.previousDays,control.day);}catch{throw new CanonicalChanged('Frozen day memory is invalid.');}
       const resume=await loadCheckpoint(control);
+      if(resume){
+        let checkpointMemory:PreviousDayMemory[];
+        try{checkpointMemory=normalizePreviousDays(resume.context.previousDays,control.day);}catch{throw new CanonicalChanged('Checkpoint day memory is invalid.');}
+        if(digest(checkpointMemory)!==digest(previousDays))throw new CanonicalChanged('Frozen day memory differs from its checkpoint.');
+      }
       const result=await prepareDay(control.base,decodeDelivery(control.delivery).map(i=>ITEM_IDS[i]!),async context=>{
         if(Date.now()-started>530_000)throw new HandOff();
         const input=buildDecision(context),inputHash=createHash('sha256').update(JSON.stringify(input)).digest('hex');
@@ -267,7 +298,7 @@ export async function runJob(value:string) {
           }
         }
         throw new InferenceError('attempt_limit');
-      },{...DECISION_PARAMETERS,daySeed:control.seed,resume,onCheckpoint:async checkpoint=>{
+      },{...DECISION_PARAMETERS,daySeed:control.seed,previousDays,resume,onCheckpoint:async checkpoint=>{
         const receipt=checkpoint.receipts.at(-1);
         const key=await immutable(`checkpoints/${id}`,{context:checkpoint.context,...(receipt?{receipt}:{})});
         await edit(c=>{

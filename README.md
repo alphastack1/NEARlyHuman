@@ -36,6 +36,8 @@ The [service guide](docs/service.md), [contract guide](docs/chain.md), [domain n
 
 ## Design references
 
+The [Jev choice-variety review](docs/CHOICE_VARIETY_REVIEW.md) and [real-day comparison gallery](docs/choice-review/index.html) cover canonical prior-day memory, balanced useful menus, real model comparisons and the free MISO day 2 → day 3 → PEEP visit sequence.
+
 The [day-rhythm review](docs/RHYTHM_REVIEW.md) and [before/after gallery](docs/rhythm-review/index.html) cover the latest live critique: continuing rest, contextual quiet moments, continuous small gestures and reachable garden cameos, while preserving the recorded model choices and saved state.
 
 The [continuous-day review](docs/DAILY_LIFE_REVIEW.md) and [current screenshot gallery](docs/daily-life-review/index.html) cover the front yard, physical mailbox trip, one main undertaking, smaller care moments and the verified six-call NORI day now used for the opening visit. The [contract and artwork review](docs/CONTRACT_AND_ART_REVIEW.md) records the fresh lifecycle/adversarial checks and explains seeded procedural appearances.

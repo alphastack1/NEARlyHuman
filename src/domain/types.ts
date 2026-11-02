@@ -20,6 +20,8 @@ export interface HouseState {
 }
 export type DeathCause = 'health'|'starvation'|'dehydration'|'wound'|'illness'|'infection'|'structural';
 export interface RecentAction { action:ActionId; target:TargetId; variant:string; success:boolean }
+/** Bounded executed records from a canonical earlier day; not proof of model choices. */
+export interface PreviousDayMemory { day:number; actions:RecentAction[] }
 export interface GameState {
   version:typeof RULES_VERSION;
   seed:string; name:string; stats:Stats;
@@ -44,15 +46,16 @@ export interface Candidate {
 }
 export interface DecisionSituation { episodes:Episode[]; restUses:number; leisureUses:number; lastRest:number; lastLeisure:number; chairMoved:boolean; minorUsed:boolean }
 export interface ChoiceContext { state:GameState; day:number; slot:number; phase:Phase; candidates:Candidate[]; recent:RecentAction[]; situation:DecisionSituation;
-  /** Exact completed nonquiet receipts earlier this day; presentation is not memory. */
+  /** Bounded executed noninterlude actions today; not all buy a model choice. */
   earlierToday?:RecentAction[];
+  previousDays?:PreviousDayMemory[];
   mode?:'day-plan'|'routine'; morningOptions?:MorningOption[];
-  dailyFocus?:{label:string;key:string;status:DailyFocus['status'];scheduledSlot:number};
+  dailyFocus?:{label:string;key:string;status:DailyFocus['status'];scheduledSlot:number;action?:ActionId;target?:TargetId;variant?:string;inputs?:Partial<Inventory>};
   pendingDelivery?:ItemId[];
 }
 export interface ModelChoice { key:string; probabilities?:Record<string,number>; provider?:string; model?:string; requestId?:string; usage?:unknown; morningKey?:string;morningProbabilities?:Record<string,number> }
 export type ChoiceProvider = (context:ChoiceContext) => Promise<ModelChoice|string>;
-export interface MorningOption {key:string;label:string;beforeActionKey?:string}
+export interface MorningOption {key:string;label:string;beforeActionKey?:string;beforeAction?:Pick<Candidate,'action'|'target'|'variant'|'inputs'|'energy'|'successChance'|'description'>}
 export interface RecordedChoice {selected:string;candidates:Candidate[];probabilities?:Record<string,number>;provider?:string;model?:string;requestId?:string;situation?:DecisionSituation}
 export interface DailyFocus {
   version:1;kind:'project'|'unhurried';
@@ -81,6 +84,7 @@ export interface DayContext {
   taskFire?:Episode; events:RecordedEvent[]; modelChoices:number;
   dailyFocus?:DailyFocus;pendingDelivery?:ItemId[];deliveryCollectedSlot?:number;deliverySettled?:'collected'|'estate';
   morningActionDone?:boolean;routineAnchor?:TargetId;
+  previousDays?:PreviousDayMemory[];meaningfulToday:RecentAction[];
 }
 export interface DayCheckpoint { context:DayContext; receipts:Receipt[] }
 export interface PrepareOptions {
@@ -90,6 +94,8 @@ export interface PrepareOptions {
   incidentRate?:number; blackSwanRate?:number;
   /** Canonical accepted request seed when provided by the chain adapter. */
   daySeed?:string;
+  /** Frozen canonical behavior context supplied by the trusted worker. */
+  previousDays?:PreviousDayMemory[];
 }
 export interface DayResult { version:1; day:number; baseDay:number; survived:boolean; finalState:GameState; state:GameState; receipts:Receipt[]; decisions:number; history:string; delivery:ItemId[]; summary:string[];dailyFocus?:DailyFocus;startTarget?:TargetId;deliveryCollectedSlot?:number;deliverySettled?:'collected'|'estate' }
 export interface Identity { seed:string|bigint|number; name?:string; stats?:Stats }

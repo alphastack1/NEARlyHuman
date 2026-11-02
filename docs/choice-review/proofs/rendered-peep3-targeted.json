@@ -1,0 +1,74 @@
+{
+  "name": "PEEP",
+  "day": 3,
+  "natural": false,
+  "seekReceipt": 31,
+  "scope": "Explicit log seek31, then natural garden-to-kitchen work and result. Not a full PEEP-day watch.",
+  "durationMs": 15142,
+  "timeline": [
+    {
+      "root": "app-root screen-discover",
+      "body": "PEEP\nLV02\nVISIT\nDAY03\nMake a comfort bowl\nAfternoon\nDay log\nBy the garden.\nThe afternoon drifts.\nTESTNET\nHatch yours\nYour home",
+      "event": "By the garden. The afternoon drifts.",
+      "goal": "Make a comfort bowlAfternoon",
+      "visibility": "visible",
+      "viewport": [
+        390,
+        844
+      ],
+      "document": [
+        390,
+        844
+      ],
+      "t": 355
+    },
+    {
+      "root": "app-root screen-discover is-traveling",
+      "body": "PEEP\nLV02\nVISIT\nDAY03\nMake a comfort bowl\nDay log\nMaking a comfort bowl\nTESTNET\nHatch yours\nYour home",
+      "event": "Making a comfort bowl ",
+      "goal": "Make a comfort bowl",
+      "visibility": "visible",
+      "viewport": [
+        390,
+        844
+      ],
+      "document": [
+        390,
+        844
+      ],
+      "t": 1483
+    },
+    {
+      "root": "app-root screen-discover",
+      "body": "PEEP\nLV02\nVISIT\nDAY03\nMake a comfort bowl\nDay log\nMaking a comfort bowl\nTESTNET\nHatch yours\nYour home",
+      "event": "Making a comfort bowl ",
+      "goal": "Make a comfort bowl",
+      "visibility": "visible",
+      "viewport": [
+        390,
+        844
+      ],
+      "document": [
+        390,
+        844
+      ],
+      "t": 7550
+    },
+    {
+      "root": "app-root screen-discover",
+      "body": "PEEP\nLV02\nVISIT\nDAY03\n+50\n+20\n−1\n+8.52\nMake a comfort bowl\nDay log\nMade a comfort bowl.\nMilk + bread.\nTESTNET\nHatch yours\nYour home",
+      "event": "Made a comfort bowl. Milk + bread.",
+      "goal": "Make a comfort bowl",
+      "visibility": "visible",
+      "viewport": [
+        390,
+        844
+      ],
+      "document": [
+        390,
+        844
+      ],
+      "t": 15142
+    }
+  ]
+}

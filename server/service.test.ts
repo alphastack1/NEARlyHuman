@@ -4,13 +4,13 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import { randomUUID } from 'node:crypto';
 import { createHash } from 'node:crypto';
-import { BlockNotFoundError, ContractFunctionRevertedError, decodeFunctionData, encodeFunctionResult, toHex } from 'viem';
+import { BlockNotFoundError, ContractFunctionRevertedError, decodeFunctionData, encodeAbiParameters, encodeEventTopics, encodeFunctionResult, keccak256, toHex } from 'viem';
 import { DECISION_CONFIG, DECISION_PARAMETERS, finishReservation, initialLedger, reserveInLedger, type AdmissionLedger, type Reservation } from './admission';
-import { dispatchJob, reserveSend, runJob, type JobControl } from './jobs';
+import { acceptTransaction, dispatchJob, reserveSend, runJob, type JobControl } from './jobs';
 import { storage, update } from './storage';
 import { blockUnavailable, pinnedRead, ServiceError } from './chain';
 import { nearlyHumanAbi } from '../src/chain/abi';
-import { cloneState, createDayContext, createInitialState, focusOptions, ITEM_IDS, morningOptions, packState, prepareDay, unpackState, type ChoiceContext, type DayCheckpoint } from '../src/domain';
+import { cloneState, createDayContext, createInitialState, encodeHistory, focusOptions, ITEM_IDS, morningOptions, packState, prepareDay, previousDayMemory, unpackState, type ChoiceContext, type DayCheckpoint, type Receipt, type RecentAction } from '../src/domain';
 import { buildDecision, infer, InferenceError } from './jev';
 
 const directory=path.resolve('TEMP/build/server/witness-'+randomUUID());
@@ -142,7 +142,7 @@ test('worker queues an exhausted missing block, preserves checkpoint40/cached41 
   const allowance=Object.fromEntries([...contexts].filter(([slot])=>slot<=41).map(([slot,context])=>[slot,{count:1,inputs:[`fixture/input/${slot}`],outputs:[`fixture/output/${slot}`],answer:{inputHash:createHash('sha256').update(JSON.stringify(buildDecision(context))).digest('hex'),choice:quiet(context),exchange:`fixture/output/${slot}`}}]));
   const receiptKeys:string[]=[];for(const cp of checkpoints.filter(cp=>cp.context.slot>0&&cp.context.slot<=40)){const key=`recovery-fixture/${id}/${cp.context.slot}`;receiptKeys.push(key);await storage().put(key,{context:cp.context,receipt:cp.receipts.at(-1)});}
   const cachedSends=Object.keys(allowance).length;
-  const initial:JobControl={version:1,chainId:46630,collection:address,requestId:id,tokenId:'81',player,permitId,inputDigest,seed:daySeed,decisionConfig:DECISION_CONFIG,rulesVersion:1,deadline:2_000_001_000,baseRevision:0,day:1,delivery:0,ownerTx:hold(87).id,acceptedBlock:'16',acceptedHash,base,phase:'queued',generation:0,checkpoint:receiptKeys.at(-1),receiptKeys,slot:40,decisions:checkpoints.find(cp=>cp.context.slot===40)!.context.modelChoices,sent:cachedSends,allowances:allowance,spentMicroUSD:4100,updatedAt:Date.now(),createdAt:Date.now()};
+  const initial:JobControl={version:1,chainId:46630,collection:address,requestId:id,tokenId:'81',player,permitId,inputDigest,seed:daySeed,decisionConfig:DECISION_CONFIG,rulesVersion:1,deadline:2_000_001_000,baseRevision:0,day:1,delivery:0,ownerTx:hold(87).id,acceptedBlock:'16',acceptedHash,base,previousDays:[],phase:'queued',generation:0,checkpoint:receiptKeys.at(-1),receiptKeys,slot:40,decisions:checkpoints.find(cp=>cp.context.slot===40)!.context.modelChoices,sent:cachedSends,allowances:allowance,spentMicroUSD:4100,updatedAt:Date.now(),createdAt:Date.now()};
   await storage().put('jobs/'+id,initial);
   let mode:'missing'|'restored'|'changed'='missing',missingReads=0;const inferenceSlots:number[]=[],rpcMethods:string[]=[];
   const request={tokenId:81n,player,baseRevision:0,day:1,delivery:0,rulesVersion:1,acceptedAt:1_999_999_000n,deadline:2_000_001_000n,seed:BigInt(daySeed),decisionConfig:DECISION_CONFIG,permitId,inputDigest,status:1,resultHash:toHex(0,{size:32})};
@@ -183,5 +183,96 @@ test('worker queues an exhausted missing block, preserves checkpoint40/cached41 
     assert.equal(after.phase,'saving');assert.equal(after.slot,60);assert.equal(after.allowances[0]!.count,1);assert.equal(inferenceSlots.includes(0),false);assert.equal(after.sent,contexts.size);
     const plannedPacket=(await storage().get<{result:typeof expected}>(after.packet!))!.value;
     assert.equal(plannedPacket.result.history,expected.history);assert.deepEqual(plannedPacket.result.dailyFocus,expected.dailyFocus);
+  }finally{globalThis.fetch=originalFetch;for(const n of names){if(saved[n]===undefined)delete process.env[n];else process.env[n]=saved[n];}}
+});
+
+test('canonical previous days freeze before paid work and a cached planner resumes without rereading history',async()=>{
+  const names=['NEARLYHUMAN_RPC_URL','NEARLYHUMAN_COLLECTION','NEAR_AI_API_KEY','NEARLYHUMAN_RELAY_KEY'],saved=Object.fromEntries(names.map(n=>[n,process.env[n]])),originalFetch=globalThis.fetch;
+  const address='0x1111111111111111111111111111111111111111' as const,id=hold(301).id,permitId=hold(302).id,inputDigest=hold(303).id,acceptedHash=hold(304).id,headHash=hold(305).id,daySeed=hold(306).id;
+  const source=createInitialState('0x1234',undefined,'MEMORY');source.day=2;source.level=2;for(const item of ITEM_IDS)source.inventory[item]=0;
+  const base=unpackState(packState(source),{seed:source.seed,name:source.name,stats:source.stats}),baseJson=JSON.stringify(base);
+  const records=(actions:RecentAction[]):RecentAction[]=>[...actions,...Array.from({length:60-actions.length},()=>({action:'T01',target:'hall',variant:'idle',success:true} as RecentAction))];
+  const one=records([{action:'H01',target:'store',variant:'water',success:true},{action:'H04',target:'baseSeat',variant:'base',success:true}]);
+  const two=records([{action:'H01',target:'store',variant:'bread',success:true},{action:'H03',target:'bed',variant:'bed',success:true}]);
+  const previousDays=[previousDayMemory(1,one),previousDayMemory(2,two)];
+  const history=(actions:RecentAction[])=>encodeHistory(actions.map(r=>({...r,outcome:r.success?1:0} as Receipt)));
+  const initial:JobControl={version:1,chainId:46630,collection:address,requestId:id,tokenId:'301',player,permitId,inputDigest,seed:daySeed,decisionConfig:DECISION_CONFIG,rulesVersion:1,deadline:2_000_001_000,baseRevision:2,day:3,delivery:0,ownerTx:hold(307).id,acceptedBlock:'16',acceptedHash,base,phase:'queued',generation:0,receiptKeys:[],slot:0,decisions:0,sent:0,allowances:{},spentMicroUSD:0,updatedAt:Date.now(),createdAt:Date.now()};
+  const request={tokenId:301n,player,baseRevision:2,day:3,delivery:0,rulesVersion:1,acceptedAt:1_999_999_000n,deadline:2_000_001_000n,seed:BigInt(daySeed),decisionConfig:DECISION_CONFIG,permitId,inputDigest,status:1,resultHash:toHex(0,{size:32})};
+  const raw={name:base.name,...base.stats,alive:true,deathCause:0,day:2,level:2,revision:2,attempts:3,bornAt:1_999_999_000n,seed:BigInt(base.seed),pendingRequest:id,latestRequest:hold(308).id,replayCommitment:hold(309).id,state:packState(base)};
+  let mode:'unavailable'|'mismatched'|'valid'|'frozen'='unavailable',historyReads=0,failCheckpoint=false;const inferenceSlots:number[]=[],historyBlocks:string[]=[],store=storage(),originalPut=store.put.bind(store);
+  try{
+    process.env.NEARLYHUMAN_RPC_URL='https://memory-witness.invalid';process.env.NEARLYHUMAN_COLLECTION=address;process.env.NEAR_AI_API_KEY='isolated-memory-test-no-live-credential';delete process.env.NEARLYHUMAN_RELAY_KEY;
+    store.put=async<T>(key:string,value:T,condition?:{etag?:string;isNew?:boolean})=>{if(failCheckpoint&&key.startsWith('checkpoints/'+id+'/')){failCheckpoint=false;throw Object.assign(new Error('Isolated interrupted checkpoint'),{code:'EPERM'});}return originalPut(key,value,condition);};
+    globalThis.fetch=async(input,options)=>{
+      if(String(input)==='https://cloud-api.near.ai/v1/systemone'){
+        const body=JSON.parse(String(options?.body)),slot=body.state.slot;inferenceSlots.push(slot);const keys=Object.keys(body.questions.next_action.criteria),selected=keys.find(k=>k.startsWith('T01_'))||keys[0]!;
+        const morning=Object.keys(body.questions.morning_order?.criteria||{});
+        return Response.json({model:'typesafe/jev-1.13',answers:{next_action:{type:'choice',choice:selected,probabilities:Object.fromEntries(keys.map(k=>[k,k===selected?1:0]))},...(morning.length?{morning_order:{type:'choice',choice:morning[0],probabilities:Object.fromEntries(morning.map((k,i)=>[k,i===0?1:0]))}}:{})},usage:{input_tokens:1,output_tokens:1,cost:0}});
+      }
+      assert.equal(new URL(String(input)).origin,'https://memory-witness.invalid');const rpc=JSON.parse(String(options?.body));let result:unknown;
+      if(rpc.method==='eth_chainId')result=toHex(46630);
+      else if(rpc.method==='eth_getCode')result='0x6000';
+      else if(rpc.method==='eth_getBlockByNumber'){
+        const current=(await store.get<JobControl>('jobs/'+id))!.value;
+        result=current.packet&&rpc.params[0]==='0x64'?null:{number:rpc.params[0]==='0x10'?'0x10':'0x64',timestamp:toHex(2_000_000_000),hash:rpc.params[0]==='0x10'?acceptedHash:headHash,transactions:[]};
+      }else if(rpc.method==='eth_call'){
+        const decoded=decodeFunctionData({abi:nearlyHumanAbi,data:rpc.params[0].data});
+        if(decoded.functionName==='getDay'){
+          historyReads++;historyBlocks.push(rpc.params[1]);assert.notEqual(mode,'frozen','Frozen memory must not reread mutable RPC history');
+          if(mode==='unavailable')return Response.json({jsonrpc:'2.0',id:rpc.id,error:{code:-32000,message:'header not found'}});
+          const day=Number(decoded.args[1]);assert.ok(day===1||day===2,'Only bounded prior days may be read');
+          result=[{day,level:day,revision:day,savedAt:1_999_998_000n,alive:true,deathCause:0,requestId:hold(310+day).id,stateHash:day===2&&mode!=='mismatched'?keccak256(packState(base)):hold(320+day).id,replayCommitment:hold(330+day).id},history(day===1?one:two)];
+        }else{const values:Record<string,unknown>={RULES_VERSION:1,STATE_BYTES:192n,isTestnet:true,getRequest:request,getRooster:raw,ownerOf:player};assert.ok(decoded.functionName in values,decoded.functionName);result=values[decoded.functionName];}
+        result=encodeFunctionResult({abi:nearlyHumanAbi,functionName:decoded.functionName,result} as Parameters<typeof encodeFunctionResult>[0]);
+      }else throw Error('Unexpected or transaction-sending RPC '+rpc.method);
+      return Response.json({jsonrpc:'2.0',id:rpc.id,result});
+    };
+    await store.put('jobs/'+id,initial);await runJob(id);let after=(await store.get<JobControl>('jobs/'+id))!.value;
+    assert.equal(after.phase,'queued');assert.equal(after.sent,0);assert.equal(after.previousDays,undefined);assert.equal(inferenceSlots.length,0);assert.ok(historyReads>0);
+    mode='mismatched';await runJob(id);after=(await store.get<JobControl>('jobs/'+id))!.value;
+    assert.equal(after.phase,'checking');assert.equal(after.sent,0);assert.equal(after.previousDays,undefined);assert.equal(inferenceSlots.length,0);
+    mode='valid';failCheckpoint=true;await runJob(id);after=(await store.get<JobControl>('jobs/'+id))!.value;
+    assert.equal(after.phase,'queued');assert.deepEqual(after.previousDays,previousDays);assert.deepEqual(inferenceSlots,[0]);assert.ok(after.allowances[0]?.answer);assert.equal(after.checkpoint,undefined);assert.ok(historyBlocks.every(block=>block==='0x64'));
+    const readsBeforeResume=historyReads;mode='frozen';await runJob(id);after=(await store.get<JobControl>('jobs/'+id))!.value;
+    assert.equal(historyReads,readsBeforeResume);assert.equal(inferenceSlots.filter(slot=>slot===0).length,1);assert.equal(after.allowances[0]!.count,1);assert.equal(after.phase,'saving');assert.equal(after.slot,60);assert.deepEqual(after.previousDays,previousDays);assert.equal(JSON.stringify(base),baseJson);assert.equal(after.failure,undefined);assert.equal(after.journal,undefined);
+    const cp=(await store.get<{context:DayCheckpoint['context']}>(after.checkpoint!))!.value;
+    assert.deepEqual(cp.context.previousDays,previousDays);
+    // Changing frozen input after a checkpoint must quarantine, not buy another answer or record failure.
+    await store.put('jobs/'+id,{...after,packet:undefined,commitment:undefined,phase:'queued',previousDays:[]});const sends=inferenceSlots.length;await runJob(id);const changed=(await store.get<JobControl>('jobs/'+id))!.value;
+    assert.equal(changed.phase,'checking');assert.equal(changed.failure,undefined);assert.equal(inferenceSlots.length,sends);
+  }finally{store.put=originalPut;globalThis.fetch=originalFetch;for(const n of names){if(saved[n]===undefined)delete process.env[n];else process.env[n]=saved[n];}}
+});
+
+test('a pristine re-mined acceptance drops old-fork memory while funded work remains quarantined',async()=>{
+  const names=['NEARLYHUMAN_RPC_URL','NEARLYHUMAN_COLLECTION','NEARLYHUMAN_RUNTIME','URL','NEARLYHUMAN_SESSION_SECRET'],saved=Object.fromEntries(names.map(n=>[n,process.env[n]])),originalFetch=globalThis.fetch;
+  const address='0x1111111111111111111111111111111111111111' as const,id=hold(401).id,permitId=hold(402).id,oldDigest=hold(403).id,newDigest=hold(404).id,oldAcceptedHash=hold(405).id,newAcceptedHash=hold(406).id,headHash=hold(407).id,ownerTx=hold(408).id,newDaySeed=hold(409).id;
+  const oldBirth=createInitialState('0x1111',undefined,'FORK'),newBirth=createInitialState('0x2222',undefined,'FORK');for(const s of[oldBirth,newBirth]){s.day=2;s.level=2;}newBirth.needs.morale=8300;
+  const oldBase=unpackState(packState(oldBirth),{seed:oldBirth.seed,name:oldBirth.name,stats:oldBirth.stats}),newBase=unpackState(packState(newBirth),{seed:newBirth.seed,name:newBirth.name,stats:newBirth.stats});
+  const previousDays=[{day:1,actions:[{action:'H04' as const,target:'baseSeat' as const,variant:'base',success:true}]}];
+  const initial:JobControl={version:1,chainId:46630,collection:address,requestId:id,tokenId:'401',player,permitId,inputDigest:oldDigest,seed:hold(410).id,decisionConfig:DECISION_CONFIG,rulesVersion:1,deadline:2_000_000_900,baseRevision:2,day:3,delivery:0,ownerTx,acceptedBlock:'16',acceptedHash:oldAcceptedHash,base:oldBase,previousDays,phase:'queued',generation:0,receiptKeys:[],slot:0,decisions:0,sent:0,allowances:{},spentMicroUSD:0,updatedAt:Date.now(),createdAt:Date.now()};
+  const request={tokenId:401n,player,baseRevision:2,day:3,delivery:0,rulesVersion:1,acceptedAt:1_999_999_000n,deadline:2_000_001_000n,seed:BigInt(newDaySeed),decisionConfig:DECISION_CONFIG,permitId,inputDigest:newDigest,status:1,resultHash:toHex(0,{size:32})};
+  const raw={name:newBase.name,...newBase.stats,alive:true,deathCause:0,day:2,level:2,revision:2,attempts:3,bornAt:1_999_999_000n,seed:BigInt(newBase.seed),pendingRequest:id,latestRequest:hold(411).id,replayCommitment:hold(412).id,state:packState(newBase)};
+  const log={address,topics:encodeEventTopics({abi:nearlyHumanAbi,eventName:'DayRequested',args:{requestId:id,tokenId:401n,player}}),data:encodeAbiParameters([{type:'uint32'},{type:'uint16'},{type:'uint256'},{type:'uint64'},{type:'bytes32'}],[3,0,BigInt(newDaySeed),request.deadline,newDigest]),blockHash:newAcceptedHash,blockNumber:'0x10',transactionHash:ownerTx,transactionIndex:'0x0',logIndex:'0x0',removed:false};
+  let dispatches=0;const rpcMethods:string[]=[];
+  storage(); // Initialize the isolated local store before enabling mocked hosted dispatch.
+  try{
+    process.env.NEARLYHUMAN_RPC_URL='https://fork-memory-witness.invalid';process.env.NEARLYHUMAN_COLLECTION=address;process.env.NEARLYHUMAN_RUNTIME='netlify';process.env.URL='https://fork-dispatch-witness.invalid';process.env.NEARLYHUMAN_SESSION_SECRET='isolated-fork-dispatch-no-live-secret';
+    globalThis.fetch=async(input,options)=>{
+      if(String(input)==='https://fork-dispatch-witness.invalid/.netlify/functions/prepare-background'){dispatches++;assert.equal(JSON.parse(String(options?.body)).requestId,id);return new Response(null,{status:202});}
+      assert.equal(new URL(String(input)).origin,'https://fork-memory-witness.invalid');const rpc=JSON.parse(String(options?.body));rpcMethods.push(rpc.method);let result:unknown;
+      if(rpc.method==='eth_chainId')result=toHex(46630);
+      else if(rpc.method==='eth_getCode')result='0x6000';
+      else if(rpc.method==='eth_getBlockByNumber')result={number:rpc.params[0]==='0x10'?'0x10':'0x64',timestamp:toHex(2_000_000_000),hash:rpc.params[0]==='0x10'?newAcceptedHash:headHash,transactions:[]};
+      else if(rpc.method==='eth_getTransactionReceipt')result={transactionHash:ownerTx,transactionIndex:'0x0',blockHash:newAcceptedHash,blockNumber:'0x10',from:player,to:address,cumulativeGasUsed:'0x5208',gasUsed:'0x5208',contractAddress:null,logs:[log],logsBloom:'0x'+'0'.repeat(512),status:'0x1',effectiveGasPrice:'0x1',type:'0x0'};
+      else if(rpc.method==='eth_getTransactionByHash')result={hash:ownerTx,nonce:'0x1',blockHash:newAcceptedHash,blockNumber:'0x10',transactionIndex:'0x0',from:player,to:address,value:'0x0',gasPrice:'0x1',gas:'0x5208',input:'0x',type:'0x0',chainId:toHex(46630),v:'0x25',r:hold(413).id,s:hold(414).id};
+      else if(rpc.method==='eth_call'){const decoded=decodeFunctionData({abi:nearlyHumanAbi,data:rpc.params[0].data}),values:Record<string,unknown>={RULES_VERSION:1,STATE_BYTES:192n,isTestnet:true,getRequest:request,getRooster:raw,ownerOf:player};assert.ok(decoded.functionName in values,decoded.functionName);result=encodeFunctionResult({abi:nearlyHumanAbi,functionName:decoded.functionName,result:values[decoded.functionName]} as Parameters<typeof encodeFunctionResult>[0]);}
+      else throw Error('Unexpected or transaction-sending RPC '+rpc.method);
+      return Response.json({jsonrpc:'2.0',id:rpc.id,result});
+    };
+    const reservation={...hold(402,'fork-memory'),status:'accepted' as const,requestId:id};await storage().put('control/admission-v1',{holds:{[permitId]:reservation},spentMicroUSD:0});await storage().put('jobs/'+id,initial);
+    await acceptTransaction(ownerTx,player);let after=(await storage().get<JobControl>('jobs/'+id))!.value;
+    assert.equal(after.phase,'queued');assert.equal(after.inputDigest,newDigest);assert.equal(after.acceptedHash,newAcceptedHash);assert.deepEqual(after.base,JSON.parse(JSON.stringify(newBase)));assert.equal(after.previousDays,undefined);assert.equal(after.sent,0);assert.deepEqual(after.allowances,{});assert.equal(dispatches,1);
+    await storage().put('jobs/'+id,{...initial,sent:1,spentMicroUSD:588,allowances:{0:{count:1,inputs:['isolated-prior-send'],outputs:[]}}});await acceptTransaction(ownerTx,player);after=(await storage().get<JobControl>('jobs/'+id))!.value;
+    assert.equal(after.phase,'checking');assert.equal(after.acceptanceConflict,true);assert.equal(after.inputDigest,oldDigest);assert.deepEqual(after.base,JSON.parse(JSON.stringify(oldBase)));assert.deepEqual(after.previousDays,previousDays);assert.equal(after.sent,1);assert.equal(dispatches,1);assert.ok(!rpcMethods.some(m=>/sendRawTransaction|sendTransaction/.test(m)));
   }finally{globalThis.fetch=originalFetch;for(const n of names){if(saved[n]===undefined)delete process.env[n];else process.env[n]=saved[n];}}
 });

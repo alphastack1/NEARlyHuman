@@ -4,6 +4,8 @@ Status: design baseline revised after twelve full-guide critiques, with visual r
 
 Current owner-requested refinement: one Jev-chosen substantial undertaking per day, smaller care and mundane moments, continuous physical walking, and a front-yard mailbox trip before delivery is available. The [continuous-day review](docs/DAILY_LIFE_REVIEW.md), [actual screenshot gallery](docs/daily-life-review/index.html) and [contract/art review](docs/CONTRACT_AND_ART_REVIEW.md) describe the implementation and verified NORI day. Sixty logical history slots remain for biology; they are not sixty model calls or equally large player-facing actions. The original baseline below retains its historical design assumptions where those execution records document a change.
 
+The subsequent [Jev choice-variety review](docs/CHOICE_VARIETY_REVIEW.md) records the owner-requested cross-day/NPC pass: truthful canonical prior-action context, useful menu coverage, preserved personalities, real model comparisons and three additional verified onchain days. It distinguishes diagnostic samples from saved NFT history and keeps normal repeated care available.
+
 Owner: Enzo Smith.
 
 Prepared: October 31, 2026, using the Asia/Bangkok calendar.

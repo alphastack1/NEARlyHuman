@@ -18,7 +18,7 @@ export function focusIcon(focus:DailyFocus):IconName {
  return focus.kind==='unhurried'?'leaf':focus.goal.action.startsWith('G')?'leaf':focus.goal.action.startsWith('K')?'food':'house';
 }
 export function morningLabel(key:string,fallback:string):string {
- return({'collect-first':'Mailbox first','coffee-first':'Coffee → mailbox','breakfast-first':'Breakfast → mailbox','look-first':'Window → mailbox',pantry:'Begin at home'} as Record<string,string>)[key]||fallback;
+ return({'collect-first':'Mailbox first','coffee-first':'Coffee ritual → mailbox','quick-coffee-first':'Quick coffee → mailbox','breakfast-first':'Breakfast → mailbox','look-first':'Window → mailbox',pantry:'Begin at home'} as Record<string,string>)[key]||fallback;
 }
 /** Only explicit new-policy, uneventful local time may share a collapsed log row. */
 export function isLogInterlude(r:Receipt):boolean {

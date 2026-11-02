@@ -1,0 +1,110 @@
+{
+  "createdAt": "2026-11-02T06:56:20.855Z",
+  "scope": "R3 maker-only residual behavior, after correct factual planned-meal context was supplied. Not proof of meal optimization.",
+  "inputHash": "23667f29ff0f11a9004b5bb6ab0e334686b156d1edf89fd2a9e512d2c780be78",
+  "recordedAt": "2026-11-02T06:46:03.648Z",
+  "mainUndertakingShown": {
+    "label": "Make a comfort bowl",
+    "key": "K03_prep_bowl",
+    "status": "planned",
+    "scheduledSlot": 46,
+    "action": "K03",
+    "target": "prep",
+    "variant": "bowl",
+    "inputs": {
+      "milk": 1,
+      "bread": 1
+    },
+    "slots_until_plan": 5,
+    "nominal_gain_if_success": {
+      "food": 50,
+      "water": 20,
+      "energy": 0,
+      "morale": 20
+    },
+    "success_is_not_guaranteed": true
+  },
+  "needsShown": {
+    "health": 100,
+    "nutrition": 90,
+    "hydration": 93,
+    "energy": 75,
+    "morale": 81.24
+  },
+  "decision": {
+    "requestId": "gen-dec-1793601963-ZIbddXlzwuBqJAgRCiRA",
+    "selected": "K01_stove_toast",
+    "offered": [
+      "H01_store_quickCoffee",
+      "K01_stove_toast",
+      "H03_bed_bed",
+      "H04_baseSeat_base",
+      "T01_store_idle",
+      "T01_cupboard_idle"
+    ],
+    "probabilities": {
+      "H01_store_quickCoffee": 0.28,
+      "K01_stove_toast": 0.31,
+      "H03_bed_bed": 0.05,
+      "H04_baseSeat_base": 0.23,
+      "T01_store_idle": 0.07,
+      "T01_cupboard_idle": 0.06
+    },
+    "costMicroUSD": 133,
+    "latencyMs": 360
+  },
+  "actualToast": {
+    "slot": 41,
+    "role": "routine",
+    "action": "K01",
+    "target": "stove",
+    "variant": "toast",
+    "success": true,
+    "choice": "K01_stove_toast",
+    "inputs": {
+      "bread": 1
+    },
+    "beforeNeeds": {
+      "health": 10000,
+      "nutrition": 9000,
+      "hydration": 9300,
+      "energy": 7500,
+      "morale": 8124
+    },
+    "afterNeeds": {
+      "health": 10000,
+      "nutrition": 10000,
+      "hydration": 9300,
+      "energy": 7400,
+      "morale": 8924
+    }
+  },
+  "actualBowl": {
+    "slot": 46,
+    "role": "focus",
+    "plan": "focus",
+    "action": "K03",
+    "target": "prep",
+    "variant": "bowl",
+    "success": true,
+    "inputs": {
+      "milk": 1,
+      "bread": 1
+    },
+    "beforeNeeds": {
+      "health": 10000,
+      "nutrition": 10000,
+      "hydration": 9300,
+      "energy": 7400,
+      "morale": 8924
+    },
+    "afterNeeds": {
+      "health": 10000,
+      "nutrition": 10000,
+      "hydration": 10000,
+      "energy": 7300,
+      "morale": 10000
+    }
+  },
+  "outcome": "Jev still chose toast at41 before the planned bowl at46. Toast filled food90→100; bowl then added0food,7water and10.76morale. The main meal retained genuine water/morale effects; the context addition did not eliminate the preceding toast."
+}

@@ -99,7 +99,7 @@ body { overflow: hidden; }
 .app-root .welcome-wrap { width: min(calc(100% - 20px), 480px); }
 .app-root .welcome-dock { padding: 10px 12px 4px; }
 .app-root .welcome-dock h1 { display: none; }
-.app-root .welcome-dock > .text-button { margin: 1px auto 0; min-height: 36px; padding: 8px; }
+.app-root .welcome-dock .welcome-secondary > .text-button { margin: 1px 0 0; min-height: 36px; padding: 8px; }
 .app-root.screen-discover:has(.resume-label) .welcome-dock > .main-action {
   background: #294655;
   color: #eeeedd;
@@ -164,6 +164,10 @@ body { overflow: hidden; }
   .app-root .welcome-dock { padding: 10px 10px 4px; }
   .app-root .care-dock .panel-care, .app-root .mint-dock .panel-mint { padding: 10px; }
   .app-root .care-dock .catalog-row { gap: 4px; }
+}
+@media (min-width: 560px) and (max-width: 699px) and (max-height: 560px) {
+  .app-root .welcome-dock .welcome-secondary { column-gap: 4px; }
+  .app-root .welcome-dock .welcome-secondary > .text-button { font-size: 8px; padding-inline: 5px; }
 }
 @media (min-width: 700px) and (max-height: 560px) {
   .app-root .game-composition.with-welcome,
