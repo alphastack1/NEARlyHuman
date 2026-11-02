@@ -1,0 +1,264 @@
+{
+  "at": "2026-11-02T05:50:40.159Z",
+  "scope": "Root-approved compiled candidate, natural default canonical NORI3 title to ending; post-ending status/log inspection. No seek, skip, packet replacement, injected renderer clock, wallet or API writes.",
+  "origin": "http://127.0.0.1:5180",
+  "js": "/assets/index-Cck9PNd7.js",
+  "viewport": [
+    390,
+    844
+  ],
+  "duration": 68093,
+  "baselineDuration": 69646,
+  "preview": {
+    "path": "/assets/preview/nori-day3-05de911accb2.json",
+    "baselineHash": "05de911accb2cf50cb519ae90722cfee084b7b808e38669c16bc2db956b6e721",
+    "loadedHash": "05de911accb2cf50cb519ae90722cfee084b7b808e38669c16bc2db956b6e721"
+  },
+  "ending": "NORI\nLV03\nVISIT\nSAVED03\nRooms\n▾\nSettled in for the night.\nNearly human.\nTESTNET\nHatch yours\nYour home",
+  "status": {
+    "needs": [
+      {
+        "label": "Health",
+        "value": "100"
+      },
+      {
+        "label": "Food",
+        "value": "45"
+      },
+      {
+        "label": "Water",
+        "value": "67"
+      },
+      {
+        "label": "Energy",
+        "value": "100"
+      },
+      {
+        "label": "Morale",
+        "value": "87.66"
+      }
+    ],
+    "stock": [
+      "Water: 1 stored. Details",
+      "Wood: 1 stored. Details",
+      "Hammer & Nails: 1 stored. Details",
+      "Umbrella: 1 stored. Details",
+      "Soap: 1 stored. Details",
+      "Compost: 1 stored. Details"
+    ],
+    "plots": [
+      "Plot 1RoseGrowth 0/2 · Water 0/2›",
+      "Plot 2EmptyWater 0/2›"
+    ]
+  },
+  "allOriginalIndices": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35,
+    36,
+    37,
+    38,
+    39,
+    40,
+    41,
+    42,
+    43,
+    44,
+    45,
+    46,
+    47,
+    48,
+    49,
+    50,
+    51,
+    52,
+    53,
+    54,
+    55,
+    56,
+    57,
+    58,
+    59,
+    60
+  ],
+  "changes": [
+    {
+      "t": 409,
+      "event": "Collecting the morning delivery ",
+      "root": "app-root screen-discover is-traveling"
+    },
+    {
+      "t": 6095,
+      "event": "Collecting the morning delivery ",
+      "root": "app-root screen-discover"
+    },
+    {
+      "t": 7311,
+      "event": "Collected the delivery. All accounted for.",
+      "root": "app-root screen-discover"
+    },
+    {
+      "t": 7779,
+      "event": "Bringing the delivery home. Back to the pantry.",
+      "root": "app-root screen-discover is-traveling"
+    },
+    {
+      "t": 14316,
+      "event": "Putting the supplies away. ",
+      "root": "app-root screen-discover"
+    },
+    {
+      "t": 14721,
+      "event": "Supplies put away. ",
+      "root": "app-root screen-discover"
+    },
+    {
+      "t": 15545,
+      "event": "A moment by the pantry. Dawn at home.",
+      "root": "app-root screen-discover"
+    },
+    {
+      "t": 17584,
+      "event": "Drinking water ",
+      "root": "app-root screen-discover"
+    },
+    {
+      "t": 19213,
+      "event": "Drank some water. A sensible little sip.",
+      "root": "app-root screen-discover"
+    },
+    {
+      "t": 20427,
+      "event": "A moment by the pantry. A morning pause.",
+      "root": "app-root screen-discover"
+    },
+    {
+      "t": 22883,
+      "event": "Relaxing in the living room ",
+      "root": "app-root screen-discover is-traveling"
+    },
+    {
+      "t": 26147,
+      "event": "Relaxing in the living room ",
+      "root": "app-root screen-discover"
+    },
+    {
+      "t": 27433,
+      "event": "Sat like a human. Nearly.",
+      "root": "app-root screen-discover"
+    },
+    {
+      "t": 29052,
+      "event": "A little longer here. A pause at midday.",
+      "root": "app-root screen-discover"
+    },
+    {
+      "t": 31145,
+      "event": "A little longer here. The afternoon drifts.",
+      "root": "app-root screen-discover"
+    },
+    {
+      "t": 36341,
+      "event": "Settled in for a bit. The day winds down.",
+      "root": "app-root screen-discover"
+    },
+    {
+      "t": 38046,
+      "event": "Planting rose seeds in plot 1 ",
+      "root": "app-root screen-discover is-traveling"
+    },
+    {
+      "t": 45167,
+      "event": "Planting rose seeds in plot 1 ",
+      "root": "app-root screen-discover"
+    },
+    {
+      "t": 52963,
+      "event": "Planted rose seeds. Something to look after.",
+      "root": "app-root screen-discover"
+    },
+    {
+      "t": 55905,
+      "event": "Watching the garden. The day winds down.",
+      "root": "app-root screen-discover"
+    },
+    {
+      "t": 57433,
+      "event": "Resting in bed ",
+      "root": "app-root screen-discover is-traveling"
+    },
+    {
+      "t": 60689,
+      "event": "Resting in bed ",
+      "root": "app-root screen-discover"
+    },
+    {
+      "t": 62394,
+      "event": "Had a little rest. Rest is important.",
+      "root": "app-root screen-discover"
+    },
+    {
+      "t": 64047,
+      "event": "Still tucked in. Bedtime settles in.",
+      "root": "app-root screen-discover"
+    },
+    {
+      "t": 66471,
+      "event": "Another little day. Nearly human.",
+      "root": "app-root screen-discover"
+    },
+    {
+      "t": 68093,
+      "event": "Settled in for the night. Nearly human.",
+      "root": "app-root screen-visit"
+    }
+  ],
+  "shots": [
+    "01-title",
+    "02-collected",
+    "03-return",
+    "04-middle-living",
+    "05-small-continuation",
+    "06-main-work",
+    "07-result",
+    "07b-garden-quiet",
+    "08-rest",
+    "09-ending",
+    "10-final-status",
+    "11-original-log"
+  ],
+  "errors": [],
+  "writes": []
+}

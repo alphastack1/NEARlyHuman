@@ -1,0 +1,455 @@
+{
+  "at": "2026-11-02T05:46:56.572Z",
+  "scope": "Finite deterministic presentation-only helper witness. No provider calls, browser, simulation or chain writes.",
+  "repeatStable": true,
+  "inputUnchanged": true,
+  "observationalCases": 54,
+  "maxLineCharacters": 23,
+  "distinctSeatedPairs": 6,
+  "same": [
+    "A little longer here.",
+    "The afternoon drifts."
+  ],
+  "bedOverride": [
+    "A little rest in bed.",
+    "An afternoon pause."
+  ],
+  "seatOverride": [
+    "Settled in for a bit.",
+    "The afternoon drifts."
+  ],
+  "cases": [
+    {
+      "target": "store",
+      "phase": "Dawn",
+      "lines": [
+        "By the pantry.",
+        "The house stirs."
+      ]
+    },
+    {
+      "target": "store",
+      "phase": "Morning",
+      "lines": [
+        "By the pantry.",
+        "The morning drifts by."
+      ]
+    },
+    {
+      "target": "store",
+      "phase": "Midday",
+      "lines": [
+        "By the pantry.",
+        "A pause at midday."
+      ]
+    },
+    {
+      "target": "store",
+      "phase": "Afternoon",
+      "lines": [
+        "By the pantry.",
+        "The afternoon drifts."
+      ]
+    },
+    {
+      "target": "store",
+      "phase": "Evening",
+      "lines": [
+        "By the pantry.",
+        "The day winds down."
+      ]
+    },
+    {
+      "target": "store",
+      "phase": "Bedtime",
+      "lines": [
+        "By the pantry.",
+        "The house grows quiet."
+      ]
+    },
+    {
+      "target": "window",
+      "phase": "Dawn",
+      "lines": [
+        "A moment by the window.",
+        "Dawn at home."
+      ]
+    },
+    {
+      "target": "window",
+      "phase": "Morning",
+      "lines": [
+        "A moment by the window.",
+        "A morning pause."
+      ]
+    },
+    {
+      "target": "window",
+      "phase": "Midday",
+      "lines": [
+        "A moment by the window.",
+        "Midday passes quietly."
+      ]
+    },
+    {
+      "target": "window",
+      "phase": "Afternoon",
+      "lines": [
+        "A moment by the window.",
+        "An afternoon pause."
+      ]
+    },
+    {
+      "target": "window",
+      "phase": "Evening",
+      "lines": [
+        "A moment by the window.",
+        "Evening at home."
+      ]
+    },
+    {
+      "target": "window",
+      "phase": "Bedtime",
+      "lines": [
+        "A moment by the window.",
+        "Bedtime settles in."
+      ]
+    },
+    {
+      "target": "cupboard",
+      "phase": "Dawn",
+      "lines": [
+        "By the cupboard.",
+        "Dawn at home."
+      ]
+    },
+    {
+      "target": "cupboard",
+      "phase": "Morning",
+      "lines": [
+        "By the cupboard.",
+        "A morning pause."
+      ]
+    },
+    {
+      "target": "cupboard",
+      "phase": "Midday",
+      "lines": [
+        "By the cupboard.",
+        "Midday passes quietly."
+      ]
+    },
+    {
+      "target": "cupboard",
+      "phase": "Afternoon",
+      "lines": [
+        "By the cupboard.",
+        "An afternoon pause."
+      ]
+    },
+    {
+      "target": "cupboard",
+      "phase": "Evening",
+      "lines": [
+        "By the cupboard.",
+        "Evening at home."
+      ]
+    },
+    {
+      "target": "cupboard",
+      "phase": "Bedtime",
+      "lines": [
+        "By the cupboard.",
+        "Bedtime settles in."
+      ]
+    },
+    {
+      "target": "gardenView",
+      "phase": "Dawn",
+      "lines": [
+        "A moment in the garden.",
+        "Dawn at home."
+      ]
+    },
+    {
+      "target": "gardenView",
+      "phase": "Morning",
+      "lines": [
+        "A moment in the garden.",
+        "A morning pause."
+      ]
+    },
+    {
+      "target": "gardenView",
+      "phase": "Midday",
+      "lines": [
+        "A moment in the garden.",
+        "Midday passes quietly."
+      ]
+    },
+    {
+      "target": "gardenView",
+      "phase": "Afternoon",
+      "lines": [
+        "A moment in the garden.",
+        "An afternoon pause."
+      ]
+    },
+    {
+      "target": "gardenView",
+      "phase": "Evening",
+      "lines": [
+        "A moment in the garden.",
+        "Evening at home."
+      ]
+    },
+    {
+      "target": "gardenView",
+      "phase": "Bedtime",
+      "lines": [
+        "A moment in the garden.",
+        "Bedtime settles in."
+      ]
+    },
+    {
+      "target": "plot1",
+      "phase": "Dawn",
+      "lines": [
+        "A pause in the garden.",
+        "Dawn at home."
+      ]
+    },
+    {
+      "target": "plot1",
+      "phase": "Morning",
+      "lines": [
+        "A pause in the garden.",
+        "A morning pause."
+      ]
+    },
+    {
+      "target": "plot1",
+      "phase": "Midday",
+      "lines": [
+        "A pause in the garden.",
+        "Midday passes quietly."
+      ]
+    },
+    {
+      "target": "plot1",
+      "phase": "Afternoon",
+      "lines": [
+        "A pause in the garden.",
+        "An afternoon pause."
+      ]
+    },
+    {
+      "target": "plot1",
+      "phase": "Evening",
+      "lines": [
+        "A pause in the garden.",
+        "Evening at home."
+      ]
+    },
+    {
+      "target": "plot1",
+      "phase": "Bedtime",
+      "lines": [
+        "A pause in the garden.",
+        "Bedtime settles in."
+      ]
+    },
+    {
+      "target": "plot2",
+      "phase": "Dawn",
+      "lines": [
+        "Watching the garden.",
+        "The house stirs."
+      ]
+    },
+    {
+      "target": "plot2",
+      "phase": "Morning",
+      "lines": [
+        "Watching the garden.",
+        "The morning drifts by."
+      ]
+    },
+    {
+      "target": "plot2",
+      "phase": "Midday",
+      "lines": [
+        "Watching the garden.",
+        "A pause at midday."
+      ]
+    },
+    {
+      "target": "plot2",
+      "phase": "Afternoon",
+      "lines": [
+        "Watching the garden.",
+        "The afternoon drifts."
+      ]
+    },
+    {
+      "target": "plot2",
+      "phase": "Evening",
+      "lines": [
+        "Watching the garden.",
+        "The day winds down."
+      ]
+    },
+    {
+      "target": "plot2",
+      "phase": "Bedtime",
+      "lines": [
+        "Watching the garden.",
+        "The house grows quiet."
+      ]
+    },
+    {
+      "target": "hall",
+      "phase": "Dawn",
+      "lines": [
+        "A moment in the hall.",
+        "The house stirs."
+      ]
+    },
+    {
+      "target": "hall",
+      "phase": "Morning",
+      "lines": [
+        "A moment in the hall.",
+        "The morning drifts by."
+      ]
+    },
+    {
+      "target": "hall",
+      "phase": "Midday",
+      "lines": [
+        "A moment in the hall.",
+        "A pause at midday."
+      ]
+    },
+    {
+      "target": "hall",
+      "phase": "Afternoon",
+      "lines": [
+        "A moment in the hall.",
+        "The afternoon drifts."
+      ]
+    },
+    {
+      "target": "hall",
+      "phase": "Evening",
+      "lines": [
+        "A moment in the hall.",
+        "The day winds down."
+      ]
+    },
+    {
+      "target": "hall",
+      "phase": "Bedtime",
+      "lines": [
+        "A moment in the hall.",
+        "The house grows quiet."
+      ]
+    },
+    {
+      "target": "bed",
+      "phase": "Dawn",
+      "lines": [
+        "By the bed.",
+        "The house stirs."
+      ]
+    },
+    {
+      "target": "bed",
+      "phase": "Morning",
+      "lines": [
+        "By the bed.",
+        "The morning drifts by."
+      ]
+    },
+    {
+      "target": "bed",
+      "phase": "Midday",
+      "lines": [
+        "By the bed.",
+        "A pause at midday."
+      ]
+    },
+    {
+      "target": "bed",
+      "phase": "Afternoon",
+      "lines": [
+        "By the bed.",
+        "The afternoon drifts."
+      ]
+    },
+    {
+      "target": "bed",
+      "phase": "Evening",
+      "lines": [
+        "By the bed.",
+        "The day winds down."
+      ]
+    },
+    {
+      "target": "bed",
+      "phase": "Bedtime",
+      "lines": [
+        "By the bed.",
+        "The house grows quiet."
+      ]
+    },
+    {
+      "target": "baseSeat",
+      "phase": "Dawn",
+      "lines": [
+        "A moment by the chair.",
+        "Dawn at home."
+      ]
+    },
+    {
+      "target": "baseSeat",
+      "phase": "Morning",
+      "lines": [
+        "A moment by the chair.",
+        "A morning pause."
+      ]
+    },
+    {
+      "target": "baseSeat",
+      "phase": "Midday",
+      "lines": [
+        "A moment by the chair.",
+        "Midday passes quietly."
+      ]
+    },
+    {
+      "target": "baseSeat",
+      "phase": "Afternoon",
+      "lines": [
+        "A moment by the chair.",
+        "An afternoon pause."
+      ]
+    },
+    {
+      "target": "baseSeat",
+      "phase": "Evening",
+      "lines": [
+        "A moment by the chair.",
+        "Evening at home."
+      ]
+    },
+    {
+      "target": "baseSeat",
+      "phase": "Bedtime",
+      "lines": [
+        "A moment by the chair.",
+        "Bedtime settles in."
+      ]
+    }
+  ]
+}

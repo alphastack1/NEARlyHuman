@@ -36,6 +36,8 @@ The [service guide](docs/service.md), [contract guide](docs/chain.md), [domain n
 
 ## Design references
 
+The [day-rhythm review](docs/RHYTHM_REVIEW.md) and [before/after gallery](docs/rhythm-review/index.html) cover the latest live critique: continuing rest, contextual quiet moments, continuous small gestures and reachable garden cameos, while preserving the recorded model choices and saved state.
+
 The [continuous-day review](docs/DAILY_LIFE_REVIEW.md) and [current screenshot gallery](docs/daily-life-review/index.html) cover the front yard, physical mailbox trip, one main undertaking, smaller care moments and the verified six-call NORI day now used for the opening visit. The [contract and artwork review](docs/CONTRACT_AND_ART_REVIEW.md) records the fresh lifecycle/adversarial checks and explains seeded procedural appearances.
 
 The [cartridge opening review](docs/CARTRIDGE_OPENING_REVIEW.md) and [actual-build motion/screenshot gallery](docs/opening-review/index.html) cover the selected House Wakes Up sequence, full-browser room, responsive camera and input/startup refinement waves. Open the title explicitly with [the intro link](https://nearlyhuman.netlify.app/?intro=1), or Options → Title screen.

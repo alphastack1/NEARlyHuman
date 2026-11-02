@@ -9,8 +9,9 @@ import { roosterCanvas, ROOSTER_FRAME, type RoosterPose } from '../art/rooster';
 import { ACTION_PROPS, actionPropCanvas, actionResultProp } from '../art/action-props';
 import { PROP_URLS } from '../art/asset-urls';
 import { findRoute, targetPoint, TARGET_LABELS, WORLD_HEIGHT, WORLD_WIDTH, type WorldPoint } from './layout';
-import { purposefulTravelMs, receiptTiming, receiptImpactFraction } from './presentation';
+import { purposefulTravelMs, receiptTiming, receiptImpactFraction, quietSpanWorkMs } from './presentation';
 import { quietSpanAt } from './quiet-spans';
+import { quietPresenceLines } from './quiet-presence';
 import { BEDROOM_VIEW, HOUSE_ROOMS, constrainHouseView, roomAtView, type HouseRoom, type HouseView } from './house-view';
 import { samplePersonality, sampleAttention, physicalCadence, settlePose, NPC_ATTENTION_MS, NPC_ATTENTION_COOLDOWN_MS } from './personality';
 import { beforeActionBeat, afterActionBeat, hasRecordedRain, type RecordedBeat } from './recorded-events';
@@ -49,7 +50,7 @@ export interface WorldController {
 interface Prop {kind:FixtureArt;id?:TargetId;x:number;y:number;image:Phaser.GameObjects.Image;shadow?:Phaser.GameObjects.Ellipse;opts:ArtOptions}
 interface Particle {sprite:Phaser.GameObjects.Rectangle;x:number;y:number;vx:number;vy:number;life:number;total:number}
 interface DeliveryReturn {route:WorldPoint[];routeLength:number;travel:number;start:number;arrived?:boolean;stored?:boolean;announced?:boolean}
-interface Playback {day:DayResult;index:number;elapsed:number;normalSlot:number;perSlot:number;route:WorldPoint[];routeLength:number;travel:number;effect:boolean;stage:'prelude'|'receipts'|'ending';paused:boolean;preludeTarget:'mailbox'|'store';arrived:boolean;intentMessage?:boolean;routineHold?:boolean;deliveryReturn?:DeliveryReturn;endingFrom?:WorldPoint;quietSpanEnd?:number;beforeBeat?:RecordedBeat;afterBeat?:RecordedBeat;introUntil:number;tailMs:number;tailMessage?:boolean;eventFocused?:boolean;vignette?:DailyVignette}
+interface Playback {day:DayResult;index:number;elapsed:number;normalSlot:number;perSlot:number;route:WorldPoint[];routeLength:number;travel:number;effect:boolean;stage:'prelude'|'receipts'|'ending';paused:boolean;preludeTarget:'mailbox'|'store';arrived:boolean;intentMessage?:boolean;routineHold?:boolean;continuingSeat?:boolean;deliveryReturn?:DeliveryReturn;endingFrom?:WorldPoint;quietSpanEnd?:number;beforeBeat?:RecordedBeat;afterBeat?:RecordedBeat;introUntil:number;tailMs:number;tailMessage?:boolean;eventFocused?:boolean;vignette?:DailyVignette}
 interface HouseGesture {pointer:number;x:number;y:number;view:WorldPoint;prop?:Prop;actor?:boolean;dragging:boolean}
 interface HouseResponse {prop:Prop;elapsed:number;duration:number;scaleX:number;scaleY:number;leaf?:Phaser.GameObjects.Image}
 interface HouseAction {kind:'move'|'reveal';prop:Prop;elapsed:number;duration:number;fromY:number;toY:number;actorFrom?:WorldPoint;actorTo?:WorldPoint}
@@ -80,6 +81,7 @@ class HomeScene extends Phaser.Scene {
  private fireFx!:Phaser.GameObjects.Graphics;private messFx!:Phaser.GameObjects.Graphics;private taskFx!:Phaser.GameObjects.Graphics;
  private worldPoint:WorldPoint={x:312,y:88};private cameraPoint:WorldPoint={...BEDROOM_VIEW};
  private furnitureExit?:WorldPoint;private furnitureRest?:'bed'|'seat';private openingTarget:TargetId='store';
+ private presenceContact?:{key:string;started:number};
  private readyResolve:()=>void;
  private muted=false;private audio:AudioContext|null=null;private audioReady:Promise<void>|null=null;private lastStep=0;
  private lastMessage='';
@@ -325,7 +327,7 @@ class HomeScene extends Phaser.Scene {
  }
  public focus(room:HouseRoom):void {this.enqueue(()=>{if(!this.exploreEnabled||!this.inputEnabled)return;const target=HOUSE_ROOMS.find(r=>r.id===room);if(!target)return;this.gesture=undefined;this.exploring=true;this.explorePoint=this.framePoint(target);this.notifyView();});}
  public follow():void {this.exploring=false;this.explorePoint=undefined;this.gesture=undefined;this.notifyView();}
- private resetPresence():void {this.follow();this.clearResponse();this.clearHouseAction();this.furnitureExit=undefined;this.furnitureRest=undefined;this.vignetteFx?.clear();this.lampOn=true;this.attentionAt=undefined;this.lastAttention=-Infinity;this.setMotion(false);}
+ private resetPresence():void {this.follow();this.clearResponse();this.clearHouseAction();this.furnitureExit=undefined;this.furnitureRest=undefined;this.presenceContact=undefined;this.vignetteFx?.clear();this.lampOn=true;this.attentionAt=undefined;this.lastAttention=-Infinity;this.setMotion(false);}
  private clearResponse():void {
   const response=this.response;if(!response)return;
   response.prop.image.setCrop().setScale(response.scaleX,response.scaleY).setRotation(0).setOrigin(.5,1).setPosition(response.prop.x,response.prop.y);
@@ -463,12 +465,13 @@ class HomeScene extends Phaser.Scene {
   this.setLight(({Dawn:.05,Morning:0,Midday:0,Afternoon:0,Evening:.08,Bedtime:.17} as Record<string,number>)[receipt.phase]||0);
   const instantTerminal=!receipt.decisionSnapshot&&!receipt.snapshot.alive&&receipt.action==='T01'&&!receipt.choice;
   const approachPoint=this.receiptPoint(receipt,approach),sameSeatContact=isSeatedReceipt(receipt)&&this.furnitureRest==='seat'&&this.furnitureExit&&Phaser.Math.Distance.BetweenPoints(this.furnitureExit,approachPoint)<.5;
+  pb.continuingSeat=!!sameSeatContact&&receipt.action==='H04'&&receipt.success&&receipt.snapshot.alive&&receipt.events.every(event=>event.kind==='action'||event.kind==='quiet');
   const dest=instantTerminal||pb.routineHold||sameSeatContact?this.worldPoint:approachPoint;pb.route=this.routeTo(dest,!pb.routineHold&&!instantTerminal&&!sameSeatContact);
   pb.routeLength=0;for(let i=1;i<pb.route.length;i++)pb.routeLength+=Phaser.Math.Distance.BetweenPoints(pb.route[i-1],pb.route[i]);
   if(pb.routeLength>32)this.handoffCamera=undefined;
-  const timing=receiptTiming(receipt,pb.routeLength,pb.normalSlot);pb.travel=timing.travel;pb.perSlot=timing.duration;pb.elapsed=0;pb.effect=false;pb.arrived=false;this.transition.setAlpha(0);
+  const timing=receiptTiming(receipt,pb.routeLength,pb.normalSlot,{continuingSeat:!!sameSeatContact});pb.travel=timing.travel;pb.perSlot=timing.duration;pb.elapsed=0;pb.effect=false;pb.arrived=false;this.transition.setAlpha(0);
   const quietSpan=allowQuietSpan?quietSpanAt(pb.day.receipts,pb.index):undefined;
-  if(quietSpan){pb.quietSpanEnd=quietSpan.end;pb.perSlot=Math.max(pb.perSlot,1850);}
+  if(quietSpan){pb.quietSpanEnd=quietSpan.end;pb.perSlot=Math.max(pb.perSlot,timing.travel+quietSpanWorkMs(quietSpan.count));}
   this.syncMailbox();
   pb.beforeBeat=beforeActionBeat(receipt);pb.afterBeat=afterActionBeat(receipt);pb.introUntil=pb.beforeBeat?Math.min(1200,Math.max(0,pb.travel+(pb.perSlot-pb.travel)*receiptImpactFraction(receipt)-120)):0;pb.tailMs=pb.afterBeat?1100:0;pb.tailMessage=false;pb.eventFocused=false;pb.intentMessage=false;
   if(pb.beforeBeat){const lines=pb.beforeBeat.lines;this.lastMessage=lines.join('\n');this.cb.onMessage?.(lines);}
@@ -476,8 +479,16 @@ class HomeScene extends Phaser.Scene {
   this.cb.onReceipt?.(receipt,pb.index);if(notifySnapshot)this.cb.onSnapshot?.(approach,pb.index);this.cb.onProgress?.(pb.index,pb.day.receipts.length);
  }
  private showActivity(receipt:Receipt):void {
-  const pb=this.playback;if(!pb)return;const lines:[string,string]=pb.routineHold?this.furnitureRest==='bed'?['A quiet stretch.','Resting at home.']:['A quiet stretch.','The house carries on.']:[activityCaption(receipt.label),''];
+  const pb=this.playback;if(!pb)return;const lines:[string,string]=pb.routineHold||pb.continuingSeat?this.presenceLines(receipt,!!pb.continuingSeat):[activityCaption(receipt.label),''];
   this.lastMessage=lines.join('\n');this.cb.onMessage?.(lines);pb.intentMessage=true;
+ }
+ private presenceLines(receipt:Receipt,continued=false):[string,string] {
+  return quietPresenceLines({seed:this.seed,day:receipt.day,phase:receipt.phase,target:receipt.target,rest:this.furnitureRest,continued:continued||!!this.playback?.routineHold&&!!this.furnitureRest});
+ }
+ private contactMoment(receipt:Receipt,rest:'seat'|'bed'|'standing'):{key:string;elapsed:number} {
+  const key=`${receipt.day}:${receipt.target}:${rest}`;
+  if(this.presenceContact?.key!==key)this.presenceContact={key,started:this.clock};
+  return{key,elapsed:this.clock-this.presenceContact.started};
  }
  private routeTo(dest:WorldPoint,leaveFurniture=true):WorldPoint[] {
   const from={...this.worldPoint},exit=leaveFurniture?this.furnitureExit:undefined;
@@ -523,7 +534,7 @@ class HomeScene extends Phaser.Scene {
  }
  private beginEffect(receipt:Receipt):void {
   const before=this.state;this.applyState(receipt.snapshot);this.beginHouseAction(before,receipt.snapshot,receipt);this.cb.onSnapshot?.(receipt.snapshot,receipt.index);
-  const lines=this.playback?.routineHold?this.furnitureRest==='bed'?['A quiet stretch.','Resting at home.'] as [string,string]:['A quiet stretch.','The house carries on.'] as [string,string]:receipt.lines;
+  const lines=this.playback?.routineHold||this.playback?.continuingSeat?this.presenceLines(receipt,!!this.playback.continuingSeat):receipt.lines;
   const message=lines.join('\n');if(message!==this.lastMessage){this.cb.onMessage?.(lines);this.lastMessage=message;}
   const colors=receipt.success?['#f6e3a7','#b6d391']:['#c7a16a','#d48561'];
   if(receipt.action!=='T01')this.emitPixels(this.actor.x+this.facing*8,this.actor.y-12,colors[0],6);
@@ -579,9 +590,10 @@ class HomeScene extends Phaser.Scene {
  private updateActor(paused:boolean):void {
   if(paused)return;this.actor.setRotation(this.state.alive?0:-Math.PI/2);this.secondHeld.setVisible(false);
   const pb=this.playback,cadence=physicalCadence(this.seed);let pose:RoosterPose='idle';let sleeping=this.modeSleep,seated=false;let point={...this.worldPoint};
+  if(pb?.stage==='receipts'&&pb.elapsed<pb.travel&&pb.routeLength>=3)this.presenceContact=undefined;
   if(this.modeSleep)pose='sleep';else if(!this.state.alive)pose='dead';else if(pb?.stage==='ending'&&pb.elapsed<pb.travel||pb?.stage==='prelude'&&pb.preludeTarget==='store'&&pb.elapsed<900+pb.travel)pose=Math.floor(this.clock/cadence.stepMs)%2?'walk-a':'walk-b';
   else if(pb?.stage==='receipts'){
-   const receipt=pb.day.receipts[pb.index];if(pb.elapsed<pb.travel)pose=Math.floor(this.clock/cadence.stepMs)%2?'walk-a':'walk-b';else if(receipt){
+   const receipt=pb.day.receipts[pb.index];if(pb.elapsed<pb.travel&&pb.routeLength>=3)pose=Math.floor(this.clock/cadence.stepMs)%2?'walk-a':'walk-b';else if(receipt){
     const workElapsed=Math.max(0,pb.elapsed-pb.travel),workDuration=Math.max(1,pb.perSlot-pb.travel),workProgress=Math.min(1,workElapsed/workDuration);
     // A purposeful gesture starts with this action, not an unrelated world clock.
     const beat=Math.floor(workElapsed/cadence.workMs)%2;
@@ -591,12 +603,13 @@ class HomeScene extends Phaser.Scene {
     const eating=receipt.action==='H01'||receipt.action==='K07'||receipt.action.startsWith('K')&&pb.effect||receipt.action==='G05'&&receipt.variant==='apple'&&pb.effect;
     const repair=['H08','H09','H10','H11','H12','H15','H20'].includes(receipt.action);
     sleeping=receipt.action==='H03';seated=isSeatedReceipt(receipt);
+    const contact=this.contactMoment(receipt,sleeping||pb.routineHold&&this.furnitureRest==='bed'?'bed':seated||pb.routineHold&&this.furnitureRest==='seat'?'seat':'standing');
     pose=sleeping?'sleep':pb.effect&&!receipt.success?'hurt':eating?'eat':receipt.action==='H02'?'treat':receipt.action.startsWith('G')?'garden':repair?'repair':'use';
     if(!sleeping&&workProgress<.13)pose='idle';
     else if(!sleeping&&workProgress>.82&&receipt.success)pose=settlePose(this.state);
     else if(beat&&!sleeping)pose='idle';
     if(sleeping){const from=pb.route.at(-1)||this.worldPoint,t=Math.min(1,workElapsed/400);point={x:Phaser.Math.Linear(from.x,312,t),y:Phaser.Math.Linear(from.y,74,t)};this.worldPoint={...point};this.furnitureExit=targetPoint('bed');this.furnitureRest='bed';this.facing=1;}
-    if(seated){const from=pb.route.at(-1)||this.worldPoint,to=receipt.target==='baseSeat'?{x:80,y:331}:{x:168,y:this.state.house.chairAnchor?379:331},t=Math.min(1,workElapsed/320);point={x:Phaser.Math.Linear(from.x,to.x,t),y:Phaser.Math.Linear(from.y,to.y,t)};this.worldPoint={...point};this.furnitureExit=targetPoint(receipt.target,this.state.house.chairAnchor);this.furnitureRest='seat';const personality=samplePersonality({seed:this.seed,clockMs:this.clock,mode:'seated',state:this.state,facing:this.facing,target:receipt.target,activityKey:receipt.day+':'+receipt.slot,activityMs:workElapsed});pose=personality.pose;this.facing=personality.facing;}
+    if(seated){const from=pb.route.at(-1)||this.worldPoint,to=receipt.target==='baseSeat'?{x:80,y:331}:{x:168,y:this.state.house.chairAnchor?379:331},t=Math.min(1,workElapsed/320);point={x:Phaser.Math.Linear(from.x,to.x,t),y:Phaser.Math.Linear(from.y,to.y,t)};this.worldPoint={...point};this.furnitureExit=targetPoint(receipt.target,this.state.house.chairAnchor);this.furnitureRest='seat';const personality=samplePersonality({seed:this.seed,clockMs:this.clock,mode:'seated',state:this.state,facing:this.facing,target:receipt.target,activityKey:contact.key,activityMs:contact.elapsed});pose=personality.pose;this.facing=personality.facing;}
     const inputs=Object.keys(receipt.inputs) as ItemId[],input=repair&&inputs.includes('toolkit')?'toolkit':inputs[0],result=pb.effect?actionResultProp(receipt):undefined,display=result?'result-'+result:input?'item-'+input:undefined;
     const consumed=pb.effect&&(receipt.action.startsWith('G')&&receipt.action!=='G05'||pb.elapsed-pb.travel>(pb.perSlot-pb.travel)*.82);
     if(display&&this.textures.exists(display)&&this.state.alive&&!consumed){
@@ -611,11 +624,11 @@ class HomeScene extends Phaser.Scene {
     if(receipt.target==='store'){const fridge=this.props.find(p=>p.kind==='fridge')!;if(!fridge.opts.open)this.setProp(fridge,{open:true});}
     if(receipt.target==='cupboard'){const cupboard=this.props.find(p=>p.kind==='cupboard')!;if(!cupboard.opts.open)this.setProp(cupboard,{open:true});}
     if(receipt.action==='T01'){
-     const personality=samplePersonality({seed:this.seed,clockMs:this.clock,mode:seated?'seated':'quiet',state:this.state,facing:this.facing,target:receipt.target,activityKey:receipt.day+':'+receipt.slot,activityMs:workElapsed});pose=personality.pose;this.facing=personality.facing;
+     const personality=samplePersonality({seed:this.seed,clockMs:this.clock,mode:seated?'seated':'quiet',state:this.state,facing:this.facing,target:receipt.target,activityKey:contact.key,activityMs:contact.elapsed});pose=personality.pose;this.facing=personality.facing;
      if(pb.vignette?.index===pb.index&&workProgress>.16&&workProgress<.73){pose='perk';if(receipt.target==='gardenView')this.facing=workProgress<.45?1:-1;}
      this.held.setVisible(false);
      if(pb.routineHold&&this.furnitureRest==='bed'){sleeping=true;pose='sleep';this.facing=1;}
-     else if(pb.routineHold&&this.furnitureRest==='seat'){seated=true;pose=samplePersonality({seed:this.seed,clockMs:this.clock,mode:'seated',state:this.state,facing:this.facing,target:receipt.target,activityKey:receipt.day+':'+receipt.slot,activityMs:workElapsed}).pose;}
+     else if(pb.routineHold&&this.furnitureRest==='seat'){seated=true;pose=samplePersonality({seed:this.seed,clockMs:this.clock,mode:'seated',state:this.state,facing:this.facing,target:receipt.target,activityKey:contact.key,activityMs:contact.elapsed}).pose;}
     }
     if(isDeliveryCollection(receipt)){
      const home=pb.deliveryReturn,returning=!!home&&pb.elapsed>=home.start&&pb.elapsed<home.start+home.travel;
@@ -659,13 +672,16 @@ class HomeScene extends Phaser.Scene {
   const pixel=(color:number,x:number,y:number,w=1,h=1)=>{g.fillStyle(color,alpha);g.fillRect(Math.round(x),Math.round(y),w,h);};
   const glass=(color:number,x:number,y:number)=>{x=Math.round(x);y=Math.round(y);if((x>=123&&x<=132||x>=140&&x<=148)&&(y>=23&&y<=29||y>=35&&y<=41))pixel(color,x,y);};
   if(v.kind.startsWith('window-')){
+   g.setDepth(15);
    const x=121+t*31,y=27+Math.sin(t*Math.PI)*2,wing=Math.floor(t*12)%2;
    if(v.kind==='window-cloud'){for(const[dx,dy]of [[0,1],[1,0],[1,1],[2,0],[2,1],[3,1],[4,1]])glass(0xe5e6ce,x+dx,y+dy);}
    else if(v.kind==='window-bird'){for(const[dx,dy]of [[0,0],[1,0],[0,1],[1,1],[-1,-wing-1],[-2,-wing-2],[-3,-wing-2],[2,-wing-1],[3,-wing-2],[4,-wing-2]])glass(0x354f62,x+dx,y+dy);}
    else{glass(0xe6dfad,x,y);glass(0xefd69b,x-1,y-wing-1);glass(0xefd69b,x+1,y-wing-1);}
   }else{
-   const x=411+Math.sin(t*Math.PI*1.3)*27,y=351+Math.sin(t*Math.PI*4)*3,wing=Math.floor(t*14)%2;
-   if(v.kind==='garden-breeze'){const drift=404+t*42,fall=348+Math.sin(t*Math.PI)*8;pixel(0xc5cc91,drift,fall,4,2);pixel(0x9cae70,drift+1,fall-1,2,1);pixel(0x7d945a,drift+4,fall+1,1,2);pixel(0xb2c285,drift+13,fall-5,2,1);}
+   const anchor=targetPoint(pb.day.receipts[pb.index].target),baseX=anchor.x,baseY=anchor.y-22;
+   g.setDepth(anchor.y+12);
+   const x=baseX+Math.sin(t*Math.PI*1.3)*14,y=baseY+Math.sin(t*Math.PI*4)*3,wing=Math.floor(t*14)%2;
+   if(v.kind==='garden-breeze'){const drift=baseX-12+t*30,fall=baseY+Math.sin(t*Math.PI)*8;pixel(0xc5cc91,drift,fall,4,2);pixel(0x9cae70,drift+1,fall-1,2,1);pixel(0x7d945a,drift+4,fall+1,1,2);pixel(0xb2c285,drift+13,fall-5,2,1);}
    else{pixel(0x8a6b40,x,y,2,3);if(v.kind==='garden-butterfly'){pixel(0xe9e2b8,x-3,y-2-wing,3,3);pixel(0xc4d08f,x+2,y-2-wing,3,3);}else{g.fillStyle(0xf2d57e,alpha*.14);g.fillRect(Math.round(x)-2,Math.round(y)-2,6,6);pixel(0xf5df8e,x,y,2,2);}}
   }
  }

@@ -1,0 +1,175 @@
+{
+  "at": "2026-11-02T05:38:55.332Z",
+  "scope": "Actual public CPac natural default NORI3, title to ending, no seek, skip, packet override, wallet, controlled clock or API writes.",
+  "js": "/assets/index-CPacLGh4.js",
+  "viewport": [
+    390,
+    844
+  ],
+  "duration": 69646,
+  "changes": [
+    {
+      "t": 416,
+      "event": "Collecting the morning delivery ",
+      "root": "app-root screen-discover is-traveling"
+    },
+    {
+      "t": 6114,
+      "event": "Collecting the morning delivery ",
+      "root": "app-root screen-discover"
+    },
+    {
+      "t": 7325,
+      "event": "Collected the delivery. All accounted for.",
+      "root": "app-root screen-discover"
+    },
+    {
+      "t": 7792,
+      "event": "Bringing the delivery home. Back to the pantry.",
+      "root": "app-root screen-discover is-traveling"
+    },
+    {
+      "t": 14374,
+      "event": "Putting the supplies away. ",
+      "root": "app-root screen-discover"
+    },
+    {
+      "t": 14777,
+      "event": "Supplies put away. ",
+      "root": "app-root screen-discover"
+    },
+    {
+      "t": 15587,
+      "event": "A quiet stretch. The house carries on.",
+      "root": "app-root screen-discover"
+    },
+    {
+      "t": 18049,
+      "event": "Drinking water ",
+      "root": "app-root screen-discover"
+    },
+    {
+      "t": 19674,
+      "event": "Drank some water. A sensible little sip.",
+      "root": "app-root screen-discover"
+    },
+    {
+      "t": 20882,
+      "event": "A quiet stretch. The house carries on.",
+      "root": "app-root screen-discover"
+    },
+    {
+      "t": 23777,
+      "event": "Relaxing in the living room ",
+      "root": "app-root screen-discover is-traveling"
+    },
+    {
+      "t": 26639,
+      "event": "Relaxing in the living room ",
+      "root": "app-root screen-discover"
+    },
+    {
+      "t": 28279,
+      "event": "Sat like a human. Nearly.",
+      "root": "app-root screen-discover"
+    },
+    {
+      "t": 29505,
+      "event": "A quiet stretch. The house carries on.",
+      "root": "app-root screen-discover"
+    },
+    {
+      "t": 32366,
+      "event": "Relaxing in the living room ",
+      "root": "app-root screen-discover"
+    },
+    {
+      "t": 33643,
+      "event": "Sat like a human. Nearly.",
+      "root": "app-root screen-discover"
+    },
+    {
+      "t": 35260,
+      "event": "A quiet stretch. The house carries on.",
+      "root": "app-root screen-discover"
+    },
+    {
+      "t": 37678,
+      "event": "Sit for a while ",
+      "root": "app-root screen-discover"
+    },
+    {
+      "t": 38513,
+      "event": "Sat for a little while. Comfortably ordinary.",
+      "root": "app-root screen-discover"
+    },
+    {
+      "t": 38916,
+      "event": "A quiet stretch. The house carries on.",
+      "root": "app-root screen-discover"
+    },
+    {
+      "t": 40934,
+      "event": "Planting rose seeds in plot 1 ",
+      "root": "app-root screen-discover is-traveling"
+    },
+    {
+      "t": 45855,
+      "event": "Planting rose seeds in plot 1 ",
+      "root": "app-root screen-discover"
+    },
+    {
+      "t": 53242,
+      "event": "Planted rose seeds. Something to look after.",
+      "root": "app-root screen-discover"
+    },
+    {
+      "t": 56167,
+      "event": "A quiet stretch. The house carries on.",
+      "root": "app-root screen-discover"
+    },
+    {
+      "t": 59018,
+      "event": "Resting in bed ",
+      "root": "app-root screen-discover is-traveling"
+    },
+    {
+      "t": 61861,
+      "event": "Resting in bed ",
+      "root": "app-root screen-discover"
+    },
+    {
+      "t": 63536,
+      "event": "Had a little rest. Rest is important.",
+      "root": "app-root screen-discover"
+    },
+    {
+      "t": 65571,
+      "event": "A quiet stretch. Resting at home.",
+      "root": "app-root screen-discover"
+    },
+    {
+      "t": 68005,
+      "event": "Another little day. Nearly human.",
+      "root": "app-root screen-discover"
+    },
+    {
+      "t": 69646,
+      "event": "Settled in for the night. Nearly human.",
+      "root": "app-root screen-visit"
+    }
+  ],
+  "shots": [
+    "01-title",
+    "02-collected",
+    "03-return",
+    "04-middle-living",
+    "05-still-living",
+    "06-main-work",
+    "07-result",
+    "08-rest",
+    "09-ending"
+  ],
+  "errors": [],
+  "writes": []
+}

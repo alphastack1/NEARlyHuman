@@ -1,0 +1,64 @@
+{
+  "at": "2026-11-02T05:42:57.230Z",
+  "scope": "Focused pure presentation checks, actual canonical packet and32 labelled synthetic-seed cases. No provider/network/chain calls.",
+  "canonicalCameo": {
+    "index": 46,
+    "kind": "garden-firefly"
+  },
+  "canonicalCameoTarget": "plot1",
+  "allChoicesRendered": true,
+  "syntheticCases": 32,
+  "continuousSeatedContactSamples": [
+    {
+      "t": 0,
+      "pose": "idle",
+      "facing": 1
+    },
+    {
+      "t": 250,
+      "pose": "idle",
+      "facing": 1
+    },
+    {
+      "t": 400,
+      "pose": "idle",
+      "facing": 1
+    },
+    {
+      "t": 550,
+      "pose": "preen",
+      "facing": 1
+    },
+    {
+      "t": 750,
+      "pose": "preen",
+      "facing": 1
+    },
+    {
+      "t": 1050,
+      "pose": "idle",
+      "facing": 1
+    },
+    {
+      "t": 1500,
+      "pose": "idle",
+      "facing": 1
+    },
+    {
+      "t": 2500,
+      "pose": "idle",
+      "facing": 1
+    },
+    {
+      "t": 4500,
+      "pose": "idle",
+      "facing": 1
+    },
+    {
+      "t": 6000,
+      "pose": "breathe",
+      "facing": 1
+    }
+  ],
+  "packetUnchanged": true
+}

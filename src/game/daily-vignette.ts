@@ -15,11 +15,11 @@ export function planDailyVignette(day:DayResult):DailyVignette|undefined {
   const receipt=day.receipts[index];
   if(receipt.choice?.situation)episodes=receipt.choice.situation.episodes;
   const calm=!receipt.snapshot.conditions.some(condition=>!condition.resolved&&condition.kind!=='jitters')&&receipt.snapshot.needs.health>3000&&receipt.snapshot.needs.energy>2000&&receipt.snapshot.needs.morale>2000;
-  if(calm&&isUnchangedQuietReceipt(receipt,episodes)&&(receipt.target==='window'||receipt.target==='gardenView'))candidates.push(index);
-  const span=quietSpanAt(day.receipts,index);index=span?span.end:index+1;
+  if(calm&&isUnchangedQuietReceipt(receipt,episodes)&&['window','gardenView','plot1','plot2'].includes(receipt.target))candidates.push(index);
+  const span=quietSpanAt(day.receipts,index);index=span?span.end+1:index+1;
  }
  if(!candidates.length)return;
- const score=(index:number)=>{const receipt=day.receipts[index];return hash32(`vignette-v1:${day.finalState.seed}:${day.day}:${receipt.slot}`)/4294967296+(receipt.phase===daily.phase?-.55:0)+(daily.interest==='gardening'&&receipt.target==='gardenView'?-.5:0)+(daily.interest==='exploring'&&receipt.target==='window'?-.55:0)+(profile.curiosity==='inquisitive'&&receipt.target==='window'?-.15:0);};
+ const score=(index:number)=>{const receipt=day.receipts[index];return hash32(`vignette-v1:${day.finalState.seed}:${day.day}:${receipt.slot}`)/4294967296+(receipt.phase===daily.phase?-.55:0)+(daily.interest==='gardening'&&receipt.target!=='window'?-.5:0)+(daily.interest==='exploring'&&receipt.target==='window'?-.55:0)+(profile.curiosity==='inquisitive'&&receipt.target==='window'?-.15:0);};
  const index=candidates.sort((a,b)=>score(a)-score(b))[0],receipt=day.receipts[index];
  const night=receipt.phase==='Evening'||receipt.phase==='Bedtime';
  const accent=(hash32('daily-cameo:'+day.finalState.seed)+day.day)%2;

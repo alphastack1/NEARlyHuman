@@ -53,15 +53,18 @@ export function samplePersonality(context:PersonalityContext):PersonalityFrame {
  if(!state.alive)return {pose:'dead',facing:baseFacing};
  if(mode==='sleep')return {pose:'sleep',facing:baseFacing};
  const profile=deriveIndividuality(context.seed),daily=dayInclination(context.seed,state.day),identity=cosmeticHash(context.seed),moment=cosmeticHash(`${context.seed}:${context.activityKey??''}:${context.target??''}`);
- const cycle=(profile.tempo==='unhurried'?8600:profile.tempo==='brisk'?5800:7200)+identity%1100,at=positiveMod(Math.max(0,context.clockMs)+moment%cycle,cycle);
+ const contact=context.activityMs;
+ const cycle=(profile.tempo==='unhurried'?8600:profile.tempo==='brisk'?5800:7200)+identity%1100,at=positiveMod(Math.max(0,contact??context.clockMs)+moment%cycle,cycle);
  const tired=state.needs.energy<3000||state.needs.health<3000;
  let pose:RoosterPose='idle',facing=baseFacing;
  // A signature is a stable physical habit; the recorded day's soft inclination
  // spaces its occasional contact beat without inventing another activity.
- const contact=context.activityMs;
- if(contact!==undefined&&moment%3===0&&contact>140&&contact<(profile.tempo==='unhurried'?660:470)){
-  pose=tired?'doze':profile.signature;
-  return {pose,facing:baseFacing};
+ if(contact!==undefined&&(mode==='quiet'||mode==='seated')&&contact<1650){
+  const start=340+moment%150,duration=profile.tempo==='unhurried'?540:profile.tempo==='brisk'?350:440;
+  const gestures=[profile.signature,'preen','stretch'] as const;
+  if(contact>=start&&contact<start+duration)pose=tired?'doze':gestures[moment%gestures.length];
+  else if(contact>=start+duration&&contact<start+duration+100)pose='blink';
+  return{pose,facing:baseFacing};
  }
  if(at<100||at>cycle-80)pose='blink';
  else if(at>620&&at<(profile.tempo==='unhurried'?1200:980))pose=tired?'doze':'breathe';
