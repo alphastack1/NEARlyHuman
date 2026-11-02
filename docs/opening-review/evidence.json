@@ -94,5 +94,17 @@
     "title": "Return to the title",
     "image": "images/options.png",
     "note": "Options → Title screen explicitly reopens the sequence. A pending submission or rooster deep link retains priority."
+  },
+  {
+    "id": "live-title",
+    "title": "Published website · title",
+    "image": "images/live-title.png",
+    "note": "Actual nearlyhuman.netlify.app after the single final deployment. Script62asVBDm, same native pixel room/title."
+  },
+  {
+    "id": "live-play",
+    "title": "Published website · real day progressing",
+    "image": "images/live-play.png",
+    "note": "Live Start clears intro query and reaches genuine milk consumption. Config200, unchanged decision fingerprint, no page errors or submission requests."
   }
 ]

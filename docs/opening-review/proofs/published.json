@@ -1,0 +1,55 @@
+{
+  "js": "/assets/index-62asVBDm.js",
+  "at": "2026-11-02T01:29:53.450Z",
+  "url": "https://nearlyhuman.netlify.app/",
+  "phase": "closed",
+  "marks": [
+    {
+      "phase": "assembling",
+      "at": 1130.5
+    },
+    {
+      "phase": "title",
+      "at": 2960.3000000715256
+    },
+    {
+      "phase": "leaving",
+      "at": 3457.7000000476837
+    },
+    {
+      "phase": "closed",
+      "at": 3872.399999976158
+    }
+  ],
+  "start": {
+    "at": 3455.5,
+    "timestamp": 3452.8000000715256,
+    "trusted": true
+  },
+  "screen": "app-root screen-discover",
+  "body": "PEEP\nLV01\nVISIT\nDAY02\nDay log\nDrank some milk.\nThe carton won.\nTESTNET\nHatch yours\nYour home",
+  "config": {
+    "status": 200,
+    "data": {
+      "chainId": 46630,
+      "chainName": "Robinhood Chain Testnet",
+      "rpcUrl": "https://rpc.testnet.chain.robinhood.com",
+      "explorerUrl": "https://explorer.testnet.chain.robinhood.com",
+      "collection": "0x998551395f8a0c4ebd1f883b8c18a41d2cecabfb",
+      "testnet": true,
+      "model": "typesafe/jev-1.13",
+      "multiplier": 2,
+      "decisionConfig": "0x0c5befc18112324ff3de00a387297d198b6c8a183f5cfb8cda3bd1513aadf714"
+    }
+  },
+  "viewport": [
+    390,
+    844
+  ],
+  "document": [
+    390,
+    844
+  ],
+  "errors": [],
+  "writes": []
+}

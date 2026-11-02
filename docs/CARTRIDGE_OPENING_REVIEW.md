@@ -2,7 +2,7 @@
 
 The owner asked for an opening like a Game Boy/Sega cartridge: animation → title → game, with the same pixel-art treatment throughout. Direction03 was selected because the real room can carry all three stages. Earlier illustrated website-surround concepts are superseded.
 
-The [actual-build gallery](opening-review/index.html) contains16 captures, a motion recording and the focused verification records. The [chosen storyboard](../design/mockups/cartridge-openings/03-the-house-wakes-up.png) remains the visual reference. Finished assets and build processes do not depend on the scratch folder.
+The [actual-build gallery](opening-review/index.html) contains18 captures, a motion recording and the focused verification records. The [chosen storyboard](../design/mockups/cartridge-openings/03-the-house-wakes-up.png) remains the visual reference. Finished assets and build processes do not depend on the scratch folder.
 
 ## Result
 
@@ -35,7 +35,7 @@ The last paused-resize change was verified against that specific uncertainty. It
 
 ## Motion, input and startup
 
-The6.56-second [motion recording](opening-review/motion/opening.webm) captures the actual compiled D7 App on the natural browser clock: assembly, held title, Start and genuine recorded milk activity. It is a silent compositor capture, not a pre-rendered intro delivered to players. Performance measurements were taken separately because recording can affect timing. The final62 build adds the paused-resize refresh outside the clip's path.
+The6.6-second [motion recording](opening-review/motion/opening.webm) captures the actual compiled D7 App on the natural browser clock: assembly, held title, Start and genuine recorded milk activity. It is a silent compositor capture, not a pre-rendered intro delivered to players. Performance measurements were taken separately because recording can affect timing. The final62 build adds the paused-resize refresh outside the clip's path.
 
 Final measured active startup/input snapshot: `index-D7L9ExCi.js`, CSS `index-BdosObvX.css`. The published candidate is `index-62asVBDm.js`; its subsequent change only refreshes paused geometry. The [release manifest](opening-review/proofs/release-manifest.json) records both identities and current asset hashes.
 
@@ -60,4 +60,10 @@ Native fixtures prove state/packet preservation, camera bounds, queued first-dra
 
 TypeScript/build and focused whitespace/credential scans pass. No domain, codec, contract, incident RNG, legal action, model policy, server admission or trusted result changed. No new AI inference or onchain submission was purchased for this presentation sprint. Physical-phone GPUs, mobile-wallet behavior and universal audio policy remain outside the desktop/emulation evidence; previous real funded day proofs remain in the earlier review.
 
-The final deployment witness is appended after the single production push. Mainnet remains deferred.
+## Published verification
+
+The single final main push published source commit `503296dddc169d2fcfd8a8f5ff8a0c45f9d6a4b3` in Netlify deployment `6ae7e729550088b4b90522b4`, Ready at **2026-11-02T01:28:46.383Z** (2 November2026, Bangkok morning). The [actual public-browser witness](opening-review/proofs/published.json) loads `index-62asVBDm.js`, reaches the held title, starts the real recorded day and shows genuine milk consumption. The intro query clears;390×844 has no document overflow. Config returns200 with the unchanged decision fingerprint; no page errors or non-GET requests occur.
+
+This ordinary live-network check reaches the title at approximately2.96s and records trusted click-to-leaving4.9ms. It is separate from the controlled cold-cache benchmarks. [Publication record](opening-review/proofs/publication.json).
+
+The source, screenshots, movie and proof records are permanent. The publication-only documentation completion is committed locally rather than causing a second deployment. Mainnet remains deferred.
