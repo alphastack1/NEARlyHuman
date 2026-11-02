@@ -1,0 +1,60 @@
+{
+  "scope": "Focused validpositivewitness generation, pure no-leak, ABIroundtrip and sparsearray rejection.",
+  "reports": [
+    {
+      "kind": "mood",
+      "seed": 9,
+      "slot": 41,
+      "steps": 9,
+      "kits": [
+        "0",
+        "5"
+      ],
+      "elapsedMs": 195
+    },
+    {
+      "kind": "sickness",
+      "seed": 83,
+      "slot": 31,
+      "steps": 11,
+      "kits": [
+        "16",
+        "5"
+      ],
+      "elapsedMs": 188
+    },
+    {
+      "kind": "mishap",
+      "seed": 19,
+      "slot": 41,
+      "steps": 11,
+      "kits": [
+        "2048",
+        "5"
+      ],
+      "elapsedMs": 157
+    },
+    {
+      "kind": "outage",
+      "seed": 3,
+      "slot": 31,
+      "steps": 9,
+      "kits": [
+        "0",
+        "5"
+      ],
+      "elapsedMs": 215
+    },
+    {
+      "kind": "visitor",
+      "seed": 39,
+      "slot": 41,
+      "steps": 9,
+      "kits": [
+        "0",
+        "5"
+      ],
+      "elapsedMs": 208
+    }
+  ]
+}

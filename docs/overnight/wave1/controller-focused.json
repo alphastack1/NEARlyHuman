@@ -1,0 +1,70 @@
+{
+  "scope": "Actual local V2 owned-snapshot TypeScript/Solidity parity and signed controller execution, no external chain/AI/production",
+  "parity": [
+    "pre-cost-energy-100",
+    "pre-cost-energy-300",
+    "terminal-unopened-estate"
+  ],
+  "rejections": [
+    "two main actions",
+    "duplicate shipment beyond stock",
+    "missing living pickup",
+    "exhausted production",
+    "noncanonical unused arguments",
+    "prepickup ordinary plus second morning routine",
+    "hole in padded shipment",
+    "chair move before any episode",
+    "no free founder",
+    "wrong admission signer",
+    "pending transfer locked",
+    "non-relay cannot finalize",
+    "settlement replay",
+    "late finalize before expiry cleanup",
+    "double reservation release",
+    "EOA arbitrary token mint"
+  ],
+  "transactions": [
+    {
+      "label": "deploy V2ActionModule",
+      "gas": 5013862,
+      "hash": "0xc4a3a1ed442e717ecb2f35acda1bcf9eb0da5151b23d7167483d31857d010538"
+    },
+    {
+      "label": "deploy V2LifeVerifier",
+      "gas": 5180147,
+      "hash": "0x4575180f2110921965b6c815f566c610020cbe3ecb86c8f4d0a3f63d248eb1dc"
+    },
+    {
+      "label": "deploy NEARlyHumanV2",
+      "gas": 4992599,
+      "hash": "0xf4bcc5bc59e61d47b0a292a9bd5b9a2dfe8dc13c258e0fc665b7915790851a1f"
+    },
+    {
+      "label": "native paid mint",
+      "gas": 769997,
+      "hash": "0x82743482c8623d9c1edaa8a964ed1cd2bd59affbfc68363bcbe28e98dc305021"
+    },
+    {
+      "label": "signed admission",
+      "gas": 822986,
+      "hash": "0x4cef0027684c63f1c913fe8b4a94148687eb13527d877e3f0ce80b87b98e7a90"
+    },
+    {
+      "label": "verified first day",
+      "gas": 1841689,
+      "hash": "0x2659610f413e0fff6b6ee09dc3bb17f28380f80731a8a3f05a4042e627915154"
+    },
+    {
+      "label": "signed admission",
+      "gas": 712451,
+      "hash": "0x34ffbab748e62ac2ca56fa3afa2b0f39de4f568bf5085f536230a70ea771a249"
+    },
+    {
+      "label": "direct expiry",
+      "gas": 49569,
+      "hash": "0x11cc9a65fb82327b16b405ea9795dd93967e0eaf2fcb8ed1008db1033648eeb3"
+    }
+  ],
+  "mismatches": [],
+  "focusedOnly": true
+}

@@ -1,0 +1,20 @@
+import {encodeAbiParameters,decodeAbiParameters,keccak256,type Hex} from 'viem';
+import {type State,type Trace,type Certificate} from './types';
+import {assertState,kitItems} from './state';
+const field=(name:string,type:string)=>({name,type});
+export const conditionComponents=[field('severity','uint8'),field('onsetDay','uint32'),field('dueDay','uint32'),field('resolved','bool')] as const;
+export const plotComponents=[field('kind','uint8'),field('ticks','uint8'),field('left','uint8'),field('moisture','uint8'),field('dry','uint8'),field('soilBlocked','bool')] as const;
+export const houseComponents=[field('mess','uint8'),field('damage','uint8'),field('chairLife','uint8'),field('chairAnchor','uint8'),field('shelterLife','uint8'),field('umbrellaLife','uint8[4]'),field('stovePatch','uint8'),field('windowPatch','uint8'),field('chairBrace','bool'),field('windowBrace','bool'),field('dripDiverted','bool'),field('backupHeat','bool'),field('powerOut','bool'),field('fire','uint8')] as const;
+export const stateParameter={type:'tuple',components:[field('version','uint8'),field('seed','bytes32'),field('day','uint32'),field('level','uint32'),field('alive','bool'),field('deathCause','uint8'),field('stats','uint8[3]'),field('needs','uint16[5]'),field('inventory','uint32[34]'),{name:'conditions',type:'tuple[8]',components:conditionComponents},{name:'plots',type:'tuple[4]',components:plotComponents},{name:'house',type:'tuple',components:houseComponents},field('goal','uint8'),field('goalCreatedDay','uint32'),field('goalReviewDay','uint32'),field('recent','uint8[6]')]} as const;
+export const stepComponents=[field('slot','uint8'),field('op','uint8'),field('arg','uint8'),field('variant','uint8'),field('goods','uint8[4]')] as const;
+export const traceParameter={type:'tuple',components:[field('goal','uint8'),{name:'steps',type:'tuple[]',components:stepComponents}]} as const;
+export const certificateParameter={type:'tuple',components:[field('horizon','uint8'),field('kits','uint64[2]'),{name:'steps',type:'tuple[]',components:stepComponents}]} as const;
+const hex=(v:string):Hex=>{if(!/^0x(?:[a-f0-9]{2})*$/i.test(v))throw Error('Invalid encoded bytes.');return v.toLowerCase() as Hex;};
+function numbers(value:unknown):unknown{if(typeof value==='bigint'){if(value>BigInt(Number.MAX_SAFE_INTEGER))throw Error('Value is too large.');return Number(value);}if(Array.isArray(value))return value.map(numbers);if(value&&typeof value==='object')return Object.fromEntries(Object.entries(value).map(([k,v])=>[k,numbers(v)]));return value;}
+export function encodeState(s:State):Hex {assertState(s);return encodeAbiParameters([stateParameter],[s as never]);}
+export function decodeState(raw:string):State {const input=hex(raw);const state=numbers(decodeAbiParameters([stateParameter],input)[0]) as State;assertState(state);if(encodeState(state)!==input)throw Error('Noncanonical state encoding.');return state;}
+export const stateHash=(s:State):Hex=>keccak256(encodeState(s));
+export function encodeTrace(t:Trace):Hex {if(!Number.isInteger(t.goal)||t.goal!==255&&(t.goal<0||t.goal>6)||t.steps.length>16)throw Error('Invalid trace.');return encodeAbiParameters([traceParameter],[t as never]);}
+export function decodeTrace(raw:string):Trace {const input=hex(raw);const t=numbers(decodeAbiParameters([traceParameter],input)[0]) as Trace;if(encodeTrace(t)!==input)throw Error('Noncanonical trace encoding.');return t;}
+export function encodeCertificate(c?:Certificate):Hex {if(!c)return'0x';if(c.horizon!==2||c.kits.length!==2||c.steps.length>24)throw Error('Invalid care certificate.');c.kits.forEach(kitItems);return encodeAbiParameters([certificateParameter],[c as never]);}
+export function decodeCertificate(raw:string):Certificate|undefined {const input=hex(raw);if(input==='0x')return;const decoded=decodeAbiParameters([certificateParameter],input)[0] as unknown as Certificate;const c:Certificate={horizon:Number(decoded.horizon),kits:[...decoded.kits].map(BigInt),steps:numbers(decoded.steps) as Certificate['steps']};if(encodeCertificate(c)!==input)throw Error('Noncanonical care certificate.');return c;}

@@ -5,10 +5,10 @@
   "timezone": "Asia/Bangkok",
   "intervalMinutes": 60,
   "scheduledWaveCount": 6,
-  "completedWaveCount": 0,
-  "nextWave": 1,
+  "completedWaveCount": 1,
+  "nextWave": 2,
   "activeWave": null,
-  "status": "scheduled",
+  "status": "waiting",
   "owner": "PM chat only",
   "preparation": {
     "wave": 0,
@@ -25,7 +25,19 @@
     {
       "number": 1,
       "focus": "Unified authoritative V2 foundation",
-      "status": "pending"
+      "status": "complete",
+      "startedAtUtc": "2026-11-02T15:20:00Z",
+      "owners": {
+        "domain": "wave1_domain",
+        "contract": "wave1_contract",
+        "adversary": "wave1_adversary",
+        "integration": "PM"
+      },
+      "question": "Can a unified authoritative life/material kernel and contract-backed candidate replace the isolated feasibility slices without trusting supplied economic/death outcomes?",
+      "completedAtUtc": "2026-11-02T16:13:45Z",
+      "evidence": "docs/overnight/wave1/README.md",
+      "result": "UnifiedV2TS/Solauthority+signedcontrollercandidate;82cumulativeparityvectors;actualclosed57dayearning/birth;compacthistory/replayhash;canonicalpreparerandinputfences. No paidAIorpublicdeploy.",
+      "nextPriority": "CanonicalacceptanceRPCassertion,durableJevbudget/checkpoints,Dawnplan/goalbehavior;realmodelcomparisonsinwave2."
     },
     {
       "number": 2,

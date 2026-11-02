@@ -1,0 +1,416 @@
+{
+  "scope": "Independent pureTypeScript core cases. Explicit injected state cases are boundary fixtures; closedtree/apple sequences use only earned production.",
+  "report": [
+    {
+      "name": "first quick crop is collectable onDay4, neverDay3",
+      "result": "pass"
+    },
+    {
+      "name": "tree yields exactly10wood then clears and cannot harvest11th",
+      "result": "pass"
+    },
+    {
+      "name": "apple holds one output and six total pickups including first",
+      "result": "pass"
+    },
+    {
+      "name": "delayed ripe fruit never accumulates hidden outputs",
+      "result": "pass"
+    },
+    {
+      "name": "soil damage persists after harvest and blocks replanting",
+      "result": "pass"
+    },
+    {
+      "name": "exhausted main cannot consume seed or create plant; actualrest enables main",
+      "result": "pass"
+    },
+    {
+      "name": "a pre-pickup recovering action shares the morning routine budget",
+      "result": "pass"
+    },
+    {
+      "name": "living day cannot omit pickup and obtain an estate kit",
+      "result": "pass"
+    },
+    {
+      "name": "duplicate shipping beyond ownedstock reverts without mutating input",
+      "result": "pass"
+    },
+    {
+      "name": "second main and noncanonical extra arguments are rejected",
+      "result": "pass"
+    },
+    {
+      "name": "neglect causes real clinical death and no living growth onterminalday",
+      "result": "pass"
+    },
+    {
+      "name": "shipment preceding structural death is retained; actionafterdeath is rejected",
+      "result": "pass"
+    },
+    {
+      "name": "reactivated deadline proposal falls back without leaking illness or certificate effects",
+      "result": "pass"
+    },
+    {
+      "name": "valid bounded care certificate admits real mood but leaks no hypothetical kits or day",
+      "result": "pass"
+    },
+    {
+      "name": "earned wood is the same inventory consumed by a real comfort chair",
+      "result": "pass"
+    },
+    {
+      "name": "competence is fixed from pre-cost energy at100 and300 thresholds",
+      "result": "pass"
+    },
+    {
+      "name": "derived terminal before pickup retains unopened estate supplies once",
+      "result": "pass"
+    },
+    {
+      "name": "shipment holes and a chair move before any episode are unavailable",
+      "result": "pass"
+    },
+    {
+      "name": "last ordinary backup-heat failure has one separately budgeted real fire response",
+      "result": "pass"
+    },
+    {
+      "name": "coffee spends energy before capped recovery, observable on a terminal prefix",
+      "result": "pass"
+    }
+  ],
+  "vectorCount": 82,
+  "vectors": [
+    {
+      "name": "quick-day1",
+      "points": 0
+    },
+    {
+      "name": "quick-day2",
+      "points": 0
+    },
+    {
+      "name": "quick-day3",
+      "points": 0
+    },
+    {
+      "name": "quick-day4",
+      "points": 65
+    },
+    {
+      "name": "tree-day1",
+      "points": 0
+    },
+    {
+      "name": "tree-day2",
+      "points": 0
+    },
+    {
+      "name": "tree-day3",
+      "points": 0
+    },
+    {
+      "name": "tree-day4",
+      "points": 0
+    },
+    {
+      "name": "tree-day5",
+      "points": 0
+    },
+    {
+      "name": "tree-day6",
+      "points": 0
+    },
+    {
+      "name": "tree-day7",
+      "points": 0
+    },
+    {
+      "name": "tree-day8",
+      "points": 0
+    },
+    {
+      "name": "tree-day9",
+      "points": 0
+    },
+    {
+      "name": "tree-day10",
+      "points": 0
+    },
+    {
+      "name": "tree-day11",
+      "points": 0
+    },
+    {
+      "name": "tree-day12",
+      "points": 0
+    },
+    {
+      "name": "tree-day13",
+      "points": 0
+    },
+    {
+      "name": "tree-day14",
+      "points": 0
+    },
+    {
+      "name": "tree-day15",
+      "points": 0
+    },
+    {
+      "name": "tree-day16",
+      "points": 0
+    },
+    {
+      "name": "tree-day17",
+      "points": 0
+    },
+    {
+      "name": "tree-day18",
+      "points": 0
+    },
+    {
+      "name": "tree-day19",
+      "points": 0
+    },
+    {
+      "name": "tree-day20",
+      "points": 0
+    },
+    {
+      "name": "tree-day21",
+      "points": 0
+    },
+    {
+      "name": "tree-day22",
+      "points": 0
+    },
+    {
+      "name": "tree-day23",
+      "points": 0
+    },
+    {
+      "name": "tree-day24",
+      "points": 0
+    },
+    {
+      "name": "tree-day25",
+      "points": 0
+    },
+    {
+      "name": "earned-spoon",
+      "points": 116
+    },
+    {
+      "name": "apple-day1",
+      "points": 0
+    },
+    {
+      "name": "apple-day2",
+      "points": 0
+    },
+    {
+      "name": "apple-day3",
+      "points": 0
+    },
+    {
+      "name": "apple-day4",
+      "points": 0
+    },
+    {
+      "name": "apple-day5",
+      "points": 0
+    },
+    {
+      "name": "apple-day6",
+      "points": 0
+    },
+    {
+      "name": "apple-day7",
+      "points": 0
+    },
+    {
+      "name": "apple-day8",
+      "points": 0
+    },
+    {
+      "name": "apple-day9",
+      "points": 0
+    },
+    {
+      "name": "apple-day10",
+      "points": 0
+    },
+    {
+      "name": "apple-day11",
+      "points": 0
+    },
+    {
+      "name": "apple-day12",
+      "points": 0
+    },
+    {
+      "name": "apple-day13",
+      "points": 0
+    },
+    {
+      "name": "apple-day14",
+      "points": 0
+    },
+    {
+      "name": "apple-day15",
+      "points": 0
+    },
+    {
+      "name": "apple-day16",
+      "points": 0
+    },
+    {
+      "name": "apple-day17",
+      "points": 0
+    },
+    {
+      "name": "apple-day18",
+      "points": 0
+    },
+    {
+      "name": "apple-day19",
+      "points": 0
+    },
+    {
+      "name": "held-grape-day1",
+      "points": 0
+    },
+    {
+      "name": "held-grape-day2",
+      "points": 0
+    },
+    {
+      "name": "held-grape-day3",
+      "points": 0
+    },
+    {
+      "name": "held-grape-day4",
+      "points": 0
+    },
+    {
+      "name": "held-grape-day5",
+      "points": 0
+    },
+    {
+      "name": "held-grape-day6",
+      "points": 0
+    },
+    {
+      "name": "held-grape-day7",
+      "points": 0
+    },
+    {
+      "name": "held-grape-day8",
+      "points": 0
+    },
+    {
+      "name": "held-grape-day9",
+      "points": 0
+    },
+    {
+      "name": "held-grape-day10",
+      "points": 0
+    },
+    {
+      "name": "held-grape-day11",
+      "points": 0
+    },
+    {
+      "name": "held-grape-day12",
+      "points": 0
+    },
+    {
+      "name": "held-grape-day13",
+      "points": 0
+    },
+    {
+      "name": "held-grape-day14",
+      "points": 0
+    },
+    {
+      "name": "held-grape-day15",
+      "points": 0
+    },
+    {
+      "name": "blocked-final-harvest",
+      "points": 0
+    },
+    {
+      "name": "real-compost-main",
+      "points": 0
+    },
+    {
+      "name": "rest-then-main",
+      "points": 0
+    },
+    {
+      "name": "neglect-day1",
+      "points": 0
+    },
+    {
+      "name": "neglect-day2",
+      "points": 0
+    },
+    {
+      "name": "neglect-day3",
+      "points": 0
+    },
+    {
+      "name": "ship-before-death",
+      "points": 40
+    },
+    {
+      "name": "deadline-softened",
+      "points": 0
+    },
+    {
+      "name": "invalid-certificate-softened",
+      "points": 0
+    },
+    {
+      "name": "mood-softened-without-cert",
+      "points": 0
+    },
+    {
+      "name": "mood-with-valid-care-cert",
+      "points": 0
+    },
+    {
+      "name": "earned-wood-comfort-chair",
+      "points": 0
+    },
+    {
+      "name": "pre-cost-energy-100",
+      "points": 0
+    },
+    {
+      "name": "pre-cost-energy-300",
+      "points": 0
+    },
+    {
+      "name": "terminal-unopened-estate",
+      "points": 0
+    },
+    {
+      "name": "last-routine-fire-unanswered",
+      "points": 0
+    },
+    {
+      "name": "last-routine-fire-doused",
+      "points": 0
+    },
+    {
+      "name": "coffee-pre-cost-capped-recovery",
+      "points": 0
+    }
+  ]
+}
