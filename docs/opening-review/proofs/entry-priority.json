@@ -1,0 +1,53 @@
+{
+  "at": "2026-11-02T00:35:38.202Z",
+  "results": [
+    {
+      "name": "options-force-over-seen-selected",
+      "pass": true,
+      "bypassed": false,
+      "afterStart": "http://localhost:5177/",
+      "reloaded": true,
+      "errors": [],
+      "writes": []
+    },
+    {
+      "name": "forced-url-preserves-context",
+      "pass": true,
+      "bypassed": false,
+      "afterStart": "http://localhost:5177/?keep=yes#room",
+      "reloaded": true,
+      "errors": [],
+      "writes": []
+    },
+    {
+      "name": "forced-pending-hash-priority",
+      "pass": true,
+      "bypassed": true,
+      "errors": [],
+      "writes": []
+    },
+    {
+      "name": "forced-pending-permit-priority",
+      "pass": true,
+      "bypassed": true,
+      "errors": [],
+      "writes": []
+    },
+    {
+      "name": "forced-deeplink-priority",
+      "pass": true,
+      "bypassed": true,
+      "errors": [],
+      "writes": []
+    },
+    {
+      "name": "malformed-marker-does-not-block",
+      "pass": true,
+      "bypassed": false,
+      "afterStart": "http://localhost:5177/?keep=yes#room",
+      "reloaded": true,
+      "errors": [],
+      "writes": []
+    }
+  ]
+}

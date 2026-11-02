@@ -36,6 +36,8 @@ The [service guide](docs/service.md), [contract guide](docs/chain.md), [domain n
 
 ## Design references
 
+The [cartridge opening review](docs/CARTRIDGE_OPENING_REVIEW.md) and [actual-build motion/screenshot gallery](docs/opening-review/index.html) cover the selected House Wakes Up sequence, full-browser room, responsive camera and input/startup refinement waves. Open the title explicitly with [the intro link](https://nearlyhuman.netlify.app/?intro=1), or Options → Title screen.
+
 The [individuality and first-use review](docs/VARIETY_AND_FIRST_USE_REVIEW.md) and [comparison gallery](docs/variety-review/index.html) cover persistent preferences, genuine model timing comparisons, recorded-event clarity and the wallet-free first visit.
 
 The [NPC and house presence review](docs/HOUSE_PRESENCE_REVIEW.md) and [interactive-house evidence gallery](docs/house-review/index.html) cover the later care exploration, physical mannerisms, object responses and useful stock/plot readers.

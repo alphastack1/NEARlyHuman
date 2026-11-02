@@ -14,6 +14,9 @@ import { BEDROOM_VIEW, HOUSE_ROOMS, constrainHouseView, roomAtView, type HouseRo
 import { samplePersonality, sampleAttention, physicalCadence, settlePose, NPC_ATTENTION_MS, NPC_ATTENTION_COOLDOWN_MS } from './personality';
 import { beforeActionBeat, afterActionBeat, hasRecordedRain, type RecordedBeat } from './recorded-events';
 import { planDailyVignette, type DailyVignette } from './daily-vignette';
+import { OPENING_ASSEMBLY_MS, OPENING_EXIT_MS, openingEase, openingTileTime, openingPropTime } from './opening';
+
+export type OpeningPhase='title'|'finished';
 
 export interface WorldCallbacks {
  onReceipt?:(receipt:Receipt,index:number)=>void;
@@ -24,11 +27,14 @@ export interface WorldCallbacks {
  onInspect?:(target:TargetId)=>void;
  onViewChange?:(view:HouseView)=>void;
  onMotion?:(motion:{traveling:boolean})=>void;
+ onOpeningPhase?:(phase:OpeningPhase)=>void;
 }
 export interface SavePresentation { sleep?:boolean; dim?:boolean; focus?:TargetId }
 export interface PlaybackOptions { startIndex?:number; durationMs?:number; skipDelivery?:boolean }
 export interface WorldController {
  ready:Promise<void>;
+ beginOpening:(source?:GameState|(()=>GameState))=>void;finishOpening:()=>void;
+ setViewportInsets:(top:number,bottom:number,left?:number,right?:number)=>void;
  showSave:(state?:GameState,options?:SavePresentation)=>void;
  playDay:(day:DayResult,options?:PlaybackOptions)=>void;
  pause:()=>void;resume:()=>void;skip:()=>void;seek:(index:number)=>void;
@@ -45,6 +51,9 @@ interface Playback {day:DayResult;index:number;elapsed:number;normalSlot:number;
 interface HouseGesture {pointer:number;x:number;y:number;view:WorldPoint;prop?:Prop;actor?:boolean;dragging:boolean}
 interface HouseResponse {prop:Prop;elapsed:number;duration:number;scaleX:number;scaleY:number;leaf?:Phaser.GameObjects.Image}
 interface HouseAction {kind:'move'|'reveal';prop:Prop;elapsed:number;duration:number;fromY:number;toY:number;actorFrom?:WorldPoint;actorTo?:WorldPoint}
+interface OpeningProp {prop:Prop;scaleX:number;scaleY:number;alpha:number;visible:boolean}
+interface Opening {elapsed:number;stage:'assembling'|'title'|'leaving';leaving:number;props:OpeningProp[]}
+interface SpritePixels {left:number;top:number;right:number;bottom:number}
 
 const ACTIVITY_VERBS:Record<string,string>={Make:'Making',Cook:'Cooking',Drink:'Drinking',Eat:'Eating',Treat:'Treating',Bandage:'Bandaging',Rest:'Resting',Enjoy:'Enjoying',Relax:'Relaxing',Tidy:'Tidying','Deep-clean':'Deep-cleaning',Wipe:'Wiping',Wash:'Washing',Repair:'Repairing',Build:'Building',Patch:'Patching',Brace:'Bracing',Divert:'Diverting',Cover:'Covering',Light:'Lighting',Douse:'Dousing',Shut:'Shutting',Shoo:'Shooing',Plant:'Planting',Water:'Watering',Fertilize:'Fertilizing',Restore:'Restoring',Harvest:'Harvesting',Abandon:'Abandoning',Move:'Moving',Watch:'Watching',Check:'Checking',Look:'Looking',Visit:'Visiting',Wander:'Wandering'};
 function activityCaption(label:string):string {return label.replace(/^\S+/,verb=>ACTIVITY_VERBS[verb]||verb);}
@@ -68,7 +77,7 @@ class HomeScene extends Phaser.Scene {
  private fireFx!:Phaser.GameObjects.Graphics;private messFx!:Phaser.GameObjects.Graphics;private taskFx!:Phaser.GameObjects.Graphics;
  private worldPoint:WorldPoint={x:312,y:88};private cameraPoint:WorldPoint={...BEDROOM_VIEW};
  private readyResolve:()=>void;
- private muted=false;private audio:AudioContext|null=null;private lastStep=0;
+ private muted=false;private audio:AudioContext|null=null;private audioReady:Promise<void>|null=null;private lastStep=0;
  private lastMessage='';
  private ambientFx!:Phaser.GameObjects.Graphics;
  private homeSeed='';
@@ -83,13 +92,22 @@ class HomeScene extends Phaser.Scene {
  private attentionAt?:number;private lastAttention=-Infinity;private attentionFacing=1;
  private motion=false;
  private vignetteFx!:Phaser.GameObjects.Graphics;
+ private opening?:Opening;private openingCovers!:Phaser.GameObjects.Graphics;private openingFx!:Phaser.GameObjects.Graphics;
+ private kitchenCounter!:Phaser.GameObjects.Graphics;
+ private openingHandoff=false;private handoffCamera?:{index:number;x:number};private desiredZoom=1.1;
+ private viewportTop=38;private viewportBottom=36;private viewportLeft=0;private viewportRight=0;private insetTopCSS=38;private insetBottomCSS=36;private insetLeftCSS=0;private insetRightCSS=0;private cssScale=1;private logicalWidth=256;private logicalHeight=256;
+ private spritePixelBounds=new WeakMap<Phaser.Textures.Frame,SpritePixels>();
 
  constructor(cb:WorldCallbacks,readyResolve:()=>void){super('home');this.cb=cb;this.readyResolve=readyResolve;}
  preload():void {
   for(const[key,url]of Object.entries(PROP_URLS))this.load.image('asset-'+key,url);
  }
  create():void {
-  this.cameras.main.setViewport(0,38,256,182).setBounds(0,0,WORLD_WIDTH,WORLD_HEIGHT).setZoom(1.1).setRoundPixels(true);
+  this.cameras.main.setViewport(0,0,this.logicalWidth,this.logicalHeight).setZoom(1.1).setRoundPixels(true);
+  // UI may cover part of the camera. Continue the actual outer wall tile beneath those covered edges,
+  // while our safe-area clamp keeps the unobstructed view inside the canonical map.
+  this.textures.addCanvas('home-margin',canvasArt(16,16,p=>{p('#705236',0,0,16,16);p('#82603c',1,1,14,14);p('#967049',1,1,14,1);}));
+  this.add.tileSprite(-WORLD_WIDTH,-WORLD_HEIGHT,WORLD_WIDTH*3,WORLD_HEIGHT*3,'home-margin').setOrigin(0).setDepth(-2);
   this.textures.addCanvas('home-floor',houseCanvas());this.floorImage=this.add.image(0,0,'home-floor').setOrigin(0).setDepth(0);
   for(const id of ITEM_IDS)this.textures.addCanvas('item-'+id,canvasArt(16,16,p=>drawItem(p,id)));
   for(const id of ACTION_PROPS)this.textures.addCanvas('result-'+id,actionPropCanvas(id));
@@ -97,7 +115,7 @@ class HomeScene extends Phaser.Scene {
   const add=(kind:FixtureArt,x:number,y:number,id?:TargetId,opts:ArtOptions={})=>this.addProp(kind,x,y,id,opts);
   add('window',136,48,'window');add('fridge',72,80,'store');add('pantry',120,80,'store');add('stove',176,80,'stove');add('prep',208,80,'prep');
   // A continuous functional counter run; narrow infill does not add an activity.
-  const counter=this.add.graphics().setDepth(48);counter.fillStyle(0x523c2a);counter.fillRect(82,53,143,28);counter.fillStyle(0xbf8c52);counter.fillRect(82,53,143,5);counter.fillStyle(0xdda96b);counter.fillRect(83,53,141,1);counter.fillStyle(0x9c7042);counter.fillRect(83,60,141,18);for(const[x,w]of [[86,17],[138,21]]){counter.fillStyle(0x6e4e32);counter.fillRect(x,60,w,18);counter.fillStyle(0xa77947);counter.fillRect(x+1,61,w-2,15);counter.fillStyle(0xc09258);counter.fillRect(x+1,61,w-2,1);counter.fillStyle(0xdfbd78);counter.fillRect(x+w-4,66,1,3);}counter.fillStyle(0x66472e);counter.fillRect(83,79,141,2);
+  const counter=this.kitchenCounter=this.add.graphics().setDepth(48);counter.fillStyle(0x523c2a);counter.fillRect(82,53,143,28);counter.fillStyle(0xbf8c52);counter.fillRect(82,53,143,5);counter.fillStyle(0xdda96b);counter.fillRect(83,53,141,1);counter.fillStyle(0x9c7042);counter.fillRect(83,60,141,18);for(const[x,w]of [[86,17],[138,21]]){counter.fillStyle(0x6e4e32);counter.fillRect(x,60,w,18);counter.fillStyle(0xa77947);counter.fillRect(x+1,61,w-2,15);counter.fillStyle(0xc09258);counter.fillRect(x+1,61,w-2,1);counter.fillStyle(0xdfbd78);counter.fillRect(x+w-4,66,1,3);}counter.fillStyle(0x66472e);counter.fillRect(83,79,141,2);
   add('plant',47,87);add('shelf',207,37);add('table',124,160);add('plant',56,183);
   add('bed',312,112,'bed');add('bedside',354,101);add('cupboard',432,80,'cupboard');add('plant',395,79);add('painting',284,48);add('painting',449,153);add('shelf',345,177);
   add('baseSeat',80,336,'baseSeat');add('plant',115,323);add('painting',69,292);add('painting',172,292);add('plant',193,379);
@@ -116,8 +134,9 @@ class HomeScene extends Phaser.Scene {
   this.ambientFx=this.add.graphics().setDepth(13);
   this.vignetteFx=this.add.graphics().setDepth(15);
   this.houseFx=this.add.graphics().setDepth(478);
-  this.night=this.add.rectangle(0,0,640,500,0x192945,1).setOrigin(0).setScrollFactor(0).setDepth(900).setAlpha(.22);
-  this.transition=this.add.rectangle(0,0,640,500,0x182d3d,1).setOrigin(0).setScrollFactor(0).setDepth(950).setAlpha(0);
+  this.night=this.add.rectangle(0,0,WORLD_WIDTH,WORLD_HEIGHT,0x192945,1).setOrigin(0).setDepth(900).setAlpha(.22);
+  this.transition=this.add.rectangle(0,0,WORLD_WIDTH,WORLD_HEIGHT,0x182d3d,1).setOrigin(0).setDepth(950).setAlpha(0);
+  this.openingCovers=this.add.graphics().setDepth(1);this.openingFx=this.add.graphics().setDepth(720);
   this.inspectFx=this.add.graphics().setDepth(960);
   this.actor.setInteractive(new Phaser.Geom.Rectangle(8,12,20,25),Phaser.Geom.Rectangle.Contains);this.actor.input!.cursor='pointer';this.actor.input!.enabled=false;
   this.input.on('gameobjectdown',(pointer:Phaser.Input.Pointer,object:Phaser.GameObjects.GameObject)=>{
@@ -131,7 +150,104 @@ class HomeScene extends Phaser.Scene {
   this.input.on('pointermove',(pointer:Phaser.Input.Pointer)=>this.moveGesture(pointer));
   this.input.on('pointerup',(pointer:Phaser.Input.Pointer)=>this.endGesture(pointer));
   this.input.on('pointerupoutside',()=>{this.gesture=undefined;});
-  this.input.enabled=this.inputEnabled;this.applyState(this.state);this.setSave(this.state);this.initialized=true;this.readyResolve();for(const q of this.queued)q();this.queued=[];
+  this.input.enabled=this.inputEnabled;this.applyState(this.state);this.prepareAudio();this.initialized=true;this.setSave(this.state);this.resizeWorld(this.logicalWidth,this.logicalHeight,this.cssScale);this.readyResolve();for(const q of this.queued)q();this.queued=[];
+ }
+ public resizeWorld(width:number,height:number,cssScale:number):void {
+  this.logicalWidth=width;this.logicalHeight=height;this.cssScale=Math.max(.1,cssScale);
+  this.viewportTop=this.insetTopCSS/this.cssScale;this.viewportBottom=this.insetBottomCSS/this.cssScale;
+  this.viewportLeft=this.insetLeftCSS/this.cssScale;this.viewportRight=this.insetRightCSS/this.cssScale;
+  if(!this.initialized)return;
+  this.cameras.main.setViewport(0,0,width,height).setZoom(Math.max(this.desiredZoom,width/WORLD_WIDTH,height/WORLD_HEIGHT));
+  if(this.explorePoint)this.explorePoint=this.constrainPoint(this.explorePoint);this.centerCamera(true);
+ }
+ public viewportInsets(top:number,bottom:number,left=0,right=0):void {
+  this.insetTopCSS=Math.max(0,top);this.insetBottomCSS=Math.max(0,bottom);
+  this.insetLeftCSS=Math.max(0,left);this.insetRightCSS=Math.max(0,right);
+  this.viewportTop=this.insetTopCSS/this.cssScale;this.viewportBottom=this.insetBottomCSS/this.cssScale;
+  this.viewportLeft=this.insetLeftCSS/this.cssScale;this.viewportRight=this.insetRightCSS/this.cssScale;
+  // A paused film has no follow tick to apply the fresh DOM geometry after a resize.
+  if(this.initialized&&(this.playback?.paused||this.exploreEnabled&&!this.inputEnabled))this.centerCamera(true);
+ }
+ private constrainPoint(point:WorldPoint):WorldPoint {const c=this.cameras.main;return constrainHouseView(point,c.zoom,c.width,c.height,this.viewportTop,this.viewportBottom,this.viewportLeft,this.viewportRight);}
+ /** Place the subject in the usable part of a full-bleed world, without clipping the world behind UI. */
+ private framePoint(point:WorldPoint):WorldPoint {const z=this.cameras.main.zoom;return this.constrainPoint({x:point.x-(this.viewportLeft-this.viewportRight)/(2*z),y:point.y-(this.viewportTop-this.viewportBottom)/(2*z)});}
+ /** Following protects the entire sprite, including headgear, when the usable area is short. */
+ private frameActor(point:WorldPoint):WorldPoint {
+  if(!this.actor.visible)return point;const c=this.cameras.main,full=this.actor.getBounds(),halfW=c.width/(2*c.zoom),halfH=c.height/(2*c.zoom),margin=3/c.zoom;
+  let b:SpritePixels=full;
+  // Transparent texture padding can exceed a short display even when the visible rooster fits.
+  // Keep the conservative full-texture rule normally; read each procedural frame's alpha once only.
+  if(full.width>(c.width-this.viewportLeft-this.viewportRight)/c.zoom-margin*2||full.height>(c.height-this.viewportTop-this.viewportBottom)/c.zoom-margin*2)b=this.visibleActorBounds()||full;
+  const minX=b.right-halfW+this.viewportRight/c.zoom+margin,maxX=b.left+halfW-this.viewportLeft/c.zoom-margin;
+  const minY=b.bottom-halfH+this.viewportBottom/c.zoom+margin,maxY=b.top+halfH-this.viewportTop/c.zoom-margin;
+  return this.constrainPoint({x:minX<=maxX?Phaser.Math.Clamp(point.x,minX,maxX):point.x,y:minY<=maxY?Phaser.Math.Clamp(point.y,minY,maxY):point.y});
+ }
+ private visibleActorBounds():SpritePixels|undefined {
+  const actor=this.actor,frame=actor.frame;let pixels=this.spritePixelBounds.get(frame);
+  if(!pixels){
+   const source=frame.source.image as HTMLCanvasElement;if(typeof source?.getContext!=='function')return;
+   const context=source.getContext('2d');if(!context)return;const width=source.width,height=source.height,data=context.getImageData(0,0,width,height).data;
+   let left=width,top=height,right=0,bottom=0;
+   for(let y=0;y<height;y++)for(let x=0;x<width;x++)if(data[(y*width+x)*4+3]){left=Math.min(left,x);top=Math.min(top,y);right=Math.max(right,x+1);bottom=Math.max(bottom,y+1);}
+   if(!right||!bottom)return;pixels={left,top,right,bottom};this.spritePixelBounds.set(frame,pixels);
+  }
+  const matrix=actor.getWorldTransformMatrix();let left=Infinity,top=Infinity,right=-Infinity,bottom=-Infinity;
+  for(const[x,y]of [[pixels.left,pixels.top],[pixels.right,pixels.top],[pixels.right,pixels.bottom],[pixels.left,pixels.bottom]]){
+   const p=matrix.transformPoint((actor.flipX?actor.width-x:x)-actor.displayOriginX,(actor.flipY?actor.height-y:y)-actor.displayOriginY);
+   left=Math.min(left,p.x);top=Math.min(top,p.y);right=Math.max(right,p.x);bottom=Math.max(bottom,p.y);
+  }
+  return{left,top,right,bottom};
+ }
+ public beginOpening(source:GameState|(()=>GameState)=demoState):void {this.enqueue(()=>{
+  const state=typeof source==='function'?source():source;
+  this.clearOpening();this.resetPresence();this.playback=null;this.clearParticles();this.closeStorage();this.applyState(state);
+  this.modeSleep=false;this.blanket.setVisible(false);this.held.setVisible(false);this.secondHeld.setVisible(false);this.transition.setAlpha(0);this.setLight(0);this.inspectFx.clear();this.taskFx.clear();this.houseFx.clear();this.vignetteFx.clear();
+  this.actor.setVisible(state.alive).setRotation(0).setAlpha(1);this.shadow.setVisible(state.alive).setAlpha(1);for(const z of this.zeds)z.setVisible(false);
+  this.worldPoint=targetPoint('store');this.actor.setPosition(this.worldPoint.x,this.worldPoint.y);this.shadow.setPosition(this.worldPoint.x,this.worldPoint.y+1);this.facing=1;this.pose('perk');
+  this.opening={elapsed:0,stage:'assembling',leaving:0,props:this.props.map(prop=>({prop,scaleX:prop.image.scaleX,scaleY:prop.image.scaleY,alpha:prop.image.alpha,visible:prop.image.visible}))};
+  this.cameraPoint=this.framePoint({x:136,y:120});this.cameras.main.centerOn(Math.round(this.cameraPoint.x),Math.round(this.cameraPoint.y));this.drawOpening(0);
+ });}
+ public finishOpening():void {this.enqueue(()=>{
+  if(!this.opening)return;
+  if(this.opening.stage==='leaving')return;
+  this.opening.stage='leaving';this.opening.leaving=0;
+  // Complete assembly before leaving, including a skip in its first frame.
+  this.opening.elapsed=OPENING_ASSEMBLY_MS;this.drawOpening(0);this.openAudio(()=>this.tone('use'));
+ });}
+ private clearOpening():void {
+  const opening=this.opening;if(!opening)return;
+  for(const {prop,scaleX,scaleY,alpha,visible}of opening.props){prop.image.setPosition(prop.x,prop.y).setScale(scaleX,scaleY).setAlpha(alpha).setVisible(visible);prop.shadow?.setAlpha(1).setPosition(prop.x+1,prop.y+1).setVisible(visible);}
+  this.openingCovers.clear();this.openingFx.clear();this.kitchenCounter.setAlpha(1);this.actor.setAlpha(1);this.shadow.setAlpha(1);this.opening=undefined;
+ }
+ private drawOpening(dt:number):void {
+  const opening=this.opening;if(!opening)return;
+  if(opening.stage==='assembling')opening.elapsed=Math.min(OPENING_ASSEMBLY_MS,opening.elapsed+dt);
+  if(opening.stage==='leaving')opening.leaving+=dt;
+  const elapsed=opening.elapsed,cover=this.openingCovers,fx=this.openingFx;cover.clear();fx.clear();
+  if(opening.stage==='assembling'||opening.stage==='leaving'&&opening.leaving===0){
+  // Reveal the existing floor in a short, staggered tile wave. No duplicate map or texture downloads.
+  for(let y=0;y<WORLD_HEIGHT;y+=16)for(let x=0;x<WORLD_WIDTH;x+=16){
+   const t=Math.max(0,Math.min(1,(elapsed-openingTileTime(x,y))/310));
+   if(t<1){cover.fillStyle(0x172c3b,1-openingEase(t));cover.fillRect(x,y,16,16);}
+   if(t>.08&&t<.85){const lift=Math.round((1-t)*8);fx.fillStyle((x+y)%48?0xf3ddb0:0x8dcce3,Math.sin(t*Math.PI)*.7);fx.fillRect(x+4,y+3-lift,2,2);}
+  }
+  this.kitchenCounter.setAlpha(openingEase((elapsed-240)/250));
+  for(const entry of opening.props){
+   const {prop}=entry,t=Math.max(0,Math.min(1,(elapsed-openingPropTime(prop.x,prop.y))/350));
+   const rise=1-openingEase(t),bounce=t<1?Math.sin(t*Math.PI*2)*(1-t)*.08:0;
+   prop.image.setAlpha(entry.alpha*Math.min(1,t*3)).setY(prop.y-Math.round(rise*12)).setScale(entry.scaleX*(1+bounce),entry.scaleY*(1-bounce));
+   prop.shadow?.setAlpha(Math.min(1,t*2)).setPosition(prop.x+1,prop.y+1);
+   if(entry.visible&&t>.2&&t<.85){const s=Math.sin(t*Math.PI);fx.fillStyle(0xffecc5,s*.85);fx.fillRect(prop.x-6,prop.y-4-Math.round(t*12),2,2);fx.fillStyle(0x94cde4,s*.7);fx.fillRect(prop.x+7,prop.y-8-Math.round(t*9),1,3);}
+  }
+  }
+  this.actor.setAlpha(Math.min(1,elapsed/210));this.shadow.setAlpha(Math.min(1,elapsed/210));
+  this.pose(opening.stage==='title'?(Math.floor(this.clock/1200)%4===0?'peek':'idle'):'perk');this.actor.setPosition(this.worldPoint.x,this.worldPoint.y).setDepth(this.worldPoint.y+1);
+  this.drawAmbient();this.centerCamera(true);
+  if(opening.stage==='assembling'&&elapsed>=OPENING_ASSEMBLY_MS){opening.stage='title';cover.clear();fx.clear();this.cb.onOpeningPhase?.('title');}
+  if(opening.stage==='title'){
+   const t=this.clock/550;for(let i=0;i<4;i++){const x=101+i*23,y=102+Math.round(Math.sin(t+i)*7),a=.25+Math.sin(t+i)*.15;fx.fillStyle(i%2?0xf1d79c:0xa6d8e1,a);fx.fillRect(x,y,1,1);}
+  }
+  if(opening.stage==='leaving'&&opening.leaving>=OPENING_EXIT_MS){this.clearOpening();this.openingHandoff=true;this.cb.onOpeningPhase?.('finished');}
  }
  private texture(kind:FixtureArt,opts:ArtOptions={}):string {
   const key=fixtureTextureKey(kind,opts);if(this.textures.exists(key))return key;
@@ -171,7 +287,7 @@ class HomeScene extends Phaser.Scene {
   return p;
  }
  private setProp(prop:Prop,opts:ArtOptions):void {prop.opts=opts;prop.image.setTexture(this.texture(prop.kind,opts));}
- private acceptsPointer(pointer:Phaser.Input.Pointer):boolean {return this.inputEnabled&&pointer.event?.target===this.game.canvas&&pointer.y>=38&&pointer.y<=220;}
+ private acceptsPointer(pointer:Phaser.Input.Pointer):boolean {return !this.opening&&this.inputEnabled&&pointer.event?.target===this.game.canvas&&pointer.y>=this.viewportTop&&pointer.y<=this.logicalHeight-this.viewportBottom&&pointer.x>=this.viewportLeft&&pointer.x<=this.logicalWidth-this.viewportRight;}
  private beginGesture(pointer:Phaser.Input.Pointer,prop?:Prop,actor=false):void {
   if(!this.acceptsPointer(pointer))return;
   this.gesture={pointer:pointer.id,x:pointer.x,y:pointer.y,view:{...this.cameraPoint},prop,actor,dragging:false};
@@ -180,7 +296,7 @@ class HomeScene extends Phaser.Scene {
   const gesture=this.gesture;if(!gesture||gesture.pointer!==pointer.id||!this.inputEnabled)return;
   const dx=pointer.x-gesture.x,dy=pointer.y-gesture.y;
   if(!gesture.dragging&&Math.hypot(dx,dy)<6)return;
-  gesture.dragging=true;if(!this.exploreEnabled)return;this.exploring=true;this.explorePoint=constrainHouseView({x:gesture.view.x-dx/this.cameras.main.zoom,y:gesture.view.y-dy/this.cameras.main.zoom},this.cameras.main.zoom);
+  gesture.dragging=true;if(!this.exploreEnabled)return;this.exploring=true;this.explorePoint=this.constrainPoint({x:gesture.view.x-dx/this.cameras.main.zoom,y:gesture.view.y-dy/this.cameras.main.zoom});
   this.cameraPoint={...this.explorePoint};this.cameras.main.centerOn(Math.round(this.cameraPoint.x),Math.round(this.cameraPoint.y));this.notifyView();
  }
  private endGesture(pointer:Phaser.Input.Pointer):void {
@@ -202,7 +318,7 @@ class HomeScene extends Phaser.Scene {
   if(!enabled){this.exploring=false;this.explorePoint=undefined;this.clearResponse();this.lampOn=true;this.attentionAt=undefined;this.notifyView();}
   if(this.initialized){for(const prop of this.props)if(prop.image.input)prop.image.input.enabled=!!prop.id||enabled;this.actor.input!.enabled=enabled&&this.state.alive;}
  }
- public focus(room:HouseRoom):void {this.enqueue(()=>{if(!this.exploreEnabled||!this.inputEnabled)return;const target=HOUSE_ROOMS.find(r=>r.id===room);if(!target)return;this.gesture=undefined;this.exploring=true;this.explorePoint=constrainHouseView(target,this.cameras.main.zoom);this.notifyView();});}
+ public focus(room:HouseRoom):void {this.enqueue(()=>{if(!this.exploreEnabled||!this.inputEnabled)return;const target=HOUSE_ROOMS.find(r=>r.id===room);if(!target)return;this.gesture=undefined;this.exploring=true;this.explorePoint=this.framePoint(target);this.notifyView();});}
  public follow():void {this.exploring=false;this.explorePoint=undefined;this.gesture=undefined;this.notifyView();}
  private resetPresence():void {this.follow();this.clearResponse();this.clearHouseAction();this.vignetteFx?.clear();this.lampOn=true;this.attentionAt=undefined;this.lastAttention=-Infinity;this.setMotion(false);}
  private clearResponse():void {
@@ -299,6 +415,7 @@ class HomeScene extends Phaser.Scene {
   if(this.state.conditions.some(c=>c.kind==='contaminatedSurface'&&!c.resolved)){this.messFx.fillStyle(0x76835b,.7);this.messFx.fillRect(201,57,3,2);this.messFx.fillRect(211,59,2,1);}
  }
  public setSave(state:GameState=demoState,options:SavePresentation={}):void {this.enqueue(()=>{
+  this.clearOpening();this.openingHandoff=false;this.handoffCamera=undefined;
   const keepView=this.exploreEnabled&&this.exploring&&this.state.seed===state.seed&&this.state.day===state.day;if(!keepView)this.resetPresence();
   this.playback=null;this.inspectMark=undefined;this.inspectFx.clear();this.transition.setAlpha(0);this.taskFx.clear();this.closeStorage();this.applyState(state);this.modeSleep=options.sleep!==false&&state.alive;this.held.setVisible(false);this.secondHeld.setVisible(false);this.actor.setVisible(state.alive);this.actor.setRotation(0);
   this.shadow.setVisible(state.alive&&!this.modeSleep);this.blanket.setVisible(this.modeSleep);this.setLight(options.dim===false?0:state.day===0?.05:.23);
@@ -308,11 +425,14 @@ class HomeScene extends Phaser.Scene {
   this.actor.setPosition(this.worldPoint.x,this.worldPoint.y);this.shadow.setPosition(this.worldPoint.x,this.worldPoint.y);this.centerCamera(true);
  });}
  public start(day:DayResult,options:PlaybackOptions={}):void {this.enqueue(()=>{
+  const handoff=this.openingHandoff&&this.seed===(day.receipts[options.startIndex||0]?.decisionSnapshot||day.receipts[options.startIndex||0]?.before)?.seed;
+  this.clearOpening();this.openingHandoff=false;
+  this.handoffCamera=handoff?{index:options.startIndex||0,x:this.cameraPoint.x}:undefined;
   this.resetPresence();
   this.openAudio();this.clearParticles();this.transition.setAlpha(0);this.modeSleep=false;this.blanket.setVisible(false);this.setLight(0);for(const z of this.zeds)z.setVisible(false);
   const index=Math.min(Math.max(0,options.startIndex||0),Math.max(0,day.receipts.length-1));const first=day.receipts[index];if(!first){this.applyState(day.finalState);this.cb.onComplete?.();return;}
   const approach=first.decisionSnapshot||first.before;
-  this.actor.setVisible(true);this.shadow.setVisible(true);this.applyState(approach);this.worldPoint=index===0&&day.baseDay>0&&!options.skipDelivery?targetPoint('mailbox'):this.receiptPoint(first,approach);this.actor.setPosition(this.worldPoint.x,this.worldPoint.y);this.cameraPoint={x:this.worldPoint.x,y:this.worldPoint.y+18};this.centerCamera(true);
+  this.actor.setVisible(true);this.shadow.setVisible(true);this.applyState(approach);this.worldPoint=index===0&&day.baseDay>0&&!options.skipDelivery?targetPoint('mailbox'):this.receiptPoint(first,approach);this.actor.setPosition(this.worldPoint.x,this.worldPoint.y);if(!handoff){this.cameraPoint={x:this.worldPoint.x,y:this.worldPoint.y+18};this.centerCamera(true);}
   const normalSlot=Math.max(1900,((options.durationMs||180000)-6000)/60);this.lastMessage='';
   this.playback={day,index,elapsed:0,normalSlot,perSlot:normalSlot,route:[],routeLength:0,travel:0,effect:false,stage:index===0&&day.baseDay>0&&!options.skipDelivery?'prelude':'receipts',paused:false,preludeTarget:'mailbox',introUntil:0,tailMs:0,vignette:planDailyVignette(day)};
   this.cb.onSnapshot?.(approach,index);
@@ -385,6 +505,7 @@ class HomeScene extends Phaser.Scene {
  }
  update(_time:number,delta:number):void {
   if(!this.initialized)return;
+  if(this.opening){const dt=Math.min(delta,70);this.clock+=dt;this.drawOpening(dt);this.setMotion(false);return;}
   const paused=!!this.playback?.paused||this.exploreEnabled&&!this.inputEnabled;const dt=paused?0:Math.min(delta,70);this.clock+=dt;
   if(!paused)this.updatePlayback(dt);
   if(!paused){this.updateHouseAction(dt);this.updateResponse(dt);}this.updateActor(paused);this.drawInspect(dt);this.drawHouseResponse();this.drawVignette();if(!paused){this.updateParticles(dt);this.drawHazards();this.drawTask();this.drawAmbient();this.centerCamera(false,dt);}
@@ -569,20 +690,25 @@ class HomeScene extends Phaser.Scene {
  private updateParticles(dt:number):void {this.particles=this.particles.filter(p=>{p.life-=dt;if(p.life<=0){p.sprite.destroy();return false;}p.x+=p.vx*dt;p.y+=p.vy*dt;p.sprite.setPosition(Math.round(p.x),Math.round(p.y));p.vy+=.00005*dt;p.sprite.setAlpha(Math.min(1,p.life/200));return true;});}
  private clearParticles():void {for(const p of this.particles)p.sprite.destroy();this.particles=[];}
  private centerCamera(immediate:boolean,delta=16):void {
-  if(this.exploreEnabled&&this.exploring&&this.explorePoint){const target=constrainHouseView(this.explorePoint,this.cameras.main.zoom),blend=immediate?1:1-Math.exp(-Math.max(0,delta)/130);this.cameraPoint={x:Phaser.Math.Linear(this.cameraPoint.x,target.x,blend),y:Phaser.Math.Linear(this.cameraPoint.y,target.y,blend)};this.cameras.main.centerOn(Math.round(this.cameraPoint.x),Math.round(this.cameraPoint.y));return;}
+  if(this.opening){this.cameraPoint=this.framePoint({x:136,y:120});this.cameras.main.centerOn(Math.round(this.cameraPoint.x),Math.round(this.cameraPoint.y));return;}
+  if(this.exploreEnabled&&this.exploring&&this.explorePoint){const target=this.constrainPoint(this.explorePoint),blend=immediate?1:1-Math.exp(-Math.max(0,delta)/130);this.cameraPoint={x:Phaser.Math.Linear(this.cameraPoint.x,target.x,blend),y:Phaser.Math.Linear(this.cameraPoint.y,target.y,blend)};this.cameras.main.centerOn(Math.round(this.cameraPoint.x),Math.round(this.cameraPoint.y));return;}
   const pb=this.playback;const resting=pb?.stage==='receipts'&&pb.elapsed>=pb.travel&&pb.day.receipts[pb.index]?.action==='H03';
   const receipt=pb?.stage==='receipts'?pb.day.receipts[pb.index]:undefined;
   const beat=pb?.stage==='receipts'?(pb.beforeBeat&&pb.elapsed<pb.introUntil?pb.beforeBeat:pb.afterBeat&&pb.effect&&pb.elapsed>=pb.perSlot-300?pb.afterBeat:undefined):undefined;
   if(pb&&beat?.target&&beat.target!=='body'&&beat.target!=='hall'){
    const point=targetPoint(beat.target,this.state.house.chairAnchor),focus=beat.target==='window'?{x:point.x+12,y:84}:beat.target==='plot1'||beat.target==='plot2'?{x:432,y:350}:{x:point.x,y:point.y+17};
-   this.cameraPoint=constrainHouseView(focus,this.cameras.main.zoom);this.cameras.main.centerOn(Math.round(this.cameraPoint.x),Math.round(this.cameraPoint.y));pb.eventFocused=true;return;
+   this.cameraPoint=this.framePoint(focus);this.cameras.main.centerOn(Math.round(this.cameraPoint.x),Math.round(this.cameraPoint.y));pb.eventFocused=true;return;
   }
   if(pb?.eventFocused){immediate=true;pb.eventFocused=false;}
   const frame=(point:WorldPoint)=>receipt&&(receipt.target==='window'||receipt.action==='H14')?{x:point.x+12,y:84}:{x:point.x,y:point.y+17};
-  if(pb?.stage==='receipts'&&pb.montage){const dest=pb.route.at(-1)!;this.cameraPoint=pb.elapsed<340?{...pb.originCamera!}:frame(dest);this.cameras.main.centerOn(Math.round(this.cameraPoint.x),Math.round(this.cameraPoint.y));return;}
-  const cam=this.cameras.main;const target=this.modeSleep||resting?BEDROOM_VIEW:frame(this.worldPoint);
+  if(pb?.stage==='receipts'&&pb.montage){const dest=pb.route.at(-1)!;this.cameraPoint=pb.elapsed<340?{...pb.originCamera!}:this.framePoint(frame(dest));this.cameras.main.centerOn(Math.round(this.cameraPoint.x),Math.round(this.cameraPoint.y));return;}
+  const cam=this.cameras.main;let target=this.framePoint(this.modeSleep||resting?BEDROOM_VIEW:frame(this.worldPoint));
+  // Keep the title's horizontal composition through its first real action. Later receipts follow normally.
+  if(this.handoffCamera&&pb?.stage==='receipts'&&pb.index===this.handoffCamera.index)target.x=this.constrainPoint({x:this.handoffCamera.x,y:target.y}).x;else this.handoffCamera=undefined;
+  target=this.frameActor(target);
   const blend=1-Math.exp(-Math.max(0,delta)/140);
   if(immediate)this.cameraPoint={...target};else{this.cameraPoint.x=Phaser.Math.Linear(this.cameraPoint.x,target.x,blend);this.cameraPoint.y=Phaser.Math.Linear(this.cameraPoint.y,target.y,blend);}
+  this.cameraPoint=this.frameActor(this.cameraPoint);
   cam.centerOn(Math.round(this.cameraPoint.x),Math.round(this.cameraPoint.y));
  }
  public pausePlayback():void {if(this.playback)this.playback.paused=true;this.setMotion(false);}
@@ -592,22 +718,41 @@ class HomeScene extends Phaser.Scene {
  public currentIndex():number{return this.playback?.index??0;}
  public paused():boolean{return !!this.playback?.paused;}
  public enableInput(enabled:boolean):void {this.inputEnabled=enabled;if(!enabled)this.gesture=undefined;if(this.initialized)this.input.enabled=enabled;}
- public mute(value:boolean):void {this.muted=value;}
- public zoom(value:number):void {this.enqueue(()=>{this.cameras.main.setZoom(Phaser.Math.Clamp(value,.9,1.3));this.centerCamera(true);});}
+ public mute(value:boolean):void {this.muted=value;if(!value&&this.initialized)this.prepareAudio();}
+ public zoom(value:number):void {this.enqueue(()=>{this.desiredZoom=Phaser.Math.Clamp(value,.9,1.3);this.resizeWorld(this.logicalWidth,this.logicalHeight,this.cssScale);});}
  private enqueue(f:()=>void):void{if(this.initialized)f();else this.queued.push(f);}
- private openAudio():void {if(this.muted)return;try{this.audio??=new AudioContext();if(this.audio.state==='suspended')void this.audio.resume();}catch{/* Silent platform; visual feedback remains complete. */}}
+ private prepareAudio():void {
+  if(this.muted||this.audio)return;
+  // Hardware setup can be expensive. Prepare before the first opening draw, with no connected sound.
+  try{this.audio=new AudioContext();}catch{/* Visual feedback remains complete on a silent platform. */}
+ }
+ private openAudio(onReady?:()=>void):void {
+  if(this.muted||!this.audio||navigator.userActivation&&!navigator.userActivation.hasBeenActive)return;
+  if(this.audio.state==='running'){onReady?.();return;}
+  if(this.audio.state==='suspended'&&!this.audioReady){
+   const pending=this.audio.resume().catch(()=>{});this.audioReady=pending;
+   void pending.then(()=>{if(this.audioReady===pending)this.audioReady=null;});
+  }
+  // Only the explicit Start acknowledgement waits for unlock. Ambient effects never build a backlog.
+  const audio=this.audio,pending=this.audioReady;if(onReady&&pending)void pending.then(()=>{if(this.audio===audio&&!this.muted&&audio.state==='running')onReady();});
+ }
  private tone(kind:string):void {
-  if(this.muted||!this.audio||this.audio.state!=='running')return;
+  if(this.muted||!this.audio||this.audio.state!=='running'||navigator.userActivation&&!navigator.userActivation.hasBeenActive)return;
   const audio=this.audio;const osc=audio.createOscillator(),gain=audio.createGain();const t=audio.currentTime;const f=({tap:440,step:150,use:520,garden:660,cook:740,hurt:190,death:130} as Record<string,number>)[kind]||440;
   osc.type=kind==='step'?'triangle':'sine';osc.frequency.setValueAtTime(f,t);osc.frequency.exponentialRampToValueAtTime(f*(kind==='hurt'||kind==='death'?.65:1.25),t+.08);gain.gain.setValueAtTime(kind==='step'?.008:.025,t);gain.gain.exponentialRampToValueAtTime(.001,t+.12);osc.connect(gain);gain.connect(audio.destination);osc.start(t);osc.stop(t+.14);
  }
- public shutdownWorld():void {this.clearParticles();if(this.audio)void this.audio.close();this.audio=null;}
+ public shutdownWorld():void {this.clearOpening();this.clearParticles();if(this.audio)void this.audio.close();this.audio=null;this.audioReady=null;}
 }
 
 export function createWorldRenderer(container:HTMLElement,callbacks:WorldCallbacks={}):WorldController {
  let resolve=()=>{};const ready=new Promise<void>(r=>{resolve=r;});const scene=new HomeScene(callbacks,resolve);
- const game=new Phaser.Game({type:Phaser.AUTO,parent:container,width:256,height:256,backgroundColor:'#192c34',pixelArt:true,roundPixels:true,antialias:false,transparent:false,render:{antialias:false,pixelArt:true,roundPixels:true},scale:{mode:Phaser.Scale.FIT,autoCenter:Phaser.Scale.CENTER_BOTH,width:256,height:256},scene:[scene],audio:{noAudio:true},fps:{target:60,forceSetTimeOut:false}});
- return{ready,showSave:(s,o)=>scene.setSave(s,o),playDay:(d,o)=>scene.start(d,o),pause:()=>scene.pausePlayback(),resume:()=>scene.resumePlayback(),skip:()=>scene.skipPlayback(),seek:i=>scene.seekReceipt(i),setMuted:m=>scene.mute(m),setZoom:z=>scene.zoom(z),setInputEnabled:enabled=>scene.enableInput(enabled),setExploreEnabled:enabled=>scene.explore(enabled),focusRoom:room=>scene.focus(room),followActor:()=>scene.follow(),getCurrentIndex:()=>scene.currentIndex(),isPaused:()=>scene.paused(),dispose:()=>{scene.shutdownWorld();game.destroy(true);}};
+ const size=()=>{const rect=container.getBoundingClientRect(),physicalWidth=Math.max(1,rect.width),width=Math.max(256,Math.min(480,Math.round(physicalWidth/2))),height=Math.max(1,Math.round(Math.max(1,rect.height)/physicalWidth*width));return{width,height,scale:physicalWidth/width};};
+ const initial=size();scene.resizeWorld(initial.width,initial.height,initial.scale);
+ const game=new Phaser.Game({type:Phaser.AUTO,parent:container,width:initial.width,height:initial.height,backgroundColor:'#192c34',pixelArt:true,roundPixels:true,antialias:false,transparent:false,render:{antialias:false,pixelArt:true,roundPixels:true},scale:{mode:Phaser.Scale.FIT,autoCenter:Phaser.Scale.CENTER_BOTH,width:initial.width,height:initial.height},scene:[scene],audio:{noAudio:true},fps:{target:60,forceSetTimeOut:false}});
+ let frame=0,disposed=false;const resize=()=>{if(disposed||!game.isBooted)return;const next=size();if(game.scale.width!==next.width||game.scale.height!==next.height)game.scale.resize(next.width,next.height);else game.scale.refresh();scene.resizeWorld(next.width,next.height,next.scale);};
+ const observer=new ResizeObserver(()=>{cancelAnimationFrame(frame);frame=requestAnimationFrame(resize);});observer.observe(container);
+ void ready.then(resize);
+ return{ready,beginOpening:s=>scene.beginOpening(s),finishOpening:()=>scene.finishOpening(),setViewportInsets:(t,b,l,r)=>scene.viewportInsets(t,b,l,r),showSave:(s,o)=>scene.setSave(s,o),playDay:(d,o)=>scene.start(d,o),pause:()=>scene.pausePlayback(),resume:()=>scene.resumePlayback(),skip:()=>scene.skipPlayback(),seek:i=>scene.seekReceipt(i),setMuted:m=>scene.mute(m),setZoom:z=>scene.zoom(z),setInputEnabled:enabled=>scene.enableInput(enabled),setExploreEnabled:enabled=>scene.explore(enabled),focusRoom:room=>scene.focus(room),followActor:()=>scene.follow(),getCurrentIndex:()=>scene.currentIndex(),isPaused:()=>scene.paused(),dispose:()=>{disposed=true;observer.disconnect();cancelAnimationFrame(frame);scene.shutdownWorld();game.destroy(true);}};
 }
 
 export {TARGET_LABELS};

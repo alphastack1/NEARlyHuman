@@ -1,0 +1,9 @@
+{
+  "during": {
+    "className": "cartridge-opening opening-leaving",
+    "titleVisibility": "hidden"
+  },
+  "closed": true,
+  "errors": [],
+  "writes": []
+}

@@ -1,0 +1,46 @@
+{
+  "at": "2026-11-02T01:15:49.446Z",
+  "origin": "http://127.0.0.1:5184",
+  "assets": [
+    {
+      "href": "/assets/index-D7L9ExCi.js",
+      "bytes": 471376,
+      "gzipBytes": 134429,
+      "sha256": "5cf9231b6a82c662c7b55467f257b5cc89b7719ae908a35452617ba951a2df24"
+    },
+    {
+      "href": "/assets/rolldown-runtime-XKyaHtl9.js",
+      "bytes": 726,
+      "gzipBytes": 429,
+      "sha256": "548d1dbf321e7d2ae804fcc158b588706a7c52f8ca175de1490c6ccb4dbe55b7"
+    },
+    {
+      "href": "/assets/wallet-B_eAljz_.js",
+      "bytes": 291497,
+      "gzipBytes": 87139,
+      "sha256": "30f7e48ad3f3a5af48c668fb7ae1ed2beaef423770a696d87173039a9df32ff7"
+    },
+    {
+      "href": "/assets/phaser-D8At0iQG.js",
+      "bytes": 1194425,
+      "gzipBytes": 317022,
+      "sha256": "84be3a4bbc0dc194737d0e8808721f836f4508757b68804d9fa7b0519f50ce02"
+    },
+    {
+      "href": "/assets/index-BdosObvX.css",
+      "bytes": 50156,
+      "gzipBytes": 11454,
+      "sha256": "6174451f549870942c5480551946875842877a8127d8b2b280d576906b15a626"
+    }
+  ],
+  "totalBytes": 2008180,
+  "totalGzipBytes": 550473,
+  "baselineGzipBytes": 544477,
+  "deltaGzipBytes": 5996,
+  "unchangedBaselineAssets": [
+    "/assets/rolldown-runtime-XKyaHtl9.js",
+    "/assets/wallet-B_eAljz_.js",
+    "/assets/phaser-D8At0iQG.js"
+  ],
+  "provenance": "Same Node default gzip method used for both client manifests; not a CDN transfer promise."
+}

@@ -1,4 +1,4 @@
-/* Moss & Cream. The house stays square; care and mint use a portrait dock. */
+/* Pixel-game controls and panels. The live scene layout is in viewport.css. */
 .modal-backdrop {
   position: fixed;
   z-index: 50;
@@ -373,20 +373,6 @@
   text-underline-offset: 4px;
 }
 
-@media (min-width: 900px) and (max-height: 700px) {
-  .app-root .game-composition.with-care {
-    width: min(100%, 1040px, calc(100dvh + 364px));
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(340px, 380px);
-    align-items: center;
-    gap: 24px;
-  }
-
-  .game-composition.with-care>.game-frame {
-    justify-self: end;
-    width: min(100%, calc(100dvh - 40px));
-  }
-}
 .fit-text {
   display: block;
   width: 100%;
@@ -426,7 +412,7 @@
 :root {
   font-family: 'Press Start 2P',monospace;
   color: #f4f0da;
-  background: #eeeada;
+  background: #192c34;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-text-size-adjust: 100%;
@@ -499,24 +485,10 @@ button:active:not(:disabled),a.button:active {
   transform: translateY(2px);
 }
 
-.app-root {
-  min-height: var(--visible-height);
-  padding: max(12px,env(safe-area-inset-top)) max(8px,env(safe-area-inset-right)) max(12px,env(safe-area-inset-bottom)) max(8px,env(safe-area-inset-left));
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: radial-gradient(ellipse at 48% 40%,#faf5e4 0%,#e9e6d7 76%,#d9dfcd 100%);
-  position: relative;
-}
-
 .game-frame {
   position: relative;
-  width: min(100%,820px,calc(100dvh - 28px));
-  aspect-ratio: 1;
   isolation: isolate;
   container-type: inline-size;
-  border: 4px solid #102331;
-  box-shadow: 0 0 0 2px #7392a0,0 0 0 5px #102331,0 12px 35px #52605c38;
   background: #192f3b;
   overflow: hidden;
 }
@@ -2244,33 +2216,8 @@ input::placeholder {
   font-size: 3cqw;
 }
 
-.app-root:before {
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  content: '';
-  opacity: .12;
-  background-image: repeating-linear-gradient(0deg,transparent 0 3px,#75857418 3px 4px);
-  z-index: 0;
-}
-
 .game-composition {
-  position: relative;
-  width: min(100%,820px,calc(100dvh - 42px));
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
   container-type: inline-size;
-}
-
-.game-composition>.game-frame {
-  width: 100%;
-  max-width: none;
-  flex: none;
-}
-
-.game-composition.with-care {
-  width: min(100%,640px,max(240px,calc((100dvh - 320px) / 1.2)));
 }
 
 .composition-modal {
@@ -2445,9 +2392,6 @@ input::placeholder {
   bottom: .4%;
 }
 
-.game-composition.with-form {
-  width: min(100%,620px,max(320px,calc(100dvh - 440px)));
-}
 
 .mint-dock {
   position: relative;
@@ -2536,9 +2480,6 @@ input::placeholder {
   margin-right: 4px;
 }
 
-.game-composition.with-form>.game-frame {
-  filter: brightness(.85);
-}
 
 .mint-dock .panel-head {
   margin-bottom: 3px;
@@ -2557,20 +2498,6 @@ input::placeholder {
 @keyframes brain-pulse{50%{filter:brightness(1.35)}}
 
 @media (max-width:599px) {
-  .app-root {
-    align-items: center;
-    padding: 20px 12px;
-  }
-
-  .game-composition,.game-composition.with-care {
-    width: 100%;
-    max-width: 460px;
-  }
-
-  .game-composition {
-    gap: 12px;
-  }
-
   .composition-modal {
     inset: 15% -1% -1%;
     padding: 2.5%;
@@ -2609,15 +2536,6 @@ input::placeholder {
     font-size: clamp(13px,3.6cqw,17px);
   }
 
-  body:has(input:focus) .app-root {
-    align-items: center;
-    padding-top: 20px;
-  }
-
-  .game-composition.with-form {
-    width: 100%;
-    max-width: 460px;
-  }
 }
 
 .house-view-controls {
@@ -2709,7 +2627,6 @@ input::placeholder {
 .home-visit-links>.text-button { min-height: 44px; margin: 0; font-size: clamp(9px, 2.2cqw, 13px); }
 
 /* A real recorded life is the welcome screen; wallet actions sit below it. */
-.game-composition.with-welcome { width: min(100%, 600px, max(240px, calc(var(--visible-height, 100dvh) - 230px))); }
 .welcome-wrap { position: relative; container-type: inline-size; }
 .welcome-wrap[inert] { filter: brightness(.6); }
 .welcome-dock { padding: 16px; border: 3px solid #102331; background: linear-gradient(110deg,#1b3444,#102431); box-shadow: 0 0 0 2px #7895a5,inset 0 0 0 2px #8fa6ad,inset 0 0 0 5px #253f50; text-align: center; }

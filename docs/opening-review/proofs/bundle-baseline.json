@@ -1,0 +1,39 @@
+{
+  "at": "2026-11-02T00:38:41.450Z",
+  "origin": "https://nearlyhuman.netlify.app",
+  "provenance": "Published pre-opening client fetched before this sprint release; raw bytes and Node default gzip comparison, not browser network throughput.",
+  "assets": [
+    {
+      "href": "/assets/index-Cfj5xGcf.js",
+      "bytes": 455904,
+      "gzipBytes": 129710,
+      "sha256": "3bf0259a126fb07e67a8e3091536fcd7f6f92d1bab435e86bd91cef04b525792"
+    },
+    {
+      "href": "/assets/rolldown-runtime-XKyaHtl9.js",
+      "bytes": 726,
+      "gzipBytes": 429,
+      "sha256": "548d1dbf321e7d2ae804fcc158b588706a7c52f8ca175de1490c6ccb4dbe55b7"
+    },
+    {
+      "href": "/assets/wallet-B_eAljz_.js",
+      "bytes": 291497,
+      "gzipBytes": 87139,
+      "sha256": "30f7e48ad3f3a5af48c668fb7ae1ed2beaef423770a696d87173039a9df32ff7"
+    },
+    {
+      "href": "/assets/phaser-D8At0iQG.js",
+      "bytes": 1194425,
+      "gzipBytes": 317022,
+      "sha256": "84be3a4bbc0dc194737d0e8808721f836f4508757b68804d9fa7b0519f50ce02"
+    },
+    {
+      "href": "/assets/index-Ct_7Qujo.css",
+      "bytes": 43256,
+      "gzipBytes": 10177,
+      "sha256": "62d008f905fcb5806492930ef411ce5f300c0834ee138a5a9c411a6af1949b8b"
+    }
+  ],
+  "totalBytes": 1985808,
+  "totalGzipBytes": 544477
+}

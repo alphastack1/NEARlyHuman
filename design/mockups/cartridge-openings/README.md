@@ -2,6 +2,8 @@
 
 The owner clarified that this is a **retro Game Boy / Sega-style game opening**, all part of the game. Every board shows one continuous sequence: the first visible opening animation → its title screen → the start of play. All three stages use the existing game's pixel-art treatment. The earlier website-surround and hand-drawn cartoon interpretations are superseded.
 
+**Direction03 is selected and implemented.** See the [actual-build gallery](../../../docs/opening-review/index.html) and [critique/fix review](../../../docs/CARTRIDGE_OPENING_REVIEW.md). The implementation reuses the live room's actual assets, rather than displaying a generated board as the game.
+
 Open the [four-board comparison](index.html).
 
 | Board | First visible image | Transformation/title | Game starts |
@@ -22,4 +24,4 @@ Open the [four-board comparison](index.html).
 - Brief animation, immediately skippable. Let real initialization run concurrently and avoid delaying ready gameplay. Tile wipes, sprite motion, opacity and camera movement can reuse the actual assets; these still images establish neither animation duration nor measured load performance.
 - Intro particles, supply icons and roof removal are presentation. They do not grant supplies, mint an NPC or change its saved life.
 
-All four were generated with the built-in image tool. The actual generation prompts are in [prompts.json](prompts.json). The first completed all-pixel board,03, supplied a style/continuity reference for the other three. Permanent assets are copied here; they do not depend on the scratch folder. This is concept work, with no gameplay code or production deployment changed.
+All four concepts were generated with the built-in image tool. The actual generation prompts are in [prompts.json](prompts.json). The first completed all-pixel board,03, supplied a style/continuity reference for the other three. Permanent assets are copied here; they do not depend on the scratch folder. The later implementation and its publication record are documented in the review linked above.

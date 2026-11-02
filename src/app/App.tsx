@@ -12,6 +12,8 @@ import { SavedDaysPanel } from './SavedDaysPanel';
 import { HouseDetails } from './HouseDetails';
 import { HouseExplorer } from './HouseExplorer';
 import { WelcomeDock } from './WelcomeDock';
+import { CartridgeOpening, type CartridgePhase } from './CartridgeOpening';
+import { openingVisitorState } from './openingIdentity';
 import { PREVIEW_DAY_URL } from './previewData';
 import { showSupplyTransfer } from './supplyTransfer';
 import { quietSpanAt } from '../game/quiet-spans';
@@ -62,6 +64,29 @@ type Submitted = {
     account?: string;
 };
 const initialStats: Stats = { body: 2, wits: 2, spirit: 1 };
+const OPENING_SEEN='nh:opening:v1';
+function firstOpening():boolean {
+    const query=new URLSearchParams(location.search);
+    if(query.has('rooster'))return false;
+    let returningOwner=false;
+    try {
+        for(let index=0;index<localStorage.length;index++){
+            const key=localStorage.key(index);
+            if(!key||!/^nh:(selected|submitted):/.test(key))continue;
+            let value:any;try{value=JSON.parse(localStorage.getItem(key)||'null');}catch{continue;}
+            if(key.startsWith('nh:submitted:')&&[value?.hash,value?.permitId].some(id=>typeof id==='string'&&/^0x[0-9a-f]{64}$/i.test(id)))return false;
+            if(key.startsWith('nh:selected:')&&typeof value==='string'&&!!value)returningOwner=true;
+        }
+    }catch{/* A fresh title screen also works when browser storage is unavailable. */}
+    if(query.get('intro')==='1')return true;
+    try{if(sessionStorage.getItem(OPENING_SEEN))return false;}catch{}
+    return !returningOwner;
+}
+function clearOpeningRequest(){
+    const url=new URL(location.href);
+    if(!url.searchParams.has('intro'))return;
+    url.searchParams.delete('intro');history.replaceState(history.state,'',url.pathname+url.search+url.hash);
+}
 const labels: Record<keyof GameState['needs'], string> = { health: 'Health', nutrition: 'Nutrition', hydration: 'Hydration', energy: 'Energy', morale: 'Morale' };
 const needIcons = NEED_ICONS;
 const deathNames:Record<NonNullable<GameState['deathCause']>,string>={health:'Health depleted',starvation:'Food deficit',dehydration:'Water deficit',wound:'Serious wound',illness:'Illness',infection:'Infection',structural:'House accident'};
@@ -141,6 +166,8 @@ function RecordedStory({receipt}:{receipt:Receipt}){
 }
 export default function App() {
     const host = useRef<HTMLDivElement>(null), world = useRef<WorldController | undefined>(undefined);
+    const [opening,setOpening]=useState<CartridgePhase>(()=>firstOpening()?'assembling':'closed');
+    const openingPhase=useRef(opening),openingStarted=useRef(false);openingPhase.current=opening;
     const [config, setConfig] = useState<PublicConfig>(), [screen, setScreen] = useState<Screen>('entry'), [modal, setModal] = useState<Modal | null>(null);
     const [wallets, setWallets] = useState<WalletEntry[]>([]), [provider, setProvider] = useState<WalletProvider>(), [account, setAccount] = useState<Address>(), [network, setNetwork] = useState<number>();
     const [owned, setOwned] = useState<Rooster[]>([]), [selected, setSelected] = useState<Rooster>(), [hud, setHud] = useState<GameState>(), [result, setResult] = useState<DayResult>(), [job, setJob] = useState<JobView>(), [jobId, setJobId] = useState<string>();
@@ -236,7 +263,7 @@ export default function App() {
         };
         document.addEventListener('keydown',keyboard);return()=>{cancelAnimationFrame(id);document.removeEventListener('keydown',keyboard);};
     },[modal]);
-    useEffect(()=>{const enabled=!modal&&canInspect(screen);modalInputBlocked.current=!enabled;world.current?.setInputEnabled(enabled);},[modal,screen,selected?.id]);
+    useEffect(()=>{const enabled=opening==='closed'&&!modal&&canInspect(screen);modalInputBlocked.current=!enabled;world.current?.setInputEnabled(enabled);},[modal,screen,selected?.id,opening]);
     useEffect(()=>{if(modal||!isFilm(screen))setMeterCue(undefined);},[modal,screen]);
     useEffect(()=>{supplyFlight.current?.();world.current?.setExploreEnabled(screen==='care'&&!!selected?.state.alive||screen==='visit'&&!!guest?.rooster.state.alive);setHousePeek(undefined);setRoomsOpen(false);if(!isFilm(screen))setTraveling(false);},[screen,selected?.id,selected?.revision,guest?.rooster.id]);
     useEffect(()=>()=>supplyFlight.current?.(),[]);
@@ -277,15 +304,15 @@ export default function App() {
         setError(humanError(e)); }); return () => { alive = false; }; }, []);
     useEffect(()=>{
         if(screen!=='entry'||selected||guestRef.current)return;
-        const ticket=++guestRequest.current;
-        void fetch(PREVIEW_DAY_URL).then(async response=>{if(!response.ok)throw Error('Visit unavailable');return await response.json() as GuestDay;}).then(packet=>{
+        const ticket=++guestRequest.current,request=new AbortController();
+        void fetch(PREVIEW_DAY_URL,{signal:request.signal}).then(async response=>{if(!response.ok)throw Error('Visit unavailable');return await response.json() as GuestDay;}).then(packet=>{
             if(ticket!==guestRequest.current)return;
             if(!packet.rooster?.id||!packet.result?.receipts?.length)throw Error('Visit unavailable');
             const visit={...packet,rooster:{...packet.rooster,state:packet.result.finalState,latestDay:packet.result.day}};guestRef.current=visit;setGuest(visit);
         }).catch(()=>{/* The ownership and hatch paths remain available while the public film rests. */});
-        return()=>{guestRequest.current++;};
+        return()=>{guestRequest.current++;request.abort();};
     },[screen,selected?.id]);
-    useEffect(()=>{if(screen==='entry'&&guest&&!selected&&!modal&&!busy&&ownershipRead!=='loading')startGuestDay();},[screen,guest,selected?.id,modal,busy,ownershipRead]);
+    useEffect(()=>{if(opening==='closed'&&screen==='entry'&&guest&&!selected&&!modal&&!busy&&ownershipRead!=='loading')startGuestDay();},[screen,guest,selected?.id,modal,busy,ownershipRead,opening]);
     useEffect(() => {
         const injected = (window as any).ethereum as WalletProvider | undefined;
         if (injected)
@@ -299,7 +326,11 @@ export default function App() {
     useEffect(() => {
         if (!host.current)
             return;
-        const renderer = createWorldRenderer(host.current, { onReceipt: (r, i) => { setReceipt(r); setReplayIndex(i); const c = context.current; if (c.selected&&c.screen==='replay')
+        const renderer = createWorldRenderer(host.current, { onOpeningPhase:phase=>{
+            if(openingPhase.current==='closed')return;
+            if(phase==='title'){if(openingPhase.current==='assembling'){openingPhase.current='title';setOpening('title');}}
+            else{openingPhase.current='closed';setOpening('closed');try{sessionStorage.setItem(OPENING_SEEN,'1');}catch{}clearOpeningRequest();}
+        },onReceipt: (r, i) => { setReceipt(r); setReplayIndex(i); const c = context.current; if (c.selected&&c.screen==='replay')
                 store.set(`nh:${c.config?.chainId}:${c.account?.toLowerCase()}:${c.selected.id}:play:${r.day}`, i); }, onSnapshot: (s,index) => {
                 const c=context.current,packet=playbackPacket.current,previous=snapshotCursor.current,impact=packet?.receipts[index]?.snapshot===s;
                 if(isFilm(c.screen)&&!c.modal&&impact&&previous?.packet===packet&&previous.index===index&&previous.state!==s){
@@ -318,12 +349,63 @@ export default function App() {
                 openRef.current?.({ kind: 'object', target, state: cloneState(state) });
             } } });
         world.current = renderer;
-        renderer.setMuted(muted);renderer.setInputEnabled(!context.current.modal&&canInspect(context.current.screen));
+        if(openingPhase.current!=='closed'){
+            openingStarted.current=true;
+            renderer.beginOpening(()=>{
+                const first=guestRef.current?.result.receipts[0];
+                return first?.decisionSnapshot||first?.before||openingVisitorState();
+            });
+            if(openingPhase.current==='leaving')renderer.finishOpening();
+        }
+        renderer.setMuted(muted);renderer.setInputEnabled(openingPhase.current==='closed'&&!context.current.modal&&canInspect(context.current.screen));
         return () => { renderer.dispose(); world.current = undefined; };
     }, []);
     // Renderer stays mounted. Saved-state changes are never pushed into an active film.
-    useEffect(() => { if (isFilm(screen))
-        return;const state=screen==='visit'?guestRef.current?.rooster.state:selected?.state;world.current?.showSave(state, { sleep: true }); setHud(state); }, [selected?.id, selected?.revision, screen]);
+    useEffect(() => { if (opening!=='closed'||isFilm(screen))
+        return;const state=screen==='visit'?guestRef.current?.rooster.state:selected?.state;if(!state)return;world.current?.showSave(state, { sleep: true }); setHud(state); }, [selected?.id, selected?.revision, screen,opening]);
+    useLayoutEffect(()=>{
+        const mount=host.current,frame=mount?.closest<HTMLElement>('.game-frame'),composition=frame?.closest<HTMLElement>('.game-composition');
+        if(!frame||!composition)return;
+        let raf=0,alive=true,lastTop=-1,lastBottom=-1,lastRight=-1;
+        const targets=[...composition.querySelectorAll<HTMLElement>('.game-hud,.event-box,.welcome-wrap,.care-dock,.mint-dock')];
+        const visible=(element:HTMLElement)=>{const style=getComputedStyle(element);return style.display!=='none'&&style.visibility!=='hidden';};
+        const measure=()=>{
+            if(!alive)return;
+            const bounds=frame.getBoundingClientRect(),active=openingPhase.current==='closed';
+            let top=0,bottom=0,right=0,dockHeight=0;
+            const sideDock=active&&(parseFloat(getComputedStyle(composition).getPropertyValue('--side-dock-width'))||0)>0;
+            const shown=active?targets.filter(visible):[];
+            for(const element of shown){
+                if(!element.matches('.game-hud'))continue;
+                const rect=element.getBoundingClientRect();
+                if(rect.width&&rect.height)top=Math.max(top,rect.bottom-bounds.top);
+            }
+            composition.style.setProperty('--hud-height',Math.ceil(top)+'px');
+            for(const element of shown){
+                if(!element.matches('.welcome-wrap,.care-dock,.mint-dock'))continue;
+                dockHeight=Math.max(dockHeight,Math.ceil(element.getBoundingClientRect().height));
+            }
+            composition.style.setProperty('--dock-height',dockHeight+'px');
+            // Publishing dock height moves the event box without resizing it.
+            // Read positions afterward so a position-only change reaches the camera.
+            top=0;
+            for(const element of shown){
+                const rect=element.getBoundingClientRect();
+                if(!rect.width||!rect.height||rect.right<=bounds.left||rect.left>=bounds.right)continue;
+                if(element.matches('.welcome-wrap,.care-dock,.mint-dock')){
+                    if(sideDock){right=Math.max(right,bounds.right-rect.left+10);continue;}
+                }
+                if(element.matches('.game-hud'))top=Math.max(top,rect.bottom-bounds.top);
+                else if(rect.bottom>bounds.top&&rect.top<bounds.bottom)bottom=Math.max(bottom,bounds.bottom-rect.top);
+            }
+            const t=Math.max(0,Math.ceil(top)),b=Math.max(0,Math.ceil(bottom)),r=Math.max(0,Math.ceil(right));
+            if(t!==lastTop||b!==lastBottom||r!==lastRight){lastTop=t;lastBottom=b;lastRight=r;world.current?.setViewportInsets(t,b,0,r);}
+        };
+        const schedule=()=>{if(!alive)return;cancelAnimationFrame(raf);raf=requestAnimationFrame(measure);};
+        const observer=new ResizeObserver(schedule);observer.observe(frame);for(const element of targets)observer.observe(element);
+        schedule();void document.fonts.ready.then(schedule);
+        return()=>{alive=false;cancelAnimationFrame(raf);observer.disconnect();};
+    },[opening,screen,modal,roomsOpen,housePeek,traitsOpen,guest?.rooster.id,selected?.id]);
     useEffect(() => { world.current?.setMuted(muted); store.set('nh:sound', muted); }, [muted]);
     useEffect(() => { if (!provider)
         return; const changed = (addresses: string[]) => { freshDay.current=undefined;operationToken.current++;setBusy(false);setBusyLabel('');walletGeneration.current++;navigationGeneration.current++;setOwnershipRead('unknown');setSession(''); session.current = undefined; setOwnerLost(false); setSelected(undefined); setOwned([]); setJobId(undefined); setResult(undefined); setSubmitted(undefined); setJob(undefined); setDelivery([]); setError('');if(!context.current.modal?.view){menuTrail.current=[];setModal(null);}setScreen('entry'); setQuote(undefined); if (addresses?.[0]) {
@@ -495,10 +577,16 @@ export default function App() {
         setBusyLabel('');
     } }
     function startGuestDay(){
-        const visit=guestRef.current,renderer=world.current;if(!visit||!renderer)return;const ticket=++guestPlaybackTicket.current;
-        void renderer.ready.then(()=>{const c=context.current;if(ticket!==guestPlaybackTicket.current||c.selected||c.modal||!['entry','discover','visit'].includes(c.screen))return;
+        const visit=guestRef.current,renderer=world.current;if(openingPhase.current!=='closed'||!visit||!renderer)return;const ticket=++guestPlaybackTicket.current;
+        void renderer.ready.then(()=>{const c=context.current;if(openingPhase.current!=='closed'||ticket!==guestPlaybackTicket.current||c.selected||c.modal||!['entry','discover','visit'].includes(c.screen))return;
             freshDay.current=undefined;archiveReturn.current=undefined;setHistoricalDay(undefined);playbackPacket.current=visit.result;snapshotCursor.current=undefined;setMeterCue(undefined);setResult(visit.result);setReceipt(undefined);setReplayIndex(0);setHud(visit.result.receipts[0]?.decisionSnapshot||visit.result.receipts[0]?.before||visit.result.finalState);setPaused(false);setModal(null);setScreen('discover');renderer.playDay(visit.result,{startIndex:0,skipDelivery:true});
         });
+    }
+    function startOpeningGame(){
+        if(openingPhase.current==='closed'||openingPhase.current==='leaving')return;
+        openingPhase.current='leaving';setOpening('leaving');
+        try{sessionStorage.setItem(OPENING_SEEN,'1');}catch{}
+        if(openingStarted.current)world.current?.finishOpening();
     }
     function enterHome(intent:'mint'|'home'){
         guestPlaybackTicket.current++;connectionIntent.current=intent;freshDay.current=undefined;world.current?.pause();if(isFilm(context.current.screen))setPaused(true);
@@ -861,7 +949,7 @@ export default function App() {
             <ul className="help-facts"><li>Jev decides how to use supplies.</li><li>The replay is already saved. Watching changes nothing.</li><li>No time passes while you are away.</li><li>A life can end. The NFT stays.</li>{config?.testnet&&<li>Testnet: 3 saved days, including the first. Failed attempts do not use a day.</li>}</ul>
         </Panel>;
         if (modal.kind === 'options')
-            return <Panel title="Options" footer={primary('Close', close)}><button className="option-row" onClick={() => setMuted(m => !m)}><span>Sound</span><span className={'toggle ' + (!muted ? 'on' : '')}><i /></span></button><button className="option-row" onClick={() => open({ kind: 'help' })}>How to play <span>›</span></button>{selected?.latestDay&&active?<button className="option-row" onClick={()=>open({kind:'savedDays'})}>Saved days <span>›</span></button>:null}<button className="option-row" onClick={() => open({ kind: 'details' })}>Transaction details <span>›</span></button><div className="network-line">{config?.chainName || 'Robinhood Chain'}{account && <small>{short(account)}</small>}{config?.testnet&&<a className="test-faucet-link" href="https://faucet.testnet.chain.robinhood.com/" target="_blank" rel="noreferrer">Get test ETH ↗</a>}</div></Panel>;
+            return <Panel title="Options" footer={primary('Close', close)}><button className="option-row" onClick={() => setMuted(m => !m)}><span>Sound</span><span className={'toggle ' + (!muted ? 'on' : '')}><i /></span></button><a className="option-row title-screen-link" href="/?intro=1">Title screen <span>›</span></a><button className="option-row" onClick={() => open({ kind: 'help' })}>How to play <span>›</span></button>{selected?.latestDay&&active?<button className="option-row" onClick={()=>open({kind:'savedDays'})}>Saved days <span>›</span></button>:null}<button className="option-row" onClick={() => open({ kind: 'details' })}>Transaction details <span>›</span></button><div className="network-line">{config?.chainName || 'Robinhood Chain'}{account && <small>{short(account)}</small>}{config?.testnet&&<a className="test-faucet-link" href="https://faucet.testnet.chain.robinhood.com/" target="_blank" rel="noreferrer">Get test ETH ↗</a>}</div></Panel>;
         if (modal.kind === 'selector') {
             const list = owned.filter(r => !tokenSearch || r.id.includes(tokenSearch));
             return <Panel title="Your roosters" kind="selector" back={close} footer={<button className="button secondary" onClick={beginMint}>+ Hatch another</button>}><form className="token-search" onSubmit={async (e) => { e.preventDefault(); if (!tokenSearch)
@@ -928,7 +1016,7 @@ export default function App() {
     const dayLabel=film?'DAY':(screen==='care'&&!homeVisit)||screen==='processing'||screen==='firstRetry'?'NEXT':'SAVED';
     const dayNumber=film?receipt?.day||result?.day:(screen==='care'&&!homeVisit)||screen==='processing'||screen==='firstRetry'?(headerRooster?.state.day||0)+1:headerRooster?.state.day;
     return <PanelContext.Provider value={{error,body:panelScroll,onScroll:e=>{scrollMemory.current[(modal?'modal:'+modal.kind:screen)+':'+selected?.id]=e.currentTarget.scrollTop;}}}>
-      <main className={'app-root screen-'+screen+(traveling&&film?' is-traveling':'')}>
+      <main className={'app-root screen-'+screen+(traveling&&film?' is-traveling':'')+(opening!=='closed'?' is-opening':'')} data-opening-phase={opening}>
        <div className={'game-composition '+(screen==='care'?'with-care':screen==='mint'?'with-form':welcome?'with-welcome':'')}>
         <div className={'game-frame '+(film?'is-replaying':'')} inert={!!modal}>
          <div className="world-mount" ref={host}/>
@@ -951,6 +1039,7 @@ export default function App() {
          {(screen==='care'||screen==='visit')&&sceneState&&<HouseExplorer key={screen==='visit'?'guest':selected?.id} state={sceneState} view={houseView} peek={housePeek} roomsOpen={roomsOpen} onRoomsOpenChange={setRoomsOpen} onWatch={screen==='visit'?startGuestDay:!homeVisit&&selected?.latestDay?()=>void watchLatest():undefined} lines={[warnings[0]?.label||'Settled in for the night.',warnings[0]?.due?expiryText(warnings[0].due):warnings[0]?'A supply may help.':'Nearly human.']} onRoom={room=>{setHousePeek(undefined);world.current?.focusRoom(room);}} onFollow={()=>{setHousePeek(undefined);world.current?.followActor();}} onDetails={target=>open({kind:'object',target,state:cloneState(sceneState)})}/>}
          <div className="screen-overlay">{!modal&&!film&&!['entry','visit','care','mint'].includes(screen)?renderScreen():null}</div>
          {config?.testnet&&headerRooster&&<span className="corner-network">TESTNET</span>}
+         {opening!=='closed'&&<CartridgeOpening phase={opening} onStart={startOpeningGame}/>}
         </div>
         {welcome&&<div className="welcome-wrap" inert={!!modal}><WelcomeDock busy={busy||ownedLoading} label={busyLabel} error={error} onHatch={()=>enterHome('mint')} onHome={()=>enterHome('home')}/></div>}
         {screen==='care'&&<div className="care-dock" inert={!!modal}>{renderScreen()}</div>}

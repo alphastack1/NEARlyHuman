@@ -1,0 +1,99 @@
+{
+  "at": "2026-11-02T00:52:30.925Z",
+  "rows": [
+    {
+      "width": 1920,
+      "height": 400,
+      "early": false,
+      "first": {
+        "seed": "0x979865feead295b3add9300f03b7591f1c800ad7008c762121e70698a3ec7efa",
+        "name": "PEEP",
+        "opening": true,
+        "stage": "assembling",
+        "point": {
+          "x": 72,
+          "y": 89
+        },
+        "sleep": false,
+        "resolves": 1
+      },
+      "resolves": 1,
+      "events": [
+        "title",
+        "finished"
+      ],
+      "canvas": {
+        "width": 480,
+        "height": 100,
+        "rect": {
+          "x": 0,
+          "y": 0,
+          "width": 1920,
+          "height": 400,
+          "top": 0,
+          "right": 1920,
+          "bottom": 400,
+          "left": 0
+        },
+        "scaleX": 4,
+        "scaleY": 4,
+        "displayScaleX": 0.25,
+        "displayScaleY": 0.25
+      },
+      "click": {
+        "x": 316.8,
+        "y": 26.400000000000002
+      },
+      "inspections": [
+        "store"
+      ]
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "early": true,
+      "first": {
+        "seed": "0x979865feead295b3add9300f03b7591f1c800ad7008c762121e70698a3ec7efa",
+        "name": "PEEP",
+        "opening": true,
+        "stage": "leaving",
+        "point": {
+          "x": 72,
+          "y": 89
+        },
+        "sleep": false,
+        "resolves": 1
+      },
+      "resolves": 1,
+      "events": [
+        "finished"
+      ],
+      "canvas": {
+        "width": 256,
+        "height": 554,
+        "rect": {
+          "x": 0,
+          "y": 0,
+          "width": 390,
+          "height": 843.984375,
+          "top": 0,
+          "right": 390,
+          "bottom": 843.984375,
+          "left": 0
+        },
+        "scaleX": 1.5234375,
+        "scaleY": 1.5234375,
+        "displayScaleX": 0.6564102564102564,
+        "displayScaleY": 0.6564102564102564
+      },
+      "click": {
+        "x": 133.75645228794642,
+        "y": 79.12353515625
+      },
+      "inspections": [
+        "store"
+      ]
+    }
+  ],
+  "errors": []
+}

@@ -1,0 +1,168 @@
+{
+  "at": "2026-11-02T00:30:32.790Z",
+  "reports": [
+    {
+      "name": "early-skip",
+      "pass": true,
+      "exitAt": 3239,
+      "view": {
+        "phase": "closed",
+        "screen": "app-root screen-discover",
+        "phases": [
+          "assembling",
+          "leaving",
+          "closed"
+        ],
+        "dialogCount": 0,
+        "hatch": true,
+        "home": true,
+        "caption": "Drinking milk"
+      },
+      "errors": [],
+      "writes": []
+    },
+    {
+      "name": "rapid-start",
+      "pass": true,
+      "titleAt": 2435,
+      "exitAt": 3924,
+      "view": {
+        "phase": "closed",
+        "screen": "app-root screen-discover",
+        "phases": [
+          "assembling",
+          "title",
+          "leaving",
+          "closed"
+        ],
+        "dialogCount": 0,
+        "hatch": true,
+        "home": true,
+        "caption": "Drinking milk"
+      },
+      "errors": [],
+      "writes": []
+    },
+    {
+      "name": "escape-title",
+      "pass": true,
+      "titleAt": 2234,
+      "exitAt": 3763,
+      "view": {
+        "phase": "closed",
+        "screen": "app-root screen-discover",
+        "phases": [
+          "assembling",
+          "title",
+          "leaving",
+          "closed"
+        ],
+        "dialogCount": 0,
+        "hatch": true,
+        "home": true,
+        "caption": "Drinking milk"
+      },
+      "errors": [],
+      "writes": []
+    },
+    {
+      "name": "space-early",
+      "pass": true,
+      "exitAt": 3200,
+      "view": {
+        "phase": "closed",
+        "screen": "app-root screen-discover",
+        "phases": [
+          "assembling",
+          "leaving",
+          "closed"
+        ],
+        "dialogCount": 0,
+        "hatch": true,
+        "home": true,
+        "caption": "Drinking milk"
+      },
+      "errors": [],
+      "writes": []
+    },
+    {
+      "name": "failed-preview-config",
+      "pass": true,
+      "titleAt": 2263,
+      "exitAt": 3756,
+      "view": {
+        "phase": "closed",
+        "screen": "app-root screen-entry",
+        "phases": [
+          "assembling",
+          "title",
+          "leaving",
+          "closed"
+        ],
+        "dialogCount": 0,
+        "hatch": true,
+        "home": true
+      },
+      "errors": [],
+      "writes": []
+    },
+    {
+      "name": "held-preview-cap",
+      "pass": true,
+      "titleAt": 3327,
+      "exitAt": 4815,
+      "previewStillHeld": true,
+      "view": {
+        "phase": "closed",
+        "screen": "app-root screen-entry",
+        "phases": [
+          "assembling",
+          "title",
+          "leaving",
+          "closed"
+        ],
+        "dialogCount": 0,
+        "hatch": true,
+        "home": true
+      },
+      "errors": [],
+      "writes": []
+    },
+    {
+      "name": "deep-link",
+      "pass": true,
+      "exitAt": 1652,
+      "view": {
+        "phase": "closed",
+        "screen": "app-root screen-discover",
+        "phases": [
+          "closed"
+        ],
+        "dialogCount": 0,
+        "hatch": true,
+        "home": true,
+        "caption": "Drinking milk"
+      },
+      "errors": [],
+      "writes": []
+    },
+    {
+      "name": "pending-priority",
+      "pass": true,
+      "exitAt": 1384,
+      "view": {
+        "phase": "closed",
+        "screen": "app-root screen-discover",
+        "phases": [
+          "closed"
+        ],
+        "dialogCount": 0,
+        "hatch": true,
+        "home": true,
+        "caption": "Drinking milk"
+      },
+      "errors": [],
+      "writes": []
+    }
+  ]
+}

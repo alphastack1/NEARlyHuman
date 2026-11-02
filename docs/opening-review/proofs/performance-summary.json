@@ -1,0 +1,293 @@
+{
+  "at": "2026-11-02T01:15:49.448Z",
+  "origin": "http://127.0.0.1:5184",
+  "cases": [
+    {
+      "profile": {
+        "name": "cold-normal",
+        "cpu": 1,
+        "latency": 0,
+        "download": -1,
+        "upload": -1
+      },
+      "titleMs": 1560.6000000238419,
+      "startToLeavingMs": 2.399999976158142,
+      "startToClosedMs": 420.8000000715256,
+      "startToDiscoverMs": 447.60000002384186,
+      "inputEvents": [
+        {
+          "type": "pointerdown",
+          "at": 2992.7000000476837,
+          "eventTimeStamp": 2991.2000000476837,
+          "isTrusted": true
+        },
+        {
+          "type": "click",
+          "at": 2993.5,
+          "eventTimeStamp": 2991.3000000715256,
+          "isTrusted": true
+        }
+      ],
+      "audioBeforeStart": [
+        {
+          "operation": "constructor",
+          "at": 468.7000000476837,
+          "duration": 193.10000002384186,
+          "state": "running"
+        }
+      ],
+      "audioDuringStart": [],
+      "startLongTasks": [],
+      "firstCanvasElementMs": 269.10000002384186,
+      "firstContentfulPaintMs": 252,
+      "frameSummary": {
+        "boot": {
+          "frames": 3,
+          "p50": 4.199999999999989,
+          "p95": 8.300000000000011,
+          "p99": 8.300000000000011,
+          "max": 8.300000000000011,
+          "over34ms": 0,
+          "over50ms": 0
+        },
+        "assembling": {
+          "frames": 209,
+          "p50": 4.2000000000000455,
+          "p95": 8.299999999999955,
+          "p99": 54.30000000000001,
+          "max": 333.4,
+          "over34ms": 3,
+          "over50ms": 3
+        },
+        "title": {
+          "frames": 342,
+          "p50": 4.199999999999818,
+          "p95": 4.400000000000091,
+          "p99": 4.5,
+          "max": 8.700000000000045,
+          "over34ms": 0,
+          "over50ms": 0
+        },
+        "leaving": {
+          "frames": 101,
+          "p50": 4.199999999999818,
+          "p95": 4.400000000000091,
+          "p99": 4.5,
+          "max": 4.600000000000364,
+          "over34ms": 0,
+          "over50ms": 0
+        },
+        "closed": {
+          "frames": 806,
+          "p50": 4.199999999999818,
+          "p95": 4.800000000000182,
+          "p99": 5.5,
+          "max": 17.099999999999454,
+          "over34ms": 0,
+          "over50ms": 0
+        }
+      },
+      "longTaskCount": 3,
+      "longTaskTotalMs": 517,
+      "longTasksBeforeTitle": [
+        {
+          "name": "self",
+          "at": 20.399999976158142,
+          "duration": 93
+        },
+        {
+          "name": "self",
+          "at": 131.80000007152557,
+          "duration": 93
+        },
+        {
+          "name": "self",
+          "at": 350.3000000715256,
+          "duration": 331
+        }
+      ],
+      "hiddenSamples": 0,
+      "transferredBytes": 592677,
+      "errors": [],
+      "writes": [],
+      "networkFailures": [],
+      "trustedClickEventToLeavingMs": 4.599999904632568,
+      "trustedPointerDownToLeavingMs": 4.699999928474426,
+      "clickListenerQueueDelayMs": 2.1999999284744263
+    },
+    {
+      "profile": {
+        "name": "cold-constrained",
+        "cpu": 4,
+        "latency": 80,
+        "download": 409600,
+        "upload": 102400
+      },
+      "titleMs": 4316.100000023842,
+      "startToLeavingMs": 9.800000071525574,
+      "startToClosedMs": 407.7000000476837,
+      "startToDiscoverMs": 472.10000002384186,
+      "inputEvents": [
+        {
+          "type": "pointerdown",
+          "at": 5837.400000095367,
+          "eventTimeStamp": 5827.400000095367,
+          "isTrusted": true
+        },
+        {
+          "type": "click",
+          "at": 5841.100000023842,
+          "eventTimeStamp": 5827.5,
+          "isTrusted": true
+        }
+      ],
+      "audioBeforeStart": [
+        {
+          "operation": "constructor",
+          "at": 3323,
+          "duration": 25.90000009536743,
+          "state": "running"
+        }
+      ],
+      "audioDuringStart": [],
+      "startLongTasks": [],
+      "firstCanvasElementMs": 2344.8000000715256,
+      "firstContentfulPaintMs": 2268,
+      "frameSummary": {
+        "boot": {
+          "frames": 249,
+          "p50": 4.100000000000023,
+          "p95": 5.2999999999999545,
+          "p99": 8.699999999999818,
+          "max": 45.30000000000007,
+          "over34ms": 2,
+          "over50ms": 0
+        },
+        "assembling": {
+          "frames": 239,
+          "p50": 4.199999999999818,
+          "p95": 12.099999999999909,
+          "p99": 221.79999999999973,
+          "max": 642.4000000000001,
+          "over34ms": 5,
+          "over50ms": 5
+        },
+        "title": {
+          "frames": 350,
+          "p50": 4.199999999999818,
+          "p95": 5.300000000000182,
+          "p99": 8.5,
+          "max": 25,
+          "over34ms": 0,
+          "over50ms": 0
+        },
+        "leaving": {
+          "frames": 90,
+          "p50": 4.199999999999818,
+          "p95": 4.399999999999636,
+          "p99": 24.900000000000546,
+          "max": 24.900000000000546,
+          "over34ms": 0,
+          "over50ms": 0
+        },
+        "closed": {
+          "frames": 800,
+          "p50": 4.199999999998909,
+          "p95": 5.299999999999272,
+          "p99": 8.300000000001091,
+          "max": 29.099999999999454,
+          "over34ms": 0,
+          "over50ms": 0
+        }
+      },
+      "longTaskCount": 6,
+      "longTaskTotalMs": 1834,
+      "longTasksBeforeTitle": [
+        {
+          "name": "self",
+          "at": 143.60000002384186,
+          "duration": 395
+        },
+        {
+          "name": "self",
+          "at": 1665.6000000238419,
+          "duration": 479
+        },
+        {
+          "name": "self",
+          "at": 2149.100000023842,
+          "duration": 103
+        },
+        {
+          "name": "self",
+          "at": 2273.5,
+          "duration": 74
+        },
+        {
+          "name": "self",
+          "at": 2367.4000000953674,
+          "duration": 161
+        },
+        {
+          "name": "self",
+          "at": 2787,
+          "duration": 622
+        }
+      ],
+      "hiddenSamples": 0,
+      "transferredBytes": 592677,
+      "errors": [],
+      "writes": [],
+      "networkFailures": [],
+      "trustedClickEventToLeavingMs": 23.40000009536743,
+      "trustedPointerDownToLeavingMs": 23.5,
+      "clickListenerQueueDelayMs": 13.600000023841858
+    }
+  ],
+  "bundle": {
+    "at": "2026-11-02T01:15:49.446Z",
+    "origin": "http://127.0.0.1:5184",
+    "assets": [
+      {
+        "href": "/assets/index-D7L9ExCi.js",
+        "bytes": 471376,
+        "gzipBytes": 134429,
+        "sha256": "5cf9231b6a82c662c7b55467f257b5cc89b7719ae908a35452617ba951a2df24"
+      },
+      {
+        "href": "/assets/rolldown-runtime-XKyaHtl9.js",
+        "bytes": 726,
+        "gzipBytes": 429,
+        "sha256": "548d1dbf321e7d2ae804fcc158b588706a7c52f8ca175de1490c6ccb4dbe55b7"
+      },
+      {
+        "href": "/assets/wallet-B_eAljz_.js",
+        "bytes": 291497,
+        "gzipBytes": 87139,
+        "sha256": "30f7e48ad3f3a5af48c668fb7ae1ed2beaef423770a696d87173039a9df32ff7"
+      },
+      {
+        "href": "/assets/phaser-D8At0iQG.js",
+        "bytes": 1194425,
+        "gzipBytes": 317022,
+        "sha256": "84be3a4bbc0dc194737d0e8808721f836f4508757b68804d9fa7b0519f50ce02"
+      },
+      {
+        "href": "/assets/index-BdosObvX.css",
+        "bytes": 50156,
+        "gzipBytes": 11454,
+        "sha256": "6174451f549870942c5480551946875842877a8127d8b2b280d576906b15a626"
+      }
+    ],
+    "totalBytes": 2008180,
+    "totalGzipBytes": 550473,
+    "baselineGzipBytes": 544477,
+    "deltaGzipBytes": 5996,
+    "unchangedBaselineAssets": [
+      "/assets/rolldown-runtime-XKyaHtl9.js",
+      "/assets/wallet-B_eAljz_.js",
+      "/assets/phaser-D8At0iQG.js"
+    ],
+    "provenance": "Same Node default gzip method used for both client manifests; not a CDN transfer promise."
+  }
+}
