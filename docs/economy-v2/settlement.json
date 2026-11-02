@@ -1,0 +1,182 @@
+{
+  "scope": "hypothetical economy-only reference model; not production contract proof",
+  "witnesses": [
+    {
+      "name": "premature harvest has no resource or purse side effect",
+      "result": "pass"
+    },
+    {
+      "name": "one harvest round collects all four ready plants exactly once",
+      "result": "pass"
+    },
+    {
+      "name": "a repeated harvest or main craft in the same day is rejected atomically",
+      "result": "pass"
+    },
+    {
+      "name": "new plant consumes one seed and gains its first tick that day",
+      "result": "pass"
+    },
+    {
+      "name": "four slots are hard bounded including tree",
+      "result": "pass"
+    },
+    {
+      "name": "ready perennial has only one held output and no invisible regrowth",
+      "result": "pass"
+    },
+    {
+      "name": "tree stops at ten outputs, fruit stops at six, first yield included",
+      "result": "pass"
+    },
+    {
+      "name": "one craft consumes precisely 3/6/8/10 wood with no raw-wood export",
+      "result": "pass"
+    },
+    {
+      "name": "seeds, saplings and food/water gifts cannot be shipped",
+      "result": "pass"
+    },
+    {
+      "name": "mailbox shipment consumes goods and repeated finalization cannot duplicate reward",
+      "result": "pass"
+    },
+    {
+      "name": "four-unit shipping limit rejects entire overlarge request, leaving stored stock",
+      "result": "pass"
+    },
+    {
+      "name": "each phase has one ordinary routine; a second shipment is not free",
+      "result": "pass"
+    },
+    {
+      "name": "one daily shipment across distinct phases matches top-four quote reservation",
+      "result": "pass"
+    },
+    {
+      "name": "failed AI attempt consumes no biology, crops, goods, purse or issuance",
+      "result": "pass"
+    },
+    {
+      "name": "permissionless expiry releases capacity and rejects late result",
+      "result": "pass"
+    },
+    {
+      "name": "retry has a fresh attempt id but the exact same unspent production base",
+      "result": "pass"
+    },
+    {
+      "name": "transfer is locked while pending; after release old owner loses all purse authority",
+      "result": "pass"
+    },
+    {
+      "name": "withdrawal during AI pending cannot be overwritten by later reward credit",
+      "result": "pass"
+    },
+    {
+      "name": "dead life cannot produce but purse withdrawal remains direct and available when paused",
+      "result": "pass"
+    },
+    {
+      "name": "valid shipment before death is credited; death discards only unshipped production",
+      "result": "pass"
+    },
+    {
+      "name": "a fabricated death flag and all post-death actions are rejected",
+      "result": "pass"
+    },
+    {
+      "name": "accepted price snapshot survives later issuance or market version change",
+      "result": "pass"
+    },
+    {
+      "name": "global reservation prevents many independent NFTs overbooking token capacity",
+      "result": "pass"
+    },
+    {
+      "name": "NFT creation burn cannot lower lifetime pressure or reset per-life progression",
+      "result": "pass"
+    },
+    {
+      "name": "advisory goal cannot create material, change purse or bypass a pending base",
+      "result": "pass"
+    },
+    {
+      "name": "waiting real time alone cannot advance growth, day or purse",
+      "result": "pass"
+    },
+    {
+      "name": "an exhausted issuance bucket still admits care and growth without shipping",
+      "result": "pass"
+    },
+    {
+      "name": "care-only accepted request cannot consume a zero-reward shipment",
+      "result": "pass"
+    },
+    {
+      "name": "last reservation won by one NPC does not prevent another NPC care day",
+      "result": "pass"
+    },
+    {
+      "name": "first seed comes from Day1 kit; failed kit is not granted and retry may change kit",
+      "result": "pass"
+    },
+    {
+      "name": "owner can atomically mint new NFT from a dead-life purse with conserved burn",
+      "result": "pass"
+    },
+    {
+      "name": "purse NFT-mint intent nonce cannot replay and approved operators have no purse rights",
+      "result": "pass"
+    },
+    {
+      "name": "ownership round trip invalidates an old unused purse mint intent",
+      "result": "pass"
+    },
+    {
+      "name": "purse mint while AI pending preserves later incremental reward credit",
+      "result": "pass"
+    },
+    {
+      "name": "tentative NEAR transfer-call owner cannot mint from purse or withdraw it",
+      "result": "pass"
+    }
+  ],
+  "counterexamples": [
+    {
+      "name": "naive asynchronous NFT transfer-call drains returning NFT",
+      "result": "vulnerability reproduced in unguarded abstract design",
+      "provisional": {
+        "owner": "receiver-contract",
+        "purse": 100,
+        "receiverTokens": 0
+      },
+      "returned": {
+        "owner": "alice",
+        "purse": 0,
+        "receiverTokens": 100
+      },
+      "requiredChange": "pending-transfer authority lock plus callback recovery, or omit this path until designed"
+    }
+  ],
+  "finiteSweeps": {
+    "splitRoundingCases": 251001,
+    "bucketStates": 441,
+    "bucketTransitions": 3255
+  },
+  "assumptions": [
+    "one main, five phase routines",
+    "one shipment round/day, maximum four output units",
+    "instant one-main craft",
+    "all productive crops need one garden-well round",
+    "one-receipt atomic finalize",
+    "terminal witness represents separate canonical biology reducer",
+    "all token burning in fixture is seasonal NFT minting"
+  ],
+  "unresolved": [
+    "full biology transition parity/gas",
+    "chain implementation correctness",
+    "NEAR combined NFT/FT contract compatibility and storage registration",
+    "economic catalog/denomination/bucket parameters are provisional"
+  ]
+}

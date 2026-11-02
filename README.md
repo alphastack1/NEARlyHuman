@@ -36,6 +36,8 @@ The [service guide](docs/service.md), [contract guide](docs/chain.md), [domain n
 
 ## Design references
 
+The selected [V2 garden, workshop and NFT-purse design](design/ECONOMY_V2.md) and [balancing research](docs/economy-v2/RESEARCH.md) define the next economy candidate. They are not deployed rules. The standalone research models have permanent inputs and generate only temporary outputs; the live V1 collection remains unchanged.
+
 The [Jev choice-variety review](docs/CHOICE_VARIETY_REVIEW.md) and [real-day comparison gallery](docs/choice-review/index.html) cover canonical prior-day memory, balanced useful menus, real model comparisons and the free MISO day 2 → day 3 → PEEP visit sequence.
 
 The [day-rhythm review](docs/RHYTHM_REVIEW.md) and [before/after gallery](docs/rhythm-review/index.html) cover the latest live critique: continuing rest, contextual quiet moments, continuous small gestures and reachable garden cameos, while preserving the recorded model choices and saved state.

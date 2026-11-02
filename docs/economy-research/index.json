@@ -1,6 +1,8 @@
 {
   "date": "2026-11-02",
   "status": "Provisional research, not implemented V2 rules or launch prices",
+  "supersededForNextCandidateBy": "../../design/ECONOMY_V2.md",
+  "followUpEvidence": "../economy-v2/RESEARCH.md",
   "scope": "Read-only source/receipt research and hypothetical deterministic arithmetic. No production game, contracts, token settings, wallets or deployments changed.",
   "confirmedOwnerDirections": [
     "Earned NFT purse tokens remain withdrawable by the owner after biological death.",

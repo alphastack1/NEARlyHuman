@@ -6,6 +6,8 @@ Current owner-requested refinement: one Jev-chosen substantial undertaking per d
 
 The subsequent [Jev choice-variety review](docs/CHOICE_VARIETY_REVIEW.md) records the owner-requested cross-day/NPC pass: truthful canonical prior-action context, useful menu coverage, preserved personalities, real model comparisons and three additional verified onchain days. It distinguishes diagnostic samples from saved NFT history and keeps normal repeated care available.
 
+The owner-selected NFT-track expansion is now specified in [ECONOMY_V2.md](design/ECONOMY_V2.md), supported by [integrated balance and settlement research](docs/economy-v2/RESEARCH.md). It supersedes older economy brainstorming for the next candidate: four slots, finite crops/wood, simple crafts, an NFT-bound token purse that survives death, token-funded births and separate RH/NEAR worlds. These are selected design defaults, not changes to the live V1 game.
+
 Owner: Enzo Smith.
 
 Prepared: October 31, 2026, using the Asia/Bangkok calendar.
