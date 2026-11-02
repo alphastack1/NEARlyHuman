@@ -73,4 +73,15 @@ The actual compiled canonical NORI day completed naturally in 70.257 seconds, fr
 
 The [compiled phone review](daily-life-review/COMPILED_PHONE_REVIEW.md) includes a delayed-preview identity check and the balanced phone room grid. The [function package inspection](daily-life-review/proofs/function-bundles.json) confirms Node 22, background preparation, five-minute reconciliation and the new policy code without development-wallet/scratch imports. The [credential audit](daily-life-review/proofs/credential-audit.json) compares all four real private credential values against the source, frontend output and every decompressed function entry; no values were found. A defensive environment-variable name in exception redaction is documented separately and is not a credential value.
 
-Verified permanent source/assets/proofs live outside `TEMP`; no runtime or build input depends on scratch contents. There is one final production push for this sprint, followed by public verification and reopening testnet admission. No mainnet deployment is part of this release.
+Verified permanent source/assets/proofs live outside `TEMP`; no runtime or build input depends on scratch contents. The sprint used one production push. Public verification passed and testnet admission is open again. No mainnet deployment is part of this release.
+
+
+## Published verification
+
+Source commit `f7013df906cfecde28dcbc923b358edda3b44f7c` published in Netlify deployment `6ae81c3f60f36f9296ed0e0a`, Ready at **2026-11-02T05:15:22.567Z** (2 November 2026, Bangkok midday). The final public app and all five JS/CSS assets match the local release manifest byte-for-byte. The content-hashed NORI preview matches its verified SHA256.
+
+The actual public 390×844 browser opened the title, started NORI’s day, reached the outside mailbox, opened the grouped log and resumed. It reported zero page errors, zero API writes and no horizontal page overflow. Config, current NORI state, canonical day-three replay, NFT metadata/image and older PEEP day-two replay all returned 200. The service exposes the new decision-policy fingerprint. No additional paid request was manufactured for this public read-only check.
+
+Admissions were reopened in transaction `0x7eb8e873e9668f3434911239fd751e141754d31dcbd083509c7c397588b14c10`, block `146877664`, with no pending request. The mainnet collection remains undeployed.
+
+[Public browser proof](daily-life-review/proofs/published.json) · [publication/admission record](daily-life-review/proofs/publication.json) · [live title](daily-life-review/images/live-title390.png) · [live mailbox](daily-life-review/images/live-mailbox390.png). These completion proofs are saved and committed locally after publication, avoiding a second Netlify deployment.
