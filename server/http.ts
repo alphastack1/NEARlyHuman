@@ -64,7 +64,8 @@ export async function handleApi(request: Request): Promise<Response> {
         return new Response(`<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 64 64" shape-rendering="crispEdges"><rect width="64" height="64" fill="#eee9d5"/><rect x="3" y="3" width="58" height="58" fill="#182e3d"/><rect x="5" y="5" width="54" height="54" fill="#728661"/><ellipse cx="32" cy="52" rx="14" ry="3" fill="#526548"/><g transform="translate(16 12)">${art}</g></svg>`, { headers: { 'Content-Type': 'image/svg+xml', 'Cache-Control': 'public,max-age=30' } });
       }
       const traits = roosterTraits(s.seed), origin = serverConfig().allowedOrigins.find(v => v.startsWith('https://')) || url.origin;
-      return json({ name: `${s.name} #${rooster.id}`, description: 'A NEARlyHuman life. A rooster with its own routine, a home, and an onchain history.', image: `${origin}/api/nft/${match[1]}/${rooster.id}/image.svg`, external_url: `${origin}/?rooster=${rooster.id}`, attributes: [
+        const original = connection();
+        return json({ name: `${s.name} #${rooster.id}`, description: 'A NEARlyHuman life. A rooster with its own routine, a home, and an onchain history.', image: `${origin}/api/nft/${match[1]}/${rooster.id}/image.svg`, external_url: `${origin}/?rooster=${rooster.id}&chainId=${match[1]}&collection=${original.address}`, attributes: [
         { trait_type: 'Life', value: s.alive ? 'Alive' : 'Remembered' }, { trait_type: 'Level', value: s.level }, { trait_type: 'Game day', value: s.day },
         ...Object.entries(s.stats).map(([k, v]) => ({ trait_type: k[0].toUpperCase() + k.slice(1), value: v })), { trait_type: 'Headgear', value: traits.headgear },
       ] }, 200, { 'Cache-Control': 'public,max-age=30' });

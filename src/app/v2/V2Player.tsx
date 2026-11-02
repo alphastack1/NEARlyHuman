@@ -5,13 +5,14 @@ import type { V2PublicLife } from '../../v2/public';
 import type { Receipt, State } from '../../v2/types';
 import { filmBeats, inspectDetail, quietInterlude, receiptNote, receiptTitle, type Inspection, type V2FilmPacket } from '../../v2/presentation';
 import '../v2Playback.css';
+import type { CartridgePhase } from '../CartridgeOpening';
 
-interface Props { packet?: V2FilmPacket; life?: V2PublicLife; name?: string; onPrepare?: () => void; onHatch?: () => void; onPurse?: () => void; onExit?: () => void }
+interface Props { packet?: V2FilmPacket; life?: V2PublicLife; name?: string; onPrepare?: () => void; onHatch?: () => void; onPurse?: () => void; onExit?: () => void; onMenu?: () => void; onProfile?: () => void; onLatest?: () => void; suspended?: boolean; opening?: CartridgePhase; prepareLabel?: string }
 const NEED_ICONS: IconName[] = ['heart', 'food', 'water', 'energy', 'morale'];
 const NEED_LABELS = ['Health', 'Food', 'Water', 'Energy', 'Mood'];
 const NEED_COLORS = ['#ef6c65', '#e6b46a', '#5db6df', '#f3d45e', '#a0bd72'];
 
-export default function V2Player({ packet, life, name, onPrepare, onHatch, onPurse, onExit }: Props) {
+export default function V2Player({ packet, life, name, onPrepare, onHatch, onPurse, onExit, onMenu, onProfile, onLatest, suspended, opening = 'closed', prepareLabel }: Props) {
   const receipts = packet?.result.receipts || [];
   const initial = receipts[0]?.before || packet?.result.state || life!.state;
   const savedHome = !packet;
@@ -35,21 +36,29 @@ export default function V2Player({ packet, life, name, onPrepare, onHatch, onPur
   const beats = filmBeats(receipts);
   const current = receipts.slice(0, index + 1).reverse().find(r => !quietInterlude(r));
   const approaching = inFlight && !inFlight.impacted && !quietInterlude(inFlight.receipt) ? inFlight.receipt : undefined;
-  const mainDone = receipts.slice(0, index + 1).some(r => r.role === 'main' && r.success);
+  const actualMain = receipts.slice(0, index + 1).find(r => r.role === 'main');
+  const plannedFocus = packet?.dailyPlan?.focus as { op?: number; arg?: number; variant?: number } | undefined;
+  const mainDone = packet?.dailyPlan?.status === 'completed' && !!actualMain?.success && (!plannedFocus || (actualMain.op === plannedFocus.op && actualMain.arg === plannedFocus.arg && actualMain.variant === plannedFocus.variant));
+  const undertaking = packet?.dailyPlan?.status === 'unavailable' && actualMain ? receiptTitle(actualMain) : packet?.dailyPlan?.mainLabel;
   const detail = inspect ? inspectDetail(inspect, snapshot) : undefined;
+  const earned = packet?.rewardMicro && BigInt(packet.rewardMicro) > 0n ? (Number(BigInt(packet.rewardMicro)) / 1e6).toLocaleString(undefined, { maximumFractionDigits: 6 }) : '';
   const title = savedHome ? snapshot.alive ? `${roosterName}, at home.` : 'A little life, remembered.' : !started ? `A day with ${roosterName}.` : complete ? snapshot.alive ? 'A little day, well lived.' : 'A little life, remembered.' : approaching ? receiptTitle(approaching) : current ? receiptTitle(current) : 'A new morning.';
-  const note = complete ? snapshot.alive ? `Day ${targetDay} · Level ${packet?.result.state.level}` : '' : approaching ? '' : current ? receiptNote(current) : '';
+  const note = complete ? snapshot.alive ? `Day ${targetDay} · Level ${packet?.result.state.level}${earned ? ` · +${earned} NHC` : ''}` : earned ? `+${earned} NHC kept in the purse` : '' : approaching ? '' : current ? current.op === 10 && current.success && earned ? `Sent with care · +${earned} NHC` : receiptNote(current) : '';
   const prepareAction = (complete || savedHome) && !!onPrepare && snapshot.alive;
   const hatchAction = (complete || savedHome) && !prepareAction && !!onHatch;
-  const primaryLabel = !ready ? 'Opening home…' : error ? 'Try again' : prepareAction ? 'Prepare tomorrow' : hatchAction ? 'Hatch your own' : savedHome ? 'Back home' : complete ? 'Watch again' : 'Watch day';
+  const primaryLabel = !ready ? 'Opening home…' : error ? 'Try again' : onLatest && (complete || savedHome) ? 'Latest home' : prepareAction ? prepareLabel || 'Prepare tomorrow' : hatchAction ? 'Hatch your own' : savedHome ? 'Back home' : complete ? 'Watch again' : 'Watch day';
 
   function pause(value: boolean) { pausedRef.current = value; setPaused(value); renderer.current?.setPaused(value); }
   function inspectObject(target: Inspection) { pause(true); setInspect(target); }
   function closeInspect() { setInspect(undefined); }
+  useEffect(() => { renderer.current?.setInputEnabled(!suspended); if (suspended) pause(true); }, [suspended, ready]);
+  useEffect(() => { renderer.current?.setOpening(opening); }, [opening, ready]);
 
   useEffect(() => {
     setReady(false); setError(false); setStarted(false); setComplete(false); setIndex(-1); setSnapshot(initial); setInFlight(undefined);
     const controller = createV2WorldRenderer(host.current!, { state: initial, onInspect: inspectObject, onMotion: ({ traveling }: { traveling: boolean }) => setTraveling(traveling) });
+    controller.setInputEnabled(!suspended);
+    controller.setOpening(opening);
     renderer.current = controller;
     controller.ready.then(() => setReady(true)).catch(() => setError(true));
     return () => { generation.current++; controller.destroy(); renderer.current = undefined; };
@@ -108,23 +117,24 @@ export default function V2Player({ packet, life, name, onPrepare, onHatch, onPur
   }
   function primaryAction() {
     setError(false);
-    if (prepareAction) onPrepare?.();
+    if (onLatest && (complete || savedHome)) onLatest();
+    else if (prepareAction) onPrepare?.();
     else if (hatchAction) onHatch?.();
     else if (savedHome) onExit ? onExit() : location.assign('/');
     else void run(0);
   }
 
-  return <main className="v2-stage" aria-label={`${roosterName}'s home`}>
+  return <main className={`v2-stage${opening !== 'closed' ? ' v2-has-opening' : ''}`} aria-label={`${roosterName}'s home`}>
     <div className="v2-world" ref={host}/>
     <header className="v2-hud v2-pixel-frame" ref={top}>
       <div className="v2-identity">
-        <div className="v2-name">{onExit && <button className="v2-icon-button v2-back" onClick={onExit} aria-label="Back"><Icon name="back" size={13}/></button>}<strong>{roosterName}</strong><span>LV{String(snapshot.level).padStart(2, '0')}</span></div>
-        <span className="v2-day">DAY {String(targetDay).padStart(2, '0')}</span>
+        <div className="v2-name">{onExit && <button className="v2-icon-button v2-back" onClick={onExit} aria-label="Back"><Icon name="back" size={13}/></button>}<strong role={onProfile ? 'button' : undefined} tabIndex={onProfile ? 0 : undefined} onClick={onProfile} onKeyDown={e => { if (onProfile && (e.key === 'Enter' || e.key === ' ')) onProfile(); }}>{roosterName}</strong><span>LV{String(snapshot.level).padStart(2, '0')}</span></div>
+        <span className="v2-day">DAY {String(targetDay).padStart(2, '0')}</span>{onMenu && <button className="v2-icon-button v2-menu-button" onClick={onMenu} aria-label="Open menu"><Icon name="gear" size={14}/></button>}
       </div>
       <div className="v2-needs">{NEED_ICONS.map((icon, i) => <div className="v2-need" key={icon} role="meter" aria-label={NEED_LABELS[i]} aria-valuenow={Math.round(snapshot.needs[i]! / 100)} aria-valuemin={0} aria-valuemax={100} title={`${NEED_LABELS[i]} ${Math.round(snapshot.needs[i]! / 100)}%`}>
         <Icon name={icon} size={18} color={NEED_COLORS[i]}/><span className="v2-pips">{[0, 1, 2, 3, 4].map(p => <i key={p} style={{ backgroundColor: snapshot.needs[i]! > p * 2000 ? NEED_COLORS[i] : undefined }}/>)}</span>
       </div>)}</div>
-      {packet?.dailyPlan?.mainLabel && !complete && <div className={`v2-intention${mainDone ? ' v2-intention-done' : ''}`}><Icon name={mainDone ? 'check' : 'leaf'} size={11}/><span>{packet.dailyPlan.mainLabel}</span></div>}
+      {undertaking && !complete && <div className={`v2-intention${mainDone ? ' v2-intention-done' : ''}`}><Icon name={mainDone ? 'check' : 'leaf'} size={11}/><span>{undertaking}</span></div>}
       {ready && started && !complete && !inspect && <button className="v2-follow v2-icon-button" onClick={() => renderer.current?.followActor()} aria-label="Follow rooster"><Icon name="house" size={16}/></button>}
     </header>
 

@@ -1,0 +1,184 @@
+{
+  "version": 2,
+  "chainId": 31337,
+  "collection": "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9",
+  "id": "1",
+  "owner": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+  "name": "MISO",
+  "revision": 103,
+  "state": {
+    "version": 2,
+    "seed": "0xc10c7765bf1384025f0b017cc07ff393e1513c5ab967eb6bbc4b2fa37cf8dcbc",
+    "day": 103,
+    "level": 102,
+    "alive": false,
+    "deathCause": 3,
+    "stats": [
+      2,
+      2,
+      1
+    ],
+    "needs": [
+      7000,
+      0,
+      0,
+      10000,
+      4120
+    ],
+    "inventory": [
+      3,
+      0,
+      3,
+      0,
+      0,
+      0,
+      4,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "conditions": [
+      {
+        "severity": 1,
+        "onsetDay": 103,
+        "dueDay": 104,
+        "resolved": false
+      },
+      {
+        "severity": 1,
+        "onsetDay": 102,
+        "dueDay": 103,
+        "resolved": false
+      },
+      {
+        "severity": 0,
+        "onsetDay": 0,
+        "dueDay": 0,
+        "resolved": false
+      },
+      {
+        "severity": 0,
+        "onsetDay": 0,
+        "dueDay": 0,
+        "resolved": false
+      },
+      {
+        "severity": 0,
+        "onsetDay": 0,
+        "dueDay": 0,
+        "resolved": false
+      },
+      {
+        "severity": 0,
+        "onsetDay": 0,
+        "dueDay": 0,
+        "resolved": false
+      },
+      {
+        "severity": 0,
+        "onsetDay": 0,
+        "dueDay": 0,
+        "resolved": false
+      },
+      {
+        "severity": 0,
+        "onsetDay": 0,
+        "dueDay": 0,
+        "resolved": false
+      }
+    ],
+    "plots": [
+      {
+        "kind": 9,
+        "ticks": 0,
+        "left": 2,
+        "moisture": 2,
+        "dry": 0,
+        "soilBlocked": false
+      },
+      {
+        "kind": 9,
+        "ticks": 0,
+        "left": 3,
+        "moisture": 2,
+        "dry": 0,
+        "soilBlocked": false
+      },
+      {
+        "kind": 9,
+        "ticks": 0,
+        "left": 3,
+        "moisture": 2,
+        "dry": 0,
+        "soilBlocked": false
+      },
+      {
+        "kind": 5,
+        "ticks": 0,
+        "left": 1,
+        "moisture": 2,
+        "dry": 0,
+        "soilBlocked": false
+      }
+    ],
+    "house": {
+      "mess": 0,
+      "damage": 0,
+      "chairLife": 0,
+      "chairAnchor": 0,
+      "shelterLife": 0,
+      "umbrellaLife": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "stovePatch": 0,
+      "windowPatch": 0,
+      "chairBrace": false,
+      "windowBrace": false,
+      "dripDiverted": false,
+      "backupHeat": false,
+      "powerOut": false,
+      "fire": 0
+    },
+    "goal": 0,
+    "goalCreatedDay": 0,
+    "goalReviewDay": 0,
+    "recent": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  "purseMicro": "20964786",
+  "purseNonce": "3",
+  "observedBlock": "230"
+}

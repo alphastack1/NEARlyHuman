@@ -13,6 +13,7 @@ import { finishV2JobBudget, updateV2Record } from './budget';
 const abi = parseAbi([
   'function request(bytes32 id) view returns((uint256 tokenId,address player,uint32 baseRevision,uint32 day,uint64 kitMask,bool shipping,uint64 acceptedAt,uint64 deadline,bytes32 daySeed,bytes32 decisionConfig,bytes32 baseHash,uint256 pressure,uint256 reservedReward,uint8 status))',
   'function expire(bytes32 id)',
+  'function dayRecord(uint256 id,uint32 day) view returns((bytes32 requestId,bytes32 seed,bytes32 stateHash,bytes32 traceHash,bytes32 certificateHash,bytes32 replayCommitment,uint256 reward,bytes history))',
 ]);
 const acceptedEvent = parseAbiItem('event DayAccepted(bytes32 indexed id,uint256 indexed tokenId,address indexed player,uint256 reservedReward,bool shipping,bytes32 daySeed)');
 const same = (a: string, b: string) => a.toLowerCase() === b.toLowerCase();
@@ -32,14 +33,26 @@ function account(r: V2RuntimeIdentity) {
 export async function quoteV2OwnerDay(player: Address, input: { tokenId: string; kitMask: string; shipping?: boolean }) {
   const c = connection();
   if (!/^[1-9]\d{0,77}$/.test(input.tokenId) || BigInt(input.tokenId) >= 1n << 256n || !/^(0|[1-9]\d{0,19})$/.test(input.kitMask) || BigInt(input.kitMask) >= 1n << 64n || input.shipping !== undefined && typeof input.shipping !== 'boolean') throw new ServiceError('Choose the supplies again.', 'format');
-  return issueV2DayQuote(c.client, c.runtime, account(c.runtime), { player, tokenId: BigInt(input.tokenId), kitMask: BigInt(input.kitMask), shipping: input.shipping }, { campaignId: c.campaignId, allowLocal: c.allowLocal });
+  const nativeAllowance = (name: string) => { const raw = process.env[name] || '0'; if (!/^(0|[1-9]\d{0,16})$/.test(raw) || BigInt(raw) > 10n ** 16n) throw new ServiceError('Preparation is resting. Try again shortly.', 'capacity', 503); return BigInt(raw); };
+  return issueV2DayQuote(c.client, c.runtime, account(c.runtime), { player, tokenId: BigInt(input.tokenId), kitMask: BigInt(input.kitMask), shipping: input.shipping }, { campaignId: c.campaignId, allowLocal: c.allowLocal,
+    inferenceReserveWei: nativeAllowance('NEARLYHUMAN_V2_INFERENCE_RESERVE_WEI'), hostingReserveWei: nativeAllowance('NEARLYHUMAN_V2_HOSTING_RESERVE_WEI') });
 }
 async function ownerJob(id: Hex, player: Address) {
   const c = connection(), job = (await storage().get<V2Job>(prefix(c.runtime) + id.toLowerCase()))?.value;
   if (!job || !same(job.input.player, player)) throw new ServiceError('That day could not be found.', 'not_found', 404);
   return job;
 }
-export async function getV2OwnerJob(id: Hex, player: Address) { return v2JobView(await ownerJob(id, player)); }
+export async function getV2OwnerJob(id: Hex, player: Address) {
+  try{return v2JobView(await ownerJob(id,player));}catch(error){if(!(error instanceof ServiceError)||error.code!=='not_found')throw error;}
+  const c=connection(),head=await verifyV2Runtime(c.client,c.runtime,c.allowLocal),q=await c.client.readContract({address:c.runtime.collection,abi,functionName:'request',args:[id],blockNumber:head.number!});
+  if(q.status===0||!same(q.player,player))throw new ServiceError('That day could not be found.','not_found',404);
+  const saved=q.status===2?await c.client.readContract({address:c.runtime.collection,abi,functionName:'dayRecord',args:[q.tokenId,q.day],blockNumber:head.number!}):undefined;
+  if(saved&&saved.requestId!==id)throw new V2ContextError('context','Checking this saved day again.');
+  if((await c.client.getBlock({blockNumber:head.number!})).hash!==head.hash)throw new V2ContextError('connection','Checking this day again.');
+  // A paid receipt can precede its durable acknowledgement. This view does not
+  // invent a job, buy inference or release a financial hold.
+  return {requestId:id,tokenId:q.tokenId.toString(),phase:q.status===2?'ready' as const:q.status===3?'failed' as const:q.status===4?'expired' as const:'queued' as const,decisions:0,updatedAt:Date.now(),...(saved?{commitment:saved.replayCommitment}:{}),retrySafe:q.status===3||q.status===4};
+}
 export async function acceptV2OwnerDay(tx: Hex, player: Address, requestId?: Hex) {
   const c = connection();
   if (requestId) {
@@ -55,7 +68,15 @@ export async function acceptV2OwnerDay(tx: Hex, player: Address, requestId?: Hex
   return v2JobView(job);
 }
 export async function wakeV2OwnerDay(id: Hex, player: Address) {
-  const job = await ownerJob(id, player);
+  let job:V2Job;
+  try{job=await ownerJob(id,player);}catch(error){
+    if(!(error instanceof ServiceError)||error.code!=='not_found')throw error;
+    const c=connection(),head=await verifyV2Runtime(c.client,c.runtime,c.allowLocal),q=await c.client.readContract({address:c.runtime.collection,abi,functionName:'request',args:[id],blockNumber:head.number!});
+    if(q.status===0||!same(q.player,player))throw new ServiceError('That day could not be found.','not_found',404);
+    if(q.status===1&&head.timestamp<=q.deadline){const tx=await findV2Acceptance(c.client,c.runtime,id,q.acceptedAt,head.number!);return acceptV2OwnerDay(tx,player,id);}
+    if(q.status===1){const data=encodeFunctionData({abi,functionName:'expire',args:[id]}),jobId=prefix(c.runtime)+id.toLowerCase(),key=`v2/recovery/${c.runtime.chainId}/${c.runtime.collection.toLowerCase()}/${id}`,previous=(await storage().get<V2RelayJournal>(key))?.value;await terminalV2Transaction(c.client,c.runtime,account(c.runtime),{jobId,kind:'expire',data,resultDigest:keccak256(data)},async journal=>{await storage().put(key,journal);},{allowLocal:c.allowLocal,recoverJournal:previous});}
+    await reconcileV2QuoteFunding(c.client,c.runtime,c.campaignId,storage(),c.allowLocal);return getV2OwnerJob(id,player);
+  }
   if (!terminal(job)) await dispatchV2Job(job.id);
   return v2JobView(job);
 }

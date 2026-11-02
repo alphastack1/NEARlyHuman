@@ -78,6 +78,8 @@ contract NEARlyHumanV2 is ERC721, Ownable, EIP712, ReentrancyGuard {
     mapping(bytes32=>Request) private requests;
     mapping(bytes32=>bool) public usedAdmissions;
     mapping(uint256=>mapping(uint32=>DayRecord)) private records;
+    mapping(address=>uint256[]) private owned;
+    mapping(uint256=>uint256) private ownedIndex;
 
     event DayAccepted(bytes32 indexed id,uint256 indexed tokenId,address indexed player,uint256 reservedReward,bool shipping,bytes32 daySeed);
     event DaySettled(bytes32 indexed id,uint256 indexed tokenId,uint32 day,bytes32 stateHash,uint256 reward,bytes32 replayCommitment);
@@ -104,6 +106,12 @@ contract NEARlyHumanV2 is ERC721, Ownable, EIP712, ReentrancyGuard {
     }
     function request(bytes32 id) external view returns(Request memory){return requests[id];}
     function dayRecord(uint256 id,uint32 day) external view returns(DayRecord memory){return records[id][day];}
+    function ownedTokens(address holder,uint256 cursor,uint256 limit) external view returns(uint256[] memory ids,uint256 next){
+        require(limit>0&&limit<=24,"page limit");uint256 length=owned[holder].length;
+        if(cursor>=length)return(new uint256[](0),length);
+        uint256 end=cursor+limit;if(end>length)end=length;ids=new uint256[](end-cursor);
+        for(uint256 i=cursor;i<end;++i)ids[i-cursor]=owned[holder][i];return(ids,end);
+    }
     function _newLife(address receiver,string memory name,uint8[3] memory stats) private returns(uint256 id){
         bytes memory n=bytes(name);require(n.length>0&&n.length<=8&&n[0]!=0x20&&n[n.length-1]!=0x20,"name");
         for(uint256 i;i<n.length;++i) require(n[i]==0x20||(n[i]>=0x30&&n[i]<=0x39)||(n[i]>=0x41&&n[i]<=0x5a),"name");
@@ -183,7 +191,12 @@ contract NEARlyHumanV2 is ERC721, Ownable, EIP712, ReentrancyGuard {
     }
     function withdrawFees() external nonReentrant {uint256 amount=nativeFees;nativeFees=0;(bool ok,)=treasury.call{value:amount}("");require(ok,"treasury transfer");}
     function _update(address to,uint256 id,address auth) internal override returns(address from){
-        from=_ownerOf(id);if(from!=address(0)){require(pending[id]==bytes32(0),"day pending");++purseNonce[id];++revisions[id];}return super._update(to,id,auth);
+        from=_ownerOf(id);if(from!=address(0)){require(pending[id]==bytes32(0),"day pending");++purseNonce[id];++revisions[id];}
+        super._update(to,id,auth);
+        if(from!=to){
+            if(from!=address(0)){uint256 at=ownedIndex[id];uint256 last=owned[from][owned[from].length-1];owned[from][at]=last;ownedIndex[last]=at;owned[from].pop();delete ownedIndex[id];}
+            if(to!=address(0)){ownedIndex[id]=owned[to].length;owned[to].push(id);}
+        }
     }
     function tokenURI(uint256 id) public view override returns(string memory){ownerOf(id);return string.concat("https://nearlyhuman.netlify.app/api/v2/nft/",id.toString(),"?chainId=",block.chainid.toString(),"&collection=",Strings.toHexString(uint160(address(this)),20));}
 }

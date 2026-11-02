@@ -1,0 +1,10 @@
+{
+  "scope": "Controlled in-memory source seal checks; no Netlify writes, real inference, production ledger or chain transactions.",
+  "passed": 4,
+  "results": [
+    "complete source seal blocks new allocations/holds/sends/closure while cached answer remains free and ledger bytes unchanged",
+    "seal stops an already-entered provider before its mandatory paid-send fence",
+    "previously reserved send reconciles actual cost and retires existing allowance after seal; this active fixture would fail import quiescence preflight",
+    "malformed source seal remains closed rather than reopening spending"
+  ]
+}

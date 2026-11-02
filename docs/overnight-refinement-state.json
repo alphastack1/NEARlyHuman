@@ -5,8 +5,8 @@
   "timezone": "Asia/Bangkok",
   "intervalMinutes": 60,
   "scheduledWaveCount": 6,
-  "completedWaveCount": 3,
-  "nextWave": 4,
+  "completedWaveCount": 4,
+  "nextWave": 5,
   "activeWave": null,
   "status": "waiting_for_next_hourly_wave",
   "owner": "PM chat only",
@@ -77,7 +77,20 @@
     {
       "number": 4,
       "focus": "Self-explanatory first use, public life and purse",
-      "status": "pending"
+      "status": "complete",
+      "startedAtUtc": "2026-11-02T18:19:03Z",
+      "owners": {
+        "fundingAndPM": "PM",
+        "coldVisitor": "wave4_cold_visitor",
+        "chain": "wave4_chain",
+        "journey": "wave4_journey"
+      },
+      "question": "Can a cold visitor become an owner, care for and share an exact life, and use its purse through one clean coherent phone journey?",
+      "completedAtUtc": "2026-11-02T19:10:35Z",
+      "evidence": "docs/overnight/wave4/README.md",
+      "screenshots": "docs/overnight/wave4/images/ui-manifest.json",
+      "result": "Full local owner/public-life/purse journey; actual browser mint and two canonical failure/retry attempts; 16 scoped phone/title/history/death captures. Actual local 100-day earning/two-token-birth/death-withdrawal proof. Closed research without resetting charges, funded 90000-microUSD candidate campaign, prepared safe deployment/cloud-cutover tools. No new paid AI, public-chain deployment or production release.",
+      "nextPriority": "Pause original V1 admissions and prove CLOUD holds/jobs/shared relay drained; deploy final V2 testnet candidate, run final-policy real Jev days and actual owner phone flows, choose a genuine saved guest. Preserve the one final wave6 cloud cutover/main push boundary."
     },
     {
       "number": 5,

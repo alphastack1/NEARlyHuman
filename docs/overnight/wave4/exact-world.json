@@ -1,0 +1,28 @@
+{
+  "scope": "Controlled API rejection of malformed or other-world NFT links; real rendered app, no wallet/chain/inference calls.",
+  "errors": [],
+  "cases": [
+    {
+      "query": "rooster=1&chainId=46630&collection=nope",
+      "paths": [],
+      "message": "Choose the original link for this life.",
+      "pass": true
+    },
+    {
+      "query": "rooster=1&chainId=46630",
+      "paths": [],
+      "message": "Choose the original link for this life.",
+      "pass": true
+    },
+    {
+      "query": "rooster=1&chainId=46630&collection=0x1111111111111111111111111111111111111111",
+      "paths": [
+        "/api/v2/config",
+        "/api/v2/replay/1?chainId=46630&collection=0x1111111111111111111111111111111111111111",
+        "/api/v2/rooster/1?chainId=46630&collection=0x1111111111111111111111111111111111111111"
+      ],
+      "message": "This life belongs to another world.",
+      "pass": true
+    }
+  ]
+}

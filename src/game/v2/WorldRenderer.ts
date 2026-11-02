@@ -7,6 +7,7 @@ import { v2Personality } from '../../v2/personality';
 import { PLANTS, RECIPES } from '../../v2/catalog';
 import { landscape, bedArt, itemArt, wellArt, workbenchArt } from './art';
 import { WORLD_WIDTH, WORLD_HEIGHT, BEDS, ANCHORS, findRoute, receiptStops, type Point, type InspectTarget } from './layout';
+import { openingEase, openingTileTime } from '../opening';
 
 export type { InspectTarget } from './layout';
 export interface V2WorldOptions { state: State; onInspect?: (target: InspectTarget) => void; onMotion?: (motion: { traveling: boolean }) => void }
@@ -15,6 +16,8 @@ export interface V2WorldController {
   setState(state: State, options?: { receipt?: Receipt; slot?: number; history?: readonly Receipt[] }): void;
   playReceipt(receipt: Receipt, options?: { duration?: number; onImpact?: () => void }): Promise<void>;
   setPaused(paused: boolean): void;
+  setInputEnabled(enabled: boolean): void;
+  setOpening(phase: 'assembling' | 'title' | 'leaving' | 'closed'): void;
   setViewportInsets(top: number, bottom: number, left?: number, right?: number): void;
   focus(target: InspectTarget): void;
   followActor(): void;
@@ -54,6 +57,10 @@ class LifeScene extends Phaser.Scene {
   private cameraPoint: Point = { x: 312, y: 79 };
   private film?: Film;
   private paused = false;
+  private interactionEnabled = true;
+  private openingPhase: 'assembling' | 'title' | 'leaving' | 'closed' = 'closed';
+  private openingSince = 0;
+  private openingMask!: Phaser.GameObjects.Graphics;
   private elapsed = 0;
   private facing = 1;
   private widthLogical = 256;
@@ -90,30 +97,32 @@ class LifeScene extends Phaser.Scene {
     prop('baseSeat', 80, 336, { kind: 'fixture', label: 'Armchair', index: 7 }); prop('plant', 115, 323); prop('painting', 69, 292); prop('painting', 172, 292); prop('plant', 193, 379);
     prop('chair', 168, 336, { kind: 'fixture', label: 'Handmade chair', index: 2 }); prop('sink', 336, 320, { kind: 'fixture', label: 'Washroom', index: 8 }); prop('plant', 301, 327); prop('painting', 335, 280);
     prop('plant', 304, 402); prop('shelf', 434, 287); prop('plant', 470, 406);
-    this.textures.addCanvas('v2-bench', workbenchArt()); this.add.image(432, 323, 'v2-bench').setOrigin(.5, 1).setDepth(323).setInteractive().on('pointerup', () => this.inspect({ kind: 'workshop', label: 'Workshop' }));
-    this.textures.addCanvas('v2-well', wellArt()); this.add.image(280, 536, 'v2-well').setOrigin(.5, 1).setDepth(536).setInteractive().on('pointerup', () => this.inspect({ kind: 'well', label: 'Well' }));
+    this.textures.addCanvas('v2-bench', workbenchArt()); this.add.image(432, 323, 'v2-bench').setOrigin(.5, 1).setDepth(323).setInteractive().on('pointerup', (pointer: Phaser.Input.Pointer) => this.inspect({ kind: 'workshop', label: 'Workshop' }, pointer));
+    this.textures.addCanvas('v2-well', wellArt()); this.add.image(280, 536, 'v2-well').setOrigin(.5, 1).setDepth(536).setInteractive().on('pointerup', (pointer: Phaser.Input.Pointer) => this.inspect({ kind: 'well', label: 'Well' }, pointer));
     prop('mailbox', 424, 728, { kind: 'mailbox', label: 'Mailbox' });
     for (let i = 0; i < 4; i++) {
       const p = BEDS[i]!; const key = `v2-plot-initial-${i}`; this.textures.addCanvas(key, bedArt(this.state.plots[i]!)); this.plotKeys[i] = key;
-      this.plots[i] = this.add.image(p.x, p.y + 3, key).setOrigin(.5, 1).setDepth(p.y).setInteractive(new Phaser.Geom.Rectangle(6, 17, 52, 70), Phaser.Geom.Rectangle.Contains).on('pointerup', () => this.inspect({ kind: 'bed', index: i, label: `Garden bed ${i + 1}` }));
+      this.plots[i] = this.add.image(p.x, p.y + 3, key).setOrigin(.5, 1).setDepth(p.y).setInteractive(new Phaser.Geom.Rectangle(6, 17, 52, 70), Phaser.Geom.Rectangle.Contains).on('pointerup', (pointer: Phaser.Input.Pointer) => this.inspect({ kind: 'bed', index: i, label: `Garden bed ${i + 1}` }, pointer));
       this.covers[i] = this.add.image(p.x + 8, p.y - 15, this.fixtureTexture('umbrella', {})).setOrigin(.5, 1).setDepth(p.y + 5).setVisible(false);
     }
     this.foreground = this.add.graphics(); this.effects = this.add.graphics().setDepth(950); this.ambient = this.add.graphics().setDepth(960); this.marks = this.add.graphics().setDepth(970);
     this.shadow = this.add.ellipse(this.point.x, this.point.y + 1, 20, 6, 0x342f28, .25);
     this.actor = this.add.image(this.point.x, this.point.y, this.roosterTexture('idle')).setOrigin(ROOSTER_FRAME.footX / ROOSTER_FRAME.width, ROOSTER_FRAME.footY / ROOSTER_FRAME.height).setScale(1.4).setInteractive();
-    this.actor.on('pointerup', () => { if (!this.dragging?.moved) this.attention = this.elapsed + 1400; });
+    this.actor.on('pointerup', (pointer: Phaser.Input.Pointer) => { if (this.allowPointer(pointer) && !this.dragging?.moved) this.attention = this.elapsed + 1400; });
     this.held = this.add.image(0, 0, this.itemTexture(6)).setVisible(false).setScale(1.1);
     this.blanket = this.add.image(312, 112, this.fixtureTexture('bedCover', {})).setOrigin(.5, 1).setDepth(115).setScale(1.2).setVisible(true);
     this.night = this.add.rectangle(0, 0, WORLD_WIDTH, WORLD_HEIGHT, 0x172439, 1).setOrigin(0).setDepth(1000).setAlpha(0);
+    this.openingMask = this.add.graphics().setDepth(1200);
     this.lampGlow = this.add.graphics().setDepth(1001);
-    this.input.on('pointerdown', (p: Phaser.Input.Pointer) => { this.dragging = { x: p.x, y: p.y, camera: { ...this.cameraPoint }, moved: false }; });
+    this.input.on('pointerdown', (p: Phaser.Input.Pointer) => { if (this.allowPointer(p)) this.dragging = { x: p.x, y: p.y, camera: { ...this.cameraPoint }, moved: false }; });
     this.input.on('pointermove', (p: Phaser.Input.Pointer) => {
-      const d = this.dragging; if (!p.isDown || !d || this.film && !this.paused) return;
+      const d = this.dragging; if (!this.interactionEnabled || !p.isDown || !d || this.film && !this.paused) return;
       if (Math.hypot(p.x - d.x, p.y - d.y) > 5) d.moved = true;
       if (d.moved) this.focusPoint = this.clampCamera({ x: d.camera.x - (p.x - d.x) / this.cameras.main.zoom, y: d.camera.y - (p.y - d.y) / this.cameras.main.zoom });
     });
     this.input.on('pointerup', () => { queueMicrotask(() => { this.dragging = undefined; }); });
     this.input.on('pointerupoutside', () => { this.dragging = undefined; });
+    this.input.enabled = this.interactionEnabled;
     this.initialized = true; this.applyState(this.state); this.resizeWorld(this.widthLogical, this.heightLogical, this.cssScale); this.resolveReady(); this.pending?.(); this.pending = undefined;
   }
 
@@ -131,7 +140,7 @@ class LifeScene extends Phaser.Scene {
     const key = this.fixtureTexture(kind, opts), [width] = FIXTURE_SIZES[kind];
     if (!['window', 'shelf', 'painting', 'bedCover'].includes(kind)) this.add.ellipse(x + 1, y, width * .9, Math.max(3, width * .15), 0x44392b, .2).setDepth(y - 1);
     const image = this.add.image(x, y, key).setOrigin(.5, 1).setDepth(kind === 'window' ? 12 : y); if (kind === 'bed') image.setScale(1.2);
-    if (target) image.setInteractive(new Phaser.Geom.Rectangle(-3, -3, image.width + 6, image.height + 8), Phaser.Geom.Rectangle.Contains).on('pointerup', () => this.inspect(target));
+    if (target) image.setInteractive(new Phaser.Geom.Rectangle(-3, -3, image.width + 6, image.height + 8), Phaser.Geom.Rectangle.Contains).on('pointerup', (pointer: Phaser.Input.Pointer) => this.inspect(target, pointer));
     this.fixtures.push({ kind, image, x, y, key });
   }
   private roosterTexture(pose: RoosterPose): string {
@@ -139,7 +148,8 @@ class LifeScene extends Phaser.Scene {
     return `v2-rooster-${pose}`;
   }
   private itemTexture(index: number): string { const key = `v2-item-${index}`; if (!this.textures.exists(key)) this.textures.addCanvas(key, itemArt(index)); return key; }
-  private inspect(target: InspectTarget): void { if (this.dragging?.moved) return; this.selected = { target, until: this.elapsed + 900 }; this.options.onInspect?.(target); }
+  private allowPointer(pointer: Phaser.Input.Pointer): boolean { return this.interactionEnabled && pointer.event?.target === this.game.canvas; }
+  private inspect(target: InspectTarget, pointer: Phaser.Input.Pointer): void { if (!this.allowPointer(pointer) || this.dragging?.moved) return; this.selected = { target, until: this.elapsed + 900 }; this.options.onInspect?.(target); }
   private replaceBed(index: number, state = this.state.plots[index]!): void {
     const key = `v2-plot-${index}-${++this.textureSerial}`, previous = this.plotKeys[index]; this.textures.addCanvas(key, bedArt(state)); this.plots[index]!.setTexture(key); this.plotKeys[index] = key;
     if (previous) this.textures.remove(previous);
@@ -222,6 +232,8 @@ class LifeScene extends Phaser.Scene {
   private finish(): void { const f = this.film; if (!f) return; this.impact(); this.film = undefined; this.carrying = -1; this.motion(false); f.resolve(); }
   private motion(traveling: boolean): void { if (traveling !== this.lastTraveling) { this.lastTraveling = traveling; this.options.onMotion?.({ traveling }); } }
   setPaused(paused: boolean): void { this.paused = paused; this.motion(!!this.film && (this.film.phase === 'travel' || this.film.phase === 'home') && !paused); }
+  setInputEnabled(enabled: boolean): void { this.interactionEnabled = enabled; if (this.input) this.input.enabled = enabled; if (!enabled) this.dragging = undefined; }
+  setOpening(phase: 'assembling' | 'title' | 'leaving' | 'closed'): void { if (phase !== this.openingPhase) { this.openingPhase = phase; this.openingSince = this.elapsed; } }
   setInsets(top: number, bottom: number, left = 0, right = 0): void { this.insets = { top, bottom, left, right }; if (this.initialized) this.centerCamera(1); }
   resizeWorld(width: number, height: number, scale: number): void { this.widthLogical = width; this.heightLogical = height; this.cssScale = scale; if (this.initialized) { this.cameras.main.setViewport(0, 0, width, height).setZoom(Math.max(1.22, width / WORLD_WIDTH)); this.centerCamera(1); } }
   focus(target: InspectTarget): void {
@@ -268,7 +280,18 @@ class LifeScene extends Phaser.Scene {
         }
       }
     }
-    this.drawActor(); this.drawEffects(); this.centerCamera(1 - Math.exp(-dt / 150));
+    this.drawActor(); this.drawEffects(); this.centerCamera(1 - Math.exp(-dt / 150)); this.drawOpening();
+  }
+  private drawOpening(): void {
+    const g = this.openingMask; g.clear();
+    const elapsed = this.elapsed - this.openingSince;
+    if (this.openingPhase !== 'assembling' || elapsed > 900) return;
+    // A brief presentation-only tile reveal uses the actual house art. No day,
+    // needs, inventory or random draw advances while the cartridge wakes up.
+    for (let y = 0; y < WORLD_HEIGHT; y += 16) for (let x = 0; x < WORLD_WIDTH; x += 16) {
+      const alpha = 1 - openingEase((elapsed - openingTileTime(x - 184, y + 31)) / 320);
+      if (alpha > .01) g.fillStyle(0x172c3d, alpha).fillRect(x, y, 16, 16);
+    }
   }
   private drawActor(): void {
     const f = this.film, traveling = !!f && (f.phase === 'travel' || f.phase === 'home') && !this.paused, working = !!f && f.phase !== 'travel' && f.phase !== 'home';
@@ -329,5 +352,5 @@ export function createV2WorldRenderer(host: HTMLElement, options: V2WorldOptions
   let disposed = false, frame = 0;
   const resize = () => { if (disposed || !game.isBooted) return; const next = size(); game.scale.getParentBounds(); game.scale.setGameSize(next.width, next.height); scene.resizeWorld(next.width, next.height, next.scale); };
   const observer = new ResizeObserver(() => { cancelAnimationFrame(frame); frame = requestAnimationFrame(resize); }); observer.observe(host); void ready.then(resize);
-  return { ready, setState: (state, options) => scene.setState(state, options), playReceipt: (r, o) => scene.play(r, o), setPaused: value => scene.setPaused(value), setViewportInsets: (t, b, l, r) => scene.setInsets(t, b, l, r), focus: target => scene.focus(target), followActor: () => scene.follow(), resize, destroy: () => { disposed = true; observer.disconnect(); cancelAnimationFrame(frame); scene.dispose(); game.destroy(true); } };
+  return { ready, setState: (state, options) => scene.setState(state, options), playReceipt: (r, o) => scene.play(r, o), setPaused: value => scene.setPaused(value), setInputEnabled: enabled => scene.setInputEnabled(enabled), setOpening: phase => scene.setOpening(phase), setViewportInsets: (t, b, l, r) => scene.setInsets(t, b, l, r), focus: target => scene.focus(target), followActor: () => scene.follow(), resize, destroy: () => { disposed = true; observer.disconnect(); cancelAnimationFrame(frame); scene.dispose(); game.destroy(true); } };
 }

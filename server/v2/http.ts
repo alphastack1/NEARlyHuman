@@ -1,6 +1,6 @@
 import { BaseError, ContractFunctionRevertedError } from 'viem';
 import { V2ContextError } from './context';
-import { readV2PublicConfig, readV2PublicDay, readV2PublicLife, readV2PublicReplay, v2NftMetadata, V2PublicError } from './views';
+import { readV2PublicConfig, readV2PublicDay, readV2PublicLife, readV2PublicReplay, readV2PublicLives, readV2PublicDays, readV2PublicRequest, readV2PublicGuest, v2NftMetadata, V2PublicError } from './views';
 import { v2LifePortrait } from './portrait';
 import { session } from '../auth';
 import { serverConfig } from '../config';
@@ -37,10 +37,15 @@ export async function handleV2Api(request: Request): Promise<Response> {
     }
     if (request.method !== 'GET') return json({ error: { code: 'method', message: 'Open this page again.' } }, 405);
     if (path === '/api/v2/config') return json(await readV2PublicConfig());
+    if(path==='/api/v2/guest')return json(await readV2PublicGuest());
+    if(path==='/api/v2/lives')return json(await readV2PublicLives(url.searchParams.get('owner')||'',url.searchParams.get('cursor')||'0'));
+    const pending=path.match(/^\/api\/v2\/request\/(0x[0-9a-f]{64})$/i);if(pending)return json(await readV2PublicRequest(checkedRequest(pending[1])));
     const job = path.match(/^\/api\/v2\/job\/(0x[0-9a-f]{64})$/i);
     if (job) return json(await getV2OwnerJob(checkedRequest(job[1]), session(request)!));
     let match = path.match(/^\/api\/v2\/rooster\/([1-9]\d{0,77})$/);
     if (match) return json({ life: await readV2PublicLife(match[1]!, world(url)) });
+    match=path.match(/^\/api\/v2\/days\/([1-9]\d{0,77})$/);
+    if(match){const before=url.searchParams.get('before');if(before!==null&&!/^[1-9]\d{0,9}$/.test(before))throw new V2PublicError('not_found','That day could not be found.');return json(await readV2PublicDays(match[1]!,before?Number(before):undefined,world(url)));}
     match = path.match(/^\/api\/v2\/day\/([1-9]\d{0,77})\/([1-9]\d{0,9})$/);
     if (match) return json(await readV2PublicDay(match[1]!, Number(match[2]), world(url)));
     match = path.match(/^\/api\/v2\/replay\/([1-9]\d{0,77})$/);

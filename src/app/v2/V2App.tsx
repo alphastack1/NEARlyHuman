@@ -4,6 +4,7 @@ import { V2ApiError, v2Api } from '../v2-api';
 import type { V2PublicLife, V2World } from '../../v2/public';
 import { filmPacket, type V2FilmPacket } from '../../v2/presentation';
 import V2Player from './V2Player';
+import V2Journey from './V2Journey';
 import { Icon } from '../Icons';
 import '../v2Playback.css';
 
@@ -19,6 +20,10 @@ export interface V2AppProps {
 declare global { interface Window { __NH_V2_PREVIEW?: { packet: unknown; life?: V2PublicLife; name?: string } } }
 
 export default function V2App(props: V2AppProps) {
+  const preview = import.meta.env.DEV ? window.__NH_V2_PREVIEW : undefined;
+  return props.initialPacket !== undefined || props.initialLife !== undefined || preview ? <V2Diagnostic {...props}/> : <V2Journey/>;
+}
+function V2Diagnostic(props: V2AppProps) {
   // Browser diagnostics are deliberately excluded from production builds.
   const preview = import.meta.env.DEV ? window.__NH_V2_PREVIEW : undefined;
   const controlled = props.initialPacket !== undefined || props.initialLife !== undefined;

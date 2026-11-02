@@ -28,7 +28,11 @@ export function calculateV2ProcessingFee(input: { requestGas: bigint; relayGas: 
   const networkEstimate = requestGas * gasPrice, relayGasReserve = relayGas * 125n / 100n + 20_000n;
   const relayReserve = relayGasReserve * gasPrice * 2n; // Same price headroom as the shared relay outbox.
   const floor = relayReserve + inferenceReserveWei + (input.hostingReserveWei ?? 0n), markup = networkEstimate * BigInt(multiplier - 1);
-  const processingFee = floor > markup ? floor : markup;
+  // Two is the baseline. Increasing the configured multiplier to three really
+  // raises the preparation quote even when relay execution dominates request gas.
+  // A setting below two still cannot remove the funded execution floor.
+  const scaledFloor = (floor * BigInt(Math.max(2, multiplier)) + 1n) / 2n;
+  const processingFee = scaledFloor > markup ? scaledFloor : markup;
   return { networkEstimate, relayGasReserve, relayReserve, processingFee, totalEstimate: networkEstimate + processingFee };
 }
 

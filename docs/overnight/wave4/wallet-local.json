@@ -1,0 +1,147 @@
+{
+  "scope": "Actual fresh isolated Anvil controller, injected EIP-1193 wallet and authenticated HTTP handlers; scripted legal choices over 100 earned days, both token birth routes and real neglect death. No public chain, workstation wallet, real AI key or provider send. New isolated TEMP ledger; no existing ledger changed.",
+  "stage": "complete",
+  "checks": [
+    "actual pinned-world injected-wallet native mint and exact collection owner NFT receipt",
+    "hashless nonce intent resolves exact native mint",
+    "bounded enumeration pages, middle removal, return and self transfer",
+    "actual public owner portfolio matches pinned ownership",
+    "real wallet challenge/signature/session",
+    "unauthenticated owner route rejected",
+    "unapproved origin rejected",
+    "duplicate quote stable within attempt",
+    "signed contract acceptance acknowledged idempotently over HTTP",
+    "asynchronous missing-provider failure terminal onchain",
+    "failure leaves biological bytes unchanged and retry safe",
+    "retry admission gets a fresh identity",
+    "owner job is not anonymously readable",
+    "exact accepted timestamp binary search locates actual acceptance hash",
+    "closed tab before HTTP acknowledgement recovered by durable reconciler",
+    "recovered provider failure terminal and biological state unchanged",
+    "changed frozen memory enters actual quarantine",
+    "quarantine does not terminalize before canonical deadline",
+    "expired quarantined job uses chain expiry and releases owner retry",
+    "all failure and expiry paths preserve biological state",
+    "real materials earned over canonical accepted days to fund both birth routes",
+    "owner withdrawal during pending leaves biology revision unchanged",
+    "stale purse nonce rejected",
+    "atomic purse birth burns250 and appends real owned NFT",
+    "exact250NHC approval then wallet birth burns250",
+    "pending transfer blocked without damaging enumeration",
+    "actual neglected life dies without burning NFT or purse",
+    "dead-life withdrawal remains owner controlled"
+  ],
+  "transactions": [
+    {
+      "label": "fund ephemeral local relay",
+      "hash": "0x158b035aef79e565e8feeb053f498880f867551ce2195b0cda945d54c72caff4",
+      "gas": 21000
+    },
+    {
+      "label": "deploy V2ActionModule",
+      "hash": "0xfebb4286c42ac14235d58eb0b7597f6bd809bb4e76b6a8b285c83616dc4b6b33",
+      "gas": 5046736
+    },
+    {
+      "label": "deploy V2LifeVerifier",
+      "hash": "0xfe9becbd4abc8145b1b8036e303a84d71f5dfd29c3f80dc069dff0a912595994",
+      "gas": 5179283
+    },
+    {
+      "label": "deploy NEARlyHumanV2",
+      "hash": "0x4e42ef4d13cfb583fef6220291408b31e871a530af5e706f14a6121f8693f500",
+      "gas": 5520709
+    },
+    {
+      "label": "transfer middle NFT to second owner",
+      "hash": "0xd84689eedc358fdd94b04162f262ca7be24810d7924b9311b1676fc298006ab3",
+      "gas": 168447
+    },
+    {
+      "label": "transfer NFT back",
+      "hash": "0x44f80d765b3e968cef0a8216090cd97463bfbd90255c87431b788a1b0366782b",
+      "gas": 102647
+    },
+    {
+      "label": "self transfer retains enumeration",
+      "hash": "0xea9bb9466293969744a6c4b6c1142cb94b6b5c038f0cfc7ab7e0285ad880deb7",
+      "gas": 79155
+    },
+    {
+      "label": "actual injected wallet signed admission",
+      "hash": "0xec8a9fb5a7571fcf92210fe7beda82384a076ae2cd33e1d0b79d26a667597096",
+      "gas": 825980
+    },
+    {
+      "label": "owner admission before simulated tab close",
+      "hash": "0xade307fc45cf6ed7b6841bc335382f17a8c00d94e63639e0cdc1a5e90b401d87",
+      "gas": 804284
+    },
+    {
+      "label": "quarantine candidate owner admission",
+      "hash": "0x53bde99133f2ffdfdbda157dc7c3cb170f9b0a46259e2cbb6171572a8ec05e08",
+      "gas": 807084
+    }
+  ],
+  "aiHttpSends": 0,
+  "forbiddenExternalCalls": 0,
+  "firstJob": {
+    "requestId": "0xba3338e9117908c5b1d249e776ebba276b8883cacbf08cc5a0226e8756f16369",
+    "phase": "failed",
+    "retrySafe": true,
+    "attempts": "1"
+  },
+  "closedTabJob": {
+    "requestId": "0xdbb4afe8d331c5ac47f18a5f5db678bc1bb3fd7f2d15d7d746658aace3e6f279",
+    "phase": "failed",
+    "recoveredOwnerTx": "0xade307fc45cf6ed7b6841bc335382f17a8c00d94e63639e0cdc1a5e90b401d87"
+  },
+  "expiredJob": {
+    "requestId": "0xb4d0a7c2fa505650c54065c5edb0a7c82ad6d4331cec65cbff39399175218713",
+    "phase": "expired",
+    "retrySafe": true
+  },
+  "campaign": {
+    "id": "wave4-wallet-http-proof",
+    "limitMicroUSD": 100000,
+    "chargedMicroUSD": 0,
+    "halted": false,
+    "complete": 0,
+    "uncertain": 0,
+    "provenance": "Explicit allocation from the $0.10 outside the existing $0.90 V1 envelope. Neither live provider balance nor V1 spending is reset or inferred."
+  },
+  "isolatedJobs": 3,
+  "runtime": {
+    "chainId": 31337,
+    "collection": "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9",
+    "verifier": "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0",
+    "actionModule": "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512",
+    "controllerCodeHash": "0x2cc4e388106261c980700600bd7b4e6c9db0b25f8acfde44e15dd4f5006c435d",
+    "verifierCodeHash": "0xa34d74dc278995f271b97721d0b05a2429a271c299b60664d91d27f22f7052a2",
+    "actionModuleCodeHash": "0xa826c7f09afc4ea32d557d12ccc9e43f483fed57a0ecbbf4ca12fbac3c62fc3c",
+    "rulesHash": "0xdbba15bd27ab533240cf3d24e0df997d850ca3c4ba598e7d222b3061216d5363",
+    "decisionConfig": "0x46211735d92f705f14444dfde6f89ae8ca5b55056a03075afd220428b20297bd",
+    "relayer": "0x2678F8FFA1Dfd0a82aC3aD83A62A6776F886b77b",
+    "quoteSigner": "0x2678F8FFA1Dfd0a82aC3aD83A62A6776F886b77b"
+  },
+  "maxFinalizeGas": 1834609,
+  "earnedDays": 100,
+  "earnedMicro": "521964786",
+  "finalOwned": [
+    "1",
+    "3",
+    "2",
+    "4",
+    "5"
+  ],
+  "finalSupply": "21964786",
+  "finalAllocated": "0",
+  "finalBurns": "500000000",
+  "passed": true,
+  "failurePathsStateBytesUnchanged": true,
+  "evidenceBoundary": "The report preserves deployment and focused transaction identifiers, assertion outcomes and aggregate economic results. The temporary harness did not serialize every earning-day receipt; no public or paid-Jev end-to-end result is claimed.",
+  "controllerRuntimeBytes": 21489,
+  "actionModuleRuntimeBytes": 23096,
+  "verifierRuntimeBytes": 23685,
+  "temporaryHarnessSha256": "93448bf507509c54fd128c547c5c94702c86a240b78c91d962bd5aaf967ca7c5"
+}

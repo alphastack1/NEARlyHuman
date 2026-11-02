@@ -1,0 +1,29 @@
+{
+  "scope": "Controlled durable-store races and crashes; zero inference, credentials, ledger changes or chain transactions.",
+  "report": [
+    {
+      "name": "closed research preserves original limits and spend, and releases only unused funds",
+      "result": "pass"
+    },
+    {
+      "name": "cached answers remain free after closure while new sends and jobs stay closed",
+      "result": "pass"
+    },
+    {
+      "name": "sent or uncertain entries and active whole-job holds cannot be released",
+      "result": "pass"
+    },
+    {
+      "name": "closure wins against a provider paused before its mandatory send fence",
+      "result": "pass"
+    },
+    {
+      "name": "crash after campaign fence resumes pool release without reopening or resetting",
+      "result": "pass"
+    },
+    {
+      "name": "a modified release or closed ledger blocks funding instead of granting capacity",
+      "result": "pass"
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "scope": "Actual fresh local chain nonce recovery only, no repeated100dayeconomyproof",
+  "checks": [
+    "actual pinned-world injected-wallet native mint and exact collection owner NFT receipt",
+    "hashless nonce intent resolves exact native mint",
+    "bounded enumeration pages, middle removal, return and self transfer",
+    "actual public owner portfolio matches pinned ownership",
+    "historical nonce binary search finds exact old mint after4096emptyblocks",
+    "same nonce with different intent is replacement, never a successful mint"
+  ],
+  "nonceRecovery": {
+    "emptyBlocks": 4096,
+    "elapsedMs": 13,
+    "exactHash": "0x51920992084fc2b04a874b93cff12de4818b938076d3097c3a9dc9c66fabbdec",
+    "replacementMatched": false
+  }
+}

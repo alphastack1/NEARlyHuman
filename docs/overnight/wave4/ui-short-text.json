@@ -1,0 +1,282 @@
+{
+  "scope": "Synthetic controlled public-life wrapper; 320px viewport reduced to360px to approximate visible keyboard area, plus explicit150% computedfont override stress (not a universal device claim)",
+  "errors": [],
+  "checks": [
+    {
+      "name": "hatch320-keyboard-bottom",
+      "layout": {
+        "viewport": [
+          320,
+          360
+        ],
+        "page": [
+          320,
+          360
+        ],
+        "sheet": [
+          {
+            "scroll": 354,
+            "h": 274,
+            "top": 80
+          }
+        ],
+        "buttons": [
+          {
+            "name": "Close",
+            "x": 260,
+            "y": 14,
+            "width": 42,
+            "height": 42
+          },
+          {
+            "name": "−",
+            "x": 161,
+            "y": 67.78125,
+            "width": 40,
+            "height": 36
+          },
+          {
+            "name": "+",
+            "x": 241,
+            "y": 68.28125,
+            "width": 40,
+            "height": 35
+          },
+          {
+            "name": "−",
+            "x": 161,
+            "y": 110.78125,
+            "width": 40,
+            "height": 36
+          },
+          {
+            "name": "+",
+            "x": 241,
+            "y": 111.28125,
+            "width": 40,
+            "height": 35
+          },
+          {
+            "name": "−",
+            "x": 161,
+            "y": 153.78125,
+            "width": 40,
+            "height": 36
+          },
+          {
+            "name": "+",
+            "x": 241,
+            "y": 154.28125,
+            "width": 40,
+            "height": 35
+          },
+          {
+            "name": "0.000001 ETH",
+            "x": 34,
+            "y": 204.78125,
+            "width": 118.5,
+            "height": 39
+          },
+          {
+            "name": "250 NHC",
+            "x": 157.5,
+            "y": 204.78125,
+            "width": 118.5,
+            "height": 39
+          },
+          {
+            "name": "Hatch this life",
+            "x": 29,
+            "y": 258.78125,
+            "width": 252,
+            "height": 46
+          }
+        ]
+      }
+    },
+    {
+      "name": "hatch320-text150-top",
+      "layout": {
+        "viewport": [
+          320,
+          568
+        ],
+        "page": [
+          320,
+          568
+        ],
+        "sheet": [
+          {
+            "scroll": 404,
+            "h": 404,
+            "top": 0
+          }
+        ],
+        "buttons": [
+          {
+            "name": "Close",
+            "x": 260,
+            "y": 52.859375,
+            "width": 42,
+            "height": 42
+          },
+          {
+            "name": "−",
+            "x": 171,
+            "y": 200.9375,
+            "width": 40,
+            "height": 46
+          },
+          {
+            "name": "+",
+            "x": 251,
+            "y": 203.9375,
+            "width": 40,
+            "height": 40
+          },
+          {
+            "name": "−",
+            "x": 171,
+            "y": 253.9375,
+            "width": 40,
+            "height": 46
+          },
+          {
+            "name": "+",
+            "x": 251,
+            "y": 256.9375,
+            "width": 40,
+            "height": 40
+          },
+          {
+            "name": "−",
+            "x": 171,
+            "y": 306.9375,
+            "width": 40,
+            "height": 46
+          },
+          {
+            "name": "+",
+            "x": 251,
+            "y": 309.9375,
+            "width": 40,
+            "height": 40
+          },
+          {
+            "name": "0.000001 ETH",
+            "x": 34,
+            "y": 367.9375,
+            "width": 123.5,
+            "height": 52
+          },
+          {
+            "name": "250 NHC",
+            "x": 162.5,
+            "y": 367.9375,
+            "width": 123.5,
+            "height": 52
+          },
+          {
+            "name": "Hatch this life",
+            "x": 29,
+            "y": 434.9375,
+            "width": 262,
+            "height": 46
+          }
+        ]
+      }
+    },
+    {
+      "name": "hatch320-text150-bottom",
+      "layout": {
+        "viewport": [
+          320,
+          568
+        ],
+        "page": [
+          320,
+          568
+        ],
+        "sheet": [
+          {
+            "scroll": 404,
+            "h": 404,
+            "top": 0
+          }
+        ],
+        "buttons": [
+          {
+            "name": "Close",
+            "x": 260,
+            "y": 52.859375,
+            "width": 42,
+            "height": 42
+          },
+          {
+            "name": "−",
+            "x": 171,
+            "y": 200.9375,
+            "width": 40,
+            "height": 46
+          },
+          {
+            "name": "+",
+            "x": 251,
+            "y": 203.9375,
+            "width": 40,
+            "height": 40
+          },
+          {
+            "name": "−",
+            "x": 171,
+            "y": 253.9375,
+            "width": 40,
+            "height": 46
+          },
+          {
+            "name": "+",
+            "x": 251,
+            "y": 256.9375,
+            "width": 40,
+            "height": 40
+          },
+          {
+            "name": "−",
+            "x": 171,
+            "y": 306.9375,
+            "width": 40,
+            "height": 46
+          },
+          {
+            "name": "+",
+            "x": 251,
+            "y": 309.9375,
+            "width": 40,
+            "height": 40
+          },
+          {
+            "name": "0.000001 ETH",
+            "x": 34,
+            "y": 367.9375,
+            "width": 123.5,
+            "height": 52
+          },
+          {
+            "name": "250 NHC",
+            "x": 162.5,
+            "y": 367.9375,
+            "width": 123.5,
+            "height": 52
+          },
+          {
+            "name": "Hatch this life",
+            "x": 29,
+            "y": 434.9375,
+            "width": 262,
+            "height": 46
+          }
+        ]
+      }
+    }
+  ]
+}

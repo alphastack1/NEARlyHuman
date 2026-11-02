@@ -1,0 +1,87 @@
+{
+  "scope": "Isolated actual local controller; scripted guest day, no paidAI, ephemeralAnvilunlockedaccount. Host never loads workstation secrets. Actual independent browser callbacks, injected unlockedLOCALAnvilaccount only; no secretwallet/providerkey/publicchain.",
+  "errors": [],
+  "api": [
+    {
+      "path": "/api/v2/config",
+      "status": 200
+    },
+    {
+      "path": "/api/v2/guest",
+      "status": 200,
+      "id": "1",
+      "day": 1
+    },
+    {
+      "path": "/api/auth/challenge",
+      "status": 200
+    },
+    {
+      "path": "/api/auth/verify",
+      "status": 200
+    },
+    {
+      "path": "/api/v2/accept",
+      "status": 200,
+      "phase": "failed",
+      "requestId": "0x9000df01320f0519698c131445726353e73ccee2886edfe30b2d7a7f3fdb744d"
+    },
+    {
+      "path": "/api/v2/replay/4",
+      "status": 404,
+      "error": {
+        "code": "not_found",
+        "message": "That day could not be found."
+      }
+    },
+    {
+      "path": "/api/v2/rooster/4",
+      "status": 200,
+      "id": "4",
+      "day": 0
+    },
+    {
+      "path": "/api/v2/replay/4",
+      "status": 404,
+      "error": {
+        "code": "not_found",
+        "message": "That day could not be found."
+      }
+    },
+    {
+      "path": "/api/v2/rooster/4",
+      "status": 200,
+      "id": "4",
+      "day": 0
+    }
+  ],
+  "rpc": [
+    {
+      "method": "eth_chainId"
+    },
+    {
+      "method": "personal_sign"
+    }
+  ],
+  "screens": [
+    {
+      "name": "actual390-guest",
+      "text": "MISO\nLV00\nDAY 01\n\nA day with MISO.\n\nWatch day",
+      "url": "http://127.0.0.1:5186/?v2=1"
+    },
+    {
+      "name": "actual390-restored-failed",
+      "text": "TWEET\nLV00\nDAY 00\n\nTWEET, at home.\n\nPrepare day 1\nAnother little try\n\nYour saved day is safe.\n\nTry another day",
+      "url": "http://127.0.0.1:5186/?v2=1&rooster=4&chainId=31337&collection=0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9"
+    },
+    {
+      "name": "actual390-restored-retry",
+      "text": "TWEET\nLV00\nDAY 00\n\nTWEET, at home.\n\nPrepare day 1\nTomorrow's post\n×1\n×1\n×1\nCare\nSeeds\nHouse\nWater\nAt home ×3\nBread\nAt home ×3\nMilk\n×1\nMedicine\n×1\nCoffee\n×1\nSteak\n×1\nPrepare day 1\nSupplies included · network + preparation fee",
+      "url": "http://127.0.0.1:5186/?v2=1&rooster=4&chainId=31337&collection=0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9"
+    }
+  ],
+  "restoredToken": "4",
+  "retryText": "TWEET\nLV00\nDAY 00\n\nTWEET, at home.\n\nPrepare day 1\nTomorrow's post\n×1\n×1\n×1\nCare\nSeeds\nHouse\nWater\nAt home ×3\nBread\nAt home ×3\nMilk\n×1\nMedicine\n×1\nCoffee\n×1\nSteak\n×1\nPrepare day 1\nSupplies included · network + preparation fee",
+  "flowCompleted": true,
+  "pass": true
+}

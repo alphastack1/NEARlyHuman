@@ -1,0 +1,38 @@
+{
+  "scope": "Wave4 independent phone/player review; actual local callbacks, controlled presentation and separate preserved local death snapshot are distinguished per image",
+  "browser": "Separate Codex Browser shared profile, one owned tab at a time",
+  "paidInferenceCalls": 0,
+  "publicChainTransactions": 0,
+  "actualBrowserLocalTransactions": { "nativeMints": 1, "signedDayAcceptances": 2, "note": "Worker failures settled on the same isolated node. Later recovery/targeting checks sent no new transaction." },
+  "images": [
+    { "file": "ui-controlled-seeds-390.png", "viewport": [390,844], "source": "Controlled synthetic life/purse/config around preserved local Jev state", "proves": "Three visible parcel slots; replacing a single seed, concise growth times and one Prepare action" },
+    { "file": "ui-controlled-public-life-390.png", "viewport": [390,844], "source": "Controlled public-life wrapper, canonical portrait function intercepted as its SVG response", "proves": "Dynamic saved-home portrait, quiet identity/day/level/purse and distinct visitor action" },
+    { "file": "ui-controlled-purse-320.png", "viewport": [320,568], "source": "Explicit synthetic268.126360NHC purse", "proves": "Readable compact purse and250NHC birth option; no economic issuance claim" },
+    { "file": "ui-controlled-hatch-keyboard-320.png", "viewport": [320,360], "source": "Controlled layout with reduced visible height approximating an open keyboard", "proves": "Card scroll reaches Hatch; Close stays reachable. Not a real mobile keyboard measurement." },
+    { "file": "ui-controlled-hatch-text-320.png", "viewport": [320,568], "source": "Explicit150% computed-font stress on the controlled hatch form", "proves": "Name, stat controls, payment and Hatch stay reachable; scoped stress only" },
+    { "file": "ui-controlled-history-return-390.png", "viewport": [390,844], "source": "Synthetic30-day public history with preserved local Jev Day1 film", "proves": "Return to scroll1269 and visibly selectedDay1" },
+    { "file": "ui-local-minted-390.png", "viewport": [390,844], "source": "Actual isolated browser host, native mint TWEET#4 via Local QA Wallet", "proves": "Confirmed new procedural identity, trueDay0 state and next action" },
+    { "file": "ui-local-care-390.png", "viewport": [390,844], "source": "Same actual browser-minted TWEET#4 before its first signed attempt", "proves": "Real starter stock and three-slot first-day delivery choice" },
+    { "file": "ui-local-restored-failure-390.png", "viewport": [390,844], "source": "Real accepted failedTWEET#4 request recovered from its saved receipt; auth/read only", "proves": "Cold recovery binds the original life before showing retry" },
+    { "file": "ui-local-restored-retry-390.png", "viewport": [390,844], "source": "Same actual failed request after choosing retry", "proves": "TWEET#4 remainsDay0 and offersDay1, rather than advancing the guest" },
+    { "file": "ui-local-dead-purse-390.png", "viewport": [390,844], "source": "Separate wallet-proof node's actual Day103 dead-life DTO before its tested withdrawal; preserved local snapshot", "proves": "Retained20.964786NHC and reachable owner withdrawal. No second withdrawal is submitted." },
+    { "file": "ui-local-dead-public-life-430.png", "viewport": [430,932], "source": "Same separate preserved actual local death DTO", "proves": "Remembered public profile with dynamic NFT art and retained purse; not the browser-host chain history" },
+    { "file": "ui-intro-01-assembling-390.png", "viewport": [390,844], "source": "Actual browser-host scripted guest NFT day, no paid Jev", "proves": "Same real house art during the short assembly" },
+    { "file": "ui-intro-02-title-390.png", "viewport": [390,844], "source": "Same actual local guest route", "proves": "Game-native title and obvious START within the same scene" },
+    { "file": "ui-intro-03-game-390.png", "viewport": [390,844], "source": "Same actual local guest route after START", "proves": "House/rooster anchor continues into Watch day with no website frame" },
+    { "file": "ui-controlled-expiry-recovery-390.png", "viewport": [390,844], "source": "Explicit synthetic accepted-day/quarantine/client-marker boundary with actual local runtime/wallet verification; estimate intercepted and rejected", "proves": "A rejected estimate retains Check day and Release expired attempt rather than losing the matching UI job. Zero transactions sent." }
+  ],
+  "results": {
+    "actualGui": "../ui-local-browser.json",
+    "actualStateReadback": "../ui-local-readback.json",
+    "actualColdReturn": "../ui-local-restored.json",
+    "controlledTargetSwitch": "../ui-switch-target.json",
+    "controlledPaymentGuard": "../ui-payment-guard.json",
+    "controlledLayouts": "../ui-controlled.json",
+    "controlledKeyboardAndText": "../ui-short-text.json",
+    "controlledHistory": "../ui-history-return.json",
+    "controlledLateGuest": "../ui-late-guest.json",
+    "actualLocalDeathRendering": "../ui-local-dead-layout.json",
+    "intro": "../ui-intro.json"
+  }
+}

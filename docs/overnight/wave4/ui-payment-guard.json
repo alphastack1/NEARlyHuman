@@ -1,0 +1,69 @@
+{
+  "scope": "Explicit controlled accepted-state UI fixtures for retained client DAY journal versus unresolved wallet intent. Actual isolated runtime/LocalQA wallet bridge; request responses and1NHC visible purse synthetic. All estimates intercepted/rejected and no transactions allowed.",
+  "cases": [
+    {
+      "name": "accepted-day-expire",
+      "kind": "day",
+      "status": 1,
+      "action": "expire",
+      "errors": [],
+      "estimates": [
+        "0xc6441798dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+      ],
+      "sends": 0,
+      "requests": [
+        "http://127.0.0.1:5186/api/v2/request/0xdddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+      ],
+      "text": "TWEET\nLV00\nDAY 00\n\nTWEET, at home.\n\nOpen day 1\nA little day is taking shape\n\nA few plans. A little thought.\n\nCheck day\nRelease expired attempt\n\nThe home changed. Check it again.",
+      "pass": true,
+      "recoveryControls": {
+        "release": true,
+        "check": true
+      }
+    },
+    {
+      "name": "accepted-day-withdraw",
+      "kind": "day",
+      "status": 1,
+      "action": "withdraw",
+      "errors": [],
+      "estimates": [
+        "0x441a3e70000000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000f4240"
+      ],
+      "sends": 0,
+      "requests": [
+        "http://127.0.0.1:5186/api/v2/request/0xdddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+      ],
+      "text": "TWEET\nLV00\nDAY 00\n\nTWEET, at home.\n\nOpen day 1\nTWEET\u2019s purse\n1\nNHC\nWithdraw to wallet\nHatch another \u00b7 250 NHC\n\nThe home changed. Check it again.",
+      "pass": true
+    },
+    {
+      "name": "unaccepted-day-expire",
+      "kind": "day",
+      "status": 0,
+      "action": "expire",
+      "errors": [],
+      "estimates": [],
+      "sends": 0,
+      "requests": [
+        "http://127.0.0.1:5186/api/v2/request/0xdddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+      ],
+      "text": "TWEET\nLV00\nDAY 00\n\nTWEET, at home.\n\nOpen day 1\nA little day is taking shape\n\nA few plans. A little thought.\n\nReconnect wallet\nRelease expired attempt\n\nCheck your earlier payment first.",
+      "pass": true
+    },
+    {
+      "name": "unknown-mint-withdraw",
+      "kind": "mint",
+      "status": 0,
+      "action": "withdraw",
+      "errors": [],
+      "estimates": [],
+      "sends": 0,
+      "requests": [],
+      "text": "TWEET\nLV00\nDAY 00\n\nTWEET, at home.\n\nOpen day 1\nA little day is taking shape\n\nA new little life is on its way.\n\nReconnect wallet\nRelease expired attempt\n\nCheck your earlier payment first.",
+      "pass": true
+    }
+  ],
+  "pass": true,
+  "focusedRecheck": "Only accepted-day-expire rerun after preserving its matching UI job on preflight rejection; both recovery controls remain visible."
+}
