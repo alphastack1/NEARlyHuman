@@ -1,11 +1,13 @@
 import Phaser from 'phaser';
 import { fixtureCanvas, FIXTURE_SIZES, type FixtureArt, type ArtOptions } from '../../art/fixtures';
 import { PROP_URLS } from '../../art/asset-urls';
-import { roosterCanvas, ROOSTER_FRAME, type RoosterPose } from '../../art/rooster';
+import type { RoosterPose } from '../../art/rooster';
 import { Op, type State, type Receipt } from '../../v2/types';
 import { v2Personality } from '../../v2/personality';
 import { PLANTS, RECIPES } from '../../v2/catalog';
-import { landscape, bedArt, itemArt, wellArt, workbenchArt } from './art';
+import { landscape, bedArt, itemArt, wellArt, workbenchArt, shadowArt } from './art';
+import { pixelViewport } from './pixel-grid';
+import { v2RoosterCanvas, V2_ROOSTER_FRAME } from './rooster-art';
 import { WORLD_WIDTH, WORLD_HEIGHT, BEDS, ANCHORS, findRoute, receiptStops, type Point, type InspectTarget } from './layout';
 import { openingEase, openingTileTime } from '../opening';
 
@@ -16,6 +18,7 @@ export interface V2WorldController {
   setState(state: State, options?: { receipt?: Receipt; slot?: number; history?: readonly Receipt[] }): void;
   playReceipt(receipt: Receipt, options?: { duration?: number; onImpact?: () => void }): Promise<void>;
   setPaused(paused: boolean): void;
+  setPlaybackRate(rate: number): void;
   setInputEnabled(enabled: boolean): void;
   setOpening(phase: 'assembling' | 'title' | 'leaving' | 'closed'): void;
   setViewportInsets(top: number, bottom: number, left?: number, right?: number): void;
@@ -44,7 +47,7 @@ class LifeScene extends Phaser.Scene {
   private covers: Phaser.GameObjects.Image[] = [];
   private plotKeys: string[] = [];
   private actor!: Phaser.GameObjects.Image;
-  private shadow!: Phaser.GameObjects.Ellipse;
+  private shadow!: Phaser.GameObjects.Image;
   private held!: Phaser.GameObjects.Image;
   private blanket!: Phaser.GameObjects.Image;
   private foreground!: Phaser.GameObjects.Graphics;
@@ -57,6 +60,7 @@ class LifeScene extends Phaser.Scene {
   private cameraPoint: Point = { x: 312, y: 79 };
   private film?: Film;
   private paused = false;
+  private playbackRate = 1;
   private interactionEnabled = true;
   private openingPhase: 'assembling' | 'title' | 'leaving' | 'closed' = 'closed';
   private openingSince = 0;
@@ -106,11 +110,11 @@ class LifeScene extends Phaser.Scene {
       this.covers[i] = this.add.image(p.x + 8, p.y - 15, this.fixtureTexture('umbrella', {})).setOrigin(.5, 1).setDepth(p.y + 5).setVisible(false);
     }
     this.foreground = this.add.graphics(); this.effects = this.add.graphics().setDepth(950); this.ambient = this.add.graphics().setDepth(960); this.marks = this.add.graphics().setDepth(970);
-    this.shadow = this.add.ellipse(this.point.x, this.point.y + 1, 20, 6, 0x342f28, .25);
-    this.actor = this.add.image(this.point.x, this.point.y, this.roosterTexture('idle')).setOrigin(ROOSTER_FRAME.footX / ROOSTER_FRAME.width, ROOSTER_FRAME.footY / ROOSTER_FRAME.height).setScale(1.4).setInteractive();
+    this.shadow = this.add.image(this.point.x, this.point.y + 1, this.shadowTexture(20, 6)).setAlpha(.25);
+    this.actor = this.add.image(this.point.x, this.point.y, this.roosterTexture('idle')).setOrigin(V2_ROOSTER_FRAME.footX / V2_ROOSTER_FRAME.width, V2_ROOSTER_FRAME.footY / V2_ROOSTER_FRAME.height).setInteractive({ pixelPerfect: true, alphaTolerance: 1 });
     this.actor.on('pointerup', (pointer: Phaser.Input.Pointer) => { if (this.allowPointer(pointer) && !this.dragging?.moved) this.attention = this.elapsed + 1400; });
-    this.held = this.add.image(0, 0, this.itemTexture(6)).setVisible(false).setScale(1.1);
-    this.blanket = this.add.image(312, 112, this.fixtureTexture('bedCover', {})).setOrigin(.5, 1).setDepth(115).setScale(1.2).setVisible(true);
+    this.held = this.add.image(0, 0, this.itemTexture(6)).setVisible(false);
+    this.blanket = this.add.image(312, 112, this.fixtureTexture('bedCover', {})).setOrigin(.5, 1).setDepth(115).setVisible(true);
     this.night = this.add.rectangle(0, 0, WORLD_WIDTH, WORLD_HEIGHT, 0x172439, 1).setOrigin(0).setDepth(1000).setAlpha(0);
     this.openingMask = this.add.graphics().setDepth(1200);
     this.lampGlow = this.add.graphics().setDepth(1001);
@@ -138,16 +142,19 @@ class LifeScene extends Phaser.Scene {
   }
   private addFixture(kind: FixtureArt, x: number, y: number, target?: InspectTarget, opts: ArtOptions = {}): void {
     const key = this.fixtureTexture(kind, opts), [width] = FIXTURE_SIZES[kind];
-    if (!['window', 'shelf', 'painting', 'bedCover'].includes(kind)) this.add.ellipse(x + 1, y, width * .9, Math.max(3, width * .15), 0x44392b, .2).setDepth(y - 1);
-    const image = this.add.image(x, y, key).setOrigin(.5, 1).setDepth(kind === 'window' ? 12 : y); if (kind === 'bed') image.setScale(1.2);
+    if (!['window', 'shelf', 'painting', 'bedCover'].includes(kind)) this.add.image(x + 1, y, this.shadowTexture(Math.max(8, Math.round(width * .45) * 2), Math.max(4, Math.round(width * .075) * 2))).setAlpha(.2).setDepth(y - 1);
+    const image = this.add.image(x, y, key).setDepth(kind === 'window' ? 12 : y);
+    // An odd-sized texture still starts on a whole world pixel.
+    image.setOrigin(Math.floor(image.width / 2) / image.width, 1);
     if (target) image.setInteractive(new Phaser.Geom.Rectangle(-3, -3, image.width + 6, image.height + 8), Phaser.Geom.Rectangle.Contains).on('pointerup', (pointer: Phaser.Input.Pointer) => this.inspect(target, pointer));
     this.fixtures.push({ kind, image, x, y, key });
   }
   private roosterTexture(pose: RoosterPose): string {
-    if (this.roosterSeed !== this.state.seed) { this.roosterSeed = this.state.seed; for (const p of POSES) { const key = `v2-rooster-${p}`; if (this.textures.exists(key)) this.textures.remove(key); this.textures.addCanvas(key, roosterCanvas(this.state.seed, p)); } }
+    if (this.roosterSeed !== this.state.seed) { this.roosterSeed = this.state.seed; for (const p of POSES) { const key = `v2-rooster-${p}`; if (this.textures.exists(key)) this.textures.remove(key); this.textures.addCanvas(key, v2RoosterCanvas(this.state.seed, p)); } }
     return `v2-rooster-${pose}`;
   }
   private itemTexture(index: number): string { const key = `v2-item-${index}`; if (!this.textures.exists(key)) this.textures.addCanvas(key, itemArt(index)); return key; }
+  private shadowTexture(width: number, height: number): string { const key = `v2-shadow-${width}-${height}`; if (!this.textures.exists(key)) this.textures.addCanvas(key, shadowArt(width, height)); return key; }
   private allowPointer(pointer: Phaser.Input.Pointer): boolean { return this.interactionEnabled && pointer.event?.target === this.game.canvas; }
   private inspect(target: InspectTarget, pointer: Phaser.Input.Pointer): void { if (!this.allowPointer(pointer) || this.dragging?.moved) return; this.selected = { target, until: this.elapsed + 900 }; this.options.onInspect?.(target); }
   private replaceBed(index: number, state = this.state.plots[index]!): void {
@@ -232,10 +239,11 @@ class LifeScene extends Phaser.Scene {
   private finish(): void { const f = this.film; if (!f) return; this.impact(); this.film = undefined; this.carrying = -1; this.motion(false); f.resolve(); }
   private motion(traveling: boolean): void { if (traveling !== this.lastTraveling) { this.lastTraveling = traveling; this.options.onMotion?.({ traveling }); } }
   setPaused(paused: boolean): void { this.paused = paused; this.motion(!!this.film && (this.film.phase === 'travel' || this.film.phase === 'home') && !paused); }
+  setPlaybackRate(rate: number): void { this.playbackRate = Number.isFinite(rate) ? Math.max(1, Math.min(2, rate)) : 1; }
   setInputEnabled(enabled: boolean): void { this.interactionEnabled = enabled; if (this.input) this.input.enabled = enabled; if (!enabled) this.dragging = undefined; }
   setOpening(phase: 'assembling' | 'title' | 'leaving' | 'closed'): void { if (phase !== this.openingPhase) { this.openingPhase = phase; this.openingSince = this.elapsed; } }
   setInsets(top: number, bottom: number, left = 0, right = 0): void { this.insets = { top, bottom, left, right }; if (this.initialized) this.centerCamera(1); }
-  resizeWorld(width: number, height: number, scale: number): void { this.widthLogical = width; this.heightLogical = height; this.cssScale = scale; if (this.initialized) { this.cameras.main.setViewport(0, 0, width, height).setZoom(Math.max(1.22, width / WORLD_WIDTH)); this.centerCamera(1); } }
+  resizeWorld(width: number, height: number, scale: number): void { this.widthLogical = width; this.heightLogical = height; this.cssScale = scale; if (this.initialized) { this.cameras.main.setViewport(0, 0, width, height).setZoom(1).setRoundPixels(true); this.centerCamera(1); } }
   focus(target: InspectTarget): void {
     this.focusPoint = target.kind === 'bed' ? { ...BEDS[target.index || 0]!, y: BEDS[target.index || 0]!.y - 20 } : target.kind === 'well' ? { x: 280, y: 510 } : target.kind === 'workshop' ? { x: 432, y: 330 } : target.kind === 'mailbox' ? { x: 424, y: 710 } : undefined;
   }
@@ -248,20 +256,24 @@ class LifeScene extends Phaser.Scene {
   private centerCamera(blend: number): void {
     const c = this.cameras.main, point = this.focusPoint || { x: this.point.x + this.facing * 12, y: this.point.y - 20 }, z = c.zoom;
     const target = this.clampCamera({ x: point.x - (this.insets.left - this.insets.right) / this.cssScale / (2 * z), y: point.y - (this.insets.top - this.insets.bottom) / this.cssScale / (2 * z) });
-    this.cameraPoint.x += (target.x - this.cameraPoint.x) * blend; this.cameraPoint.y += (target.y - this.cameraPoint.y) * blend; c.centerOn(Math.round(this.cameraPoint.x), Math.round(this.cameraPoint.y));
+    this.cameraPoint.x += (target.x - this.cameraPoint.x) * blend; this.cameraPoint.y += (target.y - this.cameraPoint.y) * blend;
+    // Round the scroll origin itself. Rounding the center leaves a half-pixel
+    // scroll whenever the logical viewport has an odd width or height.
+    c.setScroll(Math.round(this.cameraPoint.x - c.width / z / 2), Math.round(this.cameraPoint.y - c.height / z / 2));
   }
   update(_time: number, delta: number): void {
     if (!this.initialized) return; const dt = Math.min(50, delta); this.elapsed += dt;
     const f = this.film;
     if (f && !this.paused) {
+      const filmDelta = dt * this.playbackRate;
       if (f.phase === 'travel' || f.phase === 'home') {
-        let budget = dt * (v2Personality(this.state.seed).tempo === 'brisk' ? .102 : v2Personality(this.state.seed).tempo === 'unhurried' ? .082 : .092);
+        let budget = filmDelta * (v2Personality(this.state.seed).tempo === 'brisk' ? .102 : v2Personality(this.state.seed).tempo === 'unhurried' ? .082 : .092);
         while (f.route.length && budget > 0) { const p = f.route[0]!, dx = p.x - this.point.x, dy = p.y - this.point.y, distance = Math.hypot(dx, dy); if (Math.abs(dx) > .5) this.facing = dx < 0 ? -1 : 1;
           if (distance <= budget) { this.point = { ...p }; f.route.shift(); budget -= distance; } else { this.point.x += dx / distance * budget; this.point.y += dy / distance * budget; budget = 0; }
         }
         if (!f.route.length) { if (f.phase === 'home') this.finish(); else { f.phase = 'contact'; f.elapsed = 0; this.motion(false); } }
       } else {
-        f.elapsed += dt;
+        f.elapsed += filmDelta;
         if (f.phase === 'contact') {
           const contactHold = f.stops.length > 1 ? 470 : 180;
           if (f.elapsed >= contactHold) {
@@ -308,12 +320,13 @@ class LifeScene extends Phaser.Scene {
     const bob = traveling ? Math.floor(this.elapsed / 135) % 2 : pose === 'breathe' && Math.floor(this.elapsed / 650) % 2 ? 1 : 0;
     const inBed = this.point.x > 286 && this.point.x < 333 && this.point.y < 116;
     this.actor.setTexture(this.roosterTexture(pose)).setPosition(Math.round(this.point.x), Math.round(this.point.y - bob)).setFlipX(this.facing < 0).setDepth(inBed ? 114 : this.point.y + 1);
-    this.shadow.setPosition(Math.round(this.point.x), Math.round(this.point.y + 1)).setDepth(this.point.y - 1).setScale(pose === 'doze' ? 1.2 : 1, 1);
+    this.shadow.setTexture(this.shadowTexture(pose === 'doze' ? 24 : 20, 6)).setPosition(Math.round(this.point.x), Math.round(this.point.y + 1)).setDepth(this.point.y - 1);
     let item = this.carrying;
     if (working && f && FOOD_OPS.has(f.receipt.op)) item = f.receipt.op === Op.Drink ? f.receipt.arg : f.receipt.op === Op.Coffee ? 35 : f.receipt.arg || 2;
     if (working && f && WORK_OPS.has(f.receipt.op) && !f.impact) item = 37;
     if (working && f?.receipt.op === Op.EnjoyFlower) item = f.receipt.arg;
-    this.held.setVisible(item >= 0 && this.state.alive); if (item >= 0) this.held.setTexture(this.itemTexture(item)).setScale(item >= 13 && item <= 21 ? .78 : 1.1).setPosition(Math.round(this.point.x + this.facing * 13), Math.round(this.point.y - 17 - bob - (item === 37 ? Math.floor(this.elapsed / 170) % 2 * 4 : 0))).setFlipX(this.facing < 0 && (item === 36 || item === 37)).setDepth(this.point.y + 3);
+    const handHeight = working && f && FOOD_OPS.has(f.receipt.op) ? 24 : item === 37 ? 21 : 18;
+    this.held.setVisible(item >= 0 && this.state.alive); if (item >= 0) this.held.setTexture(this.itemTexture(item)).setPosition(Math.round(this.point.x + this.facing * 13), Math.round(this.point.y - handHeight - bob - (item === 37 ? Math.floor(this.elapsed / 170) % 2 * 4 : 0))).setFlipX(this.facing < 0 && (item === 36 || item === 37)).setDepth(this.point.y + 3);
   }
   private drawEffects(): void {
     const g = this.effects, a = this.ambient; g.clear(); a.clear(); const px = (color: number, x: number, y: number, w = 1, h = 1, alpha = 1) => g.fillStyle(color, alpha).fillRect(Math.round(x), Math.round(y), w, h);
@@ -340,7 +353,8 @@ class LifeScene extends Phaser.Scene {
     for (let i = 0; i < 4; i++) if (this.state.plots[i]!.kind && !this.state.plots[i]!.ticks) { const p = BEDS[i]!, blink = (this.elapsed / 500 + i) % 5; if (blink < 1) { a.fillStyle(0xf0dfa0, .75).fillRect(p.x + 20, p.y - 40, 1, 3).fillRect(p.x + 19, p.y - 39, 3, 1); } }
     this.marks.clear();
     if (this.selected && this.selected.until > this.elapsed) { const target = this.selected.target, p = target.kind === 'bed' ? BEDS[target.index || 0]! : target.kind === 'well' ? { x: 280, y: 533 } : target.kind === 'workshop' ? { x: 432, y: 321 } : target.kind === 'mailbox' ? { x: 424, y: 728 } : this.point;
-      this.marks.lineStyle(1, 0xf0d474, .9).strokeRoundedRect(p.x - 26, p.y - 35, 52, 38, 2);
+      this.marks.fillStyle(0xf0d474, .9);
+      for (const [x, y, w, h] of [[p.x - 26, p.y - 35, 9, 1], [p.x - 26, p.y - 35, 1, 9], [p.x + 17, p.y - 35, 9, 1], [p.x + 25, p.y - 35, 1, 9], [p.x - 26, p.y + 2, 9, 1], [p.x - 26, p.y - 6, 1, 9], [p.x + 17, p.y + 2, 9, 1], [p.x + 25, p.y - 6, 1, 9]]) this.marks.fillRect(x!, y!, w!, h!);
     }
     const slot = this.timeSlot, dim = slot > 45 ? Math.min(.42, (slot - 45) / 36) : slot < 8 ? (8 - slot) * .012 : 0; this.night.setAlpha(Math.max(dim, this.state.house.powerOut ? .16 : 0));
     this.lampGlow.clear(); if (dim > .14 && !this.state.house.powerOut) { this.lampGlow.fillStyle(0xf5d68c, dim * .15).fillRect(336, 62, 36, 42).fillRect(329, 73, 50, 24); this.lampGlow.fillStyle(0xf2d798, dim * .35).fillRect(349, 71, 11, 9); }
@@ -350,11 +364,11 @@ class LifeScene extends Phaser.Scene {
 
 export function createV2WorldRenderer(host: HTMLElement, options: V2WorldOptions): V2WorldController {
   let resolveReady!: () => void; const ready = new Promise<void>(resolve => { resolveReady = resolve; }); const scene = new LifeScene(options, resolveReady);
-  const size = () => { const r = host.getBoundingClientRect(), physical = Math.max(1, r.width), width = Math.max(256, Math.min(480, Math.round(physical / 1.6))); return { width, height: Math.max(1, Math.round(Math.max(1, r.height) / physical * width)), scale: physical / width }; };
+  const size = () => { const r = host.getBoundingClientRect(); return pixelViewport(Math.max(1, r.width), Math.max(1, r.height)); };
   const first = size(); scene.resizeWorld(first.width, first.height, first.scale);
-  const game = new Phaser.Game({ type: Phaser.AUTO, parent: host, width: first.width, height: first.height, backgroundColor: '#263c3c', pixelArt: true, roundPixels: true, antialias: false, render: { antialias: false, pixelArt: true, roundPixels: true }, scale: { mode: Phaser.Scale.FIT, autoCenter: Phaser.Scale.CENTER_BOTH, width: first.width, height: first.height }, scene: [scene], audio: { noAudio: true }, fps: { target: 60 } });
+  const game = new Phaser.Game({ type: Phaser.AUTO, parent: host, width: first.width, height: first.height, backgroundColor: '#263c3c', pixelArt: true, roundPixels: true, antialias: false, antialiasGL: false, autoRound: true, render: { antialias: false, antialiasGL: false, pixelArt: true, roundPixels: true, mipmapFilter: 'NEAREST' }, scale: { mode: Phaser.Scale.NONE, autoCenter: Phaser.Scale.NO_CENTER, zoom: first.scale, width: first.width, height: first.height }, scene: [scene], audio: { noAudio: true }, fps: { target: 60 } });
   let disposed = false, frame = 0;
-  const resize = () => { if (disposed || !game.isBooted) return; const next = size(); game.scale.getParentBounds(); game.scale.setGameSize(next.width, next.height); scene.resizeWorld(next.width, next.height, next.scale); };
+  const resize = () => { if (disposed || !game.isBooted) return; const next = size(); game.scale.getParentBounds(); game.scale.setZoom(next.scale); game.scale.resize(next.width, next.height); scene.resizeWorld(next.width, next.height, next.scale); };
   const observer = new ResizeObserver(() => { cancelAnimationFrame(frame); frame = requestAnimationFrame(resize); }); observer.observe(host); void ready.then(resize);
-  return { ready, setState: (state, options) => scene.setState(state, options), playReceipt: (r, o) => scene.play(r, o), setPaused: value => scene.setPaused(value), setInputEnabled: enabled => scene.setInputEnabled(enabled), setOpening: phase => scene.setOpening(phase), setViewportInsets: (t, b, l, r) => scene.setInsets(t, b, l, r), focus: target => scene.focus(target), followActor: () => scene.follow(), resize, destroy: () => { disposed = true; observer.disconnect(); cancelAnimationFrame(frame); scene.dispose(); game.destroy(true); } };
+  return { ready, setState: (state, options) => scene.setState(state, options), playReceipt: (r, o) => scene.play(r, o), setPaused: value => scene.setPaused(value), setPlaybackRate: rate => scene.setPlaybackRate(rate), setInputEnabled: enabled => scene.setInputEnabled(enabled), setOpening: phase => scene.setOpening(phase), setViewportInsets: (t, b, l, r) => scene.setInsets(t, b, l, r), focus: target => scene.focus(target), followActor: () => scene.follow(), resize, destroy: () => { disposed = true; observer.disconnect(); cancelAnimationFrame(frame); scene.dispose(); game.destroy(true); } };
 }

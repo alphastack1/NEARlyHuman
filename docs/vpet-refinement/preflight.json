@@ -1,0 +1,22 @@
+{
+  "checkedAtUtc": "2026-11-03T04:08:21.424Z",
+  "scope": "Final source/build/public-UI prepublication gate. Actual type check completed exit0, compiled assets and focused browser reports checked. No owner signing, AI call, chain write or production settings change.",
+  "typeCheck": "pass",
+  "productionBuild": "pass",
+  "diagnosticAndSecretMarkerFiles": [],
+  "finalAssets": [
+    "index-BrTytsN6.js",
+    "index-Cq0vvDkw.css",
+    "V2App-BhuwITkX.js",
+    "V2App-DCMY_QlG.css"
+  ],
+  "compiledPublic": {
+    "screens": 6,
+    "errors": 0,
+    "writes": 0,
+    "pass": true
+  },
+  "financialSourceUnchanged": true,
+  "previousRemoteMain": "c3895b037fd328f7992a6d78de034fbb4d4ec264",
+  "pass": true
+}

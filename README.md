@@ -10,11 +10,13 @@ NEARlyHuman is a retro, phone-first life game powered by **NEAR AI Cloud's Jev m
 
 ## A day in a little home
 
+Start by hatching and naming a rooster, then pack its first post. An optional short example has a visible exit. Personality and alternate payment options open on demand. Returning owners arrive at their saved home ready to prepare tomorrow; a newly completed day offers its film first.
+
 Choose up to three different supplies, with at most one seed packet or sapling. Jev plans one substantial undertaking and a morning order, then chooses smaller routines such as breakfast, watering, treatment, rest or leisure. The rooster walks through connected rooms, outside to the mailbox, into its garden and over to the workbench. The completed day is saved before its film plays.
 
 Four beds support four flowers, four fruits and one wood-tree variety, with three-, six- or eight-day initial growth. Repeat crops have finite yields. The workshop makes spoons, toy boats, birdhouses and large chests from accumulated wood. Jev may keep produce, enjoy it, eat it or carry finished goods to the outgoing mailbox. A harvest does not guarantee a sale.
 
-Touch objects to inspect them, revisit saved days, share an exact life, or prepare another day. Pause, seek and skip change only presentation.
+Touch objects to inspect them, revisit saved days, share an exact life, or prepare another day. Pause, seek and Finish day change only presentation.
 
 ## Ownership with behavior
 
@@ -67,3 +69,5 @@ The [local controller/wallet proof](docs/overnight/wave4/CHAIN_REVIEW.md) advanc
 Before publication, the public-chain run saved41 real Jev days across two NPCs using209 sends for$0.030202, with zero uncertain sends. MISO made a Toy boat from earned wood and kept it; both purses remained0NHC. [The earlier checkpoint](docs/overnight/wave5/JEV_REVIEW.md) separates observed behavior from the local earning proof. Drained policy transitions added truthful care/economy facts and [bounded produce/surplus shipping choices](docs/overnight/wave6/SHIPMENT_REVIEW.md) without forcing sales or changing contracts. [Independent chain checks](docs/overnight/wave5/RELIABILITY_REVIEW.md) and [actual rendered playback](docs/overnight/wave5/PLAYER_REVIEW.md) distinguish receipts, model calls, controlled fixtures and screenshots.
 
 The [V2 design](design/ECONOMY_V2.md), [contract guide](contracts/v2/README.md), [approved visual reference](design/references/VR-01-approved-house-and-care.png) and [99-board mockup gallery](design/mockups/index.html) preserve the intended game and visual direction.
+
+The [virtual-pet flow and pixel refinement](docs/vpet-refinement/README.md) maps the full player journey, cites the reference games, and records independent phone/menu/input reviews of the subsequent usability pass.

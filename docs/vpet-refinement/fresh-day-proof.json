@@ -1,0 +1,26 @@
+{
+  "scope": "Controlled ready-job presentation transition around actual saved SUNNY Day1 packet. Synthetic preparing/ready GET only; no actual new job, wallet, signature, quote, inference, financial write or chain transaction.",
+  "actual": {
+    "id": "3",
+    "day": 1,
+    "requestId": "0xef56ef428ad908b4c3688e53595607309a051851f6fad28a951934a108beaaea",
+    "commitment": "0x897194faac2bbc6d95c55f60eb780c7a91040cd326b6495102990f5750a45f75"
+  },
+  "errors": [],
+  "writes": [],
+  "cases": [
+    {
+      "name": "fresh-day-watch-390",
+      "text": "SUNNY\nLV00\nDAY 01\nPlant Daisy\n\nA day with SUNNY.\n\nWatch day"
+    },
+    {
+      "name": "fresh-day-complete-390",
+      "text": "SUNNY\nLV01\nDAY 01\n\nA little day, well lived.\n\nDay 1 · Level 1\nPrepare tomorrow"
+    },
+    {
+      "name": "returning-owner-home-390",
+      "text": "SUNNY\nLV01\nDAY 01\nPlant Daisy\n\nSUNNY, at home.\n\nPrepare tomorrow\nWatch day 1"
+    }
+  ],
+  "pass": true
+}

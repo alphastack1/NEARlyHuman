@@ -40,6 +40,6 @@ export function CartridgeOpening({phase,onStart}:{phase:Exclude<CartridgePhase,'
    <div className="cartridge-logo"><HouseMark/><h1 aria-label="NEARlyHuman"><span aria-hidden="true">NEAR<span className="cartridge-logo-ly">ly</span>Human</span></h1></div>
    <button ref={start} className="cartridge-start" disabled={phase!=='title'} onClick={event=>{event.stopPropagation();onStart();}}><i aria-hidden="true"/>START<i aria-hidden="true"/></button>
   </div>
-  <button ref={skip} className="cartridge-skip" disabled={phase==='leaving'} onClick={event=>{event.stopPropagation();onStart();}}>Skip<span aria-hidden="true"> ▸▸</span></button>
+  {phase==='assembling'&&<button ref={skip} className="cartridge-skip" onClick={event=>{event.stopPropagation();onStart();}}>Skip<span aria-hidden="true"> ▸▸</span></button>}
  </section>;
 }

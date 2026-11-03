@@ -1,0 +1,10 @@
+{
+  "scope": "Focused settled layout recapture after adding native-space padding so the highlighted slot border is not clipped on short phones. Actual public MISO snapshot with controlled owner preview; no wallet or app writes.",
+  "bounds": {
+    "bodyTop": 105.96875,
+    "targetTop": 107.96875
+  },
+  "errors": [],
+  "writes": [],
+  "pass": true
+}

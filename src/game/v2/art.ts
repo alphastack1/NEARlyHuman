@@ -6,6 +6,15 @@ import { BEDS, WORLD_HEIGHT, WORLD_WIDTH } from './layout';
 
 const noise = (x: number, y: number, seed: number) => { let h = Math.imul(x + 17, 374761393) ^ Math.imul(y + 31, 668265263) ^ seed; h = Math.imul(h ^ h >>> 13, 1274126177); return (h ^ h >>> 16) >>> 0; };
 
+/** Hard-edged contact shadow on the same one-pixel grid as the furniture. */
+export function shadowArt(width: number, height: number): HTMLCanvasElement {
+  return canvasArt(width, height, p => {
+    p('#342f28', 3, 0, width - 6, 1);
+    p('#342f28', 1, 1, width - 2, height - 2);
+    p('#342f28', 3, height - 1, width - 6, 1);
+  });
+}
+
 export function landscape(seed: string): HTMLCanvasElement {
   const n = homeArtSeed(seed), c = canvasArt(WORLD_WIDTH, WORLD_HEIGHT, p => {
     p('#4e6a43', 0, 0, WORLD_WIDTH, WORLD_HEIGHT);

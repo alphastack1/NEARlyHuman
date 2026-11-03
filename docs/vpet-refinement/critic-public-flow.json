@@ -1,0 +1,239 @@
+{
+  "scope": "Actual local source and actual public data. Cold-page memory stores. All non-GET application requests blocked; no wallet/model/chain writes.",
+  "errors": [],
+  "blocked": [],
+  "facts": [
+    {
+      "case": "defaultName",
+      "name": "PIP",
+      "enabled": true
+    },
+    {
+      "case": "exampleAutomaticExitMs",
+      "elapsed": 23456
+    }
+  ],
+  "screens": [
+    {
+      "name": "after-title",
+      "text": "NEARlyHuman\nSTART",
+      "buttons": [
+        "START"
+      ],
+      "overflow": false
+    },
+    {
+      "name": "after-entry",
+      "text": "A little life of its own.\n\nRaise a rooster with a mind of its own.\n\nHatch a rooster\nWatch example\nYour roosters",
+      "buttons": [
+        "Hatch a rooster",
+        "Watch example",
+        "Your roosters"
+      ],
+      "overflow": false
+    },
+    {
+      "name": "after-hatch",
+      "text": "A new rooster\nName your rooster\nPersonality\nChange\n0.0004 test ETH\nChange\nHatch PIP\nNetwork fee applies",
+      "buttons": [
+        "",
+        "Hatch PIP"
+      ],
+      "overflow": false
+    },
+    {
+      "name": "after-personality",
+      "text": "A new rooster\nName your rooster\nPersonality\nChange\nBody\n−\n2\n+\nWits\n−\n2\n+\nSpirit\n−\n1\n+\n0.0004 test ETH\nChange\nHatch PIP\nNetwork fee applies",
+      "buttons": [
+        "",
+        "−",
+        "+",
+        "−",
+        "+",
+        "−",
+        "+",
+        "Hatch PIP"
+      ],
+      "overflow": false
+    },
+    {
+      "name": "after-payment",
+      "text": "A new rooster\nName your rooster\nPersonality\nChange\n0.0004 test ETH\nChange\n0.0004 ETH\n250 NHC\nHatch PIP\nNetwork fee applies",
+      "buttons": [
+        "",
+        "0.0004 ETH",
+        "250 NHC",
+        "Hatch PIP"
+      ],
+      "overflow": false
+    },
+    {
+      "name": "after-hatch-back",
+      "text": "A little life of its own.\n\nRaise a rooster with a mind of its own.\n\nHatch a rooster\nWatch example\nYour roosters",
+      "buttons": [
+        "Hatch a rooster",
+        "Watch example",
+        "Your roosters"
+      ],
+      "overflow": false
+    },
+    {
+      "name": "after-example",
+      "text": "MISO\nLV27\nEXAMPLE\nGather the ready garden\n\nThe morning post.\n\n···\nHatch your own\nBack",
+      "buttons": [
+        "",
+        "",
+        "Hatch your own",
+        "Back"
+      ],
+      "overflow": false
+    },
+    {
+      "name": "after-example-back",
+      "text": "A little life of its own.\n\nRaise a rooster with a mind of its own.\n\nHatch a rooster\nWatch example\nYour roosters",
+      "buttons": [
+        "Hatch a rooster",
+        "Watch example",
+        "Your roosters"
+      ],
+      "overflow": false
+    },
+    {
+      "name": "after-example-natural-end",
+      "text": "A little life of its own.\n\nRaise a rooster with a mind of its own.\n\nHatch a rooster\nWatch example\nYour roosters",
+      "buttons": [
+        "Hatch a rooster",
+        "Watch example",
+        "Your roosters"
+      ],
+      "overflow": false
+    },
+    {
+      "name": "after-exact-profile",
+      "text": "MISO\nLV27\nDAY 28\nGather the ready garden\n\nA day with MISO.\n\nWatch day\nMISO\nDAY 28\nLV28\n0 NHC\nVisit home\nDays\nShare\nHatch your own",
+      "buttons": [
+        "",
+        "MISO",
+        "",
+        "Watch day",
+        "",
+        "Visit home",
+        "Days",
+        "Share",
+        "Hatch your own"
+      ],
+      "overflow": false
+    },
+    {
+      "name": "after-menu",
+      "text": "MISO\nLV27\nDAY 28\nGather the ready garden\n\nA day with MISO.\n\nWatch day\nMenu\nMISO\nDAY 28 · LV28\nDays\nBelongings\nPurse\nShare\nYour roosters\nHatch a rooster",
+      "buttons": [
+        "",
+        "MISO",
+        "",
+        "Watch day",
+        "",
+        "MISODAY 28 · LV28",
+        "Days",
+        "Belongings",
+        "Purse",
+        "Share",
+        "Your roosters",
+        "Hatch a rooster"
+      ],
+      "overflow": false
+    },
+    {
+      "name": "after-nested-days",
+      "text": "MISO\nLV27\nDAY 28\nGather the ready garden\n\nA day with MISO.\n\nWatch day\nDays\nDAY 28\nA little day\nDAY 27\nA little day\nDAY 26\nA little day\nDAY 25\nA little day\nDAY 24\nA little day\nDAY 23\nA little day\nDAY 22\nA little day\nDAY 21\nA little day\nDAY 20\nA little day\nDAY 19\nA little day\nDAY 18\nA little day\nDAY 17\nA little day\nEarlier days\nLatest home",
+      "buttons": [
+        "",
+        "MISO",
+        "",
+        "Watch day",
+        "",
+        "DAY 28A little day",
+        "DAY 27A little day",
+        "DAY 26A little day",
+        "DAY 25A little day",
+        "DAY 24A little day",
+        "DAY 23A little day",
+        "DAY 22A little day",
+        "DAY 21A little day",
+        "DAY 20A little day",
+        "DAY 19A little day",
+        "DAY 18A little day",
+        "DAY 17A little day",
+        "Earlier days",
+        "Latest home"
+      ],
+      "overflow": false
+    },
+    {
+      "name": "after-nested-return-profile",
+      "text": "MISO\nLV27\nDAY 28\nGather the ready garden\n\nA day with MISO.\n\nWatch day\nMISO\nDAY 28\nLV28\n0 NHC\nVisit home\nDays\nShare\nHatch your own",
+      "buttons": [
+        "",
+        "MISO",
+        "",
+        "Watch day",
+        "",
+        "Visit home",
+        "Days",
+        "Share",
+        "Hatch your own"
+      ],
+      "overflow": false
+    },
+    {
+      "name": "after-nested-return-menu",
+      "text": "MISO\nLV27\nDAY 28\nGather the ready garden\n\nA day with MISO.\n\nWatch day\nMenu\nMISO\nDAY 28 · LV28\nDays\nBelongings\nPurse\nShare\nYour roosters\nHatch a rooster",
+      "buttons": [
+        "",
+        "MISO",
+        "",
+        "Watch day",
+        "",
+        "MISODAY 28 · LV28",
+        "Days",
+        "Belongings",
+        "Purse",
+        "Share",
+        "Your roosters",
+        "Hatch a rooster"
+      ],
+      "overflow": false
+    },
+    {
+      "name": "after-stock",
+      "text": "MISO\nLV27\nDAY 28\nGather the ready garden\n\nA day with MISO.\n\nWatch day\nBelongings\nWater\n×2\nBread\n×2\nCoffee\n×1\nWood\n×4\nStrawberry\n×1\nApple\n×3\nToy boat\n×1",
+      "buttons": [
+        "",
+        "MISO",
+        "",
+        "Watch day",
+        ""
+      ],
+      "overflow": false
+    },
+    {
+      "name": "after-stock-back",
+      "text": "MISO\nLV27\nDAY 28\nGather the ready garden\n\nA day with MISO.\n\nWatch day\nMenu\nMISO\nDAY 28 · LV28\nDays\nBelongings\nPurse\nShare\nYour roosters\nHatch a rooster",
+      "buttons": [
+        "",
+        "MISO",
+        "",
+        "Watch day",
+        "",
+        "MISODAY 28 · LV28",
+        "Days",
+        "Belongings",
+        "Purse",
+        "Share",
+        "Your roosters",
+        "Hatch a rooster"
+      ],
+      "overflow": false
+    }
+  ]
+}

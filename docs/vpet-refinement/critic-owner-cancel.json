@@ -1,0 +1,71 @@
+{
+  "scope": "Presentation checks. Actual SUNNY life/packet for owner preview; controlled account identity only. Wallet cancel refuses at account selection before signing. All app writes blocked.",
+  "errors": [],
+  "blocked": [],
+  "facts": [
+    {
+      "case": "cancelWallet",
+      "methods": [
+        "eth_requestAccounts"
+      ],
+      "namePreserved": true
+    },
+    {
+      "case": "ownerInitial",
+      "realLifeId": "3",
+      "realDay": 1,
+      "scope": "Actual public snapshot and packet, controlled owner address through DEV preview; no wallet connected."
+    },
+    {
+      "case": "careReplacement",
+      "milkInFirstSlot": 1,
+      "count": 3
+    },
+    {
+      "case": "finishSavedFilm",
+      "prepareReady": 1
+    }
+  ],
+  "screens": [
+    {
+      "name": "after-cancel-wallet",
+      "text": "A new rooster\nName your rooster\nPersonality\nChange\n0.0004 test ETH\nChange\nHatch BEAN\nNetwork fee applies\n\nNo problem. Nothing was sent.",
+      "overflow": false
+    },
+    {
+      "name": "after-cancel-back",
+      "text": "A little life of its own.\n\nRaise a rooster with a mind of its own.\n\nHatch a rooster\nWatch example\nYour roosters",
+      "overflow": false
+    },
+    {
+      "name": "after-owner-ready",
+      "text": "SUNNY\nLV01\nDAY 01\nPlant Daisy\n\nSUNNY, at home.\n\nPrepare tomorrow\nWatch day 1",
+      "overflow": false
+    },
+    {
+      "name": "after-owner-care",
+      "text": "SUNNY\nLV01\nDAY 01\nPlant Daisy\n\nSUNNY, at home.\n\nPrepare tomorrow\nWatch day 1\nTomorrow's post\n×1\n×1\n×1\nCare\nSeeds\nHouse\nWater\nAt home ×2\nBread\nAt home ×2\nMilk\n×1\nMedicine\n×1\nCoffee\n×1\nSteak\n×1\nPrepare day 2\nSupplies included · network + preparation fee",
+      "overflow": false
+    },
+    {
+      "name": "after-care-replaced",
+      "text": "SUNNY\nLV01\nDAY 01\nPlant Daisy\n\nSUNNY, at home.\n\nPrepare tomorrow\nWatch day 1\nTomorrow's post\n×1\n×1\n×1\nCare\nSeeds\nHouse\nWater\nAt home ×2\nBread\nAt home ×2\nMilk\n×1\nMedicine\n×1\nCoffee\n×1\nSteak\n×1\nPrepare day 2\nSupplies included · network + preparation fee",
+      "overflow": false
+    },
+    {
+      "name": "after-care-seeds",
+      "text": "SUNNY\nLV01\nDAY 01\nPlant Daisy\n\nSUNNY, at home.\n\nPrepare tomorrow\nWatch day 1\nTomorrow's post\n×1\n×1\n×1\nCare\nSeeds\nHouse\nDaisy\n3 days\nMarigold\n3 days\nLavender\n6 days\nRose\n8 days\nStrawberry\n3 days\nBlueberry\n6 days\nGrape\n8 days\nApple\n8 days\nWood tree\n6 days\nPrepare day 2\nSupplies included · network + preparation fee",
+      "overflow": false
+    },
+    {
+      "name": "after-owner-watching",
+      "text": "SUNNY\nLV00\nDAY 01\nPlant Daisy\n\nThe morning post.\n\n···\nFinish day",
+      "overflow": false
+    },
+    {
+      "name": "after-owner-finished",
+      "text": "SUNNY\nLV01\nDAY 01\n\nA little day, well lived.\n\nDay 1 · Level 1\nPrepare tomorrow",
+      "overflow": false
+    }
+  ]
+}

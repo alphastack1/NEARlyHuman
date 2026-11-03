@@ -1,0 +1,1155 @@
+{
+  "scope": "Actual source and public onchain snapshots/films. Controlled public owner address in DEV presentation preview. No wallet, signature, quote, inference or app write. Synthetic narrow and short viewports, not a physical keyboard measurement. Finite CSS entrances were fast-forwarded only for settled layout screenshots; natural demo timing and motion were independently observed in the critic reports.",
+  "errors": [],
+  "writes": [],
+  "screens": [
+    {
+      "name": "entry-320",
+      "viewport": [
+        320,
+        568
+      ],
+      "overflow": false,
+      "buttons": [
+        {
+          "text": "Hatch a rooster",
+          "bounds": [
+            29,
+            332.5,
+            262,
+            46
+          ]
+        },
+        {
+          "text": "Watch example",
+          "bounds": [
+            29,
+            389.5,
+            130,
+            44
+          ]
+        },
+        {
+          "text": "Your roosters",
+          "bounds": [
+            161,
+            389.5,
+            130,
+            44
+          ]
+        }
+      ]
+    },
+    {
+      "name": "hatch-320",
+      "viewport": [
+        320,
+        568
+      ],
+      "overflow": false,
+      "buttons": [
+        {
+          "text": "Back to start",
+          "bounds": [
+            260,
+            124.4375,
+            42,
+            42
+          ]
+        },
+        {
+          "text": "More body",
+          "bounds": [
+            240,
+            315.71875,
+            40,
+            35
+          ]
+        },
+        {
+          "text": "Less wits",
+          "bounds": [
+            160,
+            358.21875,
+            40,
+            36
+          ]
+        },
+        {
+          "text": "More wits",
+          "bounds": [
+            240,
+            358.71875,
+            40,
+            35
+          ]
+        },
+        {
+          "text": "Less spirit",
+          "bounds": [
+            160,
+            401.21875,
+            40,
+            36
+          ]
+        },
+        {
+          "text": "More spirit",
+          "bounds": [
+            240,
+            401.71875,
+            40,
+            35
+          ]
+        },
+        {
+          "text": null,
+          "bounds": [
+            162.5,
+            370.21875,
+            117.5,
+            39
+          ]
+        },
+        {
+          "text": "Hatch PIP",
+          "bounds": [
+            29,
+            371.21875,
+            262,
+            46
+          ]
+        }
+      ]
+    },
+    {
+      "name": "hatch-short-320",
+      "viewport": [
+        320,
+        360
+      ],
+      "overflow": false,
+      "buttons": [
+        {
+          "text": "Back to start",
+          "bounds": [
+            260,
+            20.4375,
+            42,
+            42
+          ]
+        },
+        {
+          "text": "Less body",
+          "bounds": [
+            160,
+            211.21875,
+            40,
+            36
+          ]
+        },
+        {
+          "text": "More body",
+          "bounds": [
+            240,
+            211.71875,
+            40,
+            35
+          ]
+        },
+        {
+          "text": "Less wits",
+          "bounds": [
+            160,
+            254.21875,
+            40,
+            36
+          ]
+        },
+        {
+          "text": "More wits",
+          "bounds": [
+            240,
+            254.71875,
+            40,
+            35
+          ]
+        },
+        {
+          "text": "Less spirit",
+          "bounds": [
+            160,
+            297.21875,
+            40,
+            36
+          ]
+        },
+        {
+          "text": "More spirit",
+          "bounds": [
+            240,
+            297.71875,
+            40,
+            35
+          ]
+        },
+        {
+          "text": null,
+          "bounds": [
+            40,
+            266.21875,
+            117.5,
+            39
+          ]
+        },
+        {
+          "text": null,
+          "bounds": [
+            162.5,
+            266.21875,
+            117.5,
+            39
+          ]
+        },
+        {
+          "text": "Hatch PIP",
+          "bounds": [
+            29,
+            267.21875,
+            262,
+            46
+          ]
+        }
+      ]
+    },
+    {
+      "name": "example-390",
+      "viewport": [
+        390,
+        844
+      ],
+      "overflow": false,
+      "buttons": [
+        {
+          "text": "Back",
+          "bounds": [
+            14,
+            12,
+            42,
+            42
+          ]
+        },
+        {
+          "text": "Follow rooster",
+          "bounds": [
+            339,
+            124,
+            42,
+            42
+          ]
+        },
+        {
+          "text": "Hatch your own",
+          "bounds": [
+            23,
+            780,
+            281,
+            46
+          ]
+        },
+        {
+          "text": "Back",
+          "bounds": [
+            313,
+            781,
+            54,
+            44
+          ]
+        }
+      ]
+    },
+    {
+      "name": "owner-home-390",
+      "viewport": [
+        390,
+        844
+      ],
+      "overflow": false,
+      "buttons": [
+        {
+          "text": "Open menu",
+          "bounds": [
+            340,
+            10,
+            34,
+            42
+          ]
+        },
+        {
+          "text": "Prepare tomorrow",
+          "bounds": [
+            23,
+            736,
+            294,
+            46
+          ]
+        },
+        {
+          "text": "Open purse",
+          "bounds": [
+            325,
+            738,
+            42,
+            42
+          ]
+        },
+        {
+          "text": "Watch day 28",
+          "bounds": [
+            127,
+            785,
+            136,
+            44
+          ]
+        }
+      ]
+    },
+    {
+      "name": "menu-390",
+      "viewport": [
+        390,
+        844
+      ],
+      "overflow": false,
+      "buttons": [
+        {
+          "text": "Open menu",
+          "bounds": [
+            340,
+            10,
+            34,
+            42
+          ]
+        },
+        {
+          "text": "Prepare tomorrow",
+          "bounds": [
+            23,
+            736,
+            294,
+            46
+          ]
+        },
+        {
+          "text": "Open purse",
+          "bounds": [
+            325,
+            738,
+            42,
+            42
+          ]
+        },
+        {
+          "text": "Watch day 28",
+          "bounds": [
+            127,
+            785,
+            136,
+            44
+          ]
+        },
+        {
+          "text": "Close",
+          "bounds": [
+            325,
+            210,
+            42,
+            42
+          ]
+        },
+        {
+          "text": "MISO\nDAY 28 · LV28",
+          "bounds": [
+            34,
+            266,
+            322,
+            104
+          ]
+        },
+        {
+          "text": "Days",
+          "bounds": [
+            34,
+            384,
+            157,
+            62
+          ]
+        },
+        {
+          "text": "Belongings",
+          "bounds": [
+            199,
+            384,
+            157,
+            62
+          ]
+        },
+        {
+          "text": "Purse",
+          "bounds": [
+            34,
+            454,
+            157,
+            62
+          ]
+        },
+        {
+          "text": "Share",
+          "bounds": [
+            199,
+            454,
+            157,
+            62
+          ]
+        },
+        {
+          "text": "Your roosters",
+          "bounds": [
+            34,
+            537,
+            322,
+            44
+          ]
+        },
+        {
+          "text": "Hatch a rooster",
+          "bounds": [
+            34,
+            581,
+            322,
+            44
+          ]
+        }
+      ]
+    },
+    {
+      "name": "menu-320",
+      "viewport": [
+        320,
+        568
+      ],
+      "overflow": false,
+      "buttons": [
+        {
+          "text": "Open menu",
+          "bounds": [
+            273,
+            7,
+            34,
+            42
+          ]
+        },
+        {
+          "text": "Prepare tomorrow",
+          "bounds": [
+            21,
+            461,
+            228,
+            46
+          ]
+        },
+        {
+          "text": "Open purse",
+          "bounds": [
+            257,
+            463,
+            42,
+            42
+          ]
+        },
+        {
+          "text": "Watch day 28",
+          "bounds": [
+            92,
+            510,
+            136,
+            44
+          ]
+        },
+        {
+          "text": "Close",
+          "bounds": [
+            260,
+            92.5,
+            42,
+            42
+          ]
+        },
+        {
+          "text": "MISO\nDAY 28 · LV28",
+          "bounds": [
+            29,
+            144.5,
+            262,
+            100
+          ]
+        },
+        {
+          "text": "Days",
+          "bounds": [
+            29,
+            254.5,
+            127,
+            52
+          ]
+        },
+        {
+          "text": "Belongings",
+          "bounds": [
+            164,
+            254.5,
+            127,
+            52
+          ]
+        },
+        {
+          "text": "Purse",
+          "bounds": [
+            29,
+            314.5,
+            127,
+            52
+          ]
+        },
+        {
+          "text": "Share",
+          "bounds": [
+            164,
+            314.5,
+            127,
+            52
+          ]
+        },
+        {
+          "text": "Your roosters",
+          "bounds": [
+            29,
+            379.5,
+            262,
+            44
+          ]
+        },
+        {
+          "text": "Hatch a rooster",
+          "bounds": [
+            29,
+            423.5,
+            262,
+            44
+          ]
+        }
+      ]
+    },
+    {
+      "name": "belongings-320",
+      "viewport": [
+        320,
+        568
+      ],
+      "overflow": false,
+      "buttons": [
+        {
+          "text": "Open menu",
+          "bounds": [
+            273,
+            7,
+            34,
+            42
+          ]
+        },
+        {
+          "text": "Prepare tomorrow",
+          "bounds": [
+            21,
+            461,
+            228,
+            46
+          ]
+        },
+        {
+          "text": "Open purse",
+          "bounds": [
+            257,
+            463,
+            42,
+            42
+          ]
+        },
+        {
+          "text": "Watch day 28",
+          "bounds": [
+            92,
+            510,
+            136,
+            44
+          ]
+        },
+        {
+          "text": "Back to menu",
+          "bounds": [
+            260,
+            87.90625,
+            42,
+            42
+          ]
+        }
+      ]
+    },
+    {
+      "name": "care-320",
+      "viewport": [
+        320,
+        568
+      ],
+      "overflow": false,
+      "buttons": [
+        {
+          "text": "Open menu",
+          "bounds": [
+            273,
+            7,
+            34,
+            42
+          ]
+        },
+        {
+          "text": "Prepare tomorrow",
+          "bounds": [
+            21,
+            461,
+            228,
+            46
+          ]
+        },
+        {
+          "text": "Open purse",
+          "bounds": [
+            257,
+            463,
+            42,
+            42
+          ]
+        },
+        {
+          "text": "Watch day 28",
+          "bounds": [
+            92,
+            510,
+            136,
+            44
+          ]
+        },
+        {
+          "text": "Close",
+          "bounds": [
+            260,
+            55.96875,
+            42,
+            42
+          ]
+        },
+        {
+          "text": "×1",
+          "bounds": [
+            57,
+            105.96875,
+            60,
+            54
+          ]
+        },
+        {
+          "text": "×1",
+          "bounds": [
+            130,
+            107.96875,
+            60,
+            54
+          ]
+        },
+        {
+          "text": "×1",
+          "bounds": [
+            203,
+            107.96875,
+            60,
+            54
+          ]
+        },
+        {
+          "text": "Care",
+          "bounds": [
+            34,
+            189.96875,
+            80.65625,
+            39
+          ]
+        },
+        {
+          "text": "Seeds",
+          "bounds": [
+            119.65625,
+            189.96875,
+            80.671875,
+            39
+          ]
+        },
+        {
+          "text": "House",
+          "bounds": [
+            205.328125,
+            189.96875,
+            80.671875,
+            39
+          ]
+        },
+        {
+          "text": "Water\nAt home ×2",
+          "bounds": [
+            29,
+            243.96875,
+            82,
+            82.6875
+          ]
+        },
+        {
+          "text": "Bread\nAt home ×2",
+          "bounds": [
+            119,
+            243.96875,
+            82,
+            82.6875
+          ]
+        },
+        {
+          "text": "Milk\n×1",
+          "bounds": [
+            209,
+            243.96875,
+            82,
+            82.6875
+          ]
+        },
+        {
+          "text": "Medicine\n×1",
+          "bounds": [
+            29,
+            334.65625,
+            82,
+            82.6875
+          ]
+        },
+        {
+          "text": "Coffee\nAt home ×1",
+          "bounds": [
+            119,
+            334.65625,
+            82,
+            82.6875
+          ]
+        },
+        {
+          "text": "Steak\n×1",
+          "bounds": [
+            209,
+            334.65625,
+            82,
+            82.6875
+          ]
+        },
+        {
+          "text": "Prepare day 29",
+          "bounds": [
+            29,
+            427.34375,
+            262,
+            46
+          ]
+        }
+      ]
+    },
+    {
+      "name": "care-430",
+      "viewport": [
+        430,
+        932
+      ],
+      "overflow": false,
+      "buttons": [
+        {
+          "text": "Open menu",
+          "bounds": [
+            380,
+            10,
+            34,
+            42
+          ]
+        },
+        {
+          "text": "Prepare tomorrow",
+          "bounds": [
+            23,
+            824,
+            334,
+            46
+          ]
+        },
+        {
+          "text": "Open purse",
+          "bounds": [
+            365,
+            826,
+            42,
+            42
+          ]
+        },
+        {
+          "text": "Watch day 28",
+          "bounds": [
+            147,
+            873,
+            136,
+            44
+          ]
+        },
+        {
+          "text": "Close",
+          "bounds": [
+            365,
+            213.828125,
+            42,
+            42
+          ]
+        },
+        {
+          "text": "×1",
+          "bounds": [
+            100,
+            272.828125,
+            68,
+            64
+          ]
+        },
+        {
+          "text": "×1",
+          "bounds": [
+            181,
+            274.828125,
+            68,
+            64
+          ]
+        },
+        {
+          "text": "×1",
+          "bounds": [
+            262,
+            274.828125,
+            68,
+            64
+          ]
+        },
+        {
+          "text": "Care",
+          "bounds": [
+            39,
+            370.828125,
+            114,
+            39
+          ]
+        },
+        {
+          "text": "Seeds",
+          "bounds": [
+            158,
+            370.828125,
+            114,
+            39
+          ]
+        },
+        {
+          "text": "House",
+          "bounds": [
+            277,
+            370.828125,
+            114,
+            39
+          ]
+        },
+        {
+          "text": "Water\nAt home ×2",
+          "bounds": [
+            34,
+            428.828125,
+            115.328125,
+            95
+          ]
+        },
+        {
+          "text": "Bread\nAt home ×2",
+          "bounds": [
+            157.328125,
+            428.828125,
+            115.328125,
+            95
+          ]
+        },
+        {
+          "text": "Milk\n×1",
+          "bounds": [
+            280.65625,
+            428.828125,
+            115.34375,
+            95
+          ]
+        },
+        {
+          "text": "Medicine\n×1",
+          "bounds": [
+            34,
+            531.828125,
+            115.328125,
+            95
+          ]
+        },
+        {
+          "text": "Coffee\nAt home ×1",
+          "bounds": [
+            157.328125,
+            531.828125,
+            115.328125,
+            95
+          ]
+        },
+        {
+          "text": "Steak\n×1",
+          "bounds": [
+            280.65625,
+            531.828125,
+            115.34375,
+            95
+          ]
+        },
+        {
+          "text": "Prepare day 29",
+          "bounds": [
+            34,
+            640.828125,
+            362,
+            46
+          ]
+        }
+      ]
+    },
+    {
+      "name": "film-controls-430",
+      "viewport": [
+        430,
+        932
+      ],
+      "overflow": false,
+      "buttons": [
+        {
+          "text": "Open menu",
+          "bounds": [
+            380,
+            10,
+            34,
+            42
+          ]
+        },
+        {
+          "text": "Follow rooster",
+          "bounds": [
+            379,
+            120,
+            42,
+            42
+          ]
+        },
+        {
+          "text": "Pause day",
+          "bounds": [
+            16,
+            875,
+            40,
+            42
+          ]
+        },
+        {
+          "text": "Finish day",
+          "bounds": [
+            291,
+            874,
+            123,
+            44
+          ]
+        }
+      ]
+    },
+    {
+      "name": "finished-day-430",
+      "viewport": [
+        430,
+        932
+      ],
+      "overflow": false,
+      "buttons": [
+        {
+          "text": "Open menu",
+          "bounds": [
+            380,
+            10,
+            34,
+            42
+          ]
+        },
+        {
+          "text": "Prepare tomorrow",
+          "bounds": [
+            23,
+            868,
+            334,
+            46
+          ]
+        },
+        {
+          "text": "Open purse",
+          "bounds": [
+            365,
+            870,
+            42,
+            42
+          ]
+        }
+      ]
+    },
+    {
+      "name": "menu-desktop",
+      "viewport": [
+        1100,
+        800
+      ],
+      "overflow": false,
+      "buttons": [
+        {
+          "text": "Open menu",
+          "bounds": [
+            1033,
+            18,
+            34,
+            42
+          ]
+        },
+        {
+          "text": "Prepare tomorrow",
+          "bounds": [
+            230,
+            728,
+            590,
+            46
+          ]
+        },
+        {
+          "text": "Open purse",
+          "bounds": [
+            828,
+            730,
+            42,
+            42
+          ]
+        },
+        {
+          "text": "Close",
+          "bounds": [
+            713,
+            184.5,
+            42,
+            42
+          ]
+        },
+        {
+          "text": "MISO\nDAY 28 · LV28",
+          "bounds": [
+            356,
+            240.5,
+            388,
+            104
+          ]
+        },
+        {
+          "text": "Days",
+          "bounds": [
+            356,
+            361.5,
+            190,
+            62
+          ]
+        },
+        {
+          "text": "Belongings",
+          "bounds": [
+            554,
+            361.5,
+            190,
+            62
+          ]
+        },
+        {
+          "text": "Purse",
+          "bounds": [
+            356,
+            431.5,
+            190,
+            62
+          ]
+        },
+        {
+          "text": "Share",
+          "bounds": [
+            554,
+            431.5,
+            190,
+            62
+          ]
+        },
+        {
+          "text": "Your roosters",
+          "bounds": [
+            356,
+            517.5,
+            388,
+            44
+          ]
+        },
+        {
+          "text": "Hatch a rooster",
+          "bounds": [
+            356,
+            561.5,
+            388,
+            44
+          ]
+        }
+      ]
+    }
+  ],
+  "facts": [
+    {
+      "case": "explicit example exit",
+      "pass": true
+    },
+    {
+      "case": "playing film resumes after closing menu",
+      "pass": true
+    }
+  ]
+}
