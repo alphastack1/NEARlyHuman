@@ -1,0 +1,149 @@
+{
+  "pass": true,
+  "scope": "Two explicit renderer fixtures: exact extra pantry loss after the same receipt consumes bread, and a deliberately ambiguous multi-item loss negative. No natural event-frequency claim and no API, financial, wallet, model or chain actions.",
+  "errors": [],
+  "writes": [],
+  "checks": [
+    {
+      "case": "One bread beyond actual eaten bread: bread carried and pantry−1 only at expiry",
+      "before": {
+        "impact": false,
+        "done": false,
+        "impacts": 0,
+        "film": {
+          "phase": "work",
+          "impact": false,
+          "elapsed": 0
+        },
+        "rain": 0,
+        "visitor": {
+          "kind": "visitor",
+          "bed": 0,
+          "untilSlot": 30
+        },
+        "visualVisitor": {
+          "kind": "visitor",
+          "bed": 0,
+          "at": -1800
+        },
+        "visitorItemVisible": false,
+        "pantryCueVisible": false,
+        "fire": 0,
+        "outage": false,
+        "milk": 2,
+        "moisture": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "sameInput": true,
+        "finalMatch": false,
+        "clock": 157.05666666666679
+      },
+      "after": {
+        "impact": true,
+        "done": false,
+        "impacts": 1,
+        "film": {
+          "phase": "work",
+          "impact": true,
+          "elapsed": 1913.4066666666683
+        },
+        "rain": 0,
+        "visitor": null,
+        "visualVisitor": {
+          "kind": "visitor",
+          "bed": 0,
+          "at": -1800,
+          "departedAt": 2434.003333333331,
+          "takenItem": 2
+        },
+        "visitorItemVisible": true,
+        "pantryCueVisible": true,
+        "fire": 0,
+        "outage": false,
+        "milk": 2,
+        "moisture": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "sameInput": true,
+        "finalMatch": true,
+        "clock": 2667.30333333333
+      }
+    },
+    {
+      "case": "Two unassigned stock losses: no invented item or theft cue",
+      "before": {
+        "impact": false,
+        "done": true,
+        "impacts": 0,
+        "film": {
+          "phase": "work",
+          "impact": false,
+          "elapsed": 0
+        },
+        "rain": 0,
+        "visitor": {
+          "kind": "visitor",
+          "bed": 0,
+          "untilSlot": 30
+        },
+        "visualVisitor": {
+          "kind": "visitor",
+          "bed": 0,
+          "at": -1800
+        },
+        "visitorItemVisible": false,
+        "pantryCueVisible": false,
+        "fire": 0,
+        "outage": false,
+        "milk": 2,
+        "moisture": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "sameInput": true,
+        "finalMatch": false,
+        "clock": 156.49186666666697
+      },
+      "after": {
+        "impact": true,
+        "done": true,
+        "impacts": 1,
+        "film": {
+          "phase": "work",
+          "impact": true,
+          "elapsed": 1913.7033333333384
+        },
+        "rain": 0,
+        "visitor": null,
+        "visualVisitor": {
+          "kind": "visitor",
+          "bed": 0,
+          "at": -1800,
+          "departedAt": 2436.0252000000073
+        },
+        "visitorItemVisible": false,
+        "pantryCueVisible": false,
+        "fire": 0,
+        "outage": false,
+        "milk": 1,
+        "moisture": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "sameInput": true,
+        "finalMatch": true,
+        "clock": 2669.335200000007
+      }
+    }
+  ]
+}

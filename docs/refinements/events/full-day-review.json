@@ -1,0 +1,564 @@
+{
+  "scope": "Actual complete real RH NFT4 Day1 saved film including recorded stove damage at normal1x speed. One owned Codex Browser tab with page-local storage. Only Start/VisitHome/Watch clicked; no Pause/Finish/Seek, no renderer state setter, no wallet/quote/AI/app writes. Renderer/DOM samples are read-only. Muted preference to avoid competing audio. Response.json is transparently wrapped solely to retain the actual replay object handed to the app for post-film immutability checking. The final actual renderer state is read directly and compared with the canonical saved result. This full watch preceded the final offscreen-camera glance; that bounded correction has separate real-receipt evidence.",
+  "origin": "http://127.0.0.1:5191",
+  "label": "npc4-event-polish",
+  "entryScripts": [
+    "/@vite/client",
+    "/src/main.tsx"
+  ],
+  "world": {
+    "chainId": 46630,
+    "collection": "0x30cb5213fa94020a95893ddb6b07470dbf7a9efc"
+  },
+  "checkedAt": "2026-11-03T13:30:06.800Z",
+  "commitment": "0xeb1ca4b0759012a48f276dde3b6019357d099a657c9c547b02f32f9e38e4af4e",
+  "requestId": "0x6cefa5c5dc05010994d46375afc49115cdae35ec1a0683c37413201e56edb64d",
+  "elapsedMs": 81047,
+  "complete": true,
+  "hiddenSamples": 0,
+  "receiptCount": 60,
+  "referenceIntegrity": [
+    {
+      "scope": "Exact Response.json parsed replay.packet object returned to the real application, captured before React receives it; same reference serialized again after natural completion.",
+      "requestId": "0x6cefa5c5dc05010994d46375afc49115cdae35ec1a0683c37413201e56edb64d",
+      "commitment": "0xeb1ca4b0759012a48f276dde3b6019357d099a657c9c547b02f32f9e38e4af4e",
+      "receiptCount": 60,
+      "url": "http://127.0.0.1:5191/api/v2/replay/4?chainId=46630&collection=0x30cb5213fa94020a95893ddb6b07470dbf7a9efc&day=1",
+      "beforeResultHash": "7021fc82954b0635d6f9887f81f57a44484859e7425716c08a147b4576174cf6",
+      "afterResultHash": "7021fc82954b0635d6f9887f81f57a44484859e7425716c08a147b4576174cf6",
+      "beforePacketHash": "8918f84a5fbdf194c45f59e41f36159150d4fad1500285ba90740ab5acb66976",
+      "afterPacketHash": "8918f84a5fbdf194c45f59e41f36159150d4fad1500285ba90740ab5acb66976",
+      "unchanged": true
+    }
+  ],
+  "finalView": {
+    "state": {
+      "version": 2,
+      "seed": "0x3bc84f3aa20aaaceb853181c4153a46913a959a10121a1cb5b900f6f92cfdc22",
+      "day": 1,
+      "level": 1,
+      "alive": true,
+      "deathCause": 0,
+      "stats": [
+        2,
+        2,
+        1
+      ],
+      "needs": [
+        10000,
+        9500,
+        9300,
+        10000,
+        8236
+      ],
+      "inventory": [
+        2,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "conditions": [
+        {
+          "severity": 0,
+          "onsetDay": 0,
+          "dueDay": 0,
+          "resolved": false
+        },
+        {
+          "severity": 0,
+          "onsetDay": 0,
+          "dueDay": 0,
+          "resolved": false
+        },
+        {
+          "severity": 0,
+          "onsetDay": 0,
+          "dueDay": 0,
+          "resolved": false
+        },
+        {
+          "severity": 0,
+          "onsetDay": 0,
+          "dueDay": 0,
+          "resolved": false
+        },
+        {
+          "severity": 0,
+          "onsetDay": 0,
+          "dueDay": 0,
+          "resolved": false
+        },
+        {
+          "severity": 0,
+          "onsetDay": 0,
+          "dueDay": 0,
+          "resolved": false
+        },
+        {
+          "severity": 0,
+          "onsetDay": 0,
+          "dueDay": 0,
+          "resolved": false
+        },
+        {
+          "severity": 0,
+          "onsetDay": 0,
+          "dueDay": 0,
+          "resolved": false
+        }
+      ],
+      "plots": [
+        {
+          "kind": 6,
+          "ticks": 5,
+          "left": 1,
+          "moisture": 1,
+          "dry": 0,
+          "soilBlocked": false
+        },
+        {
+          "kind": 0,
+          "ticks": 0,
+          "left": 0,
+          "moisture": 0,
+          "dry": 0,
+          "soilBlocked": false
+        },
+        {
+          "kind": 0,
+          "ticks": 0,
+          "left": 0,
+          "moisture": 0,
+          "dry": 0,
+          "soilBlocked": false
+        },
+        {
+          "kind": 0,
+          "ticks": 0,
+          "left": 0,
+          "moisture": 0,
+          "dry": 0,
+          "soilBlocked": false
+        }
+      ],
+      "house": {
+        "mess": 0,
+        "damage": 1,
+        "chairLife": 0,
+        "chairAnchor": 0,
+        "shelterLife": 0,
+        "umbrellaLife": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "stovePatch": 0,
+        "windowPatch": 0,
+        "chairBrace": false,
+        "windowBrace": false,
+        "dripDiverted": false,
+        "backupHeat": false,
+        "powerOut": false,
+        "fire": 0
+      },
+      "goal": 0,
+      "goalCreatedDay": 0,
+      "goalReviewDay": 0,
+      "recent": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    "timeSlot": 60,
+    "phase": "idle",
+    "story": "Blueberry planted.Blueberry · 5 growing days to goHatch your own"
+  },
+  "finalViewStateEqualsResult": true,
+  "errors": [],
+  "writes": [],
+  "screens": [
+    {
+      "name": "npc4-event-polish-00-slot1-work",
+      "sample": {
+        "t": 408.89999997615814,
+        "visible": true,
+        "elapsed": 457.12879999999797,
+        "rate": 1,
+        "phase": "work",
+        "op": 0,
+        "role": "routine",
+        "slot": 1,
+        "impact": false,
+        "stop": 0,
+        "stops": 0,
+        "point": {
+          "x": 312,
+          "y": 79
+        },
+        "pose": "v2-rooster-peek",
+        "camera": {
+          "x": 227,
+          "y": -42
+        },
+        "caption": "A slow start.",
+        "note": "",
+        "story": "A slow start.Finish day",
+        "index": "-1"
+      }
+    },
+    {
+      "name": "npc4-event-polish-01-slot2-work",
+      "sample": {
+        "t": 8714.200000047684,
+        "visible": true,
+        "elapsed": 8735.088799999985,
+        "rate": 1,
+        "phase": "work",
+        "op": 1,
+        "role": "delivery",
+        "slot": 2,
+        "impact": false,
+        "stop": 0,
+        "stops": 3,
+        "point": {
+          "x": 408,
+          "y": 745
+        },
+        "pose": "v2-rooster-use",
+        "camera": {
+          "x": 312,
+          "y": 458
+        },
+        "caption": "The morning post.",
+        "note": "",
+        "story": "The morning post.Finish day",
+        "index": "0"
+      }
+    },
+    {
+      "name": "npc4-event-polish-02-slot2-contact",
+      "sample": {
+        "t": 18300.299999952316,
+        "visible": true,
+        "elapsed": 18335.00879999994,
+        "rate": 1,
+        "phase": "contact",
+        "op": 1,
+        "role": "delivery",
+        "slot": 2,
+        "impact": true,
+        "stop": 1,
+        "stops": 3,
+        "point": {
+          "x": 72,
+          "y": 89
+        },
+        "pose": "v2-rooster-breathe",
+        "camera": {
+          "x": 0,
+          "y": -42
+        },
+        "caption": "Putting things away.",
+        "note": "3 supplies collected",
+        "story": "Putting things away.3 supplies collectedFinish day",
+        "index": "1"
+      }
+    },
+    {
+      "name": "npc4-event-polish-03-slot2-contact",
+      "sample": {
+        "t": 24111.5,
+        "visible": true,
+        "elapsed": 24135.06879999987,
+        "rate": 1,
+        "phase": "contact",
+        "op": 1,
+        "role": "delivery",
+        "slot": 2,
+        "impact": true,
+        "stop": 2,
+        "stops": 3,
+        "point": {
+          "x": 432,
+          "y": 89
+        },
+        "pose": "v2-rooster-breathe",
+        "camera": {
+          "x": 317,
+          "y": -42
+        },
+        "caption": "Putting things away.",
+        "note": "3 supplies collected",
+        "story": "Putting things away.3 supplies collectedFinish day",
+        "index": "1"
+      }
+    },
+    {
+      "name": "npc4-event-polish-04-slot20-work",
+      "sample": {
+        "t": 24613.299999952316,
+        "visible": true,
+        "elapsed": 24635.118799999873,
+        "rate": 1,
+        "phase": "work",
+        "op": 0,
+        "role": "interlude",
+        "slot": 20,
+        "impact": false,
+        "stop": 0,
+        "stops": 0,
+        "point": {
+          "x": 432,
+          "y": 89
+        },
+        "pose": "v2-rooster-breathe",
+        "camera": {
+          "x": 317,
+          "y": -42
+        },
+        "caption": "A quiet morning.",
+        "note": "",
+        "story": "A quiet morning.Finish day",
+        "index": "1"
+      }
+    },
+    {
+      "name": "npc4-event-polish-05-slot21-work",
+      "sample": {
+        "t": 30909.700000047684,
+        "visible": true,
+        "elapsed": 30935.148799999864,
+        "rate": 1,
+        "phase": "work",
+        "op": 2,
+        "role": "routine",
+        "slot": 21,
+        "impact": false,
+        "stop": 0,
+        "stops": 2,
+        "point": {
+          "x": 72,
+          "y": 89
+        },
+        "pose": "v2-rooster-use",
+        "camera": {
+          "x": 0,
+          "y": -42
+        },
+        "caption": "Getting the supplies.",
+        "note": "",
+        "story": "Getting the supplies.Finish day",
+        "index": "19"
+      }
+    },
+    {
+      "name": "npc4-event-polish-06-slot30-work",
+      "sample": {
+        "t": 33400.10000002384,
+        "visible": true,
+        "elapsed": 33434.968799999886,
+        "rate": 1,
+        "phase": "work",
+        "op": 0,
+        "role": "interlude",
+        "slot": 30,
+        "impact": false,
+        "stop": 0,
+        "stops": 0,
+        "point": {
+          "x": 72,
+          "y": 89
+        },
+        "pose": "v2-rooster-breathe",
+        "camera": {
+          "x": 0,
+          "y": -42
+        },
+        "caption": "The afternoon settles in.",
+        "note": "Something in the house needs a fix.",
+        "story": "The afternoon settles in.Something in the house needs a fix.Finish day",
+        "index": "20"
+      }
+    },
+    {
+      "name": "npc4-event-polish-07-slot31-work",
+      "sample": {
+        "t": 37616.200000047684,
+        "visible": true,
+        "elapsed": 37651.768799999896,
+        "rate": 1,
+        "phase": "work",
+        "op": 8,
+        "role": "routine",
+        "slot": 31,
+        "impact": false,
+        "stop": 0,
+        "stops": 1,
+        "point": {
+          "x": 88,
+          "y": 345
+        },
+        "pose": "v2-rooster-doze",
+        "camera": {
+          "x": 0,
+          "y": 117
+        },
+        "caption": "Feet up.",
+        "note": "",
+        "story": "Feet up.Finish day",
+        "index": "29"
+      }
+    },
+    {
+      "name": "npc4-event-polish-08-slot35-work",
+      "sample": {
+        "t": 39404.60000002384,
+        "visible": true,
+        "elapsed": 39435.058799999955,
+        "rate": 1,
+        "phase": "work",
+        "op": 0,
+        "role": "interlude",
+        "slot": 35,
+        "impact": false,
+        "stop": 0,
+        "stops": 0,
+        "point": {
+          "x": 88,
+          "y": 345
+        },
+        "pose": "v2-rooster-breathe",
+        "camera": {
+          "x": 0,
+          "y": 117
+        },
+        "caption": "A little breathing room.",
+        "note": "",
+        "story": "A little breathing room.Finish day",
+        "index": "30"
+      }
+    },
+    {
+      "name": "npc4-event-polish-09-slot36-work",
+      "sample": {
+        "t": 45608.799999952316,
+        "visible": true,
+        "elapsed": 45635.08880000001,
+        "rate": 1,
+        "phase": "work",
+        "op": 18,
+        "role": "main",
+        "slot": 36,
+        "impact": false,
+        "stop": 0,
+        "stops": 2,
+        "point": {
+          "x": 432,
+          "y": 89
+        },
+        "pose": "v2-rooster-use",
+        "camera": {
+          "x": 317,
+          "y": -42
+        },
+        "caption": "Getting the supplies.",
+        "note": "",
+        "story": "Getting the supplies.Finish day",
+        "index": "34"
+      }
+    },
+    {
+      "name": "npc4-event-polish-10-slot36-contact",
+      "sample": {
+        "t": 51913.700000047684,
+        "visible": true,
+        "elapsed": 51935.03880000013,
+        "rate": 1,
+        "phase": "contact",
+        "op": 18,
+        "role": "main",
+        "slot": 36,
+        "impact": false,
+        "stop": 1,
+        "stops": 2,
+        "point": {
+          "x": 376,
+          "y": 553
+        },
+        "pose": "v2-rooster-breathe",
+        "camera": {
+          "x": 284,
+          "y": 320
+        },
+        "caption": "Room for blueberry.",
+        "note": "",
+        "story": "Room for blueberry.Finish day",
+        "index": "34"
+      }
+    },
+    {
+      "name": "npc4-event-polish-11-slot36-work",
+      "sample": {
+        "t": 52406.5,
+        "visible": true,
+        "elapsed": 52435.088800000136,
+        "rate": 1,
+        "phase": "work",
+        "op": 18,
+        "role": "main",
+        "slot": 36,
+        "impact": false,
+        "stop": 1,
+        "stops": 2,
+        "point": {
+          "x": 376,
+          "y": 553
+        },
+        "pose": "v2-rooster-use",
+        "camera": {
+          "x": 290,
+          "y": 316
+        },
+        "caption": "Room for blueberry.",
+        "note": "",
+        "story": "Room for blueberry.Finish day",
+        "index": "34"
+      }
+    }
+  ]
+}

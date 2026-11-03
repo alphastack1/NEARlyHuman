@@ -101,9 +101,17 @@ export function receiptQuietTitle(r: Receipt): string {
 
 /** Call only at receipt impact: these are recorded events, not predicted outcomes. */
 export function receiptEventNote(r: Receipt): string {
+  const incident = r.events.find(e => e.kind === 'incident' && e.source !== 'quiet');
+  const specific = incident?.source === 'fixtureBreak' ? ['The stove broke.', 'The window cracked.', 'The chair gave way.'][incident.target]
+    : incident?.source === 'visitor' ? 'A hungry visitor at the door.'
+      : incident?.source === 'seedEater' && incident.target >= 0 && incident.target < 4 ? `A bird visits bed ${incident.target + 1}.`
+        : incident?.source === 'washout' && incident.target >= 0 && incident.target < 4 ? `Rain muddied bed ${incident.target + 1}.` : undefined;
   return r.events.find(e => e.kind === 'death')?.message
     || r.events.find(e => e.kind === 'condition')?.message
-    || r.events.find(e => e.kind === 'incident' && e.source !== 'quiet')?.message
+    || (!r.before.house.fire && r.snapshot.house.fire === 1 ? 'A flare-up at the stove!' : '')
+    || r.events.find(e => e.kind === 'weather')?.message
+    || specific || incident?.message
+    || r.events.find(e => e.kind === 'garden')?.message
     || '';
 }
 

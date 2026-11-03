@@ -6,13 +6,13 @@ import {createState,encodeState,decodeState,decodeTrace,decodeCertificate,replay
 import {nearChallenge,nearAuthenticate,nearSession} from '../../server/near/auth';
 import {base58Encode,sha256,verifyNearMessage} from '../../server/near/encoding';
 import {nearRuntime,nearRpc} from '../../server/near/rpc';
-import {v2DecisionConfig} from '../../server/v2/preparation';
+import {v2DecisionConfig,V2_PREPARATION_POLICY} from '../../server/v2/preparation';
 import {createV2Campaign,reserveV2JobBudget,inspectV2Campaign} from '../../server/v2/budget';
 import {issueNearQuote,nearAdmissionMessage,nearJobId} from '../../server/near/quotes';
 import {acceptNearJob,prepareNearJob,settleNearJob,nearJobView} from '../../server/near/jobs';
 import {NearError,type NearRequest,type NearDayRecord} from '../../server/near/types';
 import {nearRelayTransaction,retireNearRelayIntent} from '../../server/near/relay';
-import {mapNearLife,readNearPublicReplay} from '../../server/near/views';
+import {mapNearLife,readNearPublicReplay,nearPacketKey} from '../../server/near/views';
 import {maybeRedispatchNearQueued} from '../../server/near/service';
 import {readAdvertisedNearWorld} from '../../server/game-worlds';
 import {handleV2Api} from '../../server/v2/http';
@@ -36,7 +36,7 @@ process.env.NEARLYHUMAN_NEAR_RUNTIME_JSON=JSON.stringify({version:2,networkId:'n
 const runtime=nearRuntime(),cases:string[]=[],requestId=base58Encode(Buffer.alloc(32,3));
 const config={network_id:'near-testnet',contract_id:runtime.collection,owner_id:'owner.testnet',relayer_id:runtime.relayer,quote_public_key:runtime.quoteSigner,rules_hash:runtime.rulesHash,decision_config:runtime.decisionConfig,native_mint_price:'100000000000000000000000',token_mint_price_micro:'250000000',storage_deposit:'100000000000000000000000',min_processing_fee:'20000000000000000000000',multiplier:2,admissions_paused:false,issued:'0',nft_mint_burns:'0',total_allocated:'0',available:'30000000000',reserved:'0'};
 const initial=createState({seed:42}),life={token_id:'1',owner_id:'player.testnet',name:'PEEP',state:encodeState(initial),revision:0,purse_micro:'0',purse_nonce:'0',pending_request:null as string|null,appearance_seed:initial.seed};
-let q:NearRequest|undefined,record:NearDayRecord|undefined,admission:any,ownerTxWrong=false,ownerTxFailed=false,modelSends=0,throwPreSend=false,thrown=false,txSent=false,relayHash='',refundFailure=false,fullAccess=true,uncertainProvider=false,lifeReads=0;const signedNonces:string[]=[];
+let q:NearRequest|undefined,record:NearDayRecord|undefined,admission:any,ownerTxWrong=false,ownerTxFailed=false,modelSends=0,throwPreSend=false,thrown=false,txSent=false,relayHash='',refundFailure=false,fullAccess=true,uncertainProvider=false,lifeReads=0,wrongRequestBlock=false;const signedNonces:string[]=[];
 const originalFetch=globalThis.fetch;
 const fixtureFailures:string[]=[];
 let blockFetch=false,blockedFetchCount=0;
@@ -66,7 +66,7 @@ globalThis.fetch=async(input,options)=>{
    else if(p.method_name==='request')value=q&&q.request_id===args.request_id?q:null;
    else if(p.method_name==='day_record')value=record;
    else throw Error('Unexpected fixture view '+p.method_name);
-   return result({result:[...Buffer.from(JSON.stringify(value))],block_hash:blockHash,block_height:42});
+   return result({result:[...Buffer.from(JSON.stringify(value))],block_hash:wrongRequestBlock&&p.method_name==='request'?base58Encode(Buffer.alloc(32,9)):blockHash,block_height:42});
  }
  if(method==='tx'){
    if(p.tx_hash===requestId)return result({final_execution_status:'FINAL',status:ownerTxFailed?{Failure:'duplicate fixture transaction'}:{SuccessValue:''},transaction:{hash:requestId,signer_id:ownerTxWrong?'intruder.testnet':'player.testnet',receiver_id:runtime.collection,nonce:40,actions:[{FunctionCall:{method_name:'accept_day',args:Buffer.from(JSON.stringify({admission,signature:'public-fixture'})).toString('base64'),gas:80000000000000,deposit:admission.processingFee}}]}});
@@ -156,6 +156,19 @@ try{
  cases.push('Official SDK relay outbox signs once and settles only matching canonical commitment; successful main state survives a fixture detached-refund failure; native holds retire while RH allowance stays active.');
  const beforeReplay=lifeReads,replay=await readNearPublicReplay('1',undefined,runtime,store);assert.equal(lifeReads-beforeReplay,1);assert.equal(replay.life.state.day,1);assert.equal(replay.commitment,ready.commitment);assert.equal(replay.life.observedBlockHash,blockHash);
  cases.push('Public replay resolves its life and day record from one coherent finalized snapshot without a second owner/day read.');
+ const originalRequest=structuredClone(q!),originalRecord=structuredClone(record!),oldPolicy=keccak256(toHex(JSON.stringify({policy:V2_PREPARATION_POLICY,mind:'v2-mind-dawn-truthful-memory-7',rulesHash,model:'typesafe/jev-1.13',maxChoices:8})));
+ const historicalPacket={...structuredClone(replay.packet),decisionConfig:oldPolicy},historicalCommitment=keccak256(toHex(JSON.stringify(historicalPacket)));
+ q!.decision_config=oldPolicy;record!.replay_commitment=historicalCommitment;
+ await store.put(nearPacketKey(runtime,historicalCommitment),historicalPacket);
+ assert.notEqual(runtime.decisionConfig,oldPolicy);
+ const historical=await readNearPublicReplay('1',1,runtime,store);assert.equal(historical.packet.decisionConfig,oldPolicy);assert.equal(historical.commitment,historicalCommitment);
+ life.owner_id='new-owner.testnet';assert.equal((await readNearPublicReplay('1',1,runtime,store)).life.owner,'new-owner.testnet');life.owner_id='player.testnet';
+ for(const altered of [{token_id:'2'},{day:2},{status:1},{request_id:keccak256(toHex('wrong historical request'))},{day_seed:keccak256(toHex('wrong historical seed'))},{decision_config:runtime.decisionConfig}]){
+  q={...q!,...altered};await assert.rejects(()=>readNearPublicReplay('1',1,runtime,store),e=>e instanceof NearError&&e.code==='context');q={...originalRequest,decision_config:oldPolicy};
+ }
+ wrongRequestBlock=true;await assert.rejects(()=>readNearPublicReplay('1',1,runtime,store),e=>e instanceof NearError&&e.code==='context');wrongRequestBlock=false;
+ q=originalRequest;record=originalRecord;
+ cases.push('A historical Mind7 film remains readable under the current Mind8 runtime only when its immutable settled request matches policy, token, day, seed and the same finalized block; altered request/policy/block are rejected.');
  const controlKey=`near/v2/control/relay/near-testnet/${runtime.relayer}`,oldControl=(await store.get<any>(controlKey))!.value;
  await store.put(controlKey,{...oldControl,pending:{...ready.journal,hash:base58Encode(Buffer.alloc(32,2))}});
  await assert.rejects(()=>nearRelayTransaction(runtime,{jobId:job.id,method:'finalize',args:JSON.parse(ready.journal!.args),resultDigest:ready.journal!.resultDigest},async()=>{},{store}),e=>e instanceof NearError&&e.code==='context');assert.equal(signedNonces.length,1);

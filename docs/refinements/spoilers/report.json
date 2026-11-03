@@ -1,0 +1,26 @@
+{
+  "scope": "Controlled UI-only job progress includes explicit secret future choices; asserts those choices never appear in page text, ARIA or future project HUD. Real SAGE packet only supplies the scene; no inference, chain or service writes. Actual app actions start/pause at beginning for spoiler boundary.",
+  "pass": true,
+  "checks": [
+    {
+      "completed": 1,
+      "spoilersInTextOrARIA": false,
+      "noFutureProject": true
+    },
+    {
+      "completed": 3,
+      "spoilersInTextOrARIA": false,
+      "noFutureProject": true
+    },
+    {
+      "completed": 5,
+      "spoilersInTextOrARIA": false,
+      "noFutureProject": true
+    },
+    {
+      "startingFilmDoesNotRevealProject": true
+    }
+  ],
+  "errors": [],
+  "writes": []
+}

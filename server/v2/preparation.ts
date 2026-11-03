@@ -4,7 +4,7 @@ import {
   decodeState, encodeState, encodeTrace, encodeCertificate, replayDay, shipmentPoints,
   buildCareCertificate,
   CERTIFICATE_OPS,
-  type State, type Step, type Candidate, type Certificate, type Context, type Trace, type Receipt,
+  type State, type Step, type Candidate, type Certificate, type Context, type Trace, type Receipt, type EpisodeKind,
 } from '../../src/v2';
 import { type V2FrozenInput, v2WorkerInputHash, validateV2FrozenInput, V2ContextError } from './context';
 import { v2PlanChoices, offerV2MindCandidates, v2OpportunityBudget, V2_MIND_POLICY, type V2DailyPlan, type V2PlanChoices, type V2MindMemory, type V2OpportunityBudget } from './choices';
@@ -29,7 +29,20 @@ export interface V2Decision {
   earlierToday: Step[];
   candidates: Candidate[];
   opportunities?: V2OpportunityBudget;
+  observedEpisodes?: V2ObservedEpisode[];
   dailyFocus?: { key: string; label: string; status: 'planned' | 'completed' | 'failed' | 'unavailable'; inputs: Record<string, number>; recovery: number[]; chanceBps: number };
+}
+/** Only the already-started, still-current episode is part of the mind's perception.
+ * Future proposals, RNG seeds and survival witnesses are deliberately absent. */
+export interface V2ObservedEpisode {
+  source: 'day' | 'task'; kind: EpisodeKind; startSlot: number; deadlineSlot: number;
+  target: number; stock: number; responded: boolean; shooTried: boolean; covered: boolean; diverted: boolean;
+}
+export function observeV2Episodes(c: Pick<Context, 'primary' | 'taskFire' | 'slot'>): V2ObservedEpisode[] {
+  return ([['day', c.primary], ['task', c.taskFire]] as const).flatMap(([source, e]) =>
+    e && e.kind !== 'quiet' && !e.resolved && e.start <= c.slot && c.slot <= e.deadline
+      ? [{ source, kind: e.kind, startSlot: e.start, deadlineSlot: e.deadline, target: e.target, stock: e.stock,
+        responded: e.responded, shooTried: e.shooTried, covered: e.covered, diverted: e.diverted }] : []);
 }
 export interface V2RecordedDecision {
   inputHash: Hex;
@@ -181,14 +194,15 @@ export async function prepareV2Core(input: V2PreparationInput, frozenHash: Hex, 
       if (!suggested.length || suggested.length > 24 || new Set(suggested.map(a => a.key)).size !== suggested.length || suggested.some(a => !legal.some(l => l.key === a.key))) throw new Error('Invalid V2 choice menu.');
       const offered = suggested.map(a => legal.find(l => l.key === a.key)!);
       const opportunities = v2OpportunityBudget(ctx);
-      const decisionHash = digest({ policy: V2_PREPARATION_POLICY, frozenHash, slot, mode, state: ctx.state, candidates: offered, opportunities });
+      const observedEpisodes = observeV2Episodes(ctx);
+      const decisionHash = digest({ policy: V2_PREPARATION_POLICY, frozenHash, slot, mode, state: ctx.state, candidates: offered, opportunities, observedEpisodes });
       let reply: V2Selection | undefined;
       if (!chosen) {
         if (offered.length === 1) { chosen = offered[0]!; source = 'single'; }
         else {
           if (++paidChoices > 8) throw new Error('The day exceeded its decision budget.');
           checkDeadline();
-          reply = await provider({ inputHash: decisionHash, requestId: input.requestId, day: ctx.day, slot, mode, state: structuredClone(ctx.state), earlierToday: structuredClone(trace.steps), candidates: structuredClone(offered), opportunities,
+          reply = await provider({ inputHash: decisionHash, requestId: input.requestId, day: ctx.day, slot, mode, state: structuredClone(ctx.state), earlierToday: structuredClone(trace.steps), candidates: structuredClone(offered), opportunities, observedEpisodes,
             ...(plannedCandidate && dailyPlan ? { dailyFocus: { key: dailyPlan.mainKey, label: dailyPlan.mainLabel, status: focusStatus, inputs: structuredClone(plannedCandidate.inputs), recovery: [...plannedCandidate.recovery], chanceBps: plannedCandidate.chanceBps } } : {}) });
           checkDeadline();
           chosen = offered.find(a => a.key === reply?.key); source = 'provider';

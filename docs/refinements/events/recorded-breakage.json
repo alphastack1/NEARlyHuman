@@ -1,0 +1,375 @@
+{
+  "scope": "Previously captured public saved V2 day; not a new inference, transaction or fresh independent chain verification.",
+  "tokenId": "4",
+  "name": "PIPOOPIP",
+  "day": 1,
+  "observedBlock": "147538247",
+  "commitment": "0xeb1ca4b0759012a48f276dde3b6019357d099a657c9c547b02f32f9e38e4af4e",
+  "receipt": {
+    "slot": 21,
+    "op": 2,
+    "arg": 2,
+    "variant": 0,
+    "role": "routine",
+    "success": true,
+    "events": [
+      {
+        "kind": "incident",
+        "message": "Something in the house needs a fix.",
+        "target": 0,
+        "source": "fixtureBreak"
+      },
+      {
+        "kind": "action",
+        "message": "Had a little breakfast.",
+        "target": 2,
+        "source": "Breakfast"
+      }
+    ],
+    "before": {
+      "version": 2,
+      "seed": "0x3bc84f3aa20aaaceb853181c4153a46913a959a10121a1cb5b900f6f92cfdc22",
+      "day": 1,
+      "level": 0,
+      "alive": true,
+      "deathCause": 0,
+      "stats": [
+        2,
+        2,
+        1
+      ],
+      "needs": [
+        10000,
+        7000,
+        6700,
+        8000,
+        7412
+      ],
+      "inventory": [
+        4,
+        0,
+        3,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "conditions": [
+        {
+          "severity": 0,
+          "onsetDay": 0,
+          "dueDay": 0,
+          "resolved": false
+        },
+        {
+          "severity": 0,
+          "onsetDay": 0,
+          "dueDay": 0,
+          "resolved": false
+        },
+        {
+          "severity": 0,
+          "onsetDay": 0,
+          "dueDay": 0,
+          "resolved": false
+        },
+        {
+          "severity": 0,
+          "onsetDay": 0,
+          "dueDay": 0,
+          "resolved": false
+        },
+        {
+          "severity": 0,
+          "onsetDay": 0,
+          "dueDay": 0,
+          "resolved": false
+        },
+        {
+          "severity": 0,
+          "onsetDay": 0,
+          "dueDay": 0,
+          "resolved": false
+        },
+        {
+          "severity": 0,
+          "onsetDay": 0,
+          "dueDay": 0,
+          "resolved": false
+        },
+        {
+          "severity": 0,
+          "onsetDay": 0,
+          "dueDay": 0,
+          "resolved": false
+        }
+      ],
+      "plots": [
+        {
+          "kind": 0,
+          "ticks": 0,
+          "left": 0,
+          "moisture": 0,
+          "dry": 0,
+          "soilBlocked": false
+        },
+        {
+          "kind": 0,
+          "ticks": 0,
+          "left": 0,
+          "moisture": 0,
+          "dry": 0,
+          "soilBlocked": false
+        },
+        {
+          "kind": 0,
+          "ticks": 0,
+          "left": 0,
+          "moisture": 0,
+          "dry": 0,
+          "soilBlocked": false
+        },
+        {
+          "kind": 0,
+          "ticks": 0,
+          "left": 0,
+          "moisture": 0,
+          "dry": 0,
+          "soilBlocked": false
+        }
+      ],
+      "house": {
+        "mess": 0,
+        "damage": 0,
+        "chairLife": 0,
+        "chairAnchor": 0,
+        "shelterLife": 0,
+        "umbrellaLife": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "stovePatch": 0,
+        "windowPatch": 0,
+        "chairBrace": false,
+        "windowBrace": false,
+        "dripDiverted": false,
+        "backupHeat": false,
+        "powerOut": false,
+        "fire": 0
+      },
+      "goal": 0,
+      "goalCreatedDay": 0,
+      "goalReviewDay": 0,
+      "recent": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    "snapshot": {
+      "version": 2,
+      "seed": "0x3bc84f3aa20aaaceb853181c4153a46913a959a10121a1cb5b900f6f92cfdc22",
+      "day": 1,
+      "level": 0,
+      "alive": true,
+      "deathCause": 0,
+      "stats": [
+        2,
+        2,
+        1
+      ],
+      "needs": [
+        10000,
+        10000,
+        10000,
+        7800,
+        7412
+      ],
+      "inventory": [
+        3,
+        0,
+        2,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "conditions": [
+        {
+          "severity": 0,
+          "onsetDay": 0,
+          "dueDay": 0,
+          "resolved": false
+        },
+        {
+          "severity": 0,
+          "onsetDay": 0,
+          "dueDay": 0,
+          "resolved": false
+        },
+        {
+          "severity": 0,
+          "onsetDay": 0,
+          "dueDay": 0,
+          "resolved": false
+        },
+        {
+          "severity": 0,
+          "onsetDay": 0,
+          "dueDay": 0,
+          "resolved": false
+        },
+        {
+          "severity": 0,
+          "onsetDay": 0,
+          "dueDay": 0,
+          "resolved": false
+        },
+        {
+          "severity": 0,
+          "onsetDay": 0,
+          "dueDay": 0,
+          "resolved": false
+        },
+        {
+          "severity": 0,
+          "onsetDay": 0,
+          "dueDay": 0,
+          "resolved": false
+        },
+        {
+          "severity": 0,
+          "onsetDay": 0,
+          "dueDay": 0,
+          "resolved": false
+        }
+      ],
+      "plots": [
+        {
+          "kind": 0,
+          "ticks": 0,
+          "left": 0,
+          "moisture": 0,
+          "dry": 0,
+          "soilBlocked": false
+        },
+        {
+          "kind": 0,
+          "ticks": 0,
+          "left": 0,
+          "moisture": 0,
+          "dry": 0,
+          "soilBlocked": false
+        },
+        {
+          "kind": 0,
+          "ticks": 0,
+          "left": 0,
+          "moisture": 0,
+          "dry": 0,
+          "soilBlocked": false
+        },
+        {
+          "kind": 0,
+          "ticks": 0,
+          "left": 0,
+          "moisture": 0,
+          "dry": 0,
+          "soilBlocked": false
+        }
+      ],
+      "house": {
+        "mess": 0,
+        "damage": 1,
+        "chairLife": 0,
+        "chairAnchor": 0,
+        "shelterLife": 0,
+        "umbrellaLife": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "stovePatch": 0,
+        "windowPatch": 0,
+        "chairBrace": false,
+        "windowBrace": false,
+        "dripDiverted": false,
+        "backupHeat": false,
+        "powerOut": false,
+        "fire": 0
+      },
+      "goal": 0,
+      "goalCreatedDay": 0,
+      "goalReviewDay": 0,
+      "recent": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        2
+      ]
+    },
+    "points": 0
+  }
+}

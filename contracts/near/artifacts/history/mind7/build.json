@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "rustFlags": "--cfg near",
+  "profile": "release, lto, opt-level=z, strip=symbols",
+  "bytes": 486332,
+  "sha256": "99f30e7aee1151218b6cbe8eab8e4bcc8ac13d077b92825dd4c9e814184c40ca",
+  "target": "wasm32-unknown-unknown",
+  "sources": {
+    "src/kernel.rs": "2bbc47bc5948af5c1001b3f42dc287610eb172fa3b5d74cbf74fe67a32c805e3",
+    "Cargo.toml": "a02ca448aae9ff3cb7ef31aab3efd9bdd79501a117231ff493f499069f1a4d84",
+    "Cargo.lock": "206398a65f2cd044bbddb167321089dcf97841a4e9627cb13e51afe7e2568799",
+    "src/lib.rs": "9e090829fe0938a53ca4c6a205977f13f40241cacbcab64d696f98462657a07f"
+  },
+  "rust": "1.95.0",
+  "nearSdk": "5.30.0"
+}

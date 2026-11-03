@@ -15,16 +15,27 @@ export function accentFixture(source: HTMLCanvasElement, kind: string): HTMLCanv
     window: { '527e95': '518ba7', '7caed0': '7fc1db', a3cbdf: 'b2dce8' },
     painting: { b96862: 'd27274', e0a083: 'f0ae8d', '78a8ba': '73afc3', '86b3bf': '81bfcf', '87b4bc': '88c9cc' },
   };
-  if (!palettes[kind] && kind !== 'plant') return source;
+  const wood = ['table', 'chair', 'cupboard', 'pantry', 'prep', 'bed', 'bedCover', 'baseSeat', 'shelf', 'bedside'].includes(kind);
+  const steel = kind === 'fridge' || kind === 'stove' || kind === 'sink';
+  if (!palettes[kind] && kind !== 'plant' && !wood && !steel) return source;
   const context = source.getContext('2d')!, image = context.getImageData(0, 0, source.width, source.height), pixels = image.data;
   for (let i = 0; i < pixels.length; i += 4) {
     if (!pixels[i + 3]) continue;
     const r = pixels[i]!, g = pixels[i + 1]!, b = pixels[i + 2]!;
     const key = [r, g, b].map(n => n.toString(16).padStart(2, '0')).join(''), replacement = palettes[kind]?.[key];
     if (replacement) { pixels[i] = parseInt(replacement.slice(0, 2), 16); pixels[i + 1] = parseInt(replacement.slice(2, 4), 16); pixels[i + 2] = parseInt(replacement.slice(4, 6), 16); }
-    else if (kind === 'plant' && g > 55 && g > r * 1.08 && g > b * 1.05) { pixels[i] = Math.min(255, r + 1); pixels[i + 1] = Math.min(255, g + 10); pixels[i + 2] = Math.min(255, b + 3); }
+    else if ((kind === 'plant' || kind === 'baseSeat') && g > 55 && g > r * 1.08 && g > b * 1.05) { pixels[i] = Math.min(255, r + 1); pixels[i + 1] = Math.min(255, g + (kind === 'plant' ? 17 : 10)); pixels[i + 2] = Math.min(255, b + 1); }
+    else if (wood && r > 105 && r > g * 1.12 && g > b * 1.12) { pixels[i] = Math.min(255, r + 7); pixels[i + 1] = Math.min(255, g + 4); pixels[i + 2] = Math.max(0, b - 2); }
+    else if ((kind === 'bed' || kind === 'bedCover') && b > 90 && b > r * 1.3 && b > g * 1.08) { pixels[i] = Math.min(255, r + 2); pixels[i + 1] = Math.min(255, g + 8); pixels[i + 2] = Math.min(255, b + 10); }
+    else if (steel && Math.max(r, g, b) - Math.min(r, g, b) < 32 && r > 115) { pixels[i] = Math.min(255, r + 5); pixels[i + 1] = Math.min(255, g + 7); pixels[i + 2] = Math.min(255, b + 7); }
   }
-  context.putImageData(image, 0, 0); return source;
+  context.putImageData(image, 0, 0);
+  // Material highlights are placed on existing faces, never outside the asset's
+  // original silhouette. This also preserves every furniture contact anchor.
+  context.globalCompositeOperation = 'source-atop';
+  if (kind === 'cupboard') { context.fillStyle = '#dfac6a'; context.fillRect(6, 8, 1, 19); context.fillRect(18, 10, 4, 1); context.fillStyle = '#85542f'; context.fillRect(7, 25, 4, 1); }
+  if (kind === 'fridge') { context.fillStyle = '#f3f3dc'; context.fillRect(6, 5, 1, 10); context.fillStyle = '#d4e8df'; context.fillRect(7, 25, 1, 9); }
+  context.globalCompositeOperation = 'source-over'; return source;
 }
 
 function textile(p: Paint, x: number, y: number, w: number, h: number, colors: readonly string[]): void {
@@ -45,31 +56,38 @@ export function shadowArt(width: number, height: number): HTMLCanvasElement {
 
 export function landscape(seed: string): HTMLCanvasElement {
   const n = homeArtSeed(seed), c = canvasArt(WORLD_WIDTH, WORLD_HEIGHT, p => {
-    p('#4e6a43', 0, 0, WORLD_WIDTH, WORLD_HEIGHT);
-    p('#83aa60', 28, 440, 456, 350); p('#a4c777', 30, 442, 452, 2);
+    p('#3d6541', 0, 0, WORLD_WIDTH, WORLD_HEIGHT);
+    p('#83b95e', 28, 440, 456, 350); p('#afd879', 30, 442, 452, 2);
     for (let y = 448; y < 784; y += 5) for (let x = 32; x < 480; x += 6) {
-      const z = noise(x, y, n); if (z % 5 === 0) { p(z % 2 ? '#719b51' : '#acc779', x, y, 3, 1); p('#78a253', x + 1, y - 1, 1, 3); }
+      const z = noise(x, y, n); if (z % 5 === 0) { p(z % 2 ? '#659b49' : '#b4d779', x, y, 3, 1); p('#76aa4f', x + 1, y - 1, 1, 3); }
     }
     // The garden is a recognizable place, with four permanent soil beds and room to walk between them.
-    p('#688950', 341, 474, 142, 204); p('#baa776', 343, 476, 138, 200); p('#cfb985', 346, 479, 132, 194);
-    for (let y = 481; y < 670; y += 5) for (let x = 348; x < 475; x += 7) if (noise(x, y, n) % 4 === 0) p('#b29d72', x, y, 2, 1);
+    p('#547e43', 341, 474, 142, 204); p('#a4c477', 343, 476, 138, 200); p('#93b76a', 346, 479, 132, 194);
+    // Four raised beds sit in grass, connected by the same clear walking lanes.
+    // The gravel follows the existing bed approaches; no new collision is added.
+    p('#a88e5e', 406, 479, 22, 194); p('#e2cc99', 408, 479, 18, 194); p('#f0dca9', 408, 479, 1, 194);
+    for (const y of [544, 640]) { p('#a88e5e', 341, y, 140, 18); p('#e2cc99', 341, y + 1, 140, 15); p('#f0dca9', 341, y + 1, 140, 1); p('#e2cc99', 408, y, 18, 18); }
+    for (let y = 481; y < 670; y += 5) for (let x = 348; x < 475; x += 7) {
+      const path = x >= 406 && x < 428 || y >= 544 && y < 562 || y >= 640 && y < 658;
+      if (noise(x, y, n) % 6 === 0) p(path ? '#c3aa79' : '#a7cb77', x, y, path ? 2 : 3, 1);
+    }
     for (const bed of BEDS) { p('#9a8157', bed.x - 28, bed.y - 30, 56, 36); p('#d4bf8c', bed.x - 27, bed.y - 29, 54, 1); }
-    const stone = (x: number, y: number, w = 22, h = 10) => { p('#8d8a6b', x, y, w, h); p('#c4bc93', x + 1, y, w - 2, h - 2); p('#ddd2a5', x + 2, y, w - 5, 1); p('#b2a77f', x + 1, y + h - 3, w - 2, 1); };
+    const stone = (x: number, y: number, w = 22, h = 10) => { p('#7c866c', x, y + 1, w, h - 1); p('#c6c7a2', x + 1, y, w - 2, h - 2); p('#eee0b7', x + 2, y, w - 5, 1); p('#a7b18a', x + 1, y + h - 3, w - 2, 1); p('#d8d3ad', x + 3, y + 2, Math.max(3, w - 12), 1); };
     for (let y = 444; y < 783; y += 14) stone(318 + (Math.floor(y / 14) % 2), y, 22, 10);
     for (let x = 275; x < 322; x += 14) stone(x, 544, 12, 9);
     for (let x = 342; x < 409; x += 14) stone(x, 736, 12, 9);
     // Low hedges frame the cutaway house; the doorstep remains the only opening.
-    for (const [x, w] of [[30, 281], [346, 136]]) { p('#3e6140', x, 441, w, 10); p('#60824c', x + 2, 441, w - 4, 6); p('#91a85f', x + 4, 441, w - 8, 2); }
+    for (const [x, w] of [[30, 281], [346, 136]]) { p('#315c3c', x, 441, w, 10); p('#578a43', x + 2, 441, w - 4, 6); p('#91bb62', x + 4, 441, w - 8, 2); }
     const post = (x: number, y: number) => { p('#48402f', x, y, 7, 16); p('#91794e', x + 1, y + 1, 5, 13); p('#c2a870', x + 1, y + 1, 4, 2); p('#6b5a3c', x + 5, y + 4, 1, 10); };
     for (let y = 452; y < 785; y += 19) { p('#625333', 20, y + 4, 8, 3); p('#b39a61', 21, y + 4, 7, 1); post(22, y - 2); p('#625333', 484, y + 4, 8, 3); p('#b39a61', 485, y + 4, 7, 1); post(485, y - 2); }
     for (const [a, b] of [[29, 317], [348, 486]]) { p('#5c4c32', a, 782, b - a, 5); p('#b39962', a, 782, b - a, 2); p('#79643e', a, 792, b - a, 3); for (let x = a; x < b; x += 16) post(x, 777); }
     p('#c7c2a1', 0, 800, 512, 9); p('#e3d8b5', 0, 800, 512, 1); p('#8b8e7b', 0, 809, 512, 2); p('#53636b', 0, 811, 512, 21);
     for (let x = 0; x < 512; x += 25) { p('#b2b296', x, 801, 1, 7); p('#e6d894', x + 4, 827, 13, 2); }
     // Ordinary little domestic details, deliberately outside the routes to work and care.
-    const flowerColors = ['#f2d16d', '#e19a92', '#b79aca', '#f0e7bd'];
-    for (const [i, [x, y]] of [[58, 473], [104, 740], [207, 490], [284, 699], [468, 703], [61, 648], [351, 466], [475, 466], [475, 683]].entries()) {
-      p('#4e773e', x! - 6, y! + 1, 13, 4); p('#709c4f', x! - 4, y! - 3, 9, 6); p('#aecb77', x! - 1, y! - 6, 3, 3);
-      p(flowerColors[i % flowerColors.length]!, x! + 2, y! - 8, 3, 3); p(flowerColors[i % flowerColors.length]!, x! + 1, y! - 7, 5, 1); p('#fff0bd', x! + 3, y! - 7, 1, 1);
+    const flowerColors = ['#f5ca55', '#ed8a78', '#b894d1', '#fff0c7'];
+    for (const [i, [x, y]] of [[58, 473], [104, 740], [207, 490], [284, 699], [468, 703], [61, 648], [351, 466], [475, 466], [475, 683], [351, 494], [474, 494], [350, 675], [475, 675]].entries()) {
+      p('#3f783d', x! - 5, y! - 1, 11, 6); p('#629e49', x! - 6, y! - 3, 5, 5); p('#629e49', x! + 1, y! - 5, 5, 7); p('#acd26d', x! - 4, y! - 3, 3, 1); p('#91bf5d', x! + 2, y! - 5, 3, 1);
+      p('#44783e', x! + 2, y! - 7, 1, 8); p(flowerColors[i % flowerColors.length]!, x!, y! - 10, 5, 3); p(flowerColors[i % flowerColors.length]!, x! + 1, y! - 11, 3, 5); p('#fff1bf', x! + 2, y! - 9, 1, 1);
     }
     // Two fence posts, a slack washing line and a slow little sheet give the yard a home.
     post(72, 529); post(184, 529); p('#6b6145', 76, 522, 109, 1);
@@ -83,10 +101,10 @@ export function landscape(seed: string): HTMLCanvasElement {
   ctx.drawImage(houseShell(n), 0, 0);
   const paint: Paint = (color, x, y, w, h) => { ctx.fillStyle = color; ctx.fillRect(Math.round(x), Math.round(y), Math.round(w), Math.round(h)); };
   // A few complementary textiles give each room an identity within the warm wood house.
-  textile(paint, 335, 116, 58, 37, ['#285a60', '#44848a', '#73a8a0']);
-  textile(paint, 231, 253, 27, 156, ['#31594d', '#467e68', '#7ea47a']);
-  textile(paint, 61, 349, 113, 41, ['#784638', '#b16f56', '#d29573']);
-  textile(paint, 302, 387, 44, 24, ['#3a6670', '#6a9d9e', '#a3c3b4']);
+  textile(paint, 335, 116, 58, 37, ['#23535b', '#36878a', '#83b9aa']);
+  textile(paint, 231, 253, 27, 156, ['#2f594a', '#44866b', '#91b981']);
+  textile(paint, 61, 349, 113, 41, ['#794637', '#bd7958', '#e0a779']);
+  textile(paint, 302, 387, 44, 24, ['#315d6b', '#569da4', '#acd0bc']);
   // The former small garden annex becomes a covered, open-front workshop.
   paint('#735139', 384, 272, 96, 144);
   for (let y = 273; y < 415; y += 6) { paint(y % 12 ? '#c79d66' : '#d0a46b', 386, y, 91, 5); paint('#e0b77c', 386, y, 91, 1); for (let x = 393 + (y % 12 ? 0 : 15); x < 476; x += 31) paint('#b18653', x, y, 1, 5); }
@@ -99,14 +117,16 @@ export function landscape(seed: string): HTMLCanvasElement {
 
 export function bedArt(plot: Plot): HTMLCanvasElement {
   return canvasArt(64, 88, p => {
-    const wet = plot.moisture > 0, soil = wet ? '#755034' : '#a17b4e';
-    p('#54412e', 7, 57, 50, 29); p('#b58d53', 8, 57, 48, 27); p('#d8b477', 8, 57, 48, 2); p(soil, 10, 60, 44, 22); p('#8a633c', 10, 80, 44, 2);
-    for (let y = 63; y < 80; y += 6) { p(wet ? '#5d412d' : '#8b6942', 12, y, 40, 2); p(wet ? '#8b6640' : '#af8c56', 12, y + 2, 40, 1); }
+    const wet = plot.moisture > 0, soil = wet ? '#714b30' : '#a77b49';
+    p('#4b3628', 7, 57, 50, 29); p('#bb8b4b', 8, 57, 48, 27); p('#edc385', 8, 57, 48, 2); p(soil, 10, 60, 44, 22); p('#83572f', 10, 80, 44, 2);
+    p('#d8a45f', 8, 60, 2, 22); p('#986338', 54, 60, 2, 24); p('#e6b773', 10, 82, 44, 1); p('#a6743e', 10, 83, 44, 1);
+    for (const [x, y] of [[8, 58], [54, 58], [8, 83], [54, 83]]) p('#65533a', x, y, 1, 1);
+    for (let y = 63; y < 80; y += 6) { p(wet ? '#563a28' : '#8e663d', 12, y, 40, 2); p(wet ? '#926b43' : '#bd9459', 12, y + 2, 40, 1); }
     if (wet) for (const [x, y] of [[14, 65], [41, 74], [26, 78]]) { p('#8d7750', x, y, 2, 1); p('#a19467', x, y, 1, 1); }
     if (plot.soilBlocked) { for (const [x, y] of [[19, 64], [40, 72], [28, 77]]) { p('#4e5735', x, y - 5, 1, 8); p('#6c7b43', x - 3, y - 3, 7, 1); p('#8c9650', x + 1, y - 5, 3, 1); } p('#533e2c', 24, 66, 7, 1); p('#533e2c', 30, 67, 1, 6); }
     if (!plot.kind) return;
     const spec = PLANTS[plot.kind], grown = spec ? Math.max(.1, 1 - plot.ticks / spec.ticks) : .1, ready = plot.ticks === 0;
-    const leaf = plot.dry > 1 ? '#8e9250' : '#4d7544', light = plot.dry > 1 ? '#b2ac68' : '#85a35d';
+    const leaf = plot.dry > 1 ? '#8e9250' : '#477d3e', light = plot.dry > 1 ? '#b2ac68' : '#92bb5e';
     if (plot.kind >= 8) {
       const big = grown >= .48, top = big ? 15 : 43, width = big ? 42 : 23;
       p('#4c3b2b', 28, top + 14, 7, 58 - top); p('#947046', 30, top + 13, 4, 58 - top); p('#c19961', 30, top + 15, 1, 58 - top); p('#6a4c32', 25, 66, 15, 3);
@@ -133,7 +153,7 @@ export function bedArt(plot: Plot): HTMLCanvasElement {
       for (const [x, y] of [[20, 72], [39, 71], [29, 62]]) {
         p('#3e613c', x, y - height, 2, height); p(leaf, x - 5, y - height + 8, 7, 3); p(light, x - 4, y - height + 8, 4, 1); p(leaf, x + 1, y - height + 3, 6, 3); p(light, x + 2, y - height + 3, 4, 1);
         if (ready) {
-          const colors = ['#eee8c6', '#e6b54d', '#9e86b2', '#c66267', '#cc5e4e', '#6684a7']; const color = colors[plot.kind - 1] || colors[0]!;
+          const colors = ['#fff1cb', '#efbd49', '#ad89c2', '#db6c7c', '#e56c4f', '#638bc3']; const color = colors[plot.kind - 1] || colors[0]!;
           if (plot.kind === 3) { for (let a = 0; a < 3; a++) { p('#65516f', x + a * 3 - 3, y - height - 5, 2, 9); p(color, x + a * 3 - 3, y - height - 5, 2, 6); p('#c5abcf', x + a * 3 - 3, y - height - 5, 1, 2); } }
           else if (plot.kind >= 5) { p(color, x - 5, y - 6, 5, 5); p(color, x + 3, y - 10, 5, 5); p(plot.kind === 5 ? '#efad73' : '#9babc3', x - 4, y - 5, 1, 1); p('#678147', x - 4, y - 7, 3, 2); }
           else { p(color, x - 3, y - height - 3, 8, 5); p(color, x - 1, y - height - 5, 4, 9); p(plot.kind === 4 ? '#e39a8b' : '#e3c75e', x, y - height - 1, 2, 2); }
@@ -145,11 +165,11 @@ export function bedArt(plot: Plot): HTMLCanvasElement {
 
 export function wellArt(): HTMLCanvasElement {
   return canvasArt(60, 75, p => {
-    p('#537044', 6, 63, 49, 8); p('#4d4938', 10, 43, 40, 27); p('#9f9e83', 12, 46, 36, 22); p('#c0bca0', 13, 46, 34, 2);
-    for (let y = 49; y < 68; y += 6) { p('#807f68', 13, y, 34, 1); for (let x = 15 + y % 2 * 5; x < 47; x += 10) p('#777865', x, y, 1, 6); }
-    p('#4b5148', 12, 42, 36, 10); p('#c3bea1', 12, 42, 36, 3); p('#d6ceaa', 14, 42, 31, 1); p('#2c6473', 18, 46, 23, 3); p('#76c4ce', 21, 47, 14, 1); p('#c2e9de', 28, 47, 3, 1);
+    p('#548544', 6, 63, 49, 8); p('#47513d', 10, 43, 40, 27); p('#b5b69a', 12, 46, 36, 22); p('#ded7b3', 13, 46, 34, 2);
+    for (let y = 49; y < 68; y += 6) { p('#8a9477', 13, y, 34, 1); for (let x = 15 + y % 2 * 5; x < 47; x += 10) p('#7e8a70', x, y, 1, 6); }
+    p('#475544', 12, 42, 36, 10); p('#d2cba7', 12, 42, 36, 3); p('#f0dfb6', 14, 42, 31, 1); p('#237e9d', 18, 46, 23, 3); p('#7bd9e3', 21, 47, 14, 1); p('#dcf4df', 28, 47, 3, 1);
     for (const x of [11, 45]) { p('#4b3c2d', x, 16, 5, 39); p('#9c7748', x + 1, 17, 3, 37); p('#c39b62', x + 1, 17, 1, 36); }
-    p('#53402e', 5, 14, 50, 9); p('#a37c47', 8, 9, 44, 11); p('#bf965b', 13, 4, 34, 11); p('#d3b077', 15, 4, 29, 2); p('#806039', 8, 18, 44, 3); p('#4d3b2b', 27, 20, 4, 23); p('#b8aa7c', 28, 21, 1, 22);
+    p('#583e2b', 5, 14, 50, 9); p('#b48749', 8, 9, 44, 11); p('#d2a15f', 13, 4, 34, 11); p('#f1ce8b', 15, 4, 29, 2); p('#90663b', 8, 18, 44, 3); p('#4d3b2b', 27, 20, 4, 23); p('#d6ba81', 28, 21, 1, 22);
     p('#4c6361', 23, 37, 12, 11); p('#9aaca2', 24, 37, 10, 2); p('#6f8884', 25, 39, 8, 7); p('#d0c59c', 26, 33, 6, 2); p('#d0c59c', 24, 34, 1, 5); p('#d0c59c', 33, 34, 1, 5);
   });
 }

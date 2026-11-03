@@ -4,9 +4,9 @@ import {
   type State, type Step, type Candidate, type Context,
 } from '../../src/v2';
 import { v2Personality, v2DayInclination, V2_PERSONALITY_VERSION, type V2Interest } from '../../src/v2/personality';
-import type { V2Decision, V2Selection } from './preparation';
+import type { V2Decision, V2Selection, V2ObservedEpisode } from './preparation';
 
-export const V2_MIND_POLICY = 'v2-mind-dawn-truthful-memory-7';
+export const V2_MIND_POLICY = 'v2-mind-observed-episodes-8';
 export interface V2PastAction extends Step { success?: boolean }
 export interface V2PreviousDay { day: number; actions: V2PastAction[] }
 export interface V2MindMemory { name?: string; previousDays?: V2PreviousDay[]; pressureMicro?: string }
@@ -190,6 +190,28 @@ function nonRecoveryFacts(a: Candidate, s: State): Record<string, unknown> {
     default:return {};
   }
 }
+function observedEventFacts(e: V2ObservedEpisode, s: State) {
+  const physical = (n: number) => Math.round(n * (50 - s.stats[0]!) / 50) / 100;
+  const target = e.kind === 'fire' ? { fixture: 'stove' }
+    : e.kind === 'rain' ? { fixture: 'window' }
+      : ['seedEater', 'washout'].includes(e.kind) ? { bed: e.target + 1 }
+        : e.kind === 'visitor' && e.stock < ITEMS.length ? { stock: ITEMS[e.stock] }
+          : e.kind === 'fixtureBreak' ? { fixture: ['stove', 'window', 'chair'][e.target] }
+            : e.kind === 'mishap' ? { body: true } : {};
+  let atBoundary: Record<string, unknown> = { additional_effect: 'None; the observed onset effects are already in current state.' };
+  if (e.kind === 'fire') atBoundary = s.house.fire === 1
+    ? { if_flame_remains: { health_loss: physical(2000), wound_severity: 2, wound_due_game_day: s.day + 1, kitchen_mess_increase_up_to: 1 } }
+    : s.house.fire === 2 ? { if_smoke_remains: { health_loss: physical(500), new_wound: false } } : { additional_effect: 'None; the fire is out.' };
+  if (e.kind === 'rain') atBoundary = s.house.damage & 2 && !s.house.windowPatch && !s.house.windowBrace
+    ? { health_loss_unless_covered: e.covered ? 0 : physical(1200),
+      ...(e.stock < ITEMS.length && !e.diverted && !s.house.dripDiverted ? { stock_loss_if_still_present: { item: ITEMS[e.stock], units: 1 } } : {}) }
+    : { additional_effect: 'None while the window remains sound, patched or braced.' };
+  if (e.kind === 'seedEater') atBoundary = { if_target_is_still_growing: { growth_delay_up_to_wet_bedtimes: 1, capped_at_current_growth_cycle: true }, stops_if_resolved: true };
+  if (e.kind === 'visitor') atBoundary = { stock_loss_if_still_present_and_unresolved: { item: ITEMS[e.stock], units: 1 } };
+  return { source: e.source, kind: e.kind, observed_from_slot: e.startSlot, boundary_slot: e.deadlineSlot,
+    target, response_already_used: e.responded, shoo_already_tried: e.shooTried,
+    ...(e.kind === 'rain' ? { body_covered: e.covered } : {}), at_boundary: atBoundary };
+}
 function stateFacts(s: State, day: number, slot: number, memory: V2MindMemory) {
   const personality = v2Personality(s.seed), inclination = v2DayInclination(s.seed, day);
   return {
@@ -230,12 +252,13 @@ export function buildV2Request(decision: V2Decision, rawMemory?: V2MindMemory): 
   // This is the canonical menu already recorded by preparation, not a second filter.
   const offered = decision.candidates;
   return request(decision.mode, { ...stateFacts(decision.state, decision.day, decision.slot, memory), decision_kind: decision.mode, earlier_today: today,
+    observed_events: (decision.observedEpisodes || []).map(e => observedEventFacts(e, decision.state)),
     opportunities, opportunity_note: 'Explicit quiet moments spend an ordinary opportunity too. Breakfast or milk may combine care within one opportunity; this is an available tradeoff, not an instruction to choose it. Acute uses need an actual eligible episode.',
     ...(decision.dailyFocus ? { main_undertaking: { ...decision.dailyFocus, nominal_recovery: Object.fromEntries(NEEDS.map((k,i)=>[k,(decision.dailyFocus!.recovery[i]||0)/100])),
       clipped_recovery_if_done_now:Object.fromEntries(NEEDS.map((k,i)=>[k,Math.min(10000-decision.state.needs[i]!,decision.dailyFocus!.recovery[i]||0)/100])), intended_slot:36, success_not_guaranteed:decision.dailyFocus.chanceBps<10000 } } : {}) }, {
     next_action: { type: 'choice', instructions: decision.mode === 'acute' ? 'Deal with the actual immediate danger before its boundary. Legal ordinary care may need to happen before a response to survive residual harm. Compare whole-item costs, exact health, active conditions and stated residual damage; do not blindly use a free cutoff if its smoke would kill you.'
       : decision.mode === 'focus' ? 'Choose one substantial, feasible undertaking. Let the current intention, real materials, useful repairs/harvests and this individual\'s tastes guide it. A sensible needed task may repeat. Do not invent a second project.'
-        : 'Choose one small moment around the day\'s project. Due treatment and serious needs come first. Otherwise compare useful care with a quiet ordinary moment. Do not top every need to100 reflexively; whole items are spent and energy does not decay each phase. Familiar care can repeat; optional habits may vary. Keep real long-term materials when a modest or free option suffices.',
+        : 'Choose one small moment around the day\'s project. Due treatment and serious needs come first. Current observed events describe real targets and boundary consequences; compare an available response with care before that boundary. Otherwise compare useful care with a quiet ordinary moment. Do not top every need to100 reflexively; whole items are spent and energy does not decay each phase. Familiar care can repeat; optional habits may vary. Keep real long-term materials when a modest or free option suffices.',
       criteria: Object.fromEntries(offered.map(a => [a.key, facts(a, decision.state, memory, today)])) },
   }, { next_action: offered.map(a => a.key) });
 }

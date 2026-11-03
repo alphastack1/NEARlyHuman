@@ -53,7 +53,13 @@ export async function readNearPublicReplay(id:string,day?:number,runtime=nearRun
   const saved=await readNearPublicDay(id,day,runtime);
   const packet=(await store.get<any>(nearPacketKey(runtime,saved.commitment)))?.value;
   if(!packet)throw new NearError('replay_unavailable','This saved day is still being checked.',404);
-  if(keccak256(toHex(JSON.stringify(packet)))!==saved.commitment||packet.requestId!==saved.requestId||packet.decisionConfig!==runtime.decisionConfig||packet.stateHash!==saved.stateHash||keccak256(packet.state)!==saved.stateHash||keccak256(packet.trace)!==saved.traceHash||keccak256(packet.certificate)!==saved.certificateHash||encodeState(packet.result.state)!==packet.state||packet.rewardMicro!==saved.rewardMicro)throw new NearError('context','The saved NEAR film needs another check.');
+  // Current code/policy still authenticates the connection. A saved film belongs
+  // to its immutable settled request's policy, which can predate that runtime.
+  // Use the same finalized block as the life and day record, including after a
+  // transfer: the request's former player need not equal the NFT's current owner.
+  const accepted=await nearView<NearRequest|null>(runtime,'request',{request_id:nearRequestId(saved.requestId)},{height:saved.life.observedBlock,hash:saved.life.observedBlockHash!,timestamp:'0'});
+  if(!accepted||accepted.status!==2||accepted.request_id!==saved.requestId||accepted.token_id!==saved.life.id||accepted.day!==saved.day||accepted.day_seed!==saved.seed
+    ||keccak256(toHex(JSON.stringify(packet)))!==saved.commitment||packet.requestId!==saved.requestId||packet.decisionConfig!==accepted.decision_config||packet.stateHash!==saved.stateHash||keccak256(packet.state)!==saved.stateHash||keccak256(packet.trace)!==saved.traceHash||keccak256(packet.certificate)!==saved.certificateHash||packet.result.state.day!==saved.day||encodeState(packet.result.state)!==packet.state||encodeTrace(packet.result.trace)!==packet.trace||packet.rewardMicro!==saved.rewardMicro)throw new NearError('context','The saved NEAR film needs another check.');
   return {life:saved.life,packet,commitment:saved.commitment};
 }
 export async function readNearPublicGuest(){const config=await readNearPublicConfig();if(!config.guest)throw new NearError('not_found','No saved example is here yet.',404);return readNearPublicReplay(config.guest.id,config.guest.day);}

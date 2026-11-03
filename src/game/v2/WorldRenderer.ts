@@ -9,6 +9,7 @@ import { landscape, bedArt, itemArt, wellArt, workbenchArt, shadowArt, accentFix
 import { pixelViewport } from './pixel-grid';
 import { WORLD_WIDTH, WORLD_HEIGHT, BEDS, ANCHORS, findRoute, receiptStops, receiptLegs, receiptItems, type ReceiptLeg, type ItemStack, type Point, type InspectTarget } from './layout';
 import { openingEase, openingTileTime } from '../opening';
+import { advanceRecordedAmbience, departingVisitorItem, recordedFixtureFocus, receiptEventAccents, type RecordedAmbience, type EventAccent, type VisitorKind } from './event-visuals';
 
 export type { InspectTarget } from './layout';
 export interface V2WorldOptions { state: State; onInspect?: (target: InspectTarget) => void; onMotion?: (motion: { traveling: boolean; purpose?: 'fetching' | 'storing' | 'watering' }) => void }
@@ -51,7 +52,6 @@ class LifeScene extends Phaser.Scene {
   private shadow!: Phaser.GameObjects.Image;
   private held!: Phaser.GameObjects.Image;
   private heldExtras: Phaser.GameObjects.Image[] = [];
-  private workpiece!: Phaser.GameObjects.Image;
   private blanket!: Phaser.GameObjects.Image;
   private foreground!: Phaser.GameObjects.Graphics;
   private marks!: Phaser.GameObjects.Graphics;
@@ -63,6 +63,9 @@ class LifeScene extends Phaser.Scene {
   private stock!: Phaser.GameObjects.Graphics;
   private stockIcons: Phaser.GameObjects.Image[] = [];
   private parcelIcons: Phaser.GameObjects.Image[] = [];
+  private visitorGoods!: Phaser.GameObjects.Image;
+  private pantryLossIcon!: Phaser.GameObjects.Image;
+  private pantryLoss?: { item: number; at: number };
   private parcel?: { items: number[]; at: number; until: number };
   private perch?: Point;
   private perchOffset: Point = { x: 0, y: 0 };
@@ -89,6 +92,7 @@ class LifeScene extends Phaser.Scene {
   private insets = { top: 0, bottom: 0, left: 0, right: 0 };
   private measuredInsets = false;
   private focusPoint?: Point;
+  private eventGlance?: { point: Point; until: number };
   private dragging?: { x: number; y: number; camera: Point; moved: boolean };
   private carrying = -1;
   private cargo: ItemStack[] = [];
@@ -99,9 +103,10 @@ class LifeScene extends Phaser.Scene {
   private attention = 0;
   private timeSlot = 0;
   private sleeping = true;
-  private rainUntil = 0;
-  private visitorUntil = 0;
-  private visitorBed = 0;
+  private recordedAmbience: RecordedAmbience = { rainUntil: 0 };
+  private rainAlpha = 0;
+  private visitor?: { kind: VisitorKind; bed: number; at: number; departedAt?: number; takenItem?: number };
+  private eventAccents: (EventAccent & { at: number })[] = [];
   private textureSerial = 0;
   private roosterSeed = '';
   private pending?: () => void;
@@ -136,7 +141,6 @@ class LifeScene extends Phaser.Scene {
     this.actor.on('pointerup', (pointer: Phaser.Input.Pointer) => { if (this.allowPointer(pointer) && !this.dragging?.moved) this.attention = this.elapsed + 1400; });
     this.held = this.add.image(0, 0, this.itemTexture(6)).setVisible(false);
     for (let i = 0; i < 2; i++) this.heldExtras.push(this.add.image(0, 0, this.itemTexture(6)).setVisible(false).setScale(.7));
-    this.workpiece = this.add.image(432, 303, this.itemTexture(30)).setOrigin(.5, 1).setDepth(324).setVisible(false);
     this.blanket = this.add.image(312, 112, this.fixtureTexture('bedCover', {})).setOrigin(.5, 1).setDepth(115).setVisible(true);
     this.night = this.add.rectangle(0, 0, WORLD_WIDTH, WORLD_HEIGHT, 0x172439, 1).setOrigin(0).setDepth(1000).setAlpha(0);
     this.openingMask = this.add.graphics().setDepth(1200);
@@ -146,6 +150,8 @@ class LifeScene extends Phaser.Scene {
       this.stockIcons.push(this.add.image(0, 0, this.itemTexture(0)).setDepth(1011).setVisible(false));
       this.parcelIcons.push(this.add.image(0, 0, this.itemTexture(0)).setDepth(1012).setVisible(false));
     }
+    this.visitorGoods = this.add.image(0, 0, this.itemTexture(2)).setScale(.45).setDepth(951).setVisible(false);
+    this.pantryLossIcon = this.add.image(0, 0, this.itemTexture(2)).setScale(.65).setDepth(1011).setVisible(false);
     this.input.on('pointerdown', (p: Phaser.Input.Pointer) => { if (this.allowPointer(p)) this.dragging = { x: p.x, y: p.y, camera: { ...this.cameraPoint }, moved: false }; });
     this.input.on('pointermove', (p: Phaser.Input.Pointer) => {
       const d = this.dragging; if (!this.interactionEnabled || !p.isDown || !d || this.film && !this.paused) return;
@@ -161,8 +167,7 @@ class LifeScene extends Phaser.Scene {
   private fixtureTexture(kind: FixtureArt, opts: ArtOptions): string {
     const key = `v2-fixture-${kind}-${JSON.stringify(opts)}`; if (this.textures.exists(key)) return key;
     const asset = kind === 'pantry' ? 'prep' : kind === 'bedCover' ? 'bed' : kind;
-    if (this.textures.exists(`v2-asset-${asset}`) && !opts.damaged && !opts.patched && !opts.open) {
-      if (kind !== 'bedCover' && kind !== 'plant') return `v2-asset-${asset}`;
+    if (this.textures.exists(`v2-asset-${asset}`) && !opts.damaged && !opts.patched && !opts.braced && !opts.open) {
       const source = this.textures.get(`v2-asset-${asset}`).getSourceImage() as HTMLImageElement, c = document.createElement('canvas'); c.width = source.width; c.height = source.height;
       const ctx = c.getContext('2d')!; ctx.drawImage(source, 0, 0); if (kind === 'bedCover') ctx.clearRect(0, 0, c.width, 25); this.textures.addCanvas(key, accentFixture(c, kind)); return key;
     }
@@ -196,7 +201,7 @@ class LifeScene extends Phaser.Scene {
     for (const f of this.fixtures) {
       let opts: ArtOptions = { ...f.opts };
       if (f.kind === 'stove') opts = { damaged: !!(state.house.damage & 1), patched: !!state.house.stovePatch };
-      if (f.kind === 'window') opts = { damaged: !!(state.house.damage & 2), braced: state.house.windowBrace };
+      if (f.kind === 'window') opts = { damaged: !!(state.house.damage & 2), patched: !!state.house.windowPatch, braced: state.house.windowBrace };
       if (f.kind === 'chair') { opts = { damaged: !!(state.house.damage & 4), braced: state.house.chairBrace }; f.image.setVisible(state.house.chairLife > 0); f.image.setY(state.house.chairAnchor ? 384 : f.y).setDepth(state.house.chairAnchor ? 384 : f.y); }
       const key = this.fixtureTexture(f.kind, opts); if (key !== f.key) { f.image.setTexture(key); f.key = key; }
     }
@@ -231,13 +236,13 @@ class LifeScene extends Phaser.Scene {
   setState(state: State, options: { receipt?: Receipt; slot?: number; history?: readonly Receipt[] } = {}): void {
     this.cancelFilm(); if (!this.initialized) { this.state = state; return; }
     const different = state.seed !== this.state.seed; this.cargo = []; this.applyState(state); this.focusPoint = undefined; this.carrying = -1; this.harvestOutcome = undefined; this.reaction = undefined; this.parcel = undefined;
+    this.recordedAmbience = { rainUntil: 0 }; this.rainAlpha = 0; this.visitor = undefined; this.eventAccents = []; this.pantryLoss = undefined; this.eventGlance = undefined;
     if (different) { this.point = { x: 312, y: 79 }; this.perch = undefined; this.perchOffset = { x: 0, y: 0 }; this.roosterTexture('idle'); }
     // An explicit film seek may jump. Ordinary receipt playback always walks its route.
     const history = options.history || (options.receipt ? [options.receipt] : []);
-    if (options.history || options.slot === 0) { this.point = { x: 312, y: 79 }; this.sleeping = true; this.rainUntil = 0; this.visitorUntil = 0; this.perch = undefined; this.perchOffset = { x: 0, y: 0 }; }
+    if (options.history || options.slot === 0) { this.point = { x: 312, y: 79 }; this.sleeping = true; this.perch = undefined; this.perchOffset = { x: 0, y: 0 }; }
     for (const r of history) {
-      for (const e of r.events) { if (e.source === 'rain') this.rainUntil = Math.ceil((r.slot + 1) / 10) * 10; if (e.source === 'seedEater' || e.source === 'visitor') { this.visitorUntil = Math.ceil((r.slot + 1) / 10) * 10; this.visitorBed = Math.min(3, e.target); } }
-      if ((r.op === Op.Shoo || r.op === Op.Bait) && r.success) this.visitorUntil = 0;
+      this.recordedAmbience = advanceRecordedAmbience(this.recordedAmbience, r);
       if (r.op === Op.Rest || r.events.some(e => e.kind === 'bedtime')) { this.point = { x: 312, y: 79 }; this.sleeping = true; this.perch = undefined; }
       else {
         const last = receiptStops(r, this.point).at(-1); if (last) this.point = { ...last };
@@ -246,8 +251,11 @@ class LifeScene extends Phaser.Scene {
         if (r.op !== Op.Quiet) this.sleeping = false;
       }
     }
+    const visitor = this.recordedAmbience.visitor;
+    if (visitor) this.visitor = { kind: visitor.kind, bed: visitor.bed, at: this.actorClock - 1800 };
+    this.rainAlpha = this.recordedAmbience.rainUntil > (options.slot ?? history.at(-1)?.slot ?? 0) ? 1 : 0;
     this.perchOffset = this.perch ? { ...this.perch } : { x: 0, y: 0 };
-    if (options.slot !== undefined) this.timeSlot = options.slot;
+    this.timeSlot = options.slot ?? history.at(-1)?.slot ?? 0;
     this.blanket.setVisible(this.point.y < 114 && this.point.x > 286 && this.point.x < 332); this.centerCamera(1);
   }
   private cancelFilm(): void { const film = this.film; this.film = undefined; this.motion(false); if (film) film.resolve(); }
@@ -256,7 +264,6 @@ class LifeScene extends Phaser.Scene {
       const begin = () => {
         this.cancelFilm(); this.paused = false; this.focusPoint = undefined; this.reaction = undefined; this.sleeping = this.sleeping && receipt.op === Op.Quiet; this.blanket.setVisible(this.sleeping); this.timeSlot = receipt.slot; this.applyState(receipt.before);
         if (receipt.op !== Op.Quiet && receipt.op !== Op.QuietMain) this.harvestOutcome = undefined;
-        for (const e of receipt.events) { if (e.source === 'rain') this.rainUntil = Math.ceil((receipt.slot + 1) / 10) * 10; if (e.source === 'seedEater' || e.source === 'visitor') { this.visitorUntil = Math.ceil((receipt.slot + 1) / 10) * 10; this.visitorBed = Math.min(3, e.target); } }
         this.cargo = []; this.carrying = -1;
         const requestedWork = options.duration ?? (receipt.role === 'main' ? 2500 : receipt.op === Op.Quiet ? 650 : 1150);
         // The parcel opens here, not while walking away: leave time to see each real supply.
@@ -316,19 +323,46 @@ class LifeScene extends Phaser.Scene {
     if (!f.legs.slice(f.stop + 1).some(l => l.kind === 'work')) this.impact();
   }
   private mailbox(open: boolean): void { const p = this.fixtures.find(f => f.kind === 'mailbox'); if (p) { const key = this.fixtureTexture('mailbox', { open, parcel: open }); p.image.setTexture(key); p.key = key; } }
+  private revealRecordedEvents(receipt: Receipt): void {
+    const previous = this.recordedAmbience.visitor;
+    const takenItem = departingVisitorItem(this.recordedAmbience, receipt, receiptItems(receipt, 'inputs'));
+    this.recordedAmbience = advanceRecordedAmbience(this.recordedAmbience, receipt);
+    const next = this.recordedAmbience.visitor;
+    if (next && (!previous || previous.kind !== next.kind || previous.bed !== next.bed)) this.visitor = { kind: next.kind, bed: next.bed, at: this.actorClock };
+    if (!next && this.visitor && this.visitor.departedAt === undefined) {
+      this.visitor.departedAt = this.actorClock;
+      if (takenItem !== undefined) { this.visitor.takenItem = takenItem; this.pantryLoss = { item: takenItem, at: this.actorClock }; }
+    }
+    // Arrival and a successful response may share one atomic receipt. Show the
+    // visitor leaving, rather than falsely keeping an already resolved threat.
+    if (!next && !this.visitor) {
+      const arrival = receipt.events.find(e => e.kind === 'incident' && (e.source === 'visitor' || e.source === 'seedEater'));
+      if (arrival) this.visitor = { kind: arrival.source as VisitorKind, bed: Math.max(0, Math.min(3, arrival.target)), at: this.actorClock - 1800, departedAt: this.actorClock };
+    }
+    this.eventAccents.push(...receiptEventAccents(receipt).map(event => ({ ...event, at: this.actorClock })));
+    this.eventAccents = this.eventAccents.filter(event => this.actorClock - event.at < 1500);
+    const point = recordedFixtureFocus(receipt);
+    if (point && !this.paused && !this.focusPoint && !this.dragging?.moved) {
+      const c = this.cameras.main, factor = this.cssScale * c.zoom;
+      const left = c.scrollX + this.insets.left / factor, right = c.scrollX + c.width / c.zoom - this.insets.right / factor;
+      const top = c.scrollY + this.insets.top / factor, bottom = c.scrollY + c.height / c.zoom - this.insets.bottom / factor;
+      // A short editorial glance changes only the camera. Already-visible
+      // incidents need no pan, and player-controlled inspection always wins.
+      if (point.x - 16 < left || point.x + 16 > right || point.y - 16 < top || point.y + 16 > bottom) this.eventGlance = { point, until: this.actorClock + 1600 };
+    }
+  }
   private impact(): void {
     const f = this.film; if (!f || f.impact) return; f.impact = true;
     this.removeCargo(receiptItems(f.receipt, 'inputs'));
     const outputs = receiptItems(f.receipt, 'outputs');
     if (f.receipt.op !== Op.Harvest) this.addCargo(outputs);
-    this.applyState(f.receipt.snapshot); f.onImpact?.();
+    this.applyState(f.receipt.snapshot); this.revealRecordedEvents(f.receipt); f.onImpact?.();
     if (f.receipt.op === Op.Pickup) {
       this.mailbox(false); this.carrying = -1;
       const items = f.receipt.snapshot.inventory.flatMap((n, i) => Array(Math.min(3, Math.max(0, n - f.receipt.before.inventory[i]!))).fill(i) as number[]).slice(0, 3);
       if (items.length) this.parcel = { items, at: this.actorClock, until: this.actorClock + 1500 };
     }
     else if (f.receipt.op === Op.Ship) { this.mailbox(true); this.carrying = -1; }
-    if ((f.receipt.op === Op.Shoo || f.receipt.op === Op.Bait) && f.receipt.success) this.visitorUntil = 0;
     if (f.receipt.events.some(e => e.kind === 'incident' || e.kind === 'condition')) {
       const before = f.receipt.before, after = f.receipt.snapshot, wound = after.conditions[2]!;
       const physical = wound.severity > 0 && !wound.resolved && (before.conditions[2]!.resolved || wound.severity > before.conditions[2]!.severity) || after.needs[0]! < before.needs[0]!;
@@ -353,16 +387,19 @@ class LifeScene extends Phaser.Scene {
   }
   resizeWorld(width: number, height: number, scale: number): void { this.widthLogical = width; this.heightLogical = height; this.cssScale = scale; if (this.initialized) { this.cameras.main.setViewport(0, 0, width, height).setZoom(1).setRoundPixels(true); this.centerCamera(1); } }
   focus(target: InspectTarget): void {
+    this.eventGlance = undefined;
     this.focusPoint = target.kind === 'bed' ? { ...BEDS[target.index || 0]!, y: BEDS[target.index || 0]!.y - 20 } : target.kind === 'well' ? { x: 280, y: 510 } : target.kind === 'workshop' ? { x: 432, y: 330 } : target.kind === 'mailbox' ? { x: 424, y: 710 } : undefined;
   }
-  follow(): void { this.focusPoint = undefined; }
+  follow(): void { this.focusPoint = undefined; this.eventGlance = undefined; }
   private clampCamera(p: Point): Point {
     const c = this.cameras.main, halfX = c.width / c.zoom / 2, halfY = c.height / c.zoom / 2, factor = this.cssScale * c.zoom;
     // World-edge overscan lives behind the measured HUD/dock, leaving the whole subject in the visible playfield.
     return { x: Math.max(halfX - this.insets.left / factor, Math.min(WORLD_WIDTH - halfX + this.insets.right / factor, p.x)), y: Math.max(halfY - this.insets.top / factor, Math.min(WORLD_HEIGHT - halfY + this.insets.bottom / factor, p.y)) };
   }
   private centerCamera(blend: number): void {
-    const c = this.cameras.main, point = this.focusPoint || { x: this.point.x + this.facing * 12, y: this.point.y - 20 }, z = c.zoom;
+    if (this.eventGlance && (this.actorClock >= this.eventGlance.until || this.focusPoint || this.dragging?.moved)) this.eventGlance = undefined;
+    if (this.paused && this.eventGlance && blend < 1) return;
+    const c = this.cameras.main, point = this.focusPoint || this.eventGlance?.point || { x: this.point.x + this.facing * 12, y: this.point.y - 20 }, z = c.zoom;
     const target = this.clampCamera({ x: point.x - (this.insets.left - this.insets.right) / this.cssScale / (2 * z), y: point.y - (this.insets.top - this.insets.bottom) / this.cssScale / (2 * z) });
     this.cameraPoint.x += (target.x - this.cameraPoint.x) * blend; this.cameraPoint.y += (target.y - this.cameraPoint.y) * blend;
     // Round the scroll origin itself. Rounding the center leaves a half-pixel
@@ -409,6 +446,7 @@ class LifeScene extends Phaser.Scene {
         }
       }
     }
+    if (!this.paused) this.rainAlpha += ((this.recordedAmbience.rainUntil > 0 ? 1 : 0) - this.rainAlpha) * (1 - Math.exp(-dt * (f ? this.playbackRate : 1) / 450));
     this.drawActor(); this.drawEffects(); this.drawStock(); this.centerCamera(1 - Math.exp(-dt / 150)); this.drawOpening();
   }
   private drawOpening(): void {
@@ -466,6 +504,7 @@ class LifeScene extends Phaser.Scene {
   private drawStock(): void {
     const g = this.stock; g.clear(); for (const image of this.stockIcons) image.setVisible(false);
     for (const image of this.parcelIcons) image.setVisible(false);
+    this.pantryLossIcon.setVisible(false);
     const burst = this.parcel, clock = this.actorClock;
     if (burst && burst.until > clock) {
       const age = clock - burst.at, spread = Math.min(1, age / 280), lift = Math.round(Math.sin(Math.min(1, age / 300) * Math.PI / 2) * 21);
@@ -476,7 +515,14 @@ class LifeScene extends Phaser.Scene {
       }
       return;
     }
-    if (this.openingPhase !== 'closed' || this.sleeping || !this.state.alive) return;
+    if (this.pantryLoss && clock - this.pantryLoss.at < 1400) {
+      const age = clock - this.pantryLoss.at, y = 110 - Math.round(Math.min(1, age / 600) * 5);
+      g.fillStyle(0x192f3b, .94).fillRect(54, y - 10, 36, 21); g.fillStyle(0xc77c5c).fillRect(55, y - 10, 34, 1);
+      this.pantryLossIcon.setTexture(this.itemTexture(this.pantryLoss.item)).setPosition(64, y).setVisible(true);
+      g.fillStyle(0xf2d4a8).fillRect(76, y, 3, 1).fillRect(82, y - 3, 1, 7).fillRect(81, y - 2, 1, 1).fillRect(81, y + 4, 3, 1);
+      return;
+    }
+    if (this.openingPhase !== 'closed' || this.sleeping || !this.state.alive || this.eventGlance && clock < this.eventGlance.until) return;
     const nearby = (p: Point, radius: number) => Math.hypot(this.point.x - p.x, this.point.y - p.y) < radius;
     const stock = (ids: number[]) => ids.filter(id => this.storedStock(id) > 0).slice(0, 3).map(id => ({ item: id, quantity: this.storedStock(id) }));
     let chips: { item: number; quantity: number }[] = [], at = { x: 72, y: 116 };
@@ -512,15 +558,76 @@ class LifeScene extends Phaser.Scene {
       }
     }
   }
+  private drawVisitor(): void {
+    this.visitorGoods.setVisible(false);
+    const visitor = this.visitor; if (!visitor) return;
+    const clock = this.actorClock, leaving = visitor.departedAt !== undefined;
+    const departure = leaving ? Math.min(1, (clock - visitor.departedAt!) / 1400) : 0;
+    if (departure >= 1) { this.visitor = undefined; return; }
+    const entered = Math.min(1, Math.max(0, ((visitor.departedAt ?? clock) - visitor.at) / 1700));
+    const ease = (n: number) => n * n * (3 - 2 * n), arrival = ease(entered), exit = ease(departure);
+    const p = BEDS[visitor.bed] || BEDS[0]!, bird = visitor.kind === 'seedEater';
+    const destination = bird ? { x: p.x + 20, y: p.y - 10 } : { x: 312, y: 472 };
+    const origin = bird ? { x: destination.x - 48, y: destination.y - 70 } : { x: 328, y: 780 };
+    const from = { x: origin.x + (destination.x - origin.x) * arrival, y: origin.y + (destination.y - origin.y) * arrival };
+    const x = Math.round(from.x + (origin.x - from.x) * exit), y = Math.round(from.y + (origin.y - from.y) * exit);
+    const g = this.effects, px = (c: number, dx: number, dy: number, w = 1, h = 1, alpha = 1) => g.fillStyle(c, alpha).fillRect(x + dx, y + dy, w, h);
+    const moving = entered < 1 || leaving, beat = Math.floor(clock / (moving ? 110 : 400)) % 2;
+    if (bird) {
+      if (!moving) px(0x30493e, -4, 0, 11, 2, .2);
+      px(0x3d4a3c, -5, -7, 11, 6); px(0xa67d43, -4, -7, 8, 5); px(0xd3b071, -3, -6, 5, 2);
+      px(0x3d4a3c, 1, -11 + (moving ? 0 : beat), 6, 6); px(0xbca276, 2, -10 + (moving ? 0 : beat), 4, 4); px(0x243d3a, 5, -9 + (moving ? 0 : beat));
+      px(0xe5b967, 7, -7 + (moving ? 0 : beat), 3, 1); px(0x715837, -7, -6, 3, 2);
+      if (moving) { px(0x6d7961, -5, -10 - beat * 3, 7, 3); px(0xbdc099, -4, -11 - beat * 3, 4, 2); }
+      else { px(0x716347, -2, -1, 1, 2); px(0x716347, 3, -1, 1, 2); }
+    } else {
+      // The hungry visitor is a small stray cat by the path, distinct from a
+      // seed-eating bird. Its arrival never implies a sale, item or reward.
+      px(0x2d453d, -8, 0, 19, 3, .2); px(0x3d4a3c, -8, -9, 17, 9); px(0xbc7a45, -7, -8, 15, 7); px(0xe2aa68, -5, -8, 10, 3);
+      px(0x3d4a3c, 4, -14, 9, 11); px(0x3d4a3c, 4, -17, 3, 5); px(0x3d4a3c, 10, -17, 3, 5);
+      px(0xd99b5d, 5, -14, 7, 8); px(0xeac390, 7, -9, 5, 3); px(0x263d3a, 7, -12); px(0x263d3a, 11, -12); px(0xc36d5f, 10, -9);
+      px(0x754f37, -4, -8, 2, 4); px(0x754f37, 0, -8, 2, 3);
+      px(0x3d4a3c, -11, -11 - beat, 4, 3); px(0x3d4a3c, -13, -16 - beat, 3, 7); px(0xd99b5d, -12, -15 - beat, 2, 5);
+      px(0x664f3a, -5, -1, 3, 2 + (moving ? beat : 0)); px(0x664f3a, 5, -1, 3, 2 + (moving ? 1 - beat : 0));
+      if (leaving && visitor.takenItem !== undefined) this.visitorGoods.setTexture(this.itemTexture(visitor.takenItem)).setPosition(x + 14, y - 8).setVisible(true);
+    }
+  }
+  private drawEventAccents(): void {
+    const clock = this.actorClock, g = this.effects;
+    this.eventAccents = this.eventAccents.filter(event => clock - event.at < 1400);
+    for (const event of this.eventAccents) {
+      const age = clock - event.at, progress = age / 1400, alpha = Math.min(1, (1 - progress) * 1.8);
+      const at = event.kind === 'fixtureBreak' ? event.target === 1 ? { x: 136, y: 32 } : event.target === 2 ? { x: 168, y: this.state.house.chairAnchor ? 363 : 315 } : { x: 176, y: 56 }
+        : event.kind === 'fire' ? { x: 176, y: 48 } : event.kind === 'outage' ? { x: 72, y: 46 }
+        : event.kind === 'rain' ? { x: 136, y: 32 }
+        : event.kind === 'washout' ? { ...BEDS[Math.max(0, Math.min(3, event.target))]!, y: BEDS[Math.max(0, Math.min(3, event.target))]!.y - 40 }
+        : { x: this.point.x, y: this.point.y - 36 };
+      const px = (c: number, dx: number, dy: number, w = 1, h = 1) => g.fillStyle(c, alpha).fillRect(Math.round(at.x + dx), Math.round(at.y + dy), w, h);
+      if (event.kind === 'outage') {
+        px(0xf4d278, 0, -8, 3, 5); px(0xf4d278, -3, -3, 5, 2); px(0xf4d278, -1, -1, 2, 5); px(0x273b40, -3, -2, 7, 1);
+        if (age < 500) { px(0xf4d278, -11, -5, 3, 1); px(0xf4d278, 10, -4, 3, 1); }
+      } else if (event.kind === 'fixtureBreak' || event.kind === 'fire') {
+        const spread = 5 + progress * 13;
+        for (let i = 0; i < 5; i++) { const angle = i / 5 * Math.PI * 2, x = Math.cos(angle) * spread, y = Math.sin(angle) * spread;
+          px(event.kind === 'fire' ? 0xffc66d : i % 2 ? 0xd3a269 : 0xd9e4cc, x, y + progress * 5, i % 2 ? 2 : 1, 2);
+        }
+      } else if (event.kind === 'rain' || event.kind === 'washout') {
+        for (let i = 0; i < 3; i++) { const y = -8 + progress * 15, x = -10 + i * 10; px(0xc6e2e0, x, y - i % 2 * 4, 1, 3); }
+      } else if (event.kind === 'mood') {
+        for (let i = 0; i < 3; i++) px(0xa6c1cc, -7 + i * 5, -progress * 8 - i % 2 * 2, 2, 2);
+      } else {
+        px(event.kind === 'mishap' ? 0xe6bd76 : 0xb9c884, 10, -7 - progress * 8, 2, 5); px(event.kind === 'mishap' ? 0xe6bd76 : 0xb9c884, 10, -progress * 8, 2, 2);
+      }
+    }
+  }
   private drawEffects(): void {
     const g = this.effects, a = this.ambient; g.clear(); a.clear(); const px = (color: number, x: number, y: number, w = 1, h = 1, alpha = 1) => g.fillStyle(color, alpha).fillRect(Math.round(x), Math.round(y), w, h);
     // Window light lives on the floor layer, below props and the untouched NFT sprite.
     const rise = this.dawn === 'rise' ? Math.min(1, (this.actorClock - this.dawnSince) / 2400) : this.dawn === 'waiting' ? 0 : 1;
     const daylight = (this.timeSlot < 6 ? .3 : this.timeSlot > 45 ? Math.max(0, (60 - this.timeSlot) / 15) : 1) * (.3 + rise * .7);
-    const windowLight = daylight * (this.state.house.damage & 2 ? .055 : .13), drift = Math.floor(this.elapsed / 3200) % 2;
-    this.sunlight.clear().fillStyle(0xffdc8e, windowLight).fillRect(121 + drift, 77, 12, 31).fillRect(138 + drift, 77, 12, 31);
-    this.sunlight.fillStyle(0xffe5a8, windowLight * .45).fillRect(122 + drift, 108, 28, 5);
-    this.workpiece.setVisible(false);
+    const windowLight = daylight * (this.state.house.damage & 2 ? .065 : .15) * (1 - this.rainAlpha * .72), drift = Math.floor(this.actorClock / 3200) % 2;
+    this.sunlight.clear().fillStyle(0xffd58a, windowLight).fillRect(121 + drift, 77, 12, 31).fillRect(138 + drift, 77, 12, 31);
+    this.sunlight.fillStyle(0xffe8ac, windowLight * .45).fillRect(122 + drift, 108, 28, 5).fillRect(120 + drift, 113, 33, 2);
     const f = this.film, clock = this.actorClock, t = Math.floor(clock / 170) % 3, leg = f?.legs[f.stop], working = f && f.phase === 'work' && (!leg || leg.kind === 'work');
     if (f?.phase === 'work' && leg?.kind === 'fill' && !f.stopImpacted) { px(0x94d4df, 272 + t * 3, 508, 6, 1); px(0xcce9d8, 277 + t, 510, 4, 1); }
     if (working && f) {
@@ -531,29 +638,50 @@ class LifeScene extends Phaser.Scene {
         if (op === Op.Plant || op === Op.Harvest) { const color = op === Op.Plant ? 0xb29765 : 0x8ea765; px(color, x + this.facing * (10 + t * 2), y - 6 - t * 3, 2, 1, .75); px(op === Op.Plant ? 0x8a704d : 0xb3be82, x + this.facing * (15 - t), y - 3 - (t + 1) % 3 * 3, 1, 1, .65); }
         if (WORK_OPS.has(op)) for (let i = 0; i < 3; i++) if ((t + i) % 2) { px(0xf0d895, x + this.facing * (17 + i * 3), y - 23 - i * 4, 1, 3); px(0xf0d895, x + this.facing * (16 + i * 3), y - 22 - i * 4, 3, 1); }
         if (op === Op.Craft) {
-          const progress = Math.min(1, f.elapsed / this.impactTime(f)), recipe = RECIPES[f.receipt.arg]!;
+          const progress = Math.min(1, f.elapsed / this.impactTime(f));
           px(0x8c633b, 420, 301, 24, 2); px(0xd6af70, 421, 301, 22, 1);
           for (let i = 0; i < Math.floor(progress * 4); i++) px(0xd2b078, 418 + i * 8, 305 + i % 2, 2, 1);
-          const reveal = Math.floor(Math.max(0, progress - .2) / .8 * 20);
-          if (f.receipt.success && reveal > 0) this.workpiece.setTexture(this.itemTexture(recipe.output)).setCrop(0, 20 - reveal, 20, reveal).setVisible(true);
+          // Work-in-progress wood is identical for every attempt. Only the
+          // recorded impact reveals the actual finished object in its hands.
+          for (let i = 0; i < Math.floor(progress * 3); i++) { px(0xb58a53, 422 + i * 5, 296 - i % 2 * 3, 4, 3); px(0xe1ba78, 422 + i * 5, 296 - i % 2 * 3, 4, 1); }
         }
         if ([Op.Toast, Op.CookSteak, Op.Coffee].includes(op)) for (let i = 0; i < 3; i++) px(0xe4e4c6, (op === Op.Coffee && f.receipt.variant !== 2 ? 209 : 175) + i * 4 + Math.sin(clock / 190 + i), 48 - (clock / 130 + i * 3) % 14, 1, 3, .7);
         if ([Op.Wash, Op.DeepClean].includes(op)) for (let i = 0; i < 3; i++) { px(0xc8e0d1, x + i * 6 - 5, y - 21 - t * 2 - i % 2 * 3, 3, 2); px(0xf3efd8, x + i * 6 - 5, y - 21 - t * 2 - i % 2 * 3, 1, 1); }
+        if (op === Op.Douse) for (let i = 0; i < 6; i++) { px(0x8fcbd8, 164 + i * 3, 67 - i * 2 + t, 2, 2); if (i % 2) px(0xd7ece3, 165 + i * 3, 67 - i * 2 + t); }
+        if (op === Op.Shoo) { px(0xf0d895, x + this.facing * (17 + t), y - 21, 1, 4); px(0xf0d895, x + this.facing * (21 + t), y - 20, 1, 2); }
       }
       if (f.stopImpacted && f.receipt.success && (f.receipt.role === 'main' || [Op.Pickup, Op.Well, Op.Ship, Op.Treat].includes(op))) for (let i = 0; i < 3; i++) { px(0xe8d48f, x - 13 + i * 13, y - 31 - t * 3 - i % 2 * 5, 1, 3); px(0xe8d48f, x - 14 + i * 13, y - 30 - t * 3 - i % 2 * 5, 3, 1); }
     }
     if (this.reaction?.surprise && this.reaction.until > clock) { px(0xf4d979, this.point.x + 11, this.point.y - 37, 2, 5); px(0xf4d979, this.point.x + 11, this.point.y - 30, 2, 2); }
     if (this.attention > this.elapsed) { const blink = Math.floor(this.elapsed / 170) % 2; px(0xe7d48e, this.point.x - 12, this.point.y - 29 - blink, 1, 3); px(0xe7d48e, this.point.x - 13, this.point.y - 28 - blink, 3, 1); }
-    if (this.state.house.fire) { for (let i = 0; i < 5; i++) px(this.state.house.fire === 1 ? 0xf2b651 : 0x747b72, 172 + i * 3, 56 - (this.elapsed / 80 + i * 4) % 23, 3, 5, .7); }
-    if (this.rainUntil >= this.timeSlot && this.rainUntil > 0) { for (let i = 0; i < 44; i++) px(0xa5c4c7, 33 + i * 37 % 442, 452 + (i * 23 + this.elapsed / 40 * 3) % 322, 1, 4, .55); }
-    if (this.visitorUntil >= this.timeSlot && this.visitorUntil > 0) { const p = BEDS[this.visitorBed] || BEDS[0]!, x = p.x + 20, y = p.y - 10 - (Math.floor(this.elapsed / 300) % 4 === 0 ? 2 : 0); px(0x514230, x - 4, y - 6, 10, 6); px(0x9c8051, x - 3, y - 5, 7, 4); px(0x6b583c, x + 2, y - 9, 5, 5); px(0x233532, x + 5, y - 7); px(0xd2a552, x + 7, y - 6, 3, 1); }
+    if (this.state.house.fire === 1) {
+      for (let i = 0; i < 4; i++) { const x = 166 + i * 5, height = 8 + (Math.floor(clock / 95) + i * 3) % 7;
+        px(0xb95036, x, 59 - height, 5, height); px(0xee8e3e, x + 1, 57 - height, 3, height + 1); px(0xffd775, x + 2, 61 - Math.floor(height * .65), 2, Math.floor(height * .65));
+      }
+      px(0xffc66d, 166, 61, 20, 1, .7);
+    }
+    if (this.state.house.fire) for (let i = 0; i < 4; i++) { const age = (clock / 55 + i * 11) % 45, x = 174 + Math.sin(age / 12 + i) * 5, y = 45 - age * .6; px(this.state.house.fire === 1 ? 0x8e8972 : 0x7a8885, x, y, 4 + i % 2, 3, (1 - age / 45) * .65); }
+    if (this.state.house.powerOut) { px(0x343f44, 60, 69, 2, 2); px(0x343f44, 163, 64, 3, 1); }
+    if (this.rainAlpha > .02) {
+      const alpha = this.rainAlpha;
+      // Rain is confined to the yard and window glass, never the house floor.
+      for (let i = 0; i < 68; i++) { const phase = (i * 31 + clock * .13) % 321, x = 33 + i * 37 % 442, y = 452 + phase; px(i % 3 ? 0x8fb6cb : 0xc6e2e0, x, y, 1, 4 + i % 3, alpha * .6); px(0xa9cdd1, x + 1, y, 1, 2, alpha * .3); }
+      for (let i = 0; i < 9; i++) { const phase = (clock / 110 + i * 1.7) % 6, x = 48 + i * 47 % 430, y = 478 + i * 43 % 285; if (phase < 2) { px(0xb5d5d1, x - 2, y, 2, 1, alpha * .55); px(0xb5d5d1, x + 2, y, 2, 1, alpha * .55); } }
+      for (let i = 0; i < 4; i++) { const x = 125 + i * 6, y = 23 + (clock / 150 + i * 7) % 18; px(0xb8d8de, x, y, 1, 3, alpha * .65); }
+      // A damaged, uncovered pane can visibly drip; the state still decides
+      // whether any supply was lost or any care is needed.
+      if (this.state.house.damage & 2 && !this.state.house.windowPatch && !this.state.house.windowBrace) { const y = 51 + clock / 60 % 25; px(0x8fbacb, 139, y, 1, 2, alpha * .75); if (y > 72) px(0xb8d8de, 137, 78, 5, 1, alpha * .5); }
+    }
+    this.drawVisitor(); this.drawEventAccents();
     if (this.state.alive) { const x = this.point.x, y = this.point.y; if (!this.state.conditions[2]?.resolved && this.state.conditions[2]?.severity) { px(0xe0dec3, x + 2, y - 16, 5, 2); px(0xc06052, x + 4, y - 17, 1, 4); } if (!this.state.conditions[3]?.resolved && this.state.conditions[3]?.severity) px(0xa5b97d, x + 10, y - 32 - t, 2, 2); if (!this.state.conditions[6]?.resolved && this.state.conditions[6]?.severity) { px(0x947546, x - 4, y - 14, 2, 1); px(0x947546, x + 1, y - 9, 2, 1); } }
     // Slow moving light, leaf flicks and butterflies give the place a pulse without inventing events.
-    for (let i = 0; i < 4; i++) { const x = 350 + i * 34 + Math.sin(this.elapsed / 2300 + i * 3) * 10, y = 488 + i * 44 + Math.sin(this.elapsed / 1700 + i) * 8; a.fillStyle(i % 2 ? 0xd7ce97 : 0xb7c37c, .72); a.fillRect(Math.round(x), Math.round(y), 2, 1); }
-    const butterflyX = 252 + Math.sin(this.elapsed / 3600) * 28, butterflyY = 616 + Math.cos(this.elapsed / 2400) * 16, wing = Math.floor(this.elapsed / 180) % 2;
-    a.fillStyle(0xf1c777).fillRect(Math.round(butterflyX) - 3, Math.round(butterflyY) - wing, 3, 2 + wing).fillRect(Math.round(butterflyX) + 1, Math.round(butterflyY) - wing, 3, 2 + wing); a.fillStyle(0x6d6340).fillRect(Math.round(butterflyX), Math.round(butterflyY), 1, 3);
+    if (daylight > .35 && this.rainAlpha < .1) {
+      for (let i = 0; i < 4; i++) { const x = 350 + i * 34 + Math.sin(clock / 2300 + i * 3) * 10, y = 488 + i * 44 + Math.sin(clock / 1700 + i) * 8; a.fillStyle(i % 2 ? 0xe0cf7e : 0xc4d38b, .72); a.fillRect(Math.round(x), Math.round(y), 2, 1); }
+      const butterflyX = 252 + Math.sin(clock / 3600) * 28, butterflyY = 616 + Math.cos(clock / 2400) * 16, wing = Math.floor(clock / 180) % 2;
+      a.fillStyle(0xf1b86d).fillRect(Math.round(butterflyX) - 3, Math.round(butterflyY) - wing, 3, 2 + wing).fillRect(Math.round(butterflyX) + 1, Math.round(butterflyY) - wing, 3, 2 + wing); a.fillStyle(0x6d6340).fillRect(Math.round(butterflyX), Math.round(butterflyY), 1, 3);
+    }
     // A cloth hem and two leaf tips move by one native pixel; nothing advances game state.
-    const breeze = Math.floor(this.elapsed / 1100) % 3 === 0 ? 1 : 0;
+    const breeze = Math.floor(clock / (this.rainAlpha > .1 ? 340 : 1100)) % 3 === 0 ? 1 : 0;
     a.fillStyle(0xece5c4).fillRect(96 + breeze, 546, 23, 1); a.fillStyle(0x87c1bd).fillRect(145 + breeze, 541, 14, 1); a.fillStyle(0xe6ad8b).fillRect(168 + breeze, 538, 9, 1);
     a.fillStyle(0x7ca75a, .8).fillRect(394 + breeze, 50, 2, 1).fillRect(303 - breeze, 373, 2, 1);
     for (let i = 0; i < 4; i++) { const plant = this.plotPreview.get(i) || this.state.plots[i]!; if (plant.kind && !plant.ticks) { const p = BEDS[i]!, blink = (this.elapsed / 500 + i) % 5; if (blink < 1) { a.fillStyle(0xf0dfa0, .75).fillRect(p.x + 20, p.y - 40, 1, 3).fillRect(p.x + 19, p.y - 39, 3, 1); } } }
@@ -562,7 +690,7 @@ class LifeScene extends Phaser.Scene {
       this.marks.fillStyle(0xf0d474, .9);
       for (const [x, y, w, h] of [[p.x - 26, p.y - 35, 9, 1], [p.x - 26, p.y - 35, 1, 9], [p.x + 17, p.y - 35, 9, 1], [p.x + 25, p.y - 35, 1, 9], [p.x - 26, p.y + 2, 9, 1], [p.x - 26, p.y - 6, 1, 9], [p.x + 17, p.y + 2, 9, 1], [p.x + 25, p.y - 6, 1, 9]]) this.marks.fillRect(x!, y!, w!, h!);
     }
-    const slot = this.timeSlot, dim = Math.max(slot > 45 ? Math.min(.42, (slot - 45) / 36) : slot < 8 ? (8 - slot) * .012 : 0, .26 * (1 - rise)); this.night.setAlpha(Math.max(dim, this.state.house.powerOut ? .16 : 0));
+    const slot = this.timeSlot, dim = Math.max(slot > 45 ? Math.min(.42, (slot - 45) / 36) : slot < 8 ? (8 - slot) * .012 : 0, .26 * (1 - rise)); this.night.setAlpha(dim);
     this.lampGlow.clear(); if (dim > .14 && !this.state.house.powerOut) { this.lampGlow.fillStyle(0xf5d68c, dim * .15).fillRect(336, 62, 36, 42).fillRect(329, 73, 50, 24); this.lampGlow.fillStyle(0xf2d798, dim * .35).fillRect(349, 71, 11, 9); }
   }
   dispose(): void { this.cancelFilm(); this.pending = undefined; }

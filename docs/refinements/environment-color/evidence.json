@@ -1,0 +1,90 @@
+{
+  "scope": "Actual production-source renderer with real saved FERN Day1 packet on GET-only preview; normal UI seek for static art inspection and one presentation-only workshop focus. No financial actions/full-film claim.",
+  "errors": [],
+  "writes": [],
+  "alpha": [
+    {
+      "kind": "fridge",
+      "width": 30,
+      "height": 44,
+      "alphaChanged": 0,
+      "colorChanged": 691
+    },
+    {
+      "kind": "stove",
+      "width": 32,
+      "height": 34,
+      "alphaChanged": 0,
+      "colorChanged": 208
+    },
+    {
+      "kind": "prep",
+      "width": 34,
+      "height": 28,
+      "alphaChanged": 0,
+      "colorChanged": 491
+    },
+    {
+      "kind": "bed",
+      "width": 44,
+      "height": 66,
+      "alphaChanged": 0,
+      "colorChanged": 1369
+    },
+    {
+      "kind": "cupboard",
+      "width": 28,
+      "height": 44,
+      "alphaChanged": 0,
+      "colorChanged": 748
+    },
+    {
+      "kind": "plant",
+      "width": 26,
+      "height": 31,
+      "alphaChanged": 0,
+      "colorChanged": 197
+    },
+    {
+      "kind": "table",
+      "width": 52,
+      "height": 36,
+      "alphaChanged": 0,
+      "colorChanged": 860
+    },
+    {
+      "kind": "chair",
+      "width": 18,
+      "height": 25,
+      "alphaChanged": 0,
+      "colorChanged": 199
+    },
+    {
+      "kind": "baseSeat",
+      "width": 24,
+      "height": 28,
+      "alphaChanged": 0,
+      "colorChanged": 192
+    }
+  ],
+  "checkedAt": "2026-11-03T13:19:10.059Z",
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "sourceHashes": {
+    "src/game/v2/art.ts": "862d881884009fd21e252526c6adf1cfc972b553fdecf4443647452bf71ac86d",
+    "src/game/v2/house-shell.ts": "838695ceb0599c1bf7e9cb80806bf550f54cc7b9feb6d1cebcb4e3939e8420bf",
+    "src/art/fixtures.ts": "fb4ee7444cfc924bb59f54aeb5da1b73eb836439e6ea308ce313d4311eab7168",
+    "src/art/rooster.ts": "77394d48de4e07c9bbeb2734c7fd5bb2e6c16789032eec957cfd22eaea793f54",
+    "src/art/rooster-data.ts": "bf21c7a5f5d58bb4718b6258a60710a01cc08b1573b6dce3899292d53fe38907"
+  },
+  "screenshots": [
+    "kitchen-after.png",
+    "garden-after.png",
+    "living-after.png",
+    "bedroom-after.png",
+    "workshop-after.png"
+  ],
+  "result": "PASS"
+}

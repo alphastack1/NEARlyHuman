@@ -1,0 +1,1172 @@
+{
+  "checkedAt": "2026-11-03T13:24:45.854Z",
+  "scope": "Pure offline balance evidence.100000deterministic seeds,4800explicit onset boundaries,96bounded care witnesses,and450controlled worker days across5injected/genesis archetypes×3stat allocations. Fake deterministic care/production selection—not real Jev or player behavior; fixed zero pressure means capacity bound, not payout forecast. No wallet, model, RPC, service store or chain operations.",
+  "raw": {
+    "none": 55045,
+    "gate": 44955,
+    "families": {
+      "rain": 4465,
+      "fire": 4542,
+      "outage": 4452,
+      "seedEater": 4477,
+      "visitor": 4563,
+      "fixtureBreak": 4473,
+      "mishap": 4466,
+      "sickness": 4515,
+      "mood": 4524,
+      "washout": 4478
+    },
+    "onsets": {
+      "1": 20000,
+      "11": 20000,
+      "21": 20000,
+      "31": 20000,
+      "41": 20000
+    },
+    "structural": 15
+  },
+  "onsetArchetypes": {
+    "newHome": {
+      "snapshots": 1200,
+      "rawFamilies": {
+        "fire": 52,
+        "none": 670,
+        "outage": 52,
+        "rain": 53,
+        "mood": 63,
+        "fixtureBreak": 49,
+        "washout": 50,
+        "mishap": 57,
+        "seedEater": 48,
+        "visitor": 60,
+        "sickness": 46
+      },
+      "eligible": {
+        "quiet": 820,
+        "outage": 52,
+        "rain": 53,
+        "mood": 63,
+        "fixtureBreak": 49,
+        "mishap": 57,
+        "visitor": 60,
+        "sickness": 46
+      },
+      "harmful": 327,
+      "witnessAccepted": 24,
+      "witnessRejected": 0,
+      "byKind": {
+        "outage": {
+          "eligible": 52,
+          "sampled": 4,
+          "accepted": 4,
+          "rejected": 0
+        },
+        "mood": {
+          "eligible": 63,
+          "sampled": 4,
+          "accepted": 4,
+          "rejected": 0
+        },
+        "fixtureBreak": {
+          "eligible": 49,
+          "sampled": 4,
+          "accepted": 4,
+          "rejected": 0
+        },
+        "mishap": {
+          "eligible": 57,
+          "sampled": 4,
+          "accepted": 4,
+          "rejected": 0
+        },
+        "visitor": {
+          "eligible": 60,
+          "sampled": 4,
+          "accepted": 4,
+          "rejected": 0
+        },
+        "sickness": {
+          "eligible": 46,
+          "sampled": 4,
+          "accepted": 4,
+          "rejected": 0
+        }
+      }
+    },
+    "established": {
+      "snapshots": 1200,
+      "rawFamilies": {
+        "mishap": 52,
+        "fire": 53,
+        "none": 675,
+        "visitor": 47,
+        "seedEater": 50,
+        "washout": 56,
+        "outage": 66,
+        "sickness": 62,
+        "mood": 51,
+        "fixtureBreak": 51,
+        "rain": 37
+      },
+      "eligible": {
+        "mishap": 52,
+        "quiet": 728,
+        "visitor": 47,
+        "seedEater": 50,
+        "washout": 56,
+        "outage": 66,
+        "sickness": 62,
+        "mood": 51,
+        "fixtureBreak": 51,
+        "rain": 37
+      },
+      "harmful": 435,
+      "witnessAccepted": 32,
+      "witnessRejected": 0,
+      "byKind": {
+        "mishap": {
+          "eligible": 52,
+          "sampled": 4,
+          "accepted": 4,
+          "rejected": 0
+        },
+        "visitor": {
+          "eligible": 47,
+          "sampled": 4,
+          "accepted": 4,
+          "rejected": 0
+        },
+        "seedEater": {
+          "eligible": 50,
+          "sampled": 4,
+          "accepted": 4,
+          "rejected": 0
+        },
+        "washout": {
+          "eligible": 56,
+          "sampled": 4,
+          "accepted": 4,
+          "rejected": 0
+        },
+        "outage": {
+          "eligible": 66,
+          "sampled": 4,
+          "accepted": 4,
+          "rejected": 0
+        },
+        "sickness": {
+          "eligible": 62,
+          "sampled": 4,
+          "accepted": 4,
+          "rejected": 0
+        },
+        "mood": {
+          "eligible": 51,
+          "sampled": 4,
+          "accepted": 4,
+          "rejected": 0
+        },
+        "fixtureBreak": {
+          "eligible": 51,
+          "sampled": 4,
+          "accepted": 4,
+          "rejected": 0
+        }
+      }
+    },
+    "fragile": {
+      "snapshots": 1200,
+      "rawFamilies": {
+        "mishap": 52,
+        "fire": 53,
+        "none": 675,
+        "visitor": 47,
+        "seedEater": 50,
+        "washout": 56,
+        "outage": 66,
+        "sickness": 62,
+        "mood": 51,
+        "fixtureBreak": 51,
+        "rain": 37
+      },
+      "eligible": {
+        "quiet": 1012,
+        "visitor": 34,
+        "outage": 66,
+        "mood": 51,
+        "rain": 37
+      },
+      "harmful": 151,
+      "witnessAccepted": 12,
+      "witnessRejected": 0,
+      "byKind": {
+        "visitor": {
+          "eligible": 34,
+          "sampled": 4,
+          "accepted": 4,
+          "rejected": 0
+        },
+        "outage": {
+          "eligible": 66,
+          "sampled": 4,
+          "accepted": 4,
+          "rejected": 0
+        },
+        "mood": {
+          "eligible": 51,
+          "sampled": 4,
+          "accepted": 4,
+          "rejected": 0
+        }
+      }
+    },
+    "wellSuppliedInjured": {
+      "snapshots": 1200,
+      "rawFamilies": {
+        "mishap": 52,
+        "fire": 53,
+        "none": 675,
+        "visitor": 47,
+        "seedEater": 50,
+        "washout": 56,
+        "outage": 66,
+        "sickness": 62,
+        "mood": 51,
+        "fixtureBreak": 51,
+        "rain": 37
+      },
+      "eligible": {
+        "quiet": 842,
+        "visitor": 47,
+        "seedEater": 50,
+        "washout": 56,
+        "outage": 66,
+        "mood": 51,
+        "fixtureBreak": 51,
+        "rain": 37
+      },
+      "harmful": 358,
+      "witnessAccepted": 28,
+      "witnessRejected": 0,
+      "byKind": {
+        "visitor": {
+          "eligible": 47,
+          "sampled": 4,
+          "accepted": 4,
+          "rejected": 0
+        },
+        "seedEater": {
+          "eligible": 50,
+          "sampled": 4,
+          "accepted": 4,
+          "rejected": 0
+        },
+        "washout": {
+          "eligible": 56,
+          "sampled": 4,
+          "accepted": 4,
+          "rejected": 0
+        },
+        "outage": {
+          "eligible": 66,
+          "sampled": 4,
+          "accepted": 4,
+          "rejected": 0
+        },
+        "mood": {
+          "eligible": 51,
+          "sampled": 4,
+          "accepted": 4,
+          "rejected": 0
+        },
+        "fixtureBreak": {
+          "eligible": 51,
+          "sampled": 4,
+          "accepted": 4,
+          "rejected": 0
+        },
+        "rain": {
+          "eligible": 37,
+          "sampled": 4,
+          "accepted": 4,
+          "rejected": 0
+        }
+      }
+    }
+  },
+  "witnessTotals": {
+    "accepted": 96,
+    "rejected": 0
+  },
+  "capacity": {
+    "days": 450,
+    "runs": [
+      {
+        "name": "healthy",
+        "stats": [
+          2,
+          2,
+          1
+        ],
+        "playedDays": 30,
+        "alive": true,
+        "deathCause": 0,
+        "points": 828,
+        "nhcAtZeroPressure": 82.8,
+        "shippedGoods": 12,
+        "harvestRounds": 18,
+        "woodHarvested": 10,
+        "accepted": 11,
+        "softened": 0,
+        "quiet": 19,
+        "episodes": {
+          "visitor": 2,
+          "sickness": 2,
+          "fixtureBreak": 1,
+          "mishap": 1,
+          "washout": 1,
+          "seedEater": 2,
+          "rain": 2
+        },
+        "actions": {
+          "Pickup": 30,
+          "Quiet": 38,
+          "Breakfast": 30,
+          "Plant": 7,
+          "Leisure": 51,
+          "Well": 13,
+          "Treat": 3,
+          "QuietMain": 1,
+          "Harvest": 18,
+          "Ship": 12,
+          "Repair": 1,
+          "Craft": 2,
+          "Shoo": 3,
+          "RestoreSoil": 1
+        },
+        "providerCalls": 150,
+        "finalNeeds": [
+          10000,
+          8500,
+          8000,
+          10000,
+          6080
+        ]
+      },
+      {
+        "name": "healthy",
+        "stats": [
+          5,
+          0,
+          0
+        ],
+        "playedDays": 30,
+        "alive": true,
+        "deathCause": 0,
+        "points": 841,
+        "nhcAtZeroPressure": 84.1,
+        "shippedGoods": 12,
+        "harvestRounds": 19,
+        "woodHarvested": 10,
+        "accepted": 4,
+        "softened": 0,
+        "quiet": 26,
+        "episodes": {
+          "visitor": 1,
+          "mishap": 3
+        },
+        "actions": {
+          "Pickup": 30,
+          "Quiet": 39,
+          "Breakfast": 30,
+          "Plant": 9,
+          "Leisure": 53,
+          "Well": 14,
+          "Harvest": 19,
+          "Ship": 12,
+          "Treat": 2,
+          "Craft": 1,
+          "QuietMain": 1
+        },
+        "providerCalls": 150,
+        "finalNeeds": [
+          10000,
+          8500,
+          8000,
+          10000,
+          7000
+        ]
+      },
+      {
+        "name": "healthy",
+        "stats": [
+          0,
+          5,
+          0
+        ],
+        "playedDays": 30,
+        "alive": true,
+        "deathCause": 0,
+        "points": 1108,
+        "nhcAtZeroPressure": 110.8,
+        "shippedGoods": 17,
+        "harvestRounds": 12,
+        "woodHarvested": 10,
+        "accepted": 12,
+        "softened": 0,
+        "quiet": 18,
+        "episodes": {
+          "washout": 2,
+          "visitor": 3,
+          "sickness": 3,
+          "seedEater": 1,
+          "rain": 1,
+          "mishap": 2
+        },
+        "actions": {
+          "Pickup": 30,
+          "Quiet": 34,
+          "Breakfast": 30,
+          "Plant": 12,
+          "Leisure": 53,
+          "RestoreSoil": 2,
+          "Well": 13,
+          "Shoo": 2,
+          "Treat": 4,
+          "Harvest": 12,
+          "Ship": 14,
+          "QuietMain": 1,
+          "Craft": 3
+        },
+        "providerCalls": 150,
+        "finalNeeds": [
+          9700,
+          8500,
+          8000,
+          10000,
+          7000
+        ]
+      },
+      {
+        "name": "wounded",
+        "stats": [
+          2,
+          2,
+          1
+        ],
+        "playedDays": 30,
+        "alive": true,
+        "deathCause": 0,
+        "points": 1043,
+        "nhcAtZeroPressure": 104.3,
+        "shippedGoods": 16,
+        "harvestRounds": 13,
+        "woodHarvested": 10,
+        "accepted": 16,
+        "softened": 0,
+        "quiet": 14,
+        "episodes": {
+          "outage": 3,
+          "mood": 2,
+          "fixtureBreak": 2,
+          "visitor": 3,
+          "rain": 1,
+          "mishap": 2,
+          "seedEater": 1,
+          "washout": 1,
+          "sickness": 1
+        },
+        "actions": {
+          "Pickup": 30,
+          "Treat": 4,
+          "Quiet": 35,
+          "Breakfast": 30,
+          "Plant": 11,
+          "Leisure": 55,
+          "Well": 13,
+          "Harvest": 13,
+          "Ship": 12,
+          "Repair": 2,
+          "Craft": 3,
+          "RestoreSoil": 1,
+          "Shoo": 1
+        },
+        "providerCalls": 150,
+        "finalNeeds": [
+          10000,
+          8500,
+          8000,
+          10000,
+          6160
+        ]
+      },
+      {
+        "name": "wounded",
+        "stats": [
+          5,
+          0,
+          0
+        ],
+        "playedDays": 30,
+        "alive": true,
+        "deathCause": 0,
+        "points": 1023,
+        "nhcAtZeroPressure": 102.3,
+        "shippedGoods": 15,
+        "harvestRounds": 14,
+        "woodHarvested": 10,
+        "accepted": 12,
+        "softened": 0,
+        "quiet": 18,
+        "episodes": {
+          "sickness": 1,
+          "fixtureBreak": 2,
+          "visitor": 1,
+          "rain": 4,
+          "outage": 2,
+          "mishap": 1,
+          "mood": 1
+        },
+        "actions": {
+          "Pickup": 30,
+          "Treat": 3,
+          "Quiet": 40,
+          "Breakfast": 30,
+          "Plant": 12,
+          "Leisure": 53,
+          "Well": 11,
+          "Repair": 2,
+          "Harvest": 14,
+          "Ship": 13,
+          "Craft": 2
+        },
+        "providerCalls": 150,
+        "finalNeeds": [
+          10000,
+          8500,
+          8000,
+          10000,
+          5000
+        ]
+      },
+      {
+        "name": "wounded",
+        "stats": [
+          0,
+          5,
+          0
+        ],
+        "playedDays": 30,
+        "alive": true,
+        "deathCause": 0,
+        "points": 738,
+        "nhcAtZeroPressure": 73.8,
+        "shippedGoods": 9,
+        "harvestRounds": 13,
+        "woodHarvested": 10,
+        "accepted": 11,
+        "softened": 0,
+        "quiet": 19,
+        "episodes": {
+          "fixtureBreak": 2,
+          "mishap": 1,
+          "sickness": 2,
+          "outage": 1,
+          "washout": 1,
+          "visitor": 1,
+          "mood": 1,
+          "rain": 2
+        },
+        "actions": {
+          "Pickup": 30,
+          "Treat": 4,
+          "Quiet": 40,
+          "Breakfast": 30,
+          "Plant": 10,
+          "Leisure": 54,
+          "Well": 13,
+          "Repair": 2,
+          "QuietMain": 1,
+          "Harvest": 13,
+          "Ship": 9,
+          "RestoreSoil": 1,
+          "Craft": 3
+        },
+        "providerCalls": 150,
+        "finalNeeds": [
+          10000,
+          8500,
+          8000,
+          10000,
+          6000
+        ]
+      },
+      {
+        "name": "lowStock",
+        "stats": [
+          2,
+          2,
+          1
+        ],
+        "playedDays": 30,
+        "alive": true,
+        "deathCause": 0,
+        "points": 1043,
+        "nhcAtZeroPressure": 104.3,
+        "shippedGoods": 16,
+        "harvestRounds": 12,
+        "woodHarvested": 10,
+        "accepted": 10,
+        "softened": 0,
+        "quiet": 20,
+        "episodes": {
+          "fixtureBreak": 2,
+          "outage": 2,
+          "seedEater": 1,
+          "mishap": 3,
+          "washout": 1,
+          "sickness": 1
+        },
+        "actions": {
+          "Pickup": 30,
+          "Breakfast": 30,
+          "Rest": 1,
+          "Leisure": 57,
+          "Repair": 3,
+          "Quiet": 32,
+          "Plant": 11,
+          "Well": 13,
+          "Shoo": 1,
+          "Harvest": 12,
+          "Ship": 13,
+          "Treat": 3,
+          "Craft": 3,
+          "RestoreSoil": 1
+        },
+        "providerCalls": 150,
+        "finalNeeds": [
+          9500,
+          8000,
+          7300,
+          10000,
+          7080
+        ]
+      },
+      {
+        "name": "lowStock",
+        "stats": [
+          5,
+          0,
+          0
+        ],
+        "playedDays": 30,
+        "alive": true,
+        "deathCause": 0,
+        "points": 913,
+        "nhcAtZeroPressure": 91.3,
+        "shippedGoods": 14,
+        "harvestRounds": 12,
+        "woodHarvested": 10,
+        "accepted": 13,
+        "softened": 0,
+        "quiet": 17,
+        "episodes": {
+          "washout": 3,
+          "sickness": 2,
+          "fixtureBreak": 4,
+          "outage": 1,
+          "rain": 1,
+          "mood": 2
+        },
+        "actions": {
+          "Pickup": 30,
+          "Breakfast": 30,
+          "Rest": 1,
+          "Leisure": 59,
+          "Repair": 5,
+          "Quiet": 31,
+          "Plant": 7,
+          "Well": 14,
+          "Harvest": 12,
+          "Ship": 13,
+          "RestoreSoil": 3,
+          "Treat": 2,
+          "Craft": 3
+        },
+        "providerCalls": 150,
+        "finalNeeds": [
+          10000,
+          8000,
+          7300,
+          10000,
+          4000
+        ]
+      },
+      {
+        "name": "lowStock",
+        "stats": [
+          0,
+          5,
+          0
+        ],
+        "playedDays": 30,
+        "alive": true,
+        "deathCause": 0,
+        "points": 711,
+        "nhcAtZeroPressure": 71.1,
+        "shippedGoods": 10,
+        "harvestRounds": 18,
+        "woodHarvested": 10,
+        "accepted": 9,
+        "softened": 0,
+        "quiet": 21,
+        "episodes": {
+          "rain": 2,
+          "visitor": 1,
+          "washout": 3,
+          "mishap": 1,
+          "sickness": 1,
+          "mood": 1
+        },
+        "actions": {
+          "Pickup": 30,
+          "Breakfast": 30,
+          "Rest": 1,
+          "Leisure": 58,
+          "Repair": 1,
+          "Quiet": 36,
+          "Plant": 7,
+          "Well": 14,
+          "Harvest": 18,
+          "Ship": 9,
+          "RestoreSoil": 3,
+          "Treat": 2,
+          "Craft": 1
+        },
+        "providerCalls": 150,
+        "finalNeeds": [
+          10000,
+          8000,
+          7300,
+          10000,
+          5000
+        ]
+      },
+      {
+        "name": "matureGarden",
+        "stats": [
+          2,
+          2,
+          1
+        ],
+        "playedDays": 30,
+        "alive": true,
+        "deathCause": 0,
+        "points": 1278,
+        "nhcAtZeroPressure": 127.8,
+        "shippedGoods": 20,
+        "harvestRounds": 15,
+        "woodHarvested": 12,
+        "accepted": 9,
+        "softened": 0,
+        "quiet": 21,
+        "episodes": {
+          "fixtureBreak": 1,
+          "mishap": 3,
+          "mood": 2,
+          "rain": 2,
+          "sickness": 1
+        },
+        "actions": {
+          "Well": 13,
+          "Quiet": 32,
+          "Breakfast": 30,
+          "Harvest": 15,
+          "Ship": 17,
+          "Pickup": 29,
+          "Leisure": 54,
+          "Plant": 10,
+          "Repair": 1,
+          "Craft": 3,
+          "Treat": 4,
+          "QuietMain": 1
+        },
+        "providerCalls": 150,
+        "finalNeeds": [
+          10000,
+          8500,
+          8000,
+          10000,
+          5160
+        ]
+      },
+      {
+        "name": "matureGarden",
+        "stats": [
+          5,
+          0,
+          0
+        ],
+        "playedDays": 30,
+        "alive": true,
+        "deathCause": 0,
+        "points": 1278,
+        "nhcAtZeroPressure": 127.8,
+        "shippedGoods": 20,
+        "harvestRounds": 14,
+        "woodHarvested": 11,
+        "accepted": 7,
+        "softened": 0,
+        "quiet": 23,
+        "episodes": {
+          "washout": 2,
+          "visitor": 1,
+          "sickness": 1,
+          "mishap": 1,
+          "rain": 1,
+          "outage": 1
+        },
+        "actions": {
+          "Well": 14,
+          "Quiet": 35,
+          "Breakfast": 30,
+          "Harvest": 14,
+          "Ship": 15,
+          "Pickup": 29,
+          "Leisure": 53,
+          "Plant": 10,
+          "Craft": 3,
+          "RestoreSoil": 2,
+          "Shoo": 1,
+          "Treat": 2,
+          "QuietMain": 1
+        },
+        "providerCalls": 150,
+        "finalNeeds": [
+          10000,
+          8500,
+          8000,
+          10000,
+          7000
+        ]
+      },
+      {
+        "name": "matureGarden",
+        "stats": [
+          0,
+          5,
+          0
+        ],
+        "playedDays": 30,
+        "alive": true,
+        "deathCause": 0,
+        "points": 1278,
+        "nhcAtZeroPressure": 127.8,
+        "shippedGoods": 20,
+        "harvestRounds": 13,
+        "woodHarvested": 11,
+        "accepted": 10,
+        "softened": 0,
+        "quiet": 20,
+        "episodes": {
+          "visitor": 2,
+          "fixtureBreak": 2,
+          "outage": 1,
+          "mishap": 2,
+          "rain": 1,
+          "sickness": 1,
+          "seedEater": 1
+        },
+        "actions": {
+          "Well": 14,
+          "Quiet": 35,
+          "Breakfast": 30,
+          "Harvest": 13,
+          "Ship": 15,
+          "Pickup": 29,
+          "Leisure": 52,
+          "Plant": 11,
+          "Craft": 3,
+          "Repair": 2,
+          "Treat": 3,
+          "QuietMain": 1,
+          "Shoo": 1
+        },
+        "providerCalls": 150,
+        "finalNeeds": [
+          10000,
+          8500,
+          8000,
+          10000,
+          6000
+        ]
+      },
+      {
+        "name": "workshop",
+        "stats": [
+          2,
+          2,
+          1
+        ],
+        "playedDays": 30,
+        "alive": true,
+        "deathCause": 0,
+        "points": 1788,
+        "nhcAtZeroPressure": 178.8,
+        "shippedGoods": 19,
+        "harvestRounds": 11,
+        "woodHarvested": 10,
+        "accepted": 6,
+        "softened": 0,
+        "quiet": 24,
+        "episodes": {
+          "mishap": 1,
+          "rain": 1,
+          "outage": 1,
+          "mood": 1,
+          "washout": 1,
+          "seedEater": 1
+        },
+        "actions": {
+          "Pickup": 29,
+          "Quiet": 39,
+          "Breakfast": 30,
+          "Craft": 5,
+          "Ship": 15,
+          "Leisure": 53,
+          "Plant": 12,
+          "Treat": 1,
+          "QuietMain": 1,
+          "Well": 12,
+          "Harvest": 11,
+          "RestoreSoil": 1
+        },
+        "providerCalls": 150,
+        "finalNeeds": [
+          10000,
+          8500,
+          8000,
+          10000,
+          7120
+        ]
+      },
+      {
+        "name": "workshop",
+        "stats": [
+          5,
+          0,
+          0
+        ],
+        "playedDays": 30,
+        "alive": true,
+        "deathCause": 0,
+        "points": 1658,
+        "nhcAtZeroPressure": 165.8,
+        "shippedGoods": 17,
+        "harvestRounds": 14,
+        "woodHarvested": 10,
+        "accepted": 15,
+        "softened": 0,
+        "quiet": 15,
+        "episodes": {
+          "mood": 3,
+          "seedEater": 1,
+          "rain": 1,
+          "visitor": 1,
+          "fixtureBreak": 2,
+          "sickness": 4,
+          "outage": 1,
+          "mishap": 2
+        },
+        "actions": {
+          "Pickup": 29,
+          "Quiet": 30,
+          "Breakfast": 30,
+          "Craft": 5,
+          "Ship": 16,
+          "Leisure": 52,
+          "Plant": 8,
+          "Well": 13,
+          "Shoo": 2,
+          "Harvest": 14,
+          "Repair": 3,
+          "Treat": 7
+        },
+        "providerCalls": 150,
+        "finalNeeds": [
+          10000,
+          8500,
+          8000,
+          10000,
+          1000
+        ]
+      },
+      {
+        "name": "workshop",
+        "stats": [
+          0,
+          5,
+          0
+        ],
+        "playedDays": 30,
+        "alive": true,
+        "deathCause": 0,
+        "points": 1638,
+        "nhcAtZeroPressure": 163.8,
+        "shippedGoods": 16,
+        "harvestRounds": 15,
+        "woodHarvested": 10,
+        "accepted": 9,
+        "softened": 0,
+        "quiet": 21,
+        "episodes": {
+          "rain": 3,
+          "visitor": 1,
+          "sickness": 1,
+          "fixtureBreak": 3,
+          "washout": 1
+        },
+        "actions": {
+          "Pickup": 29,
+          "Quiet": 39,
+          "Breakfast": 30,
+          "Craft": 4,
+          "Ship": 16,
+          "Leisure": 52,
+          "Plant": 8,
+          "Well": 12,
+          "Harvest": 15,
+          "Treat": 1,
+          "Repair": 2,
+          "RestoreSoil": 1
+        },
+        "providerCalls": 150,
+        "finalNeeds": [
+          10000,
+          8500,
+          8000,
+          10000,
+          7000
+        ]
+      }
+    ],
+    "allSurvived": true,
+    "accepted": 154,
+    "softened": 0,
+    "quiet": 296,
+    "byName": [
+      {
+        "name": "healthy",
+        "playedDays": 90,
+        "accepted": 27,
+        "softened": 0,
+        "allSurvived": true,
+        "nhcAtZeroPressureRange": [
+          82.8,
+          110.8
+        ],
+        "wateringActionsPer30Days": [
+          13,
+          14,
+          13
+        ]
+      },
+      {
+        "name": "wounded",
+        "playedDays": 90,
+        "accepted": 39,
+        "softened": 0,
+        "allSurvived": true,
+        "nhcAtZeroPressureRange": [
+          73.8,
+          104.3
+        ],
+        "wateringActionsPer30Days": [
+          13,
+          11,
+          13
+        ]
+      },
+      {
+        "name": "lowStock",
+        "playedDays": 90,
+        "accepted": 32,
+        "softened": 0,
+        "allSurvived": true,
+        "nhcAtZeroPressureRange": [
+          71.1,
+          104.3
+        ],
+        "wateringActionsPer30Days": [
+          13,
+          14,
+          14
+        ]
+      },
+      {
+        "name": "matureGarden",
+        "playedDays": 90,
+        "accepted": 26,
+        "softened": 0,
+        "allSurvived": true,
+        "nhcAtZeroPressureRange": [
+          127.8,
+          127.8
+        ],
+        "wateringActionsPer30Days": [
+          13,
+          14,
+          14
+        ]
+      },
+      {
+        "name": "workshop",
+        "playedDays": 90,
+        "accepted": 30,
+        "softened": 0,
+        "allSurvived": true,
+        "nhcAtZeroPressureRange": [
+          163.8,
+          178.8
+        ],
+        "wateringActionsPer30Days": [
+          12,
+          13,
+          12
+        ]
+      }
+    ]
+  },
+  "careBoundaries": {
+    "scope": "Pure canonical authority edge fixtures; explicit injected deficit/due-illness boundary states. No real AI, player study, chain/service/key/budget operation.",
+    "neglect": {
+      "warningDay": 2,
+      "foodAndWaterDueDay": 3,
+      "warningHealth": 7000,
+      "secondUnfedDayDies": true,
+      "cause": "starvation"
+    },
+    "suppliedDawnBreakfast": {
+      "alive": true,
+      "food": 1500,
+      "water": 1500,
+      "resolvedBothDeficits": true
+    },
+    "unrescuableOnset": {
+      "seed": "0x0000000000000000000000000000000000000000000000000000000000000091",
+      "day": 6,
+      "kind": "outage",
+      "softened": true,
+      "preexistingIllnessStillNeedsCare": true
+    },
+    "pass": true
+  },
+  "structuralCumulativeChanceByPlayedDays": {
+    "30": 0.007224682001087723,
+    "100": 0.024449248630602716,
+    "365": 0.08699267634935315,
+    "1000": 0.22102881533349616,
+    "2773": 0.49996972852376764,
+    "4000": 0.6320745671911572
+  }
+}

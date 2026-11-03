@@ -1,0 +1,177 @@
+{
+  "scope": "Pure keyless current observed-event metadata proof over10actual deterministic proposal families plus smoke, resolved/expired/future/quiet filters and one controlled same-policy before/after worker day. Explicit rich boundary fixture, not live Jev inference. No network, keys, AI, chain/service operations.",
+  "mind": "v2-mind-observed-episodes-8",
+  "oldDecisionConfig": "0x5f8f7f1d79381d02783c3960fa2b8f12da19cac75f6b483aece39f0f73766892",
+  "newDecisionConfig": "0xcc1fb25ff8a461f77768c721deb2f4ec3512355246020f2e6efb0161e1a3d1dc",
+  "allTenCurrentFamilies": [
+    {
+      "kind": "mishap",
+      "onset": 11,
+      "boundary": 20,
+      "target": {
+        "body": true
+      },
+      "beforeRequestHash": "bcba4127f58c003b77d611a9cbb362c077fc75cf08271be04ae102d48a65861c",
+      "afterRequestHash": "ee136444a574e4f4897d95261de3df8974516a30f597b3354b6c8feea433d16f",
+      "bytes": 10415,
+      "sameCandidates": true,
+      "actualBoundaryFacts": {
+        "additional_effect": "None; the observed onset effects are already in current state."
+      }
+    },
+    {
+      "kind": "fire",
+      "onset": 21,
+      "boundary": 30,
+      "target": {
+        "fixture": "stove"
+      },
+      "beforeRequestHash": "7eccbda3cef98a018d9774fb1dc16b2f101b6902d858eb27d710b416ee56391c",
+      "afterRequestHash": "4a79a407a0c711058059326d54763b85a4dad11056948e848bdd3a2405023cbe",
+      "bytes": 5686,
+      "sameCandidates": true,
+      "actualBoundaryFacts": {
+        "if_flame_remains": {
+          "health_loss": 19.2,
+          "wound_severity": 2,
+          "wound_due_game_day": 7,
+          "kitchen_mess_increase_up_to": 1
+        }
+      }
+    },
+    {
+      "kind": "visitor",
+      "onset": 41,
+      "boundary": 50,
+      "target": {
+        "stock": "bread"
+      },
+      "beforeRequestHash": "90963d4353105715eeeddff2763cd6a927db21b3e8c5b28e79fd3998ac4bb054",
+      "afterRequestHash": "5905f244762fa9feb0bdaac3deb9c0fb086b7d825ecb93d8a0aee24c9ad74a46",
+      "bytes": 10588,
+      "sameCandidates": true,
+      "actualBoundaryFacts": {
+        "stock_loss_if_still_present_and_unresolved": {
+          "item": "bread",
+          "units": 1
+        }
+      }
+    },
+    {
+      "kind": "seedEater",
+      "onset": 41,
+      "boundary": 50,
+      "target": {
+        "bed": 1
+      },
+      "beforeRequestHash": "c05def82e8a2b6230c8a38b8cd389c098f92dc5c45d73d2491eb5825cfb103eb",
+      "afterRequestHash": "16e63e410bb949e79a0d7cdf4b57a87dae51cc3f2585813eafe3ec07e1d9da90",
+      "bytes": 10653,
+      "sameCandidates": true,
+      "actualBoundaryFacts": {
+        "if_target_is_still_growing": {
+          "growth_delay_up_to_wet_bedtimes": 1,
+          "capped_at_current_growth_cycle": true
+        },
+        "stops_if_resolved": true
+      }
+    },
+    {
+      "kind": "washout",
+      "onset": 21,
+      "boundary": 30,
+      "target": {
+        "bed": 1
+      },
+      "beforeRequestHash": "9174469873e27aee619298ff6e5371729a32dd53a77a2ee9045076bfd4a33e9a",
+      "afterRequestHash": "f01c2174637d6b633fbc2e91dfa53dece5cd484735b92b422115337960500ebb",
+      "bytes": 9711,
+      "sameCandidates": true,
+      "actualBoundaryFacts": {
+        "additional_effect": "None; the observed onset effects are already in current state."
+      }
+    },
+    {
+      "kind": "outage",
+      "onset": 11,
+      "boundary": 20,
+      "target": {},
+      "beforeRequestHash": "268f6f79eacb8ac950bc3b1bb6ac0986873dbdcf0827f2c8531f2d33ffde65c8",
+      "afterRequestHash": "c261367a2c6480e244bf04a60e494b96e7e304cf4cbbca492c418c69a87fc672",
+      "bytes": 10132,
+      "sameCandidates": true,
+      "actualBoundaryFacts": {
+        "additional_effect": "None; the observed onset effects are already in current state."
+      }
+    },
+    {
+      "kind": "sickness",
+      "onset": 31,
+      "boundary": 40,
+      "target": {},
+      "beforeRequestHash": "3361e471073b333ecf13f50e4de9697822ea958d6d909a2896dfa4fc3bc85021",
+      "afterRequestHash": "776630505fc68211c9574d44e4a84eba76bb33bd7b81448e2f23adece557b992",
+      "bytes": 10406,
+      "sameCandidates": true,
+      "actualBoundaryFacts": {
+        "additional_effect": "None; the observed onset effects are already in current state."
+      }
+    },
+    {
+      "kind": "mood",
+      "onset": 11,
+      "boundary": 20,
+      "target": {},
+      "beforeRequestHash": "13afc4bf999e8b2199d2d3b8b610bc39caa72e8e9e891a0f6e09f67ee0208ecd",
+      "afterRequestHash": "e4af4fdb830d6e6a8c30cb8ad31a9db6a19a4414de6eac31d39ae9dae667b777",
+      "bytes": 9694,
+      "sameCandidates": true,
+      "actualBoundaryFacts": {
+        "additional_effect": "None; the observed onset effects are already in current state."
+      }
+    },
+    {
+      "kind": "fixtureBreak",
+      "onset": 41,
+      "boundary": 50,
+      "target": {
+        "fixture": "chair"
+      },
+      "beforeRequestHash": "8324cec5441f3c0a0cf73e2cabbdbd4eea316997f4a897e56d00f977855862c4",
+      "afterRequestHash": "f62eaaec184688a81b5a1446e141fdac0d44c550fa61b54f44a121b31be05d69",
+      "bytes": 9724,
+      "sameCandidates": true,
+      "actualBoundaryFacts": {
+        "additional_effect": "None; the observed onset effects are already in current state."
+      }
+    },
+    {
+      "kind": "rain",
+      "onset": 31,
+      "boundary": 40,
+      "target": {
+        "fixture": "window"
+      },
+      "beforeRequestHash": "1d60cb0b55426c75b589a1e42e6ee587e67636a9bc692b514cfacad5bb088076",
+      "afterRequestHash": "bc19ae800e3c2d0fee57a2870cf7b2f8bb139a53f7c890828543a067ccb12836",
+      "bytes": 5708,
+      "sameCandidates": true,
+      "actualBoundaryFacts": {
+        "health_loss_unless_covered": 11.52,
+        "stock_loss_if_still_present": {
+          "item": "water",
+          "units": 1
+        }
+      }
+    }
+  ],
+  "noFutureSeedOrCertificate": true,
+  "sameOfferedCandidates": true,
+  "sameAuthorityOutcomeForControlledChoices": true,
+  "providerCalls": {
+    "before": 5,
+    "after": 5
+  },
+  "sourceMaxChoices": 8,
+  "pass": true
+}

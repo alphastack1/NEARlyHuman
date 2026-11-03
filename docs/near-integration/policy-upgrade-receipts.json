@@ -1,0 +1,22 @@
+{
+  "scope": "Actual LOCAL Sandbox code-only upgrade of pre-existing initialized contract/NFTs and saved day records. Uses only disposable local validator key; no public chain, developer wallet, service store, model or budget operation. One local failed-attempt fixture proves pending nonshipping days block policy updates.",
+  "wasmBytes": 489972,
+  "sha256": "d1fc9ae7ad38895ede3dca756100f1e56583b312fb45349aa963b18f9792f880",
+  "oldCodeHash": "BMxLckeFy9Sg2ynJB9CpkPdXjzA6v1c1JwL26WzHpscV",
+  "newCodeHash": "F8hcchfZEbdVzEpKaFxM65LsVHiZSs2Lu72TLbRC1PfV",
+  "oldPolicy": "0x86ae35d58a6aa3b5742df94ef9d7162219f0106a911ae1954c1f0604aaec805d",
+  "newPolicy": "0xcc1fb25ff8a461f77768c721deb2f4ec3512355246020f2e6efb0161e1a3d1dc",
+  "initializedStateUpgradePreserved": true,
+  "unauthorizedRejected": true,
+  "unpausedRejected": true,
+  "pendingNonshippingRejected": true,
+  "zeroAndSameRejected": true,
+  "pausedDrainedUpdateSucceeded": true,
+  "existingNFTStatesAndRecordsUnchanged": true,
+  "policyUpdateEconomicsUnchanged": true,
+  "oldRequestPolicyRetained": true,
+  "oldNewEventLogged": true,
+  "transactionCount": 10,
+  "policyUpdateGas": 2165214184142,
+  "pass": true
+}

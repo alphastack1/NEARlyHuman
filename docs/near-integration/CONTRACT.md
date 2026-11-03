@@ -20,8 +20,8 @@ All receipt tests used **localhost 127.0.0.1:3038**, near-sandbox 2.14.0-rc.4 / 
 
 | Operation / case | Actual local measurement |
 | --- | --- |
-| Final Wasm | 486,332 bytes; SHA-256 `99f30e7aee1151218b6cbe8eab8e4bcc8ac13d077b92825dd4c9e814184c40ca` |
-| NEAR code hash | `BMxLckeFy9Sg2ynJB9CpkPdXjzA6v1c1JwL26WzHpscV` |
+| Policy administration candidate Wasm | 489,972 bytes; SHA-256 `d1fc9ae7ad38895ede3dca756100f1e56583b312fb45349aa963b18f9792f880` |
+| Candidate NEAR code hash | `F8hcchfZEbdVzEpKaFxM65LsVHiZSs2Lu72TLbRC1PfV` |
 | Newborn, including NFT, compact Borsh life, FT registration and immutable operation | 1,289 bytes / 0.01289 local NEAR storage stake |
 | Paid day admission | 393 bytes of new storage; about 3.46 Tgas |
 | Final day record, focused cases | 269–285 net new bytes |
@@ -36,6 +36,8 @@ The initial 0.1 NEAR native mint price covers the measured newborn storage. Toke
 Admission retains actual new-request storage costs and escrows 0.01 NEAR for the future day record under the initial 0.02 NEAR minimum processing fee. Escrow is excluded from earned fees. Successful settlement consumes only the record's actual net growth and releases the remainder; failure/expiry releases the unused reserve. Relay funding cannot spend this escrow, storage stake or the operating buffer. Actual fee-funded top-up of **all earned fees while a day was pending** still left that day able to finalize.
 
 ## Authority and custody decisions
+
+The policy administration candidate adds only `set_decision_config`: the owner must pause admissions and drain every paid day before updating a nonzero, different mind fingerprint. The existing native storage escrow provides the drain check even for nonshipping days; no storage fields or kernel rules change. Three focused host checks and an actual initialized local code upgrade preserved both NFTs and saved day records ([receipts](policy-upgrade-receipts.json)). The previous reviewed `BMxLckeFy9Sg2ynJB9CpkPdXjzA6v1c1JwL26WzHpscV` artifact and manifest remain in [Mind7 history](../../contracts/near/artifacts/history/mind7/).
 
 - Operation IDs are bound to the immediate expected owner and exact payload. A retry returns the stored outcome and refunds newly attached deposit; it never repeats a mint, burn or withdrawal. FT unregister cannot erase this journal.
 - A direct NFT transfer advances the life revision and purse nonce, even without a biological day. The new actual owner inherits purse rights; approved NFT operators cannot withdraw the purse. Pending days lock ownership transfer.

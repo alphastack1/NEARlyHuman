@@ -26,7 +26,7 @@ export function fixtureCanvas(kind:FixtureArt,opts:ArtOptions={}):HTMLCanvasElem
       outline(p,1,4,30,23,C.beam);p('#d39857',2,5,28,5);p('#e1b578',2,5,28,1);p('#946038',2,11,28,15);
       woodPanel(p,3,13,12,13);woodPanel(p,16,13,13,13);p('#ded1a6',12,18,2,2);p('#ded1a6',18,18,2,2);p(C.outline,3,26,3,2);p(C.outline,27,26,3,2);
       if(kind==='prep'){outline(p,7,6,15,7,'#d2bd88');p('#e6d5a8',9,7,11,4);p('#ae9b6f',10,10,6,1);p('#9da79a',25,3,2,6);p('#d4d7c4',25,2,2,5);}
-      else{outline(p,6,5,20,8,'#8e9d94');p('#c6cdbf',8,6,16,5);p('#6e817e',10,7,12,3);p('#425f64',15,9,3,1);p('#657b79',18,0,3,6);p('#bcc7be',19,0,2,4);p('#4b6365',15,0,5,2);p('#d2dbcb',16,0,4,1);}
+      else{outline(p,6,5,20,8,'#849e96');p('#d6dfcf',8,6,16,5);p('#628d91',10,7,12,3);p('#9ed9d4',11,7,9,1);p('#315966',15,9,3,1);p('#507c83',18,0,3,6);p('#c3dfd6',19,0,2,4);p('#385f6a',15,0,5,2);p('#e5efda',16,0,4,1);p('#3b8ca3',26,7,3,7);p('#8dcec9',26,7,3,1);p('#d8e7cd',27,9,1,4);}
     }
     if(kind==='pantry'||kind==='cupboard'){
       const width=kind==='cupboard'?28:24;const height=kind==='cupboard'?44:34;
@@ -77,7 +77,7 @@ export function fixtureCanvas(kind:FixtureArt,opts:ArtOptions={}):HTMLCanvasElem
     if(kind==='shelf'){
       p(C.outline,1,13,34,5);p('#9d7046',2,13,32,3);p('#c3995f',2,13,32,1);p('#684d33',6,18,3,2);p('#684d33',28,18,3,2);
       p('#eff0da',9,2,5,11);p('#f6eacf',10,3,3,7);p('#865d3c',15,4,4,9);p('#d1b37a',16,5,2,7);p('#487c4e',23,6,7,7);p('#65a05b',25,2,4,8);p('#88b365',26,2,2,4);
-      if(opts.variant){p(['#e7d6a6','#577e91','#70925c','#b77e54'][opts.variant%4],9,3,4,9);p('#e3dbc1',9,4,4,1);}
+      if(opts.variant){p(['#f0db9f','#3f8fa9','#77a754','#cc795c'][opts.variant%4],9,3,4,9);p('#f1e6c4',9,4,4,1);}
     }
     if(kind==='bedside'){
       p('#332c27',1,15,24,18);p('#67482f',3,16,20,16);p('#a47847',3,17,20,13);p('#d2a264',2,15,22,2);p('#e4b77a',3,15,20,1);

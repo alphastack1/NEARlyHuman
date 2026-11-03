@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Icon } from '../Icons';
 
 export function DayFlow({ stage, complete = false }: { stage: 0 | 1 | 2; complete?: boolean }) {
@@ -15,23 +15,15 @@ export function ProcessGraphic({ stage }: { stage: 'mint' | 'wallet' | 'chain' |
   </div>;
 }
 
-/** Only completed, validated replies enter this log. Polling never fabricates
- * progress, and stable reply IDs keep an old choice from animating twice. */
-export function ChoiceStream({ choices, saving }: { choices: readonly { id: string; stage: 'plan' | 'routine' | 'acute' | 'focus'; label: string; slot?: number }[]; saving: boolean }) {
-  const list = useRef<HTMLOListElement>(null);
-  useEffect(() => { if (list.current) list.current.scrollTop = list.current.scrollHeight; }, [choices.length]);
-  useEffect(() => {
-    const element = list.current; if (!element) return;
-    const observer = new ResizeObserver(() => { element.scrollTop = element.scrollHeight; });
-    observer.observe(element); return () => observer.disconnect();
-  }, [!!choices.length]);
-  if (!choices.length) return null;
-  return <ol ref={list} className="v2-choice-stream" role="log" aria-label="Jev’s completed choices" aria-live="polite" aria-relevant="additions">
-    {choices.map((choice, index) => <li key={choice.id} data-latest={!saving && index === choices.length - 1}>
-      <span className="v2-choice-mark"><Icon name={choice.stage === 'plan' ? 'brain' : 'check'} size={16}/></span>
-      <span><small>{choice.stage === 'plan' ? 'Day plan' : choice.stage === 'acute' ? 'Care' : choice.stage === 'focus' ? 'A little focus' : 'Routine'}</small><strong>{choice.label}</strong></span>
-    </li>)}
-  </ol>;
+/** A response leaves a sealed thought, not an itinerary. The component accepts
+ * only a completed count, so future choices never reach its text or ARIA. */
+export function ThoughtActivity({ completed, saving }: { completed: number; saving: boolean }) {
+  const count = Math.max(0, Math.min(8, Math.floor(completed)));
+  if (!count) return null;
+  return <div className="v2-thought-activity" data-saving={saving} role="status" aria-live="polite" aria-label={`${count} ${count === 1 ? 'thought' : 'thoughts'} ready. The day is still a surprise.`}>
+    <div className="v2-sealed-thoughts" aria-hidden="true">{Array.from({ length: count }, (_, index) => <i key={index} data-latest={!saving && index === count - 1} style={{ animationDelay: `${index % 2 * 80}ms` }}><svg width="22" height="24" viewBox="0 0 22 24" shapeRendering="crispEdges"><path fill="currentColor" d="M2 0h12v2h2v2h2v2h2v18H2z"/><path fill="#fff0c8" d="M4 2h9v6h5v14H4zM15 4v2h2z"/><path fill="#345d62" d="M7 11h8v2H7zM7 16h8v2H7z"/><path fill="#efbb64" d="M9 12h4v6H9z"/></svg></i>)}</div>
+    <span aria-hidden="true">{saving ? 'Sealed and ready.' : 'A little mind at work.'}</span>
+  </div>;
 }
 
 export function BirthReveal({ id, name, egg, rooster, explorer, transaction, onHome, onRetry, busy }: {

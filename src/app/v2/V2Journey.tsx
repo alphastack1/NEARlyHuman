@@ -18,7 +18,7 @@ import { createV2WorldRenderer } from '../../game/v2';
 import { endingNote, filmPacket, itemName, type V2FilmPacket } from '../../v2/presentation';
 import V2Player from './V2Player';
 import { LifeSoundButton, LifeSoundToggle } from './LifeSound';
-import { BirthReveal, ChoiceStream, DayFlow, ProcessGraphic } from './JourneyVisuals';
+import { BirthReveal, ThoughtActivity, DayFlow, ProcessGraphic } from './JourneyVisuals';
 import { NetworkMark, NetworkPicker } from './NetworkPicker';
 import '../v2Journey.css';
 
@@ -816,8 +816,8 @@ function JourneyWorld({ selectedWorld, availableWorlds, snapshot, onWorldSwitch,
     body = <>
       {pendingKind === 'day' && <DayFlow stage={pendingDayJob ? 2 : 1} complete={dayReady}/>}
       <ProcessGraphic stage={dayClosing ? 'saving' : visual}/>
-      {pendingDayJob?.progress?.length ? <ChoiceStream key={pendingDayJob.requestId} choices={pendingDayJob.progress} saving={saving || dayClosing}/> : null}
-      {!(visual === 'ai' && pendingDayJob?.progress?.length && !dayClosing) && <p className="v2-pending-status">{dayClosing ? 'Recording this incomplete attempt onchain.' : saving && !dayReady ? `Saving on ${network?.label || 'the blockchain'}…` : pendingDayJob?.phase === 'queued' ? 'Getting ready for Jev.' : pendingNote}</p>}
+      {pendingDayJob && !dayClosing && !dayRetry && !dayPaused && <ThoughtActivity completed={pendingDayJob.progress?.length || pendingDayJob.decisions} saving={saving}/>}
+      {!(visual === 'ai' && (pendingDayJob?.progress?.length || pendingDayJob?.decisions) && !dayClosing) && <p className="v2-pending-status">{dayClosing ? 'Recording this incomplete attempt onchain.' : saving && !dayReady ? `Saving on ${network?.label || 'the blockchain'}…` : pendingDayJob?.phase === 'queued' ? 'Getting ready for Jev.' : pendingNote}</p>}
       {dayRetry ? <button className="v2-primary" disabled={busy} onClick={retryDay}>Try this day again</button>
         : dayReady ? <button className="v2-primary" disabled={busy} onClick={() => void checkPending()}>{busy ? 'Opening…' : 'Watch day'}</button>
         : canCloseDay ? <button className="v2-primary" disabled={busy} onClick={() => void run('expire')}>{busy ? 'Closing…' : 'Close expired day'}</button>

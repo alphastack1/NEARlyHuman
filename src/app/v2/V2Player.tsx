@@ -53,9 +53,10 @@ export default function V2Player({ packet, life, name, onPrepare, onHatch, onPur
   const approaching = inFlight && !inFlight.impacted && !quietInterlude(inFlight.receipt) ? inFlight.receipt : undefined;
   const homeView = savedHome || (!!homeFirst && !started);
   const actualMain = receipts.slice(0, index + 1).find(r => r.role === 'main');
+  const visibleMain = actualMain || (started && !traveling && !motionPurpose && inFlight?.receipt.role === 'main' ? inFlight.receipt : undefined);
   const plannedFocus = packet?.dailyPlan?.focus as { op?: number; arg?: number; variant?: number } | undefined;
-  const mainDone = packet?.dailyPlan?.status === 'completed' && (homeView || !!actualMain?.success && (!plannedFocus || (actualMain.op === plannedFocus.op && actualMain.arg === plannedFocus.arg && actualMain.variant === plannedFocus.variant)));
-  const undertaking = packet?.dailyPlan?.status === 'unavailable' && actualMain ? receiptTitle(actualMain) : packet?.dailyPlan?.mainLabel;
+  const mainDone = packet?.dailyPlan?.status === 'completed' && !!actualMain?.success && (!plannedFocus || (actualMain.op === plannedFocus.op && actualMain.arg === plannedFocus.arg && actualMain.variant === plannedFocus.variant));
+  const undertaking = visibleMain ? packet?.dailyPlan?.status === 'unavailable' ? receiptTitle(visibleMain) : packet?.dailyPlan?.mainLabel || receiptTitle(visibleMain) : undefined;
   const detail = inspect ? inspectDetail(inspect, snapshot) : undefined;
   const earned = packet?.rewardMicro && BigInt(packet.rewardMicro) > 0n ? (Number(BigInt(packet.rewardMicro)) / 1e6).toLocaleString(undefined, { maximumFractionDigits: 6 }) : '';
   const memory = packet ? dayMemory(packet) : undefined;
