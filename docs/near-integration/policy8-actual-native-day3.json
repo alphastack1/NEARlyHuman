@@ -1,0 +1,41 @@
+{
+  "scope": "Actual public native NEAR contract and sole Cloud ledger; wallet requests were signed through real Meteor Web in the Codex profile. Independent read-only canonical/state/trace/certificate/packet/budget validation; no service write or inference by this verifier.",
+  "checkedAt": "2026-11-03T13:57:29.436Z",
+  "runtime": {
+    "version": 2,
+    "networkId": "near-testnet",
+    "network": "testnet",
+    "collection": "game.nearlyhuman-dev-20261102-26c8bd.testnet",
+    "rpcUrl": "https://test.rpc.fastnear.com",
+    "codeHash": "F8hcchfZEbdVzEpKaFxM65LsVHiZSs2Lu72TLbRC1PfV",
+    "rulesHash": "0xdbba15bd27ab533240cf3d24e0df997d850ca3c4ba598e7d222b3061216d5363",
+    "decisionConfig": "0xcc1fb25ff8a461f77768c721deb2f4ec3512355246020f2e6efb0161e1a3d1dc",
+    "relayer": "relay.nearlyhuman-dev-20261102-26c8bd.testnet",
+    "quoteSigner": "o1P3lNiomtJnS4HQyJyjakTH53m0ESzPC5Buw6KEgU0="
+  },
+  "block": {
+    "height": "276058038",
+    "hash": "AWtki1V5DFX3jxBnF644ZTtQh5HiqxGnV5wtJPsKA1UG",
+    "timestamp": "1793714242"
+  },
+  "id": "1",
+  "day": 3,
+  "name": "FERN",
+  "owner": "nearlyhuman-dev-20261102-26c8bd.testnet",
+  "requestId": "0x19e01bb159ee94d432edbb296c84b072a51d6ce325c98c1a07fd817c664efb0e",
+  "commitment": "0x528b36c2098beeb9237e242ef3abca5c71f6dcec3eff2ee05e45271df861ee7b",
+  "ownerTx": "9xjNHp14yKifkkZkso6XahBeddgHy36UewVQUMUij1zK",
+  "finalTx": "EzAvEvp57DH8jmM78raM72cupzsn1kJtmD4uTAQuTu3",
+  "paidSends": 5,
+  "chargedMicroUSD": 709,
+  "receiptCount": 60,
+  "quoteRetired": true,
+  "aiHoldInactive": true,
+  "gasHoldAbsent": true,
+  "canonicalMatch": true,
+  "phase": "ready",
+  "pass": true,
+  "origin": "https://nearlyhuman.netlify.app",
+  "publicReplayMatches": true,
+  "completedReplies": 5
+}

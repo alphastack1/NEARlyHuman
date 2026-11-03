@@ -1,47 +1,51 @@
-# Native NEAR integration — complete
+# NEARlyHuman — current completed release
 
-Completed 3 November 2026. Owner-authorized full NEAR Testnet + Meteor integration and subsequent physical-item/HUD/real-Jev-progress refinements are implemented, independently reviewed and published. Robinhood remains working. Neither mainnet was enabled.
+Updated 3 November 2026. The native NEAR integration and the subsequent spoiler/event/environment refinement are complete and published. Continue future work from the release below. Neither mainnet is enabled.
 
-## Published release
+## Current publication
 
-- Site: https://nearlyhuman.netlify.app
-- Main/source commit: 768aff93f3f59f721cf925eea3efb07da674fbe4.
-- Netlify deploy: 6ae9d6956d952f94c9a1b94c; published 2026-11-03T12:42:40.410Z.
-- Actual public entry: /assets/index-BWmA2cQo.js. Exactly one production push for this integration; post-release evidence is committed locally without another deployment.
-- Both actual worlds appear in /api/game/worlds. Explicit per-world links, wallet balances, roosters, parcels, UI return context and authority stay separate. There is no asset bridge.
+- Live site: https://nearlyhuman.netlify.app
+- Source/main commit: 72b9ab82206d57e1c98fa92afdd63aeb2af494a7.
+- Netlify deployment: 6ae9e4f6d4193cf5b371adcb, published 2026-11-03T13:43:59.850Z; actual entry /assets/index-CJPCiVIn.js.
+- Exactly one production push for this refinement. The remaining verification records are a local documentation commit, without another deployment.
+- Robinhood Testnet 46630 and native NEAR Testnet are both open. Lives, purses, inventory and UI context remain chain-specific; no bridge.
 
-## Actual end-to-end evidence
+## Latest owner feedback handled
 
-Native game: game.nearlyhuman-dev-20261102-26c8bd.testnet. Relay: relay.nearlyhuman-dev-20261102-26c8bd.testnet. Original developer account nearlyhuman-dev-20261102-26c8bd.testnet remains unchanged.
+Completed Jev replies now produce sealed thought icons only. Upcoming action labels never enter loading text or ARIA, and the main undertaking stays hidden until the rooster reaches that actual work. Crafting does not show its successful output in advance. The separate blue onchain-save stage remains.
 
-FERN #1 was minted through actual Meteor Web in the separate Codex Browser profile. Native Day 1 used real NEP413 sign-in and5 Jev sends, then saved 60 canonical receipts. See actual-native-day.json and actual-public-contract-review.json.
+House and outdoor scenery have warmer wood/cream, clearer framing and object materials, brighter greens/blues/textiles and small border flowers. Four raised beds sit in grass with narrow gravel lanes at the unchanged walk/contact anchors. Nine scenery texture copies retain every alpha value and dimension. Canonical src/art/rooster.ts and rooster-data.ts remain unchanged.
 
-After publication, real Meteor on nearlyhuman.netlify.app verified its own hosted-domain NEP413 challenge, admitted FERN Day 2, displayed5 actual completed Jev replies, showed the separate saving stage and completed the native save. Main project Plant Wood tree; routines included watering, breakfast, leisure and a nap. Actual cost634 microUSD. Request0x5e76cbd5128ea4a4f09ddaf48baaf25b2832c87e8f389bcd7435f9da7f28fc84; owner transactionE3TtAyfXGyRtyUqtgRcdKGmZKALNYHL5BRWXbMGc8uRx; saveEmqTXgnHFg4Z5vz4WCfQHVPhMtWpYi5LgjHVNiYG5azy. Public replay, actual sole Cloud packet and all onchain hashes agree. This job's quote, AI allowance and relay hold are retired. See actual-native-hosted-day2.json, actual-hosted-native-day2-review.json and published/real-progress.json.
+Recorded rain/visitors appear only at receipt impact. Weather, fire/smoke, breakage, outages and actual stock loss have readable local effects. Seed-eating birds and hungry cats are distinct. A departing cat carries an item only if an actual boundary loss proves it; ambiguous changes invent no cause. Precise breakage captions and a brief offscreen camera glance reveal the affected fixture without moving the rooster. Seek/reset/pause/manual focus are scoped correctly.
 
-Robinhood SAGE #7 was actually minted and advanced through its first real Jev day using the candidate and a bounded Node-held EIP1193 review signer. Independent replay matched all 60 complete receipts and onchain hashes;2 confirmed owner transactions and0 page errors. This does not claim human Rabby popup testing. See actual-rh-regression.json.
+## Events, balance and known limits
 
-Final hosted reviews:22 GET API/metadata/scope checks pass;10 phone captures at 320/390/430 pass, no page errors or app writes. Exact native life and portrait, real two-world picker, Meteor choice and separate native/RH return context pass. See hosted-public-readback.json and hosted-review/FINAL_PHONE_REVIEW.md.
+The existing authority has ten primary event families with a 45% nominal gate before eligibility/rescue checks. NPC barter/trading does not exist. Do not present the hungry visitor or shipping reward as an NPC market.
 
-## Logical item and care feedback
+The bounded research covered 100,000 seed draws, 96 care witnesses and 450 canonical offline days (five starts/three stat allocations). Supplied trajectories remained feasible with four beds, roughly 11–14 shared watering actions per 30 days. Separate neglect/rescue fixtures prove actual failure and recovery. These are controlled offline choices, not universal survival or live-Jev performance claims.
 
-One presentation mapping connects item storage, furniture inspection, fetching, carrying, use and putaway. Actual FERN Day 1 with the refined sublegs completes naturally in 92.036 seconds at 1x; unchanged packet/result and exact final canonical state. Representative care/craft/two-bed watering each call the canonical impact once.28 grouped item/route checks and all 34storage classifications pass. Recipe caps distinguish actual consumed inputs from incidental same-item losses. The misleading healthy-soil water-bottle count and indoor-stock count at the irrigation well are removed. See playback/PHYSICAL_ITEM_FLOW.md.
+Two deeper rule tradeoffs remain: normal worker timing makes primary fires unavailable, although task-complication fires occur; an independent 1/4000 structural death draw after day 1 is not mitigated by care. They were documented, not changed under existing NFT rules. See ../research/WORLD_EVENT_BALANCE.md and compact evidence.
 
-Care impacts briefly highlight actual need gains and meaningful injury losses. Passive decay, work costs, seeks and resets stay quiet. Actual FERN breakfast +30% food / +33% water fits at 390 and 320. See hud/review.json. No canonical rooster artwork changed.
+Mind 8 now gives Jev only already-observed event targets, response windows and conditional consequences. It does not expose future events/seeds/witnesses or change candidates, care limits, growth, economics or inference caps. New decisionConfig is 0xcc1fb25ff8a461f77768c721deb2f4ec3512355246020f2e6efb0161e1a3d1dc.
 
-Completed-reply progress is bounded, whitelisted and deduplicated. It contains finite-choice labels only, creates no inference, and never enters the replay commitment. Stale/error checks remain reachable. See progress-ui/README.md and published/.
+## Native upgrade and preserved history
 
-## Authority and build
+Native collection: game.nearlyhuman-dev-20261102-26c8bd.testnet. Original owner: nearlyhuman-dev-20261102-26c8bd.testnet. Original relay remains configured. Current code hash F8hcchfZEbdVzEpKaFxM65LsVHiZSs2Lu72TLbRC1PfV; Wasm 489,972 bytes / SHA256 d1fc9ae7ad38895ede3dca756100f1e56583b312fb45349aa963b18f9792f880. Public identity/history:contracts/near/deployments/testnet.json.
 
-Final Wasm code hash BMxLckeFy9Sg2ynJB9CpkPdXjzA6v1c1JwL26WzHpscV; artifact SHA256 99f30e7aee1151218b6cbe8eab8e4bcc8ac13d077b92825dd4c9e814184c40ca, 486332 bytes. All 4 committed source hashes exactly match its build record; native .gitattributes preserves the two byte-exact CRLF source files. Initial staging code was upgraded before any public life/day to close Wasm32 high-bit array-count aliasing, with actual malformed-Wasm rejection and canonical same-request recovery. No state reset.
+A minimal owner-only policy setter requires paused admissions, zero pending-day escrow and a nonzero/different policy. It changes no storage schema or game kernel. Three focused host tests and ten actual LOCAL Sandbox upgrade receipts passed before the public operation. The public code-only upgrade preserved all 14 contract-data entries byte-for-byte at pinned before/after blocks (digest 12e0c51a69e430971c08a4c7f7879774d9214e0435fa1103b1bdd0ead138d038). Policy was then updated and admissions reopened. The previous reviewed binary/manifest are retained under artifacts/history/mind7 with their original source commit.
 
-Native NEP171NFT and NEP141NHC share one account; purse follows ownership. Direct transfer/approvals/enumeration supported; nft_transfer_call explicitly disabled. Native mint 0.1 test NEAR, token birth 250 NHC, birth/withdraw 0.1 NEAR storage upper deposit with unused funding refunded and token recipient registered atomically. Death preserves purse rights. Same deterministic economics as Robinhood, separate supply, no cash promise.
+Historical native films now bind to their own immutable settled request policy at the same final block, rather than today's policy. Actual hosted FERN Days 1/2 retain their exact original Mind 7 commitments after this upgrade. NFT/purse rights, direct transfers and the explicit disabled nft_transfer_call limitation are unchanged. Configuration fields in deployment records are dated operation snapshots; runtime identity is the deployment pin, and actual state comes from finalized reads.
 
-11 contract host checks/82 TS parity vectors and 83 actual localSandbox productive days cover earning, token birth, death, new-owner withdrawal, storage and gas.18 backend cases, 6 RH worker cases, 7 shared client checks, 15 native wallet cases, bounded real/synthetic browser checks, final typecheck/build and Functions packaging pass. These evidence scopes are distinguished throughout the docs; no universal audit claim.
+## Actual live verification
 
-Netlify Node 24 and protected native signer (Functions scope, explicit production context) are configured. No older Lambda runtime override. Existing RH settings and financial ledgers remain intact. Both worlds use the original sole Cloud campaign; no budget/store reset or copy occurred.
+Robinhood SAGE #7 Day 2: one free sign-in, one accepted payment, five sealed thoughts, saving then ready, no page errors. Independent replay matches all 60 receipts/state/trace/certificate/commitment 0x0e1a5d34ff95e38c9eb841174e47034f9c3159272e234686302e2627d4dc0393. No human-Rabby-popup claim: this used the bounded Node-held EIP1193 QA provider. An initial UI harness checked the selected URL before asynchronous navigation finished; it stopped before any signature or payment and was corrected with a readiness wait.
 
-## Credentials and cleanup
+Native FERN #1 Day 3: REAL Meteor Web hosted-domain NEP413 and one native paid transaction. Five real Jev sends,709 microUSD, sealed thoughts→saving→ready; no upcoming action labels in the evidence. Owner tx 9xjNHp14yKifkkZkso6XahBeddgHy36UewVQUMUij1zK; save EzAvEvp57DH8jmM78raM72cupzsn1kJtmD4uTAQuTu3. All 60 steps independently replay from actual Day 2 and match commitment 0x528b36c2098beeb9237e242ef3abca5c71f6dcec3eff2ee05e45271df861ee7b. Quote/AI/relay holds retired. The film was left unwatched for the owner.
 
-All private keys, recovery phrase, raw signed journals and separate Meteor profile password remain outside the repository in their existing DPAPI/private operator locations. Do not print/export/reset them. Desktop shareable wallet guide is updated for the working native game; its separate PRIVATE recovery file is unchanged.
+Final public suite: 25 GET checks passed, both worlds/configs/metadata/SVG/old histories, 401 unauthenticated sessions and 404 mixed/foreign worlds. Actual historical NPC4 Day 1 film played naturally in 81.047 seconds at 1x, no hidden/error/write samples and unchanged packet/result/final state. Its offscreen-break issue was then fixed and verified separately against the exact saved receipt. Final build and Functions packaging pass; 19 backend cases and 16 pure event cases pass. Evidence scopes are explicit; these are not claims of an exhaustive audit.
 
-Temporary tooling/captures/caches stay in ignored TEMP; permanent code/builds have no dependency on its contents. Only owned helper processes and tabs are closed at completion. Owner's main Chrome/profile is untouched. Future work starts from this completed release, not an unfinished native scaffolding task.
+## Working files, keys and cleanup
+
+Use the Codex Browser profile only, never the owner's main Chrome. All keys, recovery phrases, raw signed journals and Meteor password remain outside the checkout in existing encrypted/private workstation locations. Do not print/export/reset them. The shared original Cloud campaign and ledgers were retained, not copied/reset; only authorized testnet operations and real paid Jev runs occurred.
+
+TEMP is disposable tooling/capture/cache storage; no permanent runtime/build source depends on its contents. Owner's shareable Desktop wallet guide now explains sealed thoughts; its PRIVATE recovery file is unchanged. Only owned preview processes, controllers and tabs are closed at completion. No unfinished rollout or extra deployment is required.

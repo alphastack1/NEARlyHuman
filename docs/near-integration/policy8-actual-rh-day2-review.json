@@ -1,0 +1,46 @@
+{
+  "pass": true,
+  "scope": "Independent read-only public hosted RH Day2 replay plus final-pinned public contract/request/record and receipt reads. No native-chain calls, private ledger, key, wallet, browser, auth, quote, inference, service wake or transaction signing. No project or action labels are included.",
+  "checkedAt": "2026-11-03T13:56:06.141Z",
+  "origin": "https://nearlyhuman.netlify.app",
+  "networkId": "robinhood-testnet",
+  "chainId": 46630,
+  "collection": "0x30cb5213fa94020a95893ddb6b07470dbf7a9efc",
+  "id": "7",
+  "name": "SAGE",
+  "day": 2,
+  "decisionConfig": "0xcc1fb25ff8a461f77768c721deb2f4ec3512355246020f2e6efb0161e1a3d1dc",
+  "block": "147735722",
+  "blockHash": "0x678cadc127f0546485a9586ade4cc0ff1ec6c91d84cb81843045b31861ba3fba",
+  "requestId": "0x8b9bfb734c1480b5c520a374b9ebb39befc8eba80471138088061941bb52b19d",
+  "commitment": "0x0e1a5d34ff95e38c9eb841174e47034f9c3159272e234686302e2627d4dc0393",
+  "baseSavedDay1Commitment": "0x8bfeab37db7013e7ac783da8510f2bd35987e4c96cc692f05ee0450d06ec1833",
+  "baseStateHash": "0xf027fb41af2bc3f19dba054c21bfb85de0f3489dcd63825fc71adae4b19c1c1f",
+  "stateHash": "0x5633d35da8ab4f36ba597d3208702c4fd42154c685e20f781c34c0cf9bbb5509",
+  "traceHash": "0xef85ee35b9ab26b5becbba5f1d41c9b404a653f7d7a163379070d8ffee47d789",
+  "certificateHash": "0x07c6cd15be6d217c42b0b785cd468b3b0f8353ee942bb43f31571f3107ee80dd",
+  "receiptCount": 60,
+  "semanticReplayReceiptsHash": "0xe1b33272ab531a1dcb0f647e356dd2e852c4b810c040b0a6797f5c2850eb6718",
+  "baseIsActualSavedDay1": true,
+  "all60ReceiptsReproduced": true,
+  "receiptSnapshotsContinuous": true,
+  "canonicalStateTraceAndCertificate": true,
+  "requestSettled": true,
+  "finalTransaction": {
+    "hash": "0x870898465bf4debbc9a994edbce605885f4be4d744d5451e1548fef72b7a6b24",
+    "success": true,
+    "block": "147732488",
+    "blockHash": "0xdae63af1bda4835a9ed627da66c69dccd19bd7a73b0137f5516dd252cb2e1813"
+  },
+  "publicGets": [
+    {
+      "path": "/api/v2/replay/7?chainId=46630&collection=0x30cb5213fa94020a95893ddb6b07470dbf7a9efc&day=1",
+      "status": 200
+    },
+    {
+      "path": "/api/v2/replay/7?chainId=46630&collection=0x30cb5213fa94020a95893ddb6b07470dbf7a9efc&day=2",
+      "status": 200
+    }
+  ],
+  "transientConnectRetries": []
+}

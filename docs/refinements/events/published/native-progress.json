@@ -1,0 +1,67 @@
+{
+  "scope": "Actual published Meteor/Jev day, observing the real authenticated job responses and rendered app only. No answer labels are printed or stored by this observer. No synthetic responses, extra inference, polling, signatures or service writes by this observer.",
+  "events": [
+    {
+      "at": "2026-11-03T13:56:10.242Z",
+      "status": 200,
+      "requestId": "0x19e01bb159ee94d432edbb296c84b072a51d6ce325c98c1a07fd817c664efb0e",
+      "tokenId": "1",
+      "phase": "preparing",
+      "completed": 0,
+      "ownerTx": "9xjNHp14yKifkkZkso6XahBeddgHy36UewVQUMUij1zK",
+      "screenshot": "native-live-01-preparing-0.png"
+    },
+    {
+      "at": "2026-11-03T13:56:13.088Z",
+      "status": 200,
+      "requestId": "0x19e01bb159ee94d432edbb296c84b072a51d6ce325c98c1a07fd817c664efb0e",
+      "tokenId": "1",
+      "phase": "preparing",
+      "completed": 2,
+      "ownerTx": "9xjNHp14yKifkkZkso6XahBeddgHy36UewVQUMUij1zK",
+      "screenshot": "native-live-02-preparing-2.png"
+    },
+    {
+      "at": "2026-11-03T13:56:15.586Z",
+      "status": 200,
+      "requestId": "0x19e01bb159ee94d432edbb296c84b072a51d6ce325c98c1a07fd817c664efb0e",
+      "tokenId": "1",
+      "phase": "preparing",
+      "completed": 3,
+      "ownerTx": "9xjNHp14yKifkkZkso6XahBeddgHy36UewVQUMUij1zK",
+      "screenshot": "native-live-03-preparing-3.png"
+    },
+    {
+      "at": "2026-11-03T13:56:18.084Z",
+      "status": 200,
+      "requestId": "0x19e01bb159ee94d432edbb296c84b072a51d6ce325c98c1a07fd817c664efb0e",
+      "tokenId": "1",
+      "phase": "preparing",
+      "completed": 5,
+      "ownerTx": "9xjNHp14yKifkkZkso6XahBeddgHy36UewVQUMUij1zK",
+      "screenshot": "native-live-04-preparing-5.png"
+    },
+    {
+      "at": "2026-11-03T13:56:20.607Z",
+      "status": 200,
+      "requestId": "0x19e01bb159ee94d432edbb296c84b072a51d6ce325c98c1a07fd817c664efb0e",
+      "tokenId": "1",
+      "phase": "saving",
+      "completed": 5,
+      "ownerTx": "9xjNHp14yKifkkZkso6XahBeddgHy36UewVQUMUij1zK",
+      "screenshot": "native-live-05-saving-5.png"
+    },
+    {
+      "at": "2026-11-03T13:56:25.997Z",
+      "status": 200,
+      "requestId": "0x19e01bb159ee94d432edbb296c84b072a51d6ce325c98c1a07fd817c664efb0e",
+      "tokenId": "1",
+      "phase": "ready",
+      "completed": 5,
+      "ownerTx": "9xjNHp14yKifkkZkso6XahBeddgHy36UewVQUMUij1zK",
+      "finalTx": "EzAvEvp57DH8jmM78raM72cupzsn1kJtmD4uTAQuTu3",
+      "screenshot": "native-live-06-ready-5.png"
+    }
+  ],
+  "errors": []
+}
