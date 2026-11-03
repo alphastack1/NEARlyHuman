@@ -37,4 +37,4 @@ Wallet software decides how it displays a custom transaction. Verified public so
 
 The four-network catalog does not enable four game deployments. Native NEAR still needs its own wallet/contract/service adapter. The funded native NEAR developer account and owner's private desktop import guide are documented separately in [NEAR testnet preparation](../NEAR_TESTNET_PREPARATION.md). No recovery material is included here.
 
-Final hosted release evidence is recorded separately after publication; the local proof above does not substitute for that check.
+The completed [hosted release check](RELEASE.md) records the actual new SPROUT #5 mint, one sign-in, one day payment, five real Jev sends and independently matched onchain save. The local proof above does not substitute for that separate live check.
