@@ -1,0 +1,44 @@
+{
+  "checkedAt": "2026-11-03T05:47:02.460Z",
+  "scope": "Two actual uninterrupted MISO#1 Day28 normal1x films, same viewport390x844, same public saved request and commitment. Before is published game; after is integrated local candidate. No Pause/Seek/Finish/renderer setters or application writes. Duration includes native render/playback and observer overhead, not an exact timing guarantee.",
+  "requestId": "0x0a11268acafbd6a709eaa5bb8cb965dc41a82430eb330ed4a2dddc6eb625d98b",
+  "commitment": "0xd17903f931ec0917ed8fa59fae2d53af9fd54c52967d8b9c1af987de10292277",
+  "beforeMs": 73209,
+  "afterMs": 61519,
+  "improvementMs": 11690,
+  "improvementPercent": 15.96798207870617,
+  "beforeComplete": true,
+  "afterComplete": true,
+  "beforeHiddenSamples": 0,
+  "afterHiddenSamples": 0,
+  "globalRates": [
+    1
+  ],
+  "finalStory": "Apple +1A wound still needs care.Hatch your own",
+  "actualWingNotice": {
+    "sampleCount": 26,
+    "firstAtMs": 27801.799999952316,
+    "lastAtMs": 30301.399999976158,
+    "firstPhase": "work",
+    "firstReceiptSlot": 31,
+    "firstReceiptImpact": true,
+    "allBeforeImpactSamplesLackNotice": true
+  },
+  "referenceIntegrity": [
+    {
+      "scope": "Exact Response.json parsed replay.packet object returned to the real application, captured before React receives it; same reference serialized again after natural completion.",
+      "requestId": "0x0a11268acafbd6a709eaa5bb8cb965dc41a82430eb330ed4a2dddc6eb625d98b",
+      "commitment": "0xd17903f931ec0917ed8fa59fae2d53af9fd54c52967d8b9c1af987de10292277",
+      "receiptCount": 60,
+      "url": "http://127.0.0.1:5191/api/v2/replay/1?chainId=46630&collection=0x30cb5213fa94020a95893ddb6b07470dbf7a9efc&day=28",
+      "beforeResultHash": "70bc45ec80f65ed6d38fc06a9c1d8260f8adf350a89eade15c2a7517ab784377",
+      "afterResultHash": "70bc45ec80f65ed6d38fc06a9c1d8260f8adf350a89eade15c2a7517ab784377",
+      "beforePacketHash": "aac01d4568371051a7619832182320eac2a7b62d50f82f007b0aacc594e5fff1",
+      "afterPacketHash": "aac01d4568371051a7619832182320eac2a7b62d50f82f007b0aacc594e5fff1",
+      "unchanged": true
+    }
+  ],
+  "errors": [],
+  "writes": [],
+  "pass": true
+}

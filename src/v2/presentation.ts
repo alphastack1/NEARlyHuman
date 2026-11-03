@@ -27,11 +27,11 @@ const recipeName = (arg: number): string => RECIPES[arg]?.name || 'Something new
 
 export function receiptTitle(r: Receipt): string {
   switch (r.op) {
-    case Op.Quiet: return r.slot >= 60 ? 'Lights out.' : 'Just a moment.';
+    case Op.Quiet: return r.slot >= 60 ? 'Goodnight.' : receiptQuietTitle(r);
     case Op.Pickup: return 'The morning post.';
-    case Op.Breakfast: return 'Breakfast first.';
-    case Op.Eat: return 'A bite to eat.';
-    case Op.Drink: return 'A cool drink.';
+    case Op.Breakfast: return r.slot <= 20 ? 'Breakfast first.' : r.slot <= 40 ? 'A late breakfast.' : 'Breakfast for supper.';
+    case Op.Eat: return r.slot <= 20 ? 'A bite to eat.' : r.slot <= 40 ? 'A little lunch.' : 'A little supper.';
+    case Op.Drink: return r.slot >= 45 ? 'One last sip.' : 'A cool drink.';
     case Op.Treat: return 'Taking care.';
     case Op.Wash: return r.arg === 7 ? 'A clean counter.' : 'A little wash.';
     case Op.Rest: return r.slot >= 60 ? 'Goodnight.' : 'Just five more minutes.';
@@ -69,6 +69,43 @@ export function receiptTitle(r: Receipt): string {
   }
 }
 
+/** Route purpose, not a claim that work has already happened. */
+export function receiptTravelTitle(r: Receipt, returning = false): string {
+  if (r.events.some(e => e.kind === 'bedtime') || r.op === Op.Rest) return 'Heading to bed.';
+  if (r.op === Op.Pickup) return returning ? 'Taking the parcel home.' : 'Checking the morning post.';
+  if (r.op === Op.Ship) return 'A parcel for the post box.';
+  if (r.op === Op.Well) return 'Water for the growing beds.';
+  if ([Op.Plant, Op.Harvest, Op.Well, Op.RestoreSoil, Op.Abandon, Op.CoverPlot, Op.CoverRain, Op.Shoo, Op.Bait].includes(r.op)) return 'Out to the garden.';
+  if ([Op.Breakfast, Op.Eat, Op.Drink, Op.RawSteak].includes(r.op)) return 'A visit to the pantry.';
+  if ([Op.Toast, Op.CookSteak, Op.BackupHeat, Op.Douse, Op.Shutdown].includes(r.op)) return 'Over to the stove.';
+  if ([Op.Craft, Op.BuildChair, Op.BuildShelter].includes(r.op)) return 'Over to the workbench.';
+  if (r.op === Op.Coffee) return r.variant === 2 ? 'Over to the stove.' : 'A little coffee ritual.';
+  if (r.op === Op.Leisure) return r.variant === 1 ? 'A little fresh air.' : 'A good seat for a moment.';
+  if (r.op === Op.Wash || r.op === Op.Treat) return 'A little care comes first.';
+  if ([Op.Tidy, Op.DeepClean, Op.Bowl, Op.Sandwich].includes(r.op)) return 'Over to the kitchen counter.';
+  if (r.op === Op.MoveChair) return 'A better spot for the chair.';
+  if (r.op === Op.BraceRain || r.op === Op.Repair || r.op === Op.Patch) return 'Going to put things right.';
+  return 'A little way to go.';
+}
+
+/** A short editorial breath derived only from the saved time of day. */
+export function receiptQuietTitle(r: Receipt): string {
+  if (r.slot <= 10) return 'A slow start.';
+  if (r.slot <= 20) return 'A quiet morning.';
+  if (r.slot <= 30) return 'The afternoon settles in.';
+  if (r.slot <= 40) return 'A little breathing room.';
+  if (r.slot <= 50) return 'An easy evening.';
+  return 'The house settles down.';
+}
+
+/** Call only at receipt impact: these are recorded events, not predicted outcomes. */
+export function receiptEventNote(r: Receipt): string {
+  return r.events.find(e => e.kind === 'death')?.message
+    || r.events.find(e => e.kind === 'condition')?.message
+    || r.events.find(e => e.kind === 'incident' && e.source !== 'quiet')?.message
+    || '';
+}
+
 export function receiptNote(r: Receipt): string {
   if (!r.snapshot.alive) return 'A little life, remembered.';
   if (r.role === 'interlude' && r.op === Op.Quiet || r.events.some(e => e.kind === 'bedtime')) return '';
@@ -94,6 +131,24 @@ export function receiptNote(r: Receipt): string {
 export function quietInterlude(r: Receipt): boolean { return r.role === 'interlude' && r.op === Op.Quiet && !r.events.length && r.slot < 60; }
 
 export interface FilmBeat { start: number; end: number; receipt: Receipt; duration: number }
+function filmWorkDuration(r: Receipt, empty: boolean): number {
+  if (empty) return r.slot <= 20 || r.slot > 40 ? 650 : 500;
+  if (r.role === 'main') return r.op === Op.QuietMain ? 2200 : 5600;
+  if (r.role === 'acute') return 2100;
+  if (receiptEventNote(r)) return 1900;
+  if (r.slot >= 60 || r.events.some(e => e.kind === 'bedtime')) return 1600;
+  switch (r.op) {
+    case Op.Quiet: return 1000;
+    case Op.Drink: return 1050;
+    case Op.Eat: case Op.RawSteak: return 1300;
+    case Op.Breakfast: return 1500;
+    case Op.Coffee: return 1550;
+    case Op.Pickup: return 1350;
+    case Op.Rest: case Op.Leisure: case Op.EnjoyFlower: return 1600;
+    case Op.Treat: case Op.Wash: return 1400;
+    default: return 1350;
+  }
+}
 /** Only empty interludes are condensed. Original indices and all 60 facts remain intact. */
 export function filmBeats(receipts: Receipt[]): FilmBeat[] {
   const beats: FilmBeat[] = [];
@@ -103,7 +158,7 @@ export function filmBeats(receipts: Receipt[]): FilmBeat[] {
     let end = i;
     if (quiet(first)) while (end + 1 < receipts.length && quiet(receipts[end + 1]!)) end++;
     const r = receipts[end]!;
-    const duration = quiet(first) ? 850 : r.role === 'main' ? r.op === Op.QuietMain ? 2200 : 5600 : r.op === Op.Rest && r.slot === 60 ? 1900 : r.role === 'acute' ? 2100 : 1600;
+    const duration = filmWorkDuration(r, quiet(first));
     beats.push({ start: i, end, receipt: r, duration }); i = end;
   }
   return beats;

@@ -3,7 +3,8 @@ import { Icon, type IconName } from '../Icons';
 import { createV2WorldRenderer, type V2WorldController } from '../../game/v2';
 import type { V2PublicLife } from '../../v2/public';
 import { Op, type Receipt, type State } from '../../v2/types';
-import { endingNote, filmBeats, inspectDetail, quietInterlude, receiptNote, receiptTitle, type Inspection, type V2FilmPacket } from '../../v2/presentation';
+import { endingNote, filmBeats, inspectDetail, quietInterlude, receiptEventNote, receiptNote, receiptQuietTitle, receiptTitle, receiptTravelTitle, type Inspection, type V2FilmPacket } from '../../v2/presentation';
+import { dayMemory } from '../../v2/day-memory';
 import '../v2Playback.css';
 import type { CartridgePhase } from '../CartridgeOpening';
 import { LifeSoundButton, useLifeSound } from './LifeSound';
@@ -30,6 +31,8 @@ export default function V2Player({ packet, life, name, onPrepare, onHatch, onPur
   const [inFlight, setInFlight] = useState<{ receipt: Receipt; impacted: boolean }>();
   const [inspect, setInspect] = useState<Inspection>();
   const [error, setError] = useState(false);
+  const [notice, setNotice] = useState<string>();
+  const noticeRemaining = useRef(0);
   const host = useRef<HTMLDivElement>(null);
   const top = useRef<HTMLElement>(null), bottom = useRef<HTMLElement>(null);
   const renderer = useRef<V2WorldController | undefined>(undefined);
@@ -50,8 +53,11 @@ export default function V2Player({ packet, life, name, onPrepare, onHatch, onPur
   const undertaking = packet?.dailyPlan?.status === 'unavailable' && actualMain ? receiptTitle(actualMain) : packet?.dailyPlan?.mainLabel;
   const detail = inspect ? inspectDetail(inspect, snapshot) : undefined;
   const earned = packet?.rewardMicro && BigInt(packet.rewardMicro) > 0n ? (Number(BigInt(packet.rewardMicro)) / 1e6).toLocaleString(undefined, { maximumFractionDigits: 6 }) : '';
-  const title = homeView ? snapshot.alive ? snapshot.day === 0 ? `${roosterName} is home.` : `${roosterName}, at home.` : 'A little life, remembered.' : !started ? `A day with ${roosterName}.` : complete ? snapshot.alive ? 'A little day, well lived.' : 'A little life, remembered.' : approaching ? receiptTitle(approaching) : current ? receiptTitle(current) : 'A new morning.';
-  const note = !snapshot.alive && (homeView || complete) ? `${endingNote(snapshot)}${earned ? ` · +${earned} NHC kept in the purse` : ''}` : complete ? `Day ${targetDay} · Level ${packet?.result.state.level}${earned ? ` · +${earned} NHC` : ''}` : approaching ? '' : current ? current.op === 10 && current.success && earned ? `Sent with care · +${earned} NHC` : receiptNote(current) : '';
+  const memory = packet ? dayMemory(packet) : undefined;
+  const quietBeat = inFlight && quietInterlude(inFlight.receipt) ? inFlight.receipt : undefined;
+  const bedtimeApproach = inFlight && !inFlight.impacted && (inFlight.receipt.op === Op.Rest || inFlight.receipt.events.some(e => e.kind === 'bedtime'));
+  const title = homeView ? snapshot.alive ? snapshot.day === 0 ? `${roosterName} is home.` : `${roosterName}, at home.` : 'A little life, remembered.' : !started ? `A day with ${roosterName}.` : complete ? memory?.headline || 'A little day, well lived.' : bedtimeApproach ? receiptTravelTitle(inFlight.receipt) : traveling && inFlight ? receiptTravelTitle(inFlight.receipt, inFlight.impacted && inFlight.receipt.op === Op.Pickup) : quietBeat ? receiptQuietTitle(quietBeat) : approaching ? receiptTitle(approaching) : current ? receiptTitle(current) : 'A new morning.';
+  const note = !snapshot.alive && (homeView || complete) ? `${endingNote(snapshot)}${earned ? ` · +${earned} NHC kept in the purse` : ''}` : complete ? [memory?.hint, earned ? `+${earned} NHC` : ''].filter(Boolean).join(' · ') : notice || (quietBeat || approaching ? '' : current ? current.op === Op.Ship && current.success && earned ? `Sent with care · +${earned} NHC` : receiptNote(current) : '');
   const prepareAction = (complete || homeView) && !!onPrepare && snapshot.alive;
   const hatchAction = (complete || homeView) && !prepareAction && !!onHatch;
   const primaryLabel = !ready ? 'Opening home…' : error ? 'Try again' : onLatest && (complete || homeView) ? 'Latest home' : prepareAction ? prepareLabel || 'Prepare tomorrow' : hatchAction ? hatchLabel : homeView ? 'Back home' : complete ? 'Watch again' : 'Watch day';
@@ -69,10 +75,20 @@ export default function V2Player({ packet, life, name, onPrepare, onHatch, onPur
     sound.playing(ready && started && snapshot.alive && !paused && !complete && !suspended && !inspect && opening === 'closed');
     return () => sound.playing(false);
   }, [sound.playing, ready, started, snapshot.alive, paused, complete, suspended, inspect, opening]);
+  useEffect(() => {
+    if (!notice) return;
+    let previous = performance.now();
+    const timer = setInterval(() => {
+      const now = performance.now(), delta = now - previous; previous = now;
+      if (!pausedRef.current && !suspended && !document.hidden) noticeRemaining.current -= delta;
+      if (noticeRemaining.current <= 0) setNotice(undefined);
+    }, 100);
+    return () => clearInterval(timer);
+  }, [notice, suspended]);
 
   useEffect(() => {
     const state = homeFirst ? homeState : initial;
-    setReady(false); setError(false); setStarted(false); setComplete(false); setIndex(-1); setSnapshot(state); setInFlight(undefined); exampleRemaining.current = EXAMPLE_LENGTH;
+    setReady(false); setError(false); setStarted(false); setComplete(false); setIndex(-1); setSnapshot(state); setInFlight(undefined); setNotice(undefined); exampleRemaining.current = EXAMPLE_LENGTH;
     const controller = createV2WorldRenderer(host.current!, { state, onInspect: inspectObject, onMotion: ({ traveling }: { traveling: boolean }) => setTraveling(traveling) });
     controller.setInputEnabled(!suspended);
     controller.setOpening(opening);
@@ -111,7 +127,7 @@ export default function V2Player({ packet, life, name, onPrepare, onHatch, onPur
   async function run(from = 0) {
     if (!packet || !receipts.length) return;
     const id = ++generation.current;
-    setInspect(undefined); setStarted(true); setComplete(false); pause(false);
+    setInspect(undefined); setNotice(undefined); setStarted(true); setComplete(false); pause(false);
     const start = Math.max(0, Math.min(receipts.length - 1, from));
     running.current = true;
     renderer.current?.setState(start ? receipts[start - 1]!.snapshot : initial, { history: receipts.slice(0, start), slot: start ? receipts[start - 1]!.slot : 0 });
@@ -125,7 +141,10 @@ export default function V2Player({ packet, life, name, onPrepare, onHatch, onPur
         await renderer.current?.playReceipt(beat.receipt, { duration: beat.duration, onImpact: () => {
           if (generation.current !== id) return;
           setIndex(beat.end); setSnapshot(beat.receipt.snapshot); setInFlight({ receipt: beat.receipt, impacted: true });
+          const incident = receiptEventNote(beat.receipt);
+          if (incident) { noticeRemaining.current = 2600; setNotice(incident); }
           if (!beat.receipt.snapshot.alive && beat.receipt.before.alive) sound.cue('back');
+          else if (incident) sound.cue('back');
           else if (beat.receipt.success && beat.receipt.op === Op.Pickup) sound.cue('parcel');
           else if (beat.receipt.success && beat.receipt.role === 'main' && beat.receipt.op !== Op.QuietMain) sound.cue('project');
         } });
@@ -137,7 +156,7 @@ export default function V2Player({ packet, life, name, onPrepare, onHatch, onPur
     } catch { if (generation.current === id) setError(true); }
   }
   function seek(value: number) {
-    generation.current++; running.current = false; pause(true); setStarted(true); setComplete(false); setInspect(undefined); setInFlight(undefined);
+    generation.current++; running.current = false; pause(true); setStarted(true); setComplete(false); setInspect(undefined); setInFlight(undefined); setNotice(undefined);
     const at = Math.min(receipts.length - 1, Math.max(-1, value));
     const state = at < 0 ? initial : receipts[at]!.snapshot;
     renderer.current?.setState(state, { history: receipts.slice(0, at + 1), slot: at < 0 ? 0 : receipts[at]!.slot }); setSnapshot(state); setIndex(at);
@@ -146,13 +165,13 @@ export default function V2Player({ packet, life, name, onPrepare, onHatch, onPur
     if (pausedRef.current) { if (running.current) pause(false); else void run(index + 1); } else pause(true);
   }
   function endExample() {
-    generation.current++; running.current = false; setStarted(false); setComplete(false); setInFlight(undefined); setInspect(undefined); pause(false);
+    generation.current++; running.current = false; setStarted(false); setComplete(false); setInFlight(undefined); setInspect(undefined); setNotice(undefined); pause(false);
     renderer.current?.setState(initial, { slot: 0 }); setSnapshot(initial); setIndex(-1);
     endExampleAction.current?.();
   }
   function finishDay() {
     if (!packet) return;
-    generation.current++; running.current = false; setInspect(undefined); setInFlight(undefined); setStarted(true); setComplete(true);
+    generation.current++; running.current = false; setInspect(undefined); setInFlight(undefined); setNotice(undefined); setStarted(true); setComplete(true);
     renderer.current?.setState(packet.result.state, { history: receipts, slot: receipts.at(-1)?.slot || 60 });
     setSnapshot(packet.result.state); setIndex(receipts.length - 1); pause(false);
   }
@@ -187,7 +206,7 @@ export default function V2Player({ packet, life, name, onPrepare, onHatch, onPur
         {!!detail.stock?.length && <div className="v2-stock">{detail.stock.map(item => <span key={item.name}>{item.name}<b>×{item.count}</b></span>)}</div>}
         {inspect?.kind === 'mailbox' && prepareAction && <button className="v2-inspect-post v2-primary" onClick={() => { closeInspect(); onPrepare?.(); }}><Icon name="mail" size={16}/>{life?.pendingRequest ? prepareLabel || 'Open day' : snapshot.day === 0 ? 'Pack first post' : "Pack tomorrow's post"}</button>}
       </section> : <section className="v2-story v2-pixel-frame" aria-live="polite">
-        <div className="v2-caption"><p>{error ? 'A little pause. Try the day again.' : title}</p>{!error && note && <span>{note}</span>}{traveling && started && !complete && <i className="v2-travel-dots" aria-label="Walking">···</i>}</div>
+        <div className="v2-caption"><p>{error ? 'A little pause. Try the day again.' : title}</p>{!error && note && <span className={notice && !complete ? 'v2-event-note' : undefined}>{note}</span>}{traveling && started && !complete && <i className="v2-travel-dots" aria-label="Walking">···</i>}</div>
         {example ? <div className="v2-example-actions"><button className="v2-primary" onClick={() => { endExample(); onHatch?.(); }}><Icon name="leaf" size={16}/>Hatch your own</button><button className="v2-example-back" onClick={endExample}>Back</button><LifeSoundButton/></div> : (!started || complete || error) ? <><div className="v2-start-actions">
           <button className="v2-primary" disabled={!ready} onClick={primaryAction}><Icon name={prepareAction ? 'mail' : hatchAction ? 'leaf' : savedHome ? 'back' : 'play'} size={16}/>{primaryLabel}</button>
           {complete && hatchAction && <button className="v2-icon-button" onClick={() => void run(0)} aria-label="Watch again"><Icon name="play"/></button>}

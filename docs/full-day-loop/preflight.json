@@ -1,0 +1,39 @@
+{
+  "checkedAtUtc": "2026-11-03T05:56:43.110Z",
+  "scope": "Final full-day presentation candidate: actual uninterrupted films, saved packet integrity, original-art hashes, integrated type/build and compiled public smoke. No AI/chain/financial writes.",
+  "originalRoosterHashes": {
+    "src/art/rooster.ts": "77394d48de4e07c9bbeb2734c7fd5bb2e6c16789032eec957cfd22eaea793f54",
+    "src/art/rooster-data.ts": "bf21c7a5f5d58bb4718b6258a60710a01cc08b1573b6dce3899292d53fe38907"
+  },
+  "allReceiptsPreserved": true,
+  "actualReferenceIntegrity": [
+    {
+      "scope": "Exact Response.json parsed replay.packet object returned to the real application, captured before React receives it; same reference serialized again after natural completion.",
+      "requestId": "0x0a11268acafbd6a709eaa5bb8cb965dc41a82430eb330ed4a2dddc6eb625d98b",
+      "commitment": "0xd17903f931ec0917ed8fa59fae2d53af9fd54c52967d8b9c1af987de10292277",
+      "receiptCount": 60,
+      "url": "http://127.0.0.1:5191/api/v2/replay/1?chainId=46630&collection=0x30cb5213fa94020a95893ddb6b07470dbf7a9efc&day=28",
+      "beforeResultHash": "70bc45ec80f65ed6d38fc06a9c1d8260f8adf350a89eade15c2a7517ab784377",
+      "afterResultHash": "70bc45ec80f65ed6d38fc06a9c1d8260f8adf350a89eade15c2a7517ab784377",
+      "beforePacketHash": "aac01d4568371051a7619832182320eac2a7b62d50f82f007b0aacc594e5fff1",
+      "afterPacketHash": "aac01d4568371051a7619832182320eac2a7b62d50f82f007b0aacc594e5fff1",
+      "unchanged": true
+    }
+  ],
+  "typeCheck": "pass",
+  "productionBuild": "pass",
+  "unexpectedClientMarkers": [],
+  "assets": [
+    "index-B3gg3y-P.js",
+    "index-Cq0vvDkw.css",
+    "V2App-CPoBseOE.js",
+    "V2App-D9Z84uWe.css"
+  ],
+  "compiledPublic": {
+    "screens": 6,
+    "errors": 0,
+    "writes": 0
+  },
+  "previousRemoteMain": "1bfef534d2213f6a2e085ead8dbc2765ba6ad9e7",
+  "pass": true
+}

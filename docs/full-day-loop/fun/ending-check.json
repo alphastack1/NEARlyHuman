@@ -1,0 +1,72 @@
+{
+  "scope": "Independent semantic expectations derived from five actual public saved packets before reading the helper implementation. No simulated outcome, browser, wallet, model or chain operation. This is a presentation check, not a new paid-day proof.",
+  "checkedAt": "2026-11-03T05:35:25.809Z",
+  "results": [
+    {
+      "id": 1,
+      "day": 27,
+      "name": "MISO",
+      "requestId": "0x5747a9531662b278a1e714705e056da4429a2964147e4f1022196c067bfb0517",
+      "commitment": "0x8449c715b1d9a6c972419c292a829ce03990e9413b1cfa642fab1ce266242b00",
+      "summary": {
+        "headline": "A comfort bowl.",
+        "hint": "Apples ready to gather."
+      },
+      "packetUnchanged": true,
+      "pass": true
+    },
+    {
+      "id": 1,
+      "day": 28,
+      "name": "MISO",
+      "requestId": "0x0a11268acafbd6a709eaa5bb8cb965dc41a82430eb330ed4a2dddc6eb625d98b",
+      "commitment": "0xd17903f931ec0917ed8fa59fae2d53af9fd54c52967d8b9c1af987de10292277",
+      "summary": {
+        "headline": "Apple +1",
+        "hint": "A wound still needs care."
+      },
+      "packetUnchanged": true,
+      "pass": true
+    },
+    {
+      "id": 2,
+      "day": 13,
+      "name": "PEEP",
+      "requestId": "0x74cbc6cd9c61473b3ad4e43c447d137e0c7da582d339f6c2bd1456cdfffad3ea",
+      "commitment": "0x6d2ac781f94679ca13b64d16dcc689c406a2b6df2641b984b9654b28a8cecb88",
+      "summary": {
+        "headline": "Marigold planted.",
+        "hint": "Garden ready to gather."
+      },
+      "packetUnchanged": true,
+      "pass": true
+    },
+    {
+      "id": 3,
+      "day": 1,
+      "name": "SUNNY",
+      "requestId": "0xef56ef428ad908b4c3688e53595607309a051851f6fad28a951934a108beaaea",
+      "commitment": "0x897194faac2bbc6d95c55f60eb780c7a91040cd326b6495102990f5750a45f75",
+      "summary": {
+        "headline": "Daisy planted.",
+        "hint": "Daisy · 2 growing days to go"
+      },
+      "packetUnchanged": true,
+      "pass": true
+    },
+    {
+      "id": 1,
+      "day": 19,
+      "name": "MISO",
+      "requestId": "0x6de34d03184f78d4ea363da739c18a351073b6d6baa8e655430096b529a4f205",
+      "commitment": "0x28cad0e52229da8275ef06166b848e7c6b1e19ef71b717e381e6d032464ff951",
+      "summary": {
+        "headline": "Toy boat made.",
+        "hint": "Wood ready to gather."
+      },
+      "packetUnchanged": true,
+      "pass": true
+    }
+  ],
+  "pass": true
+}

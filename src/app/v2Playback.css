@@ -181,6 +181,9 @@
   line-height: 1.65;
   color: #b9c4b5;
 }
+.v2-caption>span.v2-event-note {
+  color: #f6cf8a;
+}
 .v2-travel-dots {
   position: absolute;
   right: -4px;

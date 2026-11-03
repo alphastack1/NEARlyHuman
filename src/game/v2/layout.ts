@@ -7,7 +7,7 @@ export const BEDS: readonly Point[] = [{ x: 376, y: 536 }, { x: 456, y: 536 }, {
 export const ANCHORS = {
   pantry: { x: 72, y: 89 }, stove: { x: 168, y: 89 }, counter: { x: 216, y: 89 }, window: { x: 136, y: 89 },
   bed: { x: 312, y: 137 }, seat: { x: 88, y: 345 }, chair: { x: 168, y: 345 }, wash: { x: 328, y: 329 },
-  hall: { x: 248, y: 233 }, workshop: { x: 424, y: 345 }, well: { x: 280, y: 553 }, mailbox: { x: 408, y: 745 },
+  hall: { x: 248, y: 233 }, workshop: { x: 424, y: 329 }, well: { x: 280, y: 553 }, mailbox: { x: 408, y: 745 },
   garden: { x: 328, y: 601 }, doorway: { x: 328, y: 457 },
 } satisfies Record<string, Point>;
 

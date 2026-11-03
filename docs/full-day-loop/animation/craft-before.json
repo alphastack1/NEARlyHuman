@@ -1,0 +1,71 @@
+{
+  "scope": "Actual public MISO Day19 Toy boat receipt. Explicit UI seek to previous receipt then normal resume; runtime data read only to observe contact/tool/pose, no renderer setters, wallet or app write. Not a complete-day timing proof.",
+  "work": {
+    "point": {
+      "x": 424,
+      "y": 345
+    },
+    "phase": "work",
+    "op": 20,
+    "work": 5600,
+    "elapsed": 912.5700000000003,
+    "pose": "v2-rooster-repair",
+    "held": "v2-item-37",
+    "heldPoint": {
+      "x": 437,
+      "y": 328
+    },
+    "paused": false,
+    "camera": {
+      "x": 317,
+      "y": 108
+    },
+    "display": []
+  },
+  "pausedA": {
+    "point": {
+      "x": 424,
+      "y": 345
+    },
+    "phase": "work",
+    "op": 20,
+    "work": 5600,
+    "elapsed": 979.2800000000003,
+    "pose": "v2-rooster-repair",
+    "held": "v2-item-37",
+    "heldPoint": {
+      "x": 437,
+      "y": 328
+    },
+    "paused": true,
+    "camera": {
+      "x": 317,
+      "y": 108
+    },
+    "display": []
+  },
+  "pausedB": {
+    "point": {
+      "x": 424,
+      "y": 345
+    },
+    "phase": "work",
+    "op": 20,
+    "work": 5600,
+    "elapsed": 979.2800000000003,
+    "pose": "v2-rooster-repair",
+    "held": "v2-item-37",
+    "heldPoint": {
+      "x": 437,
+      "y": 324
+    },
+    "paused": true,
+    "camera": {
+      "x": 317,
+      "y": 108
+    },
+    "display": []
+  },
+  "errors": [],
+  "writes": []
+}
