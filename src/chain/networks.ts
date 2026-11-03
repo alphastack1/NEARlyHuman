@@ -33,6 +33,16 @@ export function networkForConfig(config: { chainId: number; testnet?: boolean })
   return undefined;
 }
 
+/** Only the currently served, wallet-supported game can be selected. A catalog
+ * name or extra advertised ID never creates another deployment or wallet path. */
+export function playableNetworks(config: { chainId: number; testnet?: boolean; networkId?: GameNetworkId; availableNetworks?: readonly GameNetworkId[] }): readonly GameNetwork[] {
+  if (config.chainId !== 46630 || config.testnet !== true) return [];
+  const network = networkForConfig(config);
+  if (!network || config.networkId !== undefined && config.networkId !== network.id) return [];
+  if (config.availableNetworks !== undefined && (!Array.isArray(config.availableNetworks) || !config.availableNetworks.includes(network.id))) return [];
+  return [network];
+}
+
 /** Compact downward-rounded display. A nonzero dust balance stays visible. */
 export function formatNativeBalance(amount: bigint, network: GameNetwork = GAME_NETWORKS[0]!): string {
   if (amount < 0n) throw new RangeError('A wallet balance cannot be negative.');

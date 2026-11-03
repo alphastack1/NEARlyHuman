@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { decodeFunctionData, encodeFunctionData, encodeFunctionResult, keccak256, parseAbi, type Address, type EIP1193Provider, type Hex } from 'viem';
-import { createV2OwnerWallet, isV2WalletRejected, v2Abi, V2WalletError, type V2SubmissionIntent } from '../../src/chain/v2-client';
-import { formatNativeBalance, GAME_NETWORKS, networkForConfig } from '../../src/chain/networks';
+import { connectV2Wallet, createV2OwnerWallet, isV2WalletRejected, v2Abi, V2WalletError, type V2SubmissionIntent } from '../../src/chain/v2-client';
+import { formatNativeBalance, GAME_NETWORKS, networkForConfig, playableNetworks } from '../../src/chain/networks';
 import type { V2PublicConfig } from '../../src/v2/public';
 
 const addr = (n: number) => ('0x' + n.toString(16).padStart(40, '0')) as Address;
@@ -54,5 +54,48 @@ try {
   assert.equal(formatNativeBalance(1500000000000000000000000n, GAME_NETWORKS[2]), '1.5 NEAR');
   assert.equal(networkForConfig({ chainId: 46630, testnet: false }), undefined); assert.equal(networkForConfig(config)?.id, 'robinhood-testnet');
   assert.throws(() => createV2OwnerWallet(provider, { ...config, networkId: 'near-testnet' }, addr(7)), /Choose Robinhood Testnet/);
-  console.log(JSON.stringify({ passed: true, walletPrompts: submissions.length, controlledRpcReads: rpcReads, scope: 'Actual viem ABI writes against controlled wallet/RPC: encoding matches recovery journal, rejection stays safe, ambiguous send retains intent, network identity and native balances. Zero live network/wallet writes.' }));
+  assert.deepEqual(playableNetworks(config).map(n => n.id), ['robinhood-testnet']);
+  assert.deepEqual(playableNetworks({ chainId: 46630, testnet: true }).map(n => n.id), ['robinhood-testnet']);
+  for (const candidate of [
+    { ...config, networkId: 'near-testnet' as const }, { ...config, chainId: 4663, testnet: false },
+    { ...config, testnet: false }, { ...config, availableNetworks: [] },
+    { ...config, availableNetworks: ['near-testnet'] as const }, { ...config, availableNetworks: 'robinhood-testnet' as never },
+  ]) assert.equal(playableNetworks(candidate).length, 0);
+  assert.deepEqual(playableNetworks({ ...config, availableNetworks: ['robinhood-testnet', 'near-testnet', 'near-mainnet', 'robinhood-mainnet'] }).map(n => n.id), ['robinhood-testnet']);
+  const connectionCases: string[] = [];
+  function connectionProvider(options: { startChain?: string; refuse?: boolean; ignoreSwitch?: boolean; changedAccount?: boolean; needsAdd?: boolean } = {}) {
+    let selected = options.startChain || '0xb626', added = false;
+    const calls: string[] = [];
+    const controlled = { request: async (request: { method: string; params?: any }) => {
+      calls.push(request.method);
+      if (request.method === 'eth_requestAccounts') return [addr(7)];
+      if (request.method === 'eth_accounts') return [addr(options.changedAccount ? 8 : 7)];
+      if (request.method === 'eth_chainId') return selected;
+      if (request.method === 'wallet_switchEthereumChain') {
+        if (options.refuse) throw Object.assign(new Error('User rejected network switch'), { code: 4001 });
+        if (options.needsAdd && !added) throw Object.assign(new Error('Unknown chain'), { code: 4902 });
+        if (!options.ignoreSwitch) selected = request.params[0].chainId;
+        return null;
+      }
+      if (request.method === 'wallet_addEthereumChain') { added = true; return null; }
+      throw Error('Unexpected connect request ' + request.method);
+    } } as EIP1193Provider;
+    return { controlled, calls };
+  }
+  const current = connectionProvider(); assert.equal((await connectV2Wallet(current.controlled, config)).account, addr(7));
+  assert(!current.calls.includes('wallet_switchEthereumChain')); connectionCases.push('Current network connects without a redundant switch request.');
+  const other = connectionProvider({ startChain: '0x1' }); await connectV2Wallet(other.controlled, config);
+  assert.equal(other.calls.filter(m => m === 'wallet_switchEthereumChain').length, 1); connectionCases.push('Wrong starting network switches once and verifies final chain/account.');
+  const missing = connectionProvider({ startChain: '0x1', needsAdd: true }); await connectV2Wallet(missing.controlled, config);
+  assert.equal(missing.calls.filter(m => m === 'wallet_addEthereumChain').length, 1); assert.equal(missing.calls.filter(m => m === 'wallet_switchEthereumChain').length, 2); connectionCases.push('Unknown network is added then switched and verified.');
+  const declined = connectionProvider({ startChain: '0x1', refuse: true }); await assert.rejects(connectV2Wallet(declined.controlled, config), isV2WalletRejected);
+  assert(!declined.calls.includes('wallet_addEthereumChain')); connectionCases.push('Rejected switch stops with no add or signing request.');
+  const falseSwitch = connectionProvider({ startChain: '0x1', ignoreSwitch: true });
+  await assert.rejects(connectV2Wallet(falseSwitch.controlled, config), e => e instanceof V2WalletError && e.code === 'network'); connectionCases.push('False switch acknowledgement is rejected before connection is adopted.');
+  const changed = connectionProvider({ changedAccount: true });
+  await assert.rejects(connectV2Wallet(changed.controlled, config), e => e instanceof V2WalletError && e.code === 'wallet'); connectionCases.push('Account changed during connection is rejected.');
+  const unsupported = connectionProvider();
+  await assert.rejects(connectV2Wallet(unsupported.controlled, { ...config, networkId: 'near-testnet' }), e => e instanceof V2WalletError && e.code === 'network');
+  assert.equal(unsupported.calls.length, 0); connectionCases.push('Unsupported world is rejected before requesting wallet access.');
+  console.log(JSON.stringify({ passed: true, walletPrompts: submissions.length, controlledRpcReads: rpcReads, connectionCases, scope: 'Actual viem ABI writes and wallet connection against controlled wallet/RPC: exact recovery intent; safe rejection; ambiguous-send retention; no redundant switch; final chain/account verification. Zero live network/wallet writes.' }));
 } finally { globalThis.fetch = originalFetch; }

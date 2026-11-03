@@ -2,7 +2,7 @@ import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from 're
 import { formatEther, type Address, type EIP1193Provider, type Hex } from 'viem';
 import { connectV2Wallet, createV2ChainReader, mintedId, resolveV2Submission, type V2SubmissionIntent } from '../../chain/v2-client';
 import { explorerToken, explorerTransaction } from '../../chain/config';
-import { formatNativeBalance, networkForConfig } from '../../chain/networks';
+import { formatNativeBalance, networkForConfig, playableNetworks } from '../../chain/networks';
 import { cacheV2Session, restoreV2Session, v2Api, setV2Session, V2ApiError } from '../v2-api';
 import { api } from '../api';
 import { Icon } from '../Icons';
@@ -16,12 +16,13 @@ import { endingNote, filmPacket, itemName, type V2FilmPacket } from '../../v2/pr
 import V2Player from './V2Player';
 import { LifeSoundButton, LifeSoundToggle } from './LifeSound';
 import { BirthReveal, DayFlow, ProcessGraphic } from './JourneyVisuals';
+import { NetworkMark, NetworkPicker } from './NetworkPicker';
 import '../v2Journey.css';
 
 type Provider = EIP1193Provider & { on?: (name: string, listener: (...a: any[]) => void) => void; removeListener?: (name: string, listener: (...a: any[]) => void) => void };
 type Wallet = Awaited<ReturnType<typeof connectV2Wallet>>;
-type Screen = 'home' | 'welcome' | 'profile' | 'hatch' | 'birth' | 'care' | 'review' | 'pending' | 'purse' | 'history' | 'lives' | 'menu' | 'wallet' | 'stock';
-type Action = 'mint' | 'day' | 'verify' | 'withdraw' | 'connect' | 'expire' | 'resume' | 'approve';
+type Screen = 'home' | 'welcome' | 'profile' | 'hatch' | 'birth' | 'care' | 'review' | 'pending' | 'purse' | 'history' | 'lives' | 'menu' | 'wallet' | 'stock' | 'networks';
+type Action = 'mint' | 'day' | 'verify' | 'withdraw' | 'connect' | 'hatch-connect' | 'expire' | 'resume' | 'approve';
 type Parcel = [number | undefined, number | undefined, number | undefined];
 interface BirthDraft { name: string; stats: number[]; payment: 'native' | 'purse' | 'wallet'; sourceId?: string }
 interface Pending { kind: Action; hash?: Hex; requestId?: Hex; tokenId?: string; intent?: V2SubmissionIntent; cursor?: string; birthDraft?: BirthDraft }
@@ -109,6 +110,9 @@ export default function V2Journey() {
   const historyControls = readingDay !== undefined || historical && owner;
   const world = life ? { chainId: life.chainId, collection: life.collection } : config;
   const network = config ? networkForConfig(config) : undefined;
+  // A descriptive catalog entry alone is not a deployed game. Only the served,
+  // validated runtime can be selected until an actual second-world adapter exists.
+  const availableNetworks = config ? playableNetworks(config) : [];
   const signedIn = same(verifiedAccount, account);
   const parcelKey = life && account ? `nh:v2:parcel:${life.chainId}:${life.collection.toLowerCase()}:${life.id}:${life.state.day + 1}:${account.toLowerCase()}` : undefined;
   const packed = kit.filter((i): i is number => i !== undefined);
@@ -116,7 +120,7 @@ export default function V2Journey() {
   function clearQuote() { quoteRef.current = undefined; setQuote(undefined); }
   function keepQuote(q: V2OwnerQuote) { quoteRef.current = q; setQuote(q); }
   function finishGuide() { setGuide(undefined); storage.set('nh:v2:packing-help', true); }
-  function networkCard() { return config ? <div className="v2-network-card"><span className="v2-network-badge"><i/>{network?.label || `Chain ${config.chainId}`}</span>{account && <><span className="v2-wallet-address">{account.slice(0, 6)}…{account.slice(-4)}</span><strong className="v2-wallet-balance">{nativeBalance === undefined ? 'Checking balance…' : nativeBalance === null ? 'Balance unavailable' : formatNativeBalance(BigInt(nativeBalance), network)}</strong></>}</div> : null; }
+  function networkCard() { return config ? <div className="v2-network-card"><button type="button" className="v2-network-trigger" aria-label={`Choose network: ${network?.label || `Chain ${config.chainId}`}`} aria-haspopup="dialog" disabled={busy || !!walletOperation.current || !!pendingRef.current?.intent || !availableNetworks.length} onClick={() => overlay('networks')}><NetworkMark/><strong className="v2-network-brand">{network?.ecosystem === 'near' ? 'NEAR' : network ? 'Robinhood' : `Chain ${config.chainId}`}</strong><span className="v2-network-environment" data-network={network?.environment}>{network?.environment === 'mainnet' ? 'Mainnet' : 'Testnet'}</span><i className="v2-network-chevron" aria-hidden="true"/></button>{account && <><span className="v2-wallet-address">{account.slice(0, 6)}…{account.slice(-4)}</span><strong className="v2-wallet-balance">{nativeBalance === undefined ? 'Checking balance…' : nativeBalance === null ? 'Balance unavailable' : formatNativeBalance(BigInt(nativeBalance), network)}</strong></>}</div> : null; }
   function refreshNativeBalance(who: Address | undefined, target = config) {
     if (!who || !target) return;
     const scope = `${target.chainId}:${target.collection.toLowerCase()}:${who.toLowerCase()}`;
@@ -149,7 +153,7 @@ export default function V2Journey() {
   function close() {
     const destination = backStack.current.pop() || returnScreen.current;
     returnScreen.current = backStack.current.at(-1) || 'home';
-    go(destination === 'wallet' || destination === screen ? life ? 'home' : 'welcome' : destination);
+    go(destination === 'wallet' && screen !== 'networks' || destination === screen ? life ? 'home' : 'welcome' : destination);
   }
   function watchExample() { if (!life || !packet || busy) return; setExample(true); go('home'); }
   function endExample() { setExample(false); go('welcome'); }
@@ -308,6 +312,7 @@ export default function V2Journey() {
     operation.current = action;
     operationContext.current = { tokenId: life?.id, requestId: life?.pendingRequest || (job?.tokenId === life?.id ? job?.requestId : undefined), ...(action === 'mint' ? { birthDraft: { name, stats: [...stats], payment, sourceId: payment === 'purse' ? life?.id : undefined } } : {}) };
     if (action === 'connect') { go('lives'); await listLives(w.account); return; }
+    if (action === 'hatch-connect') { go('hatch'); return; }
     if (action === 'verify') { await signIn(w); go('review'); return; }
     if (action === 'resume') {
       if (pendingRef.current) { await checkPayment(w, token); return; }
@@ -500,10 +505,10 @@ export default function V2Journey() {
     } catch (e) { if (currentScreen.current === 'pending') setMessage(errorText(e)); }
     finally { pendingCheck.current = false; if (!walletOperation.current) setBusy(false); }
   }
-  const title: Record<Exclude<Screen, 'home'>, string> = { welcome: exactId ? 'Opening this home' : 'A little life of its own.', profile: life?.state.alive === false ? `${life.name} · remembered` : life?.name || 'A little life', hatch: 'A new rooster', birth: birth ? `Rooster #${birth.id}` : 'Your rooster NFT', care: life?.state.day === 0 ? 'Pack the first day' : 'Pack tomorrow', review: `Ready for day ${(life?.state.day || 0) + 1}?`, pending: pendingTitle, purse: `${life?.name || 'A little life'}’s purse`, history: 'Days', lives: 'Your roosters', menu: 'Menu', wallet: 'Choose your wallet', stock: historical && packet ? `Day ${packet.result.state.day} belongings` : 'Belongings' };
+  const title: Record<Exclude<Screen, 'home'>, string> = { welcome: exactId ? 'Opening this home' : 'A little life of its own.', profile: life?.state.alive === false ? `${life.name} · remembered` : life?.name || 'A little life', hatch: 'A new rooster', birth: birth ? `Rooster #${birth.id}` : 'Your rooster NFT', care: life?.state.day === 0 ? 'Pack the first day' : 'Pack tomorrow', review: `Ready for day ${(life?.state.day || 0) + 1}?`, pending: pendingTitle, purse: `${life?.name || 'A little life'}’s purse`, history: 'Days', lives: 'Your roosters', menu: 'Menu', wallet: 'Choose your wallet', stock: historical && packet ? `Day ${packet.result.state.day} belongings` : 'Belongings', networks: 'Choose network' };
   const closeDestination = backStack.current.at(-1) || returnScreen.current;
   const nestedSheet = closeDestination !== 'home' && closeDestination !== screen;
-  const backLabel = closeDestination === 'welcome' ? 'Back to start' : closeDestination === 'hatch' ? 'Back to hatching' : closeDestination === 'care' ? 'Back to supplies' : closeDestination === 'review' ? 'Back to review' : closeDestination === 'profile' ? 'Back to rooster' : closeDestination === 'menu' ? 'Back to menu' : 'Back';
+  const backLabel = closeDestination === 'welcome' ? 'Back to start' : closeDestination === 'hatch' ? 'Back to hatching' : closeDestination === 'care' ? 'Back to supplies' : closeDestination === 'review' ? 'Back to review' : closeDestination === 'profile' ? 'Back to rooster' : closeDestination === 'menu' ? 'Back to menu' : closeDestination === 'wallet' ? 'Back to wallets' : 'Back';
   const entryRecovery = !exactId && !!config && !!pending;
   const entryRecoveryLabel = pending?.kind === 'mint' || pending?.kind === 'approve' ? 'Continue hatching' : pending?.kind === 'day' ? 'Open my day' : pending?.kind === 'withdraw' ? 'Check transfer' : 'Check day';
   let body: ReactNode;
@@ -531,16 +536,18 @@ export default function V2Journey() {
     <div className="v2-egg small"><img src={itemImage(38)} alt=""/></div>
     {networkCard()}
     <label className="v2-name-field"><span>Name your rooster</span><input value={name} disabled={busy} maxLength={8} placeholder="Name" autoComplete="off" autoCapitalize="characters" onChange={e => setName(e.target.value.toUpperCase().replace(/[^A-Z0-9 ]/g, ''))}/></label>
-    <details className="v2-personality"><summary>Personality<span>{sum < 5 ? `${5 - sum} to place` : 'Change'}</span></summary>
-      <div className="v2-stat-picker">{(['Body', 'Wits', 'Spirit'] as const).map((label, i) => <div key={label}><span>{label}</span><button aria-label={`Less ${label.toLowerCase()}`} disabled={stats[i] === 0 || busy} onClick={() => setStats(stats.map((n, j) => i === j ? n - 1 : n))}>−</button><b>{stats[i]}</b><button aria-label={`More ${label.toLowerCase()}`} disabled={sum >= 5 || busy} onClick={() => setStats(stats.map((n, j) => i === j ? n + 1 : n))}>+</button></div>)}</div>
+    <details className="v2-personality"><summary><span className="v2-personality-label">Strengths<small>Hardy, handy or upbeat?</small></span><span>{sum < 5 ? `${5 - sum} to place` : stats[0] === 2 && stats[1] === 2 && stats[2] === 1 ? 'Balanced' : 'Custom'}</span></summary>
+      <p className="v2-points-left"><span>Move 5 points</span><small>− then + to move a point.</small></p>
+      <div className="v2-stat-picker">{(['Body', 'Wits', 'Spirit'] as const).map((label, i) => <div key={label}><span className="v2-stat-copy"><strong>{label}</strong><small>{['Less hurt from mishaps', 'Fewer fumbles', 'Cheerful for longer'][i]}</small></span><button aria-label={`Less ${label.toLowerCase()}`} disabled={stats[i] === 0 || busy} onClick={() => setStats(stats.map((n, j) => i === j ? n - 1 : n))}>−</button><b>{stats[i]}</b><button aria-label={`More ${label.toLowerCase()}`} disabled={sum >= 5 || busy} onClick={() => setStats(stats.map((n, j) => i === j ? n + 1 : n))}>+</button></div>)}</div>
+      {(stats[0] !== 2 || stats[1] !== 2 || stats[2] !== 1) && <button className="v2-text-button v2-strength-reset" disabled={busy} onClick={() => setStats([2, 2, 1])}>Reset to balanced</button>}
     </details>
-    {sum < 5 && <p className="v2-small-note">{5 - sum} {5 - sum === 1 ? 'point' : 'points'} to place in Personality</p>}
+    {sum < 5 && <p className="v2-small-note">Place {5 - sum} {5 - sum === 1 ? 'point' : 'points'} in Strengths to hatch.</p>}
     <details className="v2-payment-options"><summary><span>{payment === 'native' ? config ? `${eth(config.nativeMintPrice)} ${network?.nativeSymbol || 'ETH'}` : 'ETH' : '250 NHC'}</span><span>Change</span></summary>
       <div className="v2-payment"><button disabled={busy} aria-pressed={payment === 'native'} onClick={() => selectPayment('native')}>{config ? eth(config.nativeMintPrice) + ' ETH' : 'ETH'}</button><button disabled={busy} aria-pressed={payment !== 'native'} onClick={() => selectPayment(owner && purse >= 250000000n ? 'purse' : 'wallet')}>250 NHC</button></div>
     </details>
     {payment !== 'native' && <p className="v2-small-note">{payment === 'purse' ? `From ${life?.name}’s purse` : 'From your wallet'}{owner && purse >= 250000000n && <button className="v2-inline-button" disabled={busy} onClick={() => selectPayment(payment === 'wallet' ? 'purse' : 'wallet')}>Change</button>}</p>}
-    <button className="v2-primary" disabled={!config || busy || !nameValid || sum !== 5} onClick={() => void run('mint')}><Icon name="leaf" size={16}/>{busy ? 'Hatching…' : payment === 'wallet' && BigInt(allowance) < 250000000n ? 'Allow 250 NHC' : 'Hatch ' + (name.trim() || 'rooster')}</button>
-    <span className="v2-fee-note">Network fee applies</span>
+    <button className="v2-primary" disabled={!config || busy || !!wallet.current && (!nameValid || sum !== 5)} onClick={() => void run(wallet.current ? 'mint' : 'hatch-connect')}><Icon name={wallet.current ? 'leaf' : 'wallet'} size={16}/>{busy ? wallet.current ? 'Hatching…' : 'Connecting…' : !wallet.current ? 'Connect wallet' : payment === 'wallet' && BigInt(allowance) < 250000000n ? 'Allow 250 NHC' : 'Hatch ' + (name.trim() || 'rooster')}</button>
+    <span className="v2-fee-note">{wallet.current ? 'Network fee applies' : 'Connecting is free'}</span>
   </>;
   else if (screen === 'birth' && birth && config) body = <BirthReveal key={`${config.collection}:${birth.id}`} id={birth.id} name={life?.id === birth.id && currentWorld ? life.name : pending?.birthDraft?.name || name} egg={itemImage(38)} rooster={life?.id === birth.id && currentWorld ? roosterImage(life.state.seed) : undefined} explorer={explorerToken(config.chainId, config.collection, birth.id)} transaction={birth.hash ? explorerTransaction(config.chainId, birth.hash) : undefined} busy={busy} onHome={() => { setBirth(undefined); go('home'); }} onRetry={() => { if (pendingRef.current) void checkPayment(); else void loadLife(birth.id, config, undefined, 'birth'); }}/>
   else if (screen === 'care' && life) {
@@ -550,6 +557,7 @@ export default function V2Journey() {
       {guide !== undefined && <aside className="v2-pack-guide" data-step={guide}><span className="v2-guide-dots" aria-label={`Tip ${guide + 1} of 3`}>{[0, 1, 2].map(i => <i key={i} data-active={i === guide}/>)}</span><strong>{['Tap a supply.', 'Pick up to three.', 'Review, then start.'][guide]}</strong><button className="v2-icon-button" aria-label="Dismiss packing tips" onClick={finishGuide}><Icon name="close" size={16}/></button></aside>}
       <div className="v2-post-tray">{[0, 1, 2].map(i => <button key={i} className={'v2-post-slot' + (parcelSlot === i ? ' is-target' : '')} aria-pressed={parcelSlot === i} aria-label={`Parcel slot ${i + 1}: ${kit[i] === undefined ? 'empty' : itemName(kit[i]!)}`} disabled={busy} onClick={() => { if (!walletOperation.current) setParcelSlot(i); }}>{kit[i] === undefined ? <span className="v2-empty-slot" aria-hidden="true">+</span> : <><img src={itemImage(kit[i]!)} alt=""/><i>×1</i></>}</button>)}</div>
       <div className="v2-supply-tabs">{(['Care', 'Garden', 'House'] as const).map((label, i) => <button key={label} aria-pressed={category === i} onClick={() => selectCategory(i)}>{label}</button>)}</div>
+      {category === 1 && <span className="v2-supply-hint">1 seed or sapling per day</span>}
       <div className={'v2-supplies' + (category === 2 ? ' is-house' : '')}>{choices.map(i => <button key={i} className={`${kit.includes(i) ? 'selected' : ''}${i === 11 || i === 12 ? ' v2-supply-wide' : ''}`} aria-pressed={kit.includes(i)} aria-label={`${kit.includes(i) ? 'Remove' : 'Pack'} ${i >= 13 ? PLANTS[i - 12]?.name : itemName(i)}`} disabled={busy} onClick={() => choose(i)}><img src={itemImage(i)} alt=""/><span>{i >= 13 ? PLANTS[i - 12]?.name : itemName(i)}</span><small>{i >= 13 ? `${PLANTS[i - 12]?.ticks} days` : life.state.inventory[i] ? `At home ×${life.state.inventory[i]}` : '×1'}</small></button>)}</div>
       <div className="v2-pack-controls"><button className="v2-primary" disabled={busy} onClick={reviewDay}><Icon name="check" size={16}/>Review day {life.state.day + 1}</button>
       <span className="v2-fee-note">{packed.length ? `${packed.length} of 3 packed` : 'Up to 3 supplies · included'}</span></div>
@@ -605,11 +613,11 @@ export default function V2Journey() {
     const groups = [{ name: 'For home', test: (i: number) => i < 13 && i !== 6 }, { name: 'Seeds', test: (i: number) => i >= 13 && i < 22 }, { name: 'From garden', test: (i: number) => i >= 22 && i < 30 }, { name: 'Workshop', test: (i: number) => i === 6 || i >= 30 }];
     body = <>{groups.map(group => { const stock = state.inventory.flatMap((n, i) => n > 0 && group.test(i) ? [{ n, i }] : []); return stock.length ? <section className="v2-belongings-group" key={group.name}><h2>{group.name}</h2><div className="v2-belongings">{stock.map(({ n, i }) => <div key={i}><img src={itemImage(i)} alt=""/><span>{itemName(i)}</span><b>×{n.toLocaleString()}</b></div>)}</div></section> : null; })}{!state.inventory.some(n => n > 0) && <p>A little room for future things.</p>}</>;
   }
+  else if (screen === 'networks') body = <NetworkPicker networks={availableNetworks} currentId={network?.id} disabled={busy || !!walletOperation.current || !!pendingRef.current?.intent} onSelect={selected => { if (availableNetworks.some(n => n.id === selected.id) && selected.id === network?.id && !walletOperation.current && !pendingRef.current?.intent) close(); }}/>;
   else if (screen === 'wallet') body = <>
-    <Icon name="wallet" size={32}/>
     {networkCard()}
-    {walletIntent !== 'connect' && <span className="v2-wallet-purpose">{walletIntent === 'verify' ? 'Sign-in · no fee' : walletIntent === 'mint' || walletIntent === 'approve' ? `Hatch ${name.trim() || 'your rooster'}` : walletIntent === 'withdraw' ? 'NHC to your wallet' : walletIntent === 'day' ? 'Start the next day' : walletIntent === 'expire' ? 'Close this expired day' : pending?.kind === 'mint' || pending?.kind === 'approve' ? 'Finish hatching' : 'Open your day'}</span>}
-    {wallets.length ? <div className="v2-wallet-choices">{wallets.map(w => <button className="v2-primary" disabled={busy} key={w.id} onClick={() => void attach(w, walletIntent)}>{busy ? 'Opening wallet…' : w.name}</button>)}</div> : <><p>Open this game in your wallet’s browser to bring a life home.</p><a className="v2-primary" href="https://metamask.io/download/" target="_blank" rel="noreferrer">Get a wallet</a></>}
+    {walletIntent !== 'connect' && <span className="v2-wallet-purpose">{walletIntent === 'hatch-connect' ? 'Connect to hatch' : walletIntent === 'verify' ? 'Sign-in · no fee' : walletIntent === 'mint' || walletIntent === 'approve' ? `Hatch ${name.trim() || 'your rooster'}` : walletIntent === 'withdraw' ? 'NHC to your wallet' : walletIntent === 'day' ? 'Start the next day' : walletIntent === 'expire' ? 'Close this expired day' : pending?.kind === 'mint' || pending?.kind === 'approve' ? 'Finish hatching' : 'Open your day'}</span>}
+    {wallets.length ? <div className="v2-wallet-choices">{wallets.map(w => <button className="v2-wallet-choice" disabled={busy} key={w.id} onClick={() => void attach(w, walletIntent)}><Icon name="wallet" size={16}/><span>{busy ? 'Opening wallet…' : w.name}</span><i className="v2-network-chevron" aria-hidden="true"/></button>)}</div> : <><p>Open this game in your wallet’s browser to bring a life home.</p><a className="v2-primary" href="https://metamask.io/download/" target="_blank" rel="noreferrer">Get a wallet</a></>}
   </>;
   else body = <>
     {networkCard()}

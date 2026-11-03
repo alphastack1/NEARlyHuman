@@ -1,0 +1,80 @@
+{
+  "scope": "Actual live before renders; actual local revised React UI. Local wallet choices explicitly keyless and reject connection. No secrets or live financial operations.",
+  "before": {
+    "origin": "https://nearlyhuman.netlify.app",
+    "screens": 9,
+    "errors": [],
+    "writes": []
+  },
+  "after": {
+    "origin": "http://127.0.0.1:5191",
+    "screens": 16,
+    "errors": [],
+    "writes": [],
+    "assertions": [
+      "Reset restores 2/2/1; real network picker has only one supported deployment; network return retains name; keyless wallet rejection remains usable; narrow/short screens have no page overflow."
+    ]
+  },
+  "final": {
+    "screens": [
+      {
+        "name": "after-hatch-320",
+        "overflow": false,
+        "scroll": [
+          342,
+          342
+        ]
+      },
+      {
+        "name": "after-hatch-390",
+        "overflow": false,
+        "scroll": [
+          440,
+          440
+        ]
+      },
+      {
+        "name": "after-strengths-390",
+        "overflow": false,
+        "scroll": [
+          698,
+          698
+        ]
+      },
+      {
+        "name": "after-networks-390",
+        "overflow": false,
+        "scroll": [
+          114,
+          114
+        ]
+      },
+      {
+        "name": "after-wallet-390",
+        "overflow": false,
+        "scroll": [
+          245,
+          245
+        ]
+      }
+    ],
+    "errors": [],
+    "writes": []
+  },
+  "stress": {
+    "scope": "Synthetic 40% text enlargement in the actual hatch DOM on a 320×568 viewport; not a claim about every physical phone/OS text-inflation mode",
+    "overflow": false,
+    "cta": [
+      29,
+      478.984375,
+      252,
+      46
+    ],
+    "bodyScroll": [
+      644,
+      482
+    ],
+    "errors": [],
+    "writes": []
+  }
+}

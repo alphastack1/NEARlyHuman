@@ -59,7 +59,7 @@ export function createV2OwnerWallet(provider:EIP1193Provider,config:V2PublicConf
  }
  const write=(functionName:'mintNFT'|'acceptDay'|'expire'|'withdraw'|'birthFromPurse'|'birthFromWallet',args:readonly unknown[],value=0n)=>{const frozen=structuredClone(args),data=encodeFunctionData({abi:v2Abi,functionName,args:frozen as never});return send(config.collection,data,value,({gas,nonce})=>client.writeContract({...at,functionName,args:frozen,value,gas,nonce} as never));};
  const wallet={account,client,reader,
-  async switchNetwork(){try{await client.switchChain({id:config.chainId});}catch(e){const x=e as {code?:number;cause?:{code?:number}};if(x.code!==4902&&x.cause?.code!==4902)throw e;await client.addChain({chain:configuredChain});await client.switchChain({id:config.chainId});}},
+  async switchNetwork(){if(Number(await provider.request({method:'eth_chainId'}))===config.chainId)return;try{await client.switchChain({id:config.chainId});}catch(e){const x=e as {code?:number;cause?:{code?:number}};if(x.code!==4902&&x.cause?.code!==4902)throw e;await client.addChain({chain:configuredChain});await client.switchChain({id:config.chainId});}},
   signMessage:async(message:string)=>{await guard();return client.signMessage({message});},
   mint:async(name:string,stats:V2Stats)=>{const price=await reader.client.readContract({...at,functionName:'nativeMintPrice'});if(price!==BigInt(config.nativeMintPrice))throw new V2WalletError('price','The hatch price changed. Check it again.');return write('mintNFT',[name.trim().toUpperCase(),stats],price);},
   async accept(quote:V2OwnerQuote){const a={...quote.admission,tokenId:BigInt(quote.admission.tokenId),kitMask:BigInt(quote.admission.kitMask),processingFee:BigInt(quote.admission.processingFee),expiresAt:BigInt(quote.admission.expiresAt)};if(!equal(a.player,account)||a.decisionConfig!==config.decisionConfig||BigInt(quote.value)!==a.processingFee)throw new V2WalletError('quote','Check these supplies again.');const signer=await recoverTypedDataAddress({...v2AdmissionTypedData(config.chainId,config.collection,a),signature:quote.signature});if(!config.quoteSigner||!equal(signer,config.quoteSigner))throw new V2WalletError('quote','Check this day estimate again.');return write('acceptDay',[a,quote.signature],a.processingFee);},
@@ -73,8 +73,15 @@ export function createV2OwnerWallet(provider:EIP1193Provider,config:V2PublicConf
  return {...wallet,acceptDay:wallet.accept};
 }
 export async function connectV2Wallet(provider:EIP1193Provider,config:V2PublicConfig,onIntent?:(intent:V2SubmissionIntent)=>void){
+ chain(config); // Reject an unsupported world before asking for wallet access.
  const accounts=await provider.request({method:'eth_requestAccounts'});if(!Array.isArray(accounts)||!/^0x[0-9a-f]{40}$/i.test(accounts[0]||''))throw new V2WalletError('wallet','Choose a wallet to continue.');
- const wallet=createV2OwnerWallet(provider,config,accounts[0] as Address,onIntent);await wallet.switchNetwork();await verifyV2WalletWorld(config);return wallet;
+ const wallet=createV2OwnerWallet(provider,config,accounts[0] as Address,onIntent);await wallet.switchNetwork();await verifyV2WalletWorld(config);
+ // A switch acknowledgement is not enough: wallet/account changes can happen
+ // while the public contract checks are in flight. Adopt only the final state.
+ const [currentAccounts,currentChain]=await Promise.all([provider.request({method:'eth_accounts'}),provider.request({method:'eth_chainId'})]);
+ if(Number(currentChain)!==config.chainId)throw new V2WalletError('network','Choose Robinhood Testnet in your wallet.');
+ if(!Array.isArray(currentAccounts)||typeof currentAccounts[0]!=='string'||!equal(currentAccounts[0],wallet.account))throw new V2WalletError('wallet','Your wallet changed. Connect it again.');
+ return wallet;
 }
 /** A hashless wallet result remains pending until its exact nonce/intent is found. */
 export async function resolveV2Submission(config:V2PublicConfig,intent:V2SubmissionIntent,cursor?:string){
