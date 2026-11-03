@@ -71,3 +71,18 @@ The [comparison record](pace/comparison.json) also checks the **actual replay ob
 That covers all 60 receipts, snapshots, events and the packet's other data while the renderer performs its distributed previews and the Player creates its ending summary. [The after phase/caption record](pace/after-summary.json) preserves the observed transitions. Raw 100ms samples remain in TEMP.
 
 The integrated full watch found no remaining pacing blocker. The improved captions explain the movement, the main harvest still feels substantial, the small mishap now registers, and the ending provides a factual reason to care for another day. Small typography/camera-only refinements do not require buying or simulating another authoritative day. The application type check passed after the display helpers; PM owns the final integrated build/release checks.
+
+## Actual published full-day verification
+
+After the PM confirmed publication of commit `914db95982d3f868504836453797787d5cd0b208`, one final full **normal1×** MISO Day28 watch ran on [the actual hosted game](https://nearlyhuman.netlify.app). The page asserted the new `index-B3gg3y-P.js` entry before playing. This is a separate hosted validation of the final camera/bed-caption/build refinements; it does not replace the measured73.209s →61.519s local before/after comparison above.
+
+The hosted film ended naturally in **61.468 seconds**, with zero hidden samples, application errors or application writes. No Pause, Seek, Finish, renderer setter, wallet, new inference or chain transaction was used. The actual wing event appeared only after impact; the completed card again remembered **Apple +1** and **A wound still needs care**. The original rooster artwork remained the canonical generated texture.
+
+Both the **exact response object passed to the app** and the **actual final renderer state** were checked: result/full-packet hashes before/after remain identical, and the scene's final state deep-equals the canonical saved result. Time slot60 finishes idle. All60 receipts, request, policy and commitment remain the original saved day. See [hosted summary](hosted/summary.json) and [observed phase/caption groups](hosted/phase-summary.json).
+
+- [Hosted mailbox](hosted/hosted-mailbox.png)
+- [Hosted actual wing notice](hosted/hosted-mishap.png)
+- [Hosted main work](hosted/hosted-main.png)
+- [Hosted natural completion](hosted/hosted-complete.png)
+
+Only selected verified frames and compact summaries are permanent. Raw100ms samples remain in ignored TEMP. The run-owned Codex Browser tab and connection were closed after completion.

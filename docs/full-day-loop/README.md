@@ -42,4 +42,12 @@ Focused craft/contact, pause, camera and bedtime proofs use explicit UI seek/res
 - [Actual incident](pace/after-mishap.png), [MISO ending](pace/after-complete.png), [SUNNY planting](fun/after-sunny-planting.png), [SUNNY ending](fun/after-sunny-complete.png).
 - [Craft contact](animation/after-craft-paused.png), [recipe progress](animation/after-craft-progress.png), [finished result](animation/after-craft-outcome.png), [visible keepsake](animation/after-craft-on-bench.png).
 
-Publication happens once after final review; actual hosted evidence is added separately afterward.
+## Verified hosted release
+
+The reviewed candidate is live at [nearlyhuman.netlify.app](https://nearlyhuman.netlify.app). One main push published commit `914db95982d3f868504836453797787d5cd0b208` as Netlify deployment `6ae977e48dd73e653a03fed8`, at **12:58 on 3 November 2026, Asia/Bangkok**. The root serves the reviewed `index-B3gg3y-P.js` build. [Release verification](release.json) confirms the unchanged Robinhood testnet world and decision configuration.
+
+A final **complete hosted MISO Day28** watch ran naturally at normal1× in **61.468 seconds**, with no Pause, Seek or Finish, zero hidden samples, zero application errors and zero writes. The final actual renderer state equals the canonical saved result; the exact parsed packet and its complete result remain unchanged after rendering. The actual wing notice appears only after impact, and the ending remains Apple +1 / A wound still needs care. See [hosted summary](hosted/summary.json).
+
+- [Hosted morning post](hosted/hosted-mailbox.png), [actual mishap](hosted/hosted-mishap.png), [main work](hosted/hosted-main.png) and [natural ending](hosted/hosted-complete.png).
+
+All owned browser tabs and temporary local servers are closed. No new inference call, chain transaction, mainnet action or financial-ledger mutation was used in this pass. Hosted evidence and these notes are committed locally after publication without a second main push.
