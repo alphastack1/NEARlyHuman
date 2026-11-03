@@ -37,6 +37,17 @@ The [complete action map and genre research](JOURNEY.md) covers entry, adoption,
 - [Pixel comparison, viewport metrics and authored character](PIXELS.md).
 - [Stable entry / explicit latest-day proof](entry-intent-proof.json).
 
-Application type checking and the production-flag Vite build pass. Compiled public checks use the actual built assets and public APIs, without development previews. No contract, accepted-day rule, inference policy, financial store, allocation or key was changed in this refinement. QA incurred no new inference calls or chain transactions. Temporary tools, caches and build outputs remain in ignored TEMP and are not application dependencies. Publication is performed once after the final review; its actual hosted outcome is recorded separately.
+Application type checking and the production-flag Vite build pass. Compiled public checks use the actual built assets and public APIs, without development previews. No contract, accepted-day rule, inference policy, financial store, allocation or key was changed in this refinement. QA incurred no new inference calls or chain transactions. Temporary tools, caches and build outputs remain in ignored TEMP and are not application dependencies.
 
 One intermediate compiled pass received a transient public configuration read failure and displayed the existing Try again action. Follow-up direct and proxied reads returned200; the final compiled public pass completed without that failure. The read was not retried as a payment, no financial state was changed, and a persistent service outage is not claimed. The final source also fixes same-life retry for an exact public link. The [compiled public report](built/public-smoke.json) records the successful final build pass.
+
+## Actual hosted release
+
+The reviewed update is live at [nearlyhuman.netlify.app](https://nearlyhuman.netlify.app), published at **11:09 on 3 November 2026, Asia/Bangkok**. One main push published commit `aa81d8e9f2d92c1832f7f725ef03b272e2d252af` as Netlify deployment `6ae95e51f6af161d35b46693`. The actual root serves the reviewed `index-BrTytsN6.js` bundle; its API remains Robinhood testnet 46630 with the same collection and decision configuration. See [release verification](release.json).
+
+The [actual hosted pass](hosted/public-smoke.json) inspected seven views: title with one START, adoption entry, usable hatch with collapsed options, explicit example exit, automatic example return, exact SUNNY public portrait and menu. It recorded zero application JavaScript errors and zero application write attempts. The uninterrupted hosted example returned after **23.633 seconds**. These hosted checks use public facts and no owner preview; controlled owner/payment/ready-day presentation proofs remain separately identified above.
+
+- [Live entry](hosted/entry-390.png), [live hatch](hosted/hatch-390.png) and [live menu](hosted/menu-390.png).
+- [Live example](hosted/example-390.png), [automatic return](hosted/example-return-390.png) and [public portrait](hosted/exact-profile-390.png).
+
+Run-owned browser tabs and both temporary local hosts are closed. Hosted screenshots and this completion record are committed locally after publication without a second main push or deployment. Mainnet remains deferred.

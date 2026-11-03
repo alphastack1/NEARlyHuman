@@ -1,0 +1,48 @@
+{
+  "checkedAtUtc": "2026-11-03T04:11:50.765Z",
+  "url": "https://nearlyhuman.netlify.app",
+  "deployment": {
+    "id": "6ae95e51f6af161d35b46693",
+    "state": "ready",
+    "commit": "aa81d8e9f2d92c1832f7f725ef03b272e2d252af",
+    "createdAtUtc": "2026-11-03T04:08:49.135Z",
+    "publishedAtUtc": "2026-11-03T04:09:26.243Z",
+    "error": null
+  },
+  "actualEntryScripts": [
+    "/assets/index-BrTytsN6.js"
+  ],
+  "config": {
+    "status": 200,
+    "chainId": 46630,
+    "testnet": true,
+    "collection": "0x30cb5213fa94020a95893ddb6b07470dbf7a9efc",
+    "decisionConfig": "0x5f8f7f1d79381d02783c3960fa2b8f12da19cac75f6b483aece39f0f73766892"
+  },
+  "hostedQA": {
+    "screenshots": 7,
+    "applicationErrors": 0,
+    "applicationWrites": 0,
+    "uninterruptedExampleMs": 23633,
+    "exactPublicProfileAndMenu": true
+  },
+  "scope": "One final testnet publication of the reviewed UI/render/input candidate. Actual hosted cold root, hatch disclosure, both example exits, exact SUNNY public profile and menu; local/controlled owner proofs remain explicitly separate.",
+  "sourceChanges": [
+    "player journey",
+    "menus",
+    "local film presentation",
+    "native pixel world and art",
+    "sprite hit testing"
+  ],
+  "contractsAndEconomicsChanged": false,
+  "newQaAiCalls": 0,
+  "newQaChainTransactions": 0,
+  "mainnetUsed": false,
+  "productionPushCount": 1,
+  "cleanup": {
+    "ownedTabsClosed": true,
+    "ownedReadonlyAndBuiltHostsStopped": true
+  },
+  "evidencePublication": "Hosted screenshots and completion proof are retained locally after publication; no second main push for documentation.",
+  "pass": true
+}
