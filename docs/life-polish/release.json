@@ -1,0 +1,54 @@
+{
+  "checkedAtUtc": "2026-11-03T05:11:26.346Z",
+  "url": "https://nearlyhuman.netlify.app",
+  "deployment": {
+    "id": "6ae96bbc2c3d28927968b187",
+    "state": "ready",
+    "commit": "1bfef534d2213f6a2e085ead8dbc2765ba6ad9e7",
+    "createdAtUtc": "2026-11-03T05:06:04.324Z",
+    "publishedAtUtc": "2026-11-03T05:06:36.685Z",
+    "error": null
+  },
+  "actualEntryScripts": [
+    "/assets/index-vgYVg-iK.js"
+  ],
+  "publicWorld": {
+    "chainId": 46630,
+    "collection": "0x30cb5213fa94020a95893ddb6b07470dbf7a9efc",
+    "decisionConfig": "0x5f8f7f1d79381d02783c3960fa2b8f12da19cac75f6b483aece39f0f73766892",
+    "testnet": true
+  },
+  "originalRooster": {
+    "canonicalSourceHashes": {
+      "src/art/rooster.ts": "77394d48de4e07c9bbeb2734c7fd5bb2e6c16789032eec957cfd22eaea793f54",
+      "src/art/rooster-data.ts": "bf21c7a5f5d58bb4718b6258a60710a01cc08b1573b6dce3899292d53fe38907"
+    },
+    "rendererTextureComparisons": 54,
+    "alternateSilhouetteRemoved": true
+  },
+  "hostedQA": {
+    "frames": 7,
+    "applicationErrors": 0,
+    "applicationWrites": 0,
+    "titleMuteKeyboardSafe": true,
+    "noAudioContextBeforeGesture": true,
+    "mutedExampleActualVoices": 0,
+    "mutedContextStates": [
+      "suspended"
+    ],
+    "uninterruptedExampleMs": 23945,
+    "exactPublicProfileAndMenu": true
+  },
+  "controlledPresentationScope": "Purse balances/death/job states and delayed ready reads are separately scoped local presentation cases, not new economic receipts. Real hosted checks use public data and native browser audio with count-only instrumentation.",
+  "productionPushCount": 1,
+  "mainnetUsed": false,
+  "qaInferenceCalls": 0,
+  "qaChainTransactions": 0,
+  "contractsRulesModelAndFinancialLedgersUnchanged": true,
+  "cleanup": {
+    "ownTabsClosed": true,
+    "ownReadonlyAndBuiltHostsStopped": true
+  },
+  "evidencePublication": "Hosted evidence and completion notes saved in a local post-release commit; no second main push for documents.",
+  "pass": true
+}

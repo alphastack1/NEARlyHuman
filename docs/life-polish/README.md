@@ -48,3 +48,14 @@ Unavailable purse/death/job states are explicitly synthetic presentations of the
 - [Current menu](pm/menu-390.png), [grouped belongings](world/produce-stock-320.png) and [care post](pm/care-320.png).
 - [Original rooster and warmer room](world/after-bedroom.png), [yard](world/after-yard.png) and [distinct produce](world/produce-native2x.png).
 - [Useful post box](pm/inspect-post-box-390.png) and [packing from the world](pm/post-box-to-post-390.png).
+
+## Actual hosted release
+
+The reviewed update is live at [nearlyhuman.netlify.app](https://nearlyhuman.netlify.app). Commit `1bfef534d2213f6a2e085ead8dbc2765ba6ad9e7` published once as Netlify deployment `6ae96bbc2c3d28927968b187`, at **12:06 on 3 November 2026, Asia/Bangkok**. The actual root serves the reviewed `index-vgYVg-iK.js` build. The API remains on Robinhood testnet 46630 with the same collection and decision configuration. [Release verification](release.json) records the actual readback.
+
+The [hosted browser pass](hosted/public-smoke.json) checked seven actual public views with zero application JavaScript errors and zero application write attempts. The title speaker sits inside its dialog; keyboard mute leaves START intact. No AudioContext exists before a gesture. Muted example playback creates zero oscillator voices, with the actual context suspended. The example's uninterrupted automatic return took 23.945 seconds, and its explicit Back also returned correctly. SUNNY's exact public portrait and menu opened successfully. Owner-only and unavailable-state presentations remain separately scoped above.
+
+- [Live title](hosted/title-390.png), [entry](hosted/entry-390.png), [hatch](hosted/hatch-390.png) and [menu](hosted/menu-390.png).
+- [Live example](hosted/example-390.png) and [automatic return](hosted/example-return-390.png).
+
+All owned browser tabs and both temporary local hosts are closed. Finished source, assets and evidence are outside ignored TEMP. Hosted screenshots and completion notes are saved in a local post-release commit without another production push. Mainnet was not used.
