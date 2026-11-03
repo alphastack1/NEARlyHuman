@@ -13,6 +13,25 @@ export function isV2StateLagError(error: unknown): boolean {
   for (let i = 0; current && i < 8; i++, current = current.cause as typeof current) if (current instanceof V2StateLagError || current.code === 'V2_STATE_LAG') return true;
   return false;
 }
+
+/** Viem wraps transport failures inside contract-call errors. Inspect the cause
+ * chain, but never turn a decoded contract revert into a transport retry. */
+export function isV2TransientReadError(error: unknown): boolean {
+  if (isV2StateLagError(error)) return true;
+  let current = error as { name?: string; code?: unknown; status?: unknown; cause?: unknown } | undefined;
+  let transient = false;
+  for (let i = 0; current && i < 12; i++, current = current.cause as typeof current) {
+    if (['ContractFunctionRevertedError', 'ExecutionRevertedError'].includes(current.name || '')) return false;
+    if (current.name === 'HttpRequestError') {
+      const status = current.status;
+      if (typeof status === 'number' && status >= 400 && status < 500 && status !== 408 && status !== 429) return false;
+      transient = true;
+    }
+    if (['TimeoutError', 'SocketClosedError', 'SocketRequestError'].includes(current.name || '')
+      || ['ECONNRESET', 'ETIMEDOUT', 'ECONNREFUSED', 'EAI_AGAIN', 'UND_ERR_CONNECT_TIMEOUT', 'UND_ERR_SOCKET'].includes(String(current.code || ''))) transient = true;
+  }
+  return transient;
+}
 function pinnedBlock(request: RpcArguments): bigint | undefined {
   if (!Array.isArray(request.params)) return;
   const index = ['eth_call', 'eth_getCode', 'eth_getBalance', 'eth_getTransactionCount'].includes(request.method) ? 1

@@ -2,7 +2,8 @@ import { BaseError, ContractFunctionRevertedError } from 'viem';
 import { V2ContextError } from './context';
 import { readV2PublicConfig, readV2PublicDay, readV2PublicLife, readV2PublicReplay, readV2PublicLives, readV2PublicDays, readV2PublicRequest, readV2PublicGuest, v2NftMetadata, V2PublicError } from './views';
 import { v2LifePortrait } from './portrait';
-import { session } from '../auth';
+import { session, sessionDetails } from '../auth';
+import { v2ViewConnection } from './views';
 import { serverConfig } from '../config';
 import { checkedRequest, ServiceError } from '../chain';
 import { StoreConflict } from '../storage';
@@ -36,6 +37,11 @@ export async function handleV2Api(request: Request): Promise<Response> {
       throw new V2PublicError('not_found', 'This page has wandered off.');
     }
     if (request.method !== 'GET') return json({ error: { code: 'method', message: 'Open this page again.' } }, 405);
+    if (path === '/api/v2/session') {
+      const verified = sessionDetails(request), { runtime } = v2ViewConnection();
+      if (verified.chainId !== runtime.chainId) throw new ServiceError('Connect your wallet to continue.', 'session', 401);
+      return json({ ...verified, collection: runtime.collection });
+    }
     if (path === '/api/v2/config') return json(await readV2PublicConfig());
     if(path==='/api/v2/guest')return json(await readV2PublicGuest());
     if(path==='/api/v2/lives')return json(await readV2PublicLives(url.searchParams.get('owner')||'',url.searchParams.get('cursor')||'0'));

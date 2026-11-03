@@ -1,6 +1,7 @@
 import { createPublicClient,createWalletClient,custom,defineChain,parseAbi,parseEventLogs,encodeFunctionData,keccak256,recoverTypedDataAddress,type Address,type Hex,type EIP1193Provider,type TransactionReceipt } from 'viem';
 import { chainFor } from './config';
 import { v2HttpTransport } from './v2-transport';
+import { networkForConfig } from './networks';
 import { v2AdmissionTypedData } from './v2-admission';
 import type { V2PublicConfig,V2OwnerQuote } from '../v2/public';
 
@@ -20,10 +21,11 @@ const tokenAbi=parseAbi(['function balanceOf(address holder) view returns(uint25
 const moduleAbi=parseAbi(['function actionModule() view returns(address)']);
 const equal=(a:string,b:string)=>a.toLowerCase()===b.toLowerCase();
 const zero='0x0000000000000000000000000000000000000000';
-function chain(config:V2PublicConfig){if(config.chainId===31337&&/^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?\/?$/.test(config.rpcUrl))return defineChain({id:31337,name:'Local test world',nativeCurrency:{name:'Ether',symbol:'ETH',decimals:18},rpcUrls:{default:{http:[config.rpcUrl]}},testnet:true});if(config.chainId!==46630||!config.testnet)throw new V2WalletError('network','Choose Robinhood Testnet.');return chainFor(46630);}
+function chain(config:V2PublicConfig){if(config.chainId===31337&&/^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?\/?$/.test(config.rpcUrl))return defineChain({id:31337,name:'Local test world',nativeCurrency:{name:'Ether',symbol:'ETH',decimals:18},rpcUrls:{default:{http:[config.rpcUrl]}},testnet:true});const network=networkForConfig(config);if(config.chainId!==46630||!config.testnet||!network||config.networkId&&config.networkId!==network.id)throw new V2WalletError('network','Choose Robinhood Testnet.');return chainFor(46630);}
 export type V2Stats=readonly[number,number,number];
 export interface V2SubmissionIntent {account:Address;chainId:number;collection:Address;to?:Address;nonce:number;fromBlock:string;data:Hex;value:string}
 export class V2WalletError extends Error {constructor(public code:string,message:string,public intent?:V2SubmissionIntent){super(message);}}
+export function isV2WalletRejected(error:unknown){let e=error as {code?:unknown;cause?:unknown}|undefined;for(let depth=0;e&&depth<12;depth++,e=e.cause as typeof e)if(e.code===4001||e.code==='ACTION_REJECTED')return true;return false;}
 export type V2OwnerReceipt=TransactionReceipt&{replacementReason?:'repriced'|'cancelled'|'replaced';originalHash:Hex};
 export function createV2ChainReader(config:V2PublicConfig){
  const client=createPublicClient({chain:chain(config),transport:v2HttpTransport(config.rpcUrl,{timeout:15000,retryCount:1}),cacheTime:0}),at={address:config.collection,abi:v2Abi};
@@ -46,16 +48,16 @@ export async function verifyV2WalletWorld(config:V2PublicConfig){
 export function createV2OwnerWallet(provider:EIP1193Provider,config:V2PublicConfig,account:Address,onIntent?:(intent:V2SubmissionIntent)=>void){
  const configuredChain=chain(config),client=createWalletClient({account,chain:configuredChain,transport:custom(provider)}),reader=createV2ChainReader(config),at={address:config.collection,abi:v2Abi};
  async function guard(){const [accounts,chainId]=await Promise.all([provider.request({method:'eth_accounts'}),provider.request({method:'eth_chainId'})]);if(!Array.isArray(accounts)||typeof accounts[0]!=='string'||!equal(accounts[0],account)||Number(chainId)!==config.chainId)throw new V2WalletError('wallet','Reconnect this wallet to continue.');await verifyV2WalletWorld(config);}
- async function send(to:Address,data:Hex,value=0n){
+ async function send(to:Address,data:Hex,value=0n,submit?:(request:{gas:bigint;nonce:number})=>Promise<Hex>){
   await guard();
   // Estimate before creating an ambiguous submission. A failed preflight is safe to amend.
   let estimate:bigint;try{estimate=await reader.client.estimateGas({account,to,data,value});}catch(error){if(/insufficient funds|funds for gas|exceeds the balance/i.test(error instanceof Error?error.message:''))throw new V2WalletError('funds','This wallet needs test ETH.');throw new V2WalletError('preflight','The home changed. Check it again.');}
   const [nonce,fromBlock,balance,price]=await Promise.all([reader.client.getTransactionCount({address:account,blockTag:'pending'}),reader.client.getBlockNumber(),reader.client.getBalance({address:account}),reader.client.getGasPrice()]);
   const gas=estimate*125n/100n+20000n;if(balance<value+gas*price*2n)throw new V2WalletError('funds','This wallet needs test ETH.');
   const intent:V2SubmissionIntent={account,chainId:config.chainId,collection:config.collection,to,nonce,fromBlock:fromBlock.toString(),data,value:value.toString()};onIntent?.(intent);
-  try{return await client.sendTransaction({to,data,value,gas,nonce});}catch(e){const error=e as Error&{code?:number;cause?:{code?:number};intent?:V2SubmissionIntent};if(error.code!==4001&&error.cause?.code!==4001)error.intent=intent;throw error;}
+  try{return await (submit?submit({gas,nonce}):client.sendTransaction({to,data,value,gas,nonce}));}catch(e){if(isV2WalletRejected(e))throw new V2WalletError('ACTION_REJECTED','No problem. Nothing was sent.');const error=e as Error&{intent?:V2SubmissionIntent};error.intent=intent;throw error;}
  }
- const write=(functionName:'mintNFT'|'acceptDay'|'expire'|'withdraw'|'birthFromPurse'|'birthFromWallet',args:readonly unknown[],value=0n)=>send(config.collection,encodeFunctionData({abi:v2Abi,functionName,args:args as never}),value);
+ const write=(functionName:'mintNFT'|'acceptDay'|'expire'|'withdraw'|'birthFromPurse'|'birthFromWallet',args:readonly unknown[],value=0n)=>{const frozen=structuredClone(args),data=encodeFunctionData({abi:v2Abi,functionName,args:frozen as never});return send(config.collection,data,value,({gas,nonce})=>client.writeContract({...at,functionName,args:frozen,value,gas,nonce} as never));};
  const wallet={account,client,reader,
   async switchNetwork(){try{await client.switchChain({id:config.chainId});}catch(e){const x=e as {code?:number;cause?:{code?:number}};if(x.code!==4902&&x.cause?.code!==4902)throw e;await client.addChain({chain:configuredChain});await client.switchChain({id:config.chainId});}},
   signMessage:async(message:string)=>{await guard();return client.signMessage({message});},
@@ -64,7 +66,7 @@ export function createV2OwnerWallet(provider:EIP1193Provider,config:V2PublicConf
   expire:(id:Hex)=>write('expire',[id]),withdraw:(id:string|bigint,amount:string|bigint)=>write('withdraw',[BigInt(id),BigInt(amount)]),
   birthFromPurse:(id:string|bigint,nonce:string|bigint,name:string,stats:V2Stats)=>write('birthFromPurse',[BigInt(id),BigInt(nonce),name.trim().toUpperCase(),stats]),
   tokenAllowance:()=>reader.client.readContract({address:config.token,abi:tokenAbi,functionName:'allowance',args:[account,config.collection]}),
-  approveBirthTokens:()=>send(config.token,encodeFunctionData({abi:tokenAbi,functionName:'approve',args:[config.collection,250000000n]})),
+  approveBirthTokens:()=>send(config.token,encodeFunctionData({abi:tokenAbi,functionName:'approve',args:[config.collection,250000000n]}),0n,({gas,nonce})=>client.writeContract({address:config.token,abi:tokenAbi,functionName:'approve',args:[config.collection,250000000n],gas,nonce})),
   async birthFromWallet(name:string,stats:V2Stats){await guard();const allowance=await reader.client.readContract({address:config.token,abi:tokenAbi,functionName:'allowance',args:[account,config.collection]});if(allowance<250000000n)throw new V2WalletError('approval_required','Approve NHC to hatch this life.');return write('birthFromWallet',[name.trim().toUpperCase(),stats]);},
   wait:reader.wait,balance:()=>reader.balance(account),tokenBalance:()=>reader.tokenBalance(account),
  };

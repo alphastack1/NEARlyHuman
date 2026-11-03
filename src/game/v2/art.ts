@@ -1,5 +1,6 @@
 import { canvasArt, drawItem, type Paint } from '../../art/pixels';
-import { houseCanvas, homeArtSeed } from '../../art/house';
+import { homeArtSeed } from '../../art/house';
+import { houseShell, clearDoorways } from './house-shell';
 import { PLANTS } from '../../v2/catalog';
 import type { Plot } from '../../v2/types';
 import { BEDS, WORLD_HEIGHT, WORLD_WIDTH } from './layout';
@@ -79,7 +80,7 @@ export function landscape(seed: string): HTMLCanvasElement {
     p('#725934', 141, 643, 5, 6); p('#9ca869', 140, 638, 7, 6); p('#c2c386', 142, 637, 3, 3);
   });
   const ctx = c.getContext('2d')!; ctx.imageSmoothingEnabled = false;
-  ctx.drawImage(houseCanvas(n), 0, 0, 512, 440, 0, 0, 512, 440);
+  ctx.drawImage(houseShell(n), 0, 0);
   const paint: Paint = (color, x, y, w, h) => { ctx.fillStyle = color; ctx.fillRect(Math.round(x), Math.round(y), Math.round(w), Math.round(h)); };
   // A few complementary textiles give each room an identity within the warm wood house.
   textile(paint, 335, 116, 58, 37, ['#285a60', '#44848a', '#73a8a0']);
@@ -90,6 +91,7 @@ export function landscape(seed: string): HTMLCanvasElement {
   paint('#735139', 384, 272, 96, 144);
   for (let y = 273; y < 415; y += 6) { paint(y % 12 ? '#c79d66' : '#d0a46b', 386, y, 91, 5); paint('#e0b77c', 386, y, 91, 1); for (let x = 393 + (y % 12 ? 0 : 15); x < 476; x += 31) paint('#b18653', x, y, 1, 5); }
   paint('#493c2c', 383, 265, 99, 11); paint('#927247', 385, 267, 95, 5); paint('#b39358', 385, 267, 95, 1); paint('#4a3c2c', 478, 272, 5, 145); paint('#9e7b4c', 479, 274, 2, 140);
+  clearDoorways(paint, n);
   // Front door threshold, continuous with the yard stones.
   paint('#cfaa70', 320, 432, 16, 16); paint('#e6bf81', 321, 433, 14, 1); paint('#674b30', 316, 432, 4, 12); paint('#ac8450', 317, 432, 2, 10); paint('#674b30', 336, 432, 4, 12); paint('#ac8450', 337, 432, 2, 10);
   return c;
@@ -174,7 +176,7 @@ export function itemArt(index: number): HTMLCanvasElement {
     if (index === 34) { p('#59422d', 2, 5, 16, 13); p('#bd955f', 3, 5, 14, 11); p('#dbb67a', 3, 5, 14, 2); p('#e0d1a6', 9, 5, 2, 11); p('#9c7546', 3, 10, 14, 1); p('#eee0b8', 4, 8, 5, 3); p('#b5a078', 5, 9, 3, 1); return; }
     if (index === 35) { p('#4b5146', 3, 5, 11, 12); p('#e4ddbd', 4, 6, 9, 10); p('#c6c5a6', 11, 7, 2, 8); p('#705239', 5, 6, 7, 2); p('#eee7c9', 13, 7, 4, 2); p('#eee7c9', 16, 8, 1, 5); p('#eee7c9', 13, 12, 4, 2); return; }
     if (index === 36) { p('#435851', 2, 8, 12, 10); p('#7a9a8a', 3, 9, 10, 8); p('#acc0a3', 4, 9, 7, 2); p('#4f7067', 11, 10, 2, 6); p('#56756c', 13, 10, 3, 4); p('#8fae99', 15, 7, 3, 5); p('#48645c', 17, 6, 2, 3); p('#9bb7a0', 5, 4, 6, 2); p('#9bb7a0', 4, 5, 2, 5); p('#9bb7a0', 10, 5, 2, 4); return; }
-    if (index === 37) { p('#57432e', 8, 6, 3, 13); p('#b58c52', 9, 7, 1, 10); p('#3e5350', 4, 3, 12, 6); p('#9aa99a', 5, 3, 10, 4); p('#c3cbb4', 5, 3, 9, 1); p('#697d72', 13, 5, 3, 3); return; }
+    if (index === 37) { p('#513f2c', 9, 7, 3, 12); p('#b58c52', 10, 8, 1, 10); p('#334b4c', 3, 3, 14, 6); p('#94aaa2', 4, 4, 12, 4); p('#d1d8be', 4, 3, 12, 1); p('#667f79', 4, 7, 12, 1); p('#495e5a', 14, 4, 2, 3); return; }
     if (index >= 0 && index <= 12 && index !== 6) { const care = ['water', 'milk', 'bread', 'steak', 'medicine', 'coffee', 'wood', 'toolkit', 'umbrella', 'matches', 'soap', 'bandage', 'compost'] as const; drawItem(p, care[index]!, 2, 2); return; }
     if (index >= 13 && index <= 21) {
       p('#675335', 3, 3, 14, 16); p('#d7be83', 4, 3, 12, 14); p('#f0dda6', 4, 3, 12, 2); p('#b99c63', 5, 16, 10, 1);

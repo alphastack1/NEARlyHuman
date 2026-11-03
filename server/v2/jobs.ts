@@ -1,6 +1,6 @@
 import { randomUUID, createHash } from 'node:crypto';
 import { encodeFunctionData, keccak256, parseAbi, parseTransaction, recoverTransactionAddress, toHex, type Hex, type PublicClient, type PrivateKeyAccount } from 'viem';
-import { storage, StoreConflict, type DurableStore } from '../storage';
+import { storage, type DurableStore } from '../storage';
 import { prepareV2, v2DecisionConfig, type V2ChoiceProvider, type V2PreparationOptions } from './preparation';
 import { validateV2FrozenInput, v2WorkerInputHash, verifyV2Runtime, V2ContextError, type V2FrozenInput, type V2RuntimeIdentity } from './context';
 import { paidV2Call, requireV2JobBudget, finishV2JobBudget, updateV2Record, V2BudgetError } from './budget';
@@ -9,7 +9,7 @@ import { sendV2 } from './jev';
 import { readV2AcceptedTransaction } from './chain';
 import { expandV2History, encodeTrace, Op } from '../../src/v2';
 import { reconcileV2QuoteFunding } from './quotes';
-import { isV2StateLagError } from '../../src/chain/v2-transport';
+import { classifyV2PreparationFailure, V2PreSendCheckError, v2FailureMessage, type V2FailureStage } from './failures';
 
 export interface V2Job {
   version: 2; id: string; campaignId: string; input: V2FrozenInput; inputHash: Hex;
@@ -22,7 +22,7 @@ export interface V2Job {
   ownerTx?: Hex;
   journal?: V2RelayJournal;
   journals?: V2RelayJournal[];
-  failureCode?: string; createdAt: number; updatedAt: number;
+  failureCode?: string; failureStage?: V2FailureStage; failureClass?: string; createdAt: number; updatedAt: number;
 }
 export interface V2JobLease { id: string; generation: number }
 const keyOf = (input: V2FrozenInput) => `v2/jobs/${input.runtime.chainId}/${input.runtime.collection.toLowerCase()}/${input.requestId.toLowerCase()}`;
@@ -55,7 +55,7 @@ export async function acquireV2Job(id: string, store: DurableStore = storage()) 
   const job = await updateV2Record<V2Job>(store, id, () => { throw Error('Missing accepted day'); }, j => {
     if (['ready', 'prepared', 'saving', 'failure_due', 'expiry_due', 'failed', 'expired', 'quarantined'].includes(j.phase)) return j;
     if (j.lease && j.lease.until > Date.now()) throw new V2LeaseLost();
-    if (BigInt(j.input.deadline) < BigInt(Math.floor(Date.now() / 1000))) { j.phase = 'expiry_due'; delete j.lease; return j; }
+    if (BigInt(j.input.deadline) < BigInt(Math.floor(Date.now() / 1000))) { j.phase = 'expiry_due'; j.failureCode = 'expired'; j.failureStage = 'chain_check'; delete j.failureClass; delete j.lease; j.updatedAt = Date.now(); return j; }
     j.generation++; j.lease = { id: leaseId, generation: j.generation, until: Date.now() + leaseMs }; j.phase = 'preparing'; j.updatedAt = Date.now(); return j;
   });
   return { job, lease: job.lease?.id === leaseId ? { id: leaseId, generation: job.generation } : undefined };
@@ -111,16 +111,23 @@ export async function prepareV2Job(
     }
     return updateV2Record<V2Job>(store, id, () => { throw Error('Missing accepted day'); }, j => {
       fence(j, lease); if (j.inputHash !== job.inputHash) throw new V2LeaseLost();
-      j.phase = 'prepared'; j.packetKey = packetKey; j.commitment = prepared.commitment; j.stateHash = prepared.packet.stateHash; delete j.lease; j.updatedAt = Date.now(); return j;
+      j.phase = 'prepared'; j.packetKey = packetKey; j.commitment = prepared.commitment; j.stateHash = prepared.packet.stateHash; delete j.lease; delete j.failureCode; delete j.failureStage; delete j.failureClass; j.updatedAt = Date.now(); return j;
     });
   } catch (error) {
     if (error instanceof V2LeaseLost) throw error;
     await updateV2Record<V2Job>(store, id, () => { throw Error('Missing accepted day'); }, j => {
-      const e = error as Error & { code?: string };
-      const retryable = error instanceof StoreConflict || isV2StateLagError(error) || ['HttpRequestError', 'TimeoutError', 'RpcRequestError'].includes(e.name) || ['EPERM', 'EBUSY', 'EACCES', 'ECONNRESET', 'ETIMEDOUT'].includes(e.code || '');
-      fence(j, lease); j.phase = retryable ? 'queued' : error instanceof V2ContextError && error.code === 'expired' ? 'expiry_due'
+      const failure = classifyV2PreparationFailure(error);
+      fence(j, lease); j.phase = failure.retryable ? 'queued' : error instanceof V2ContextError && error.code === 'expired' ? 'expiry_due'
         : error instanceof V2ContextError || error instanceof V2BudgetError && error.code === 'changed' ? 'quarantined' : 'failure_due';
-      j.failureCode = error instanceof V2ContextError ? error.code : 'preparation_interrupted'; delete j.lease; j.updatedAt = Date.now(); return j;
+      j.failureCode = failure.code; j.failureStage = failure.stage;
+      // Class names aid private diagnosis without persisting RPC URLs, bodies,
+      // signatures, stack traces, or arbitrary exception messages.
+      const classes: string[] = []; let cause = error as { name?: unknown; constructor?: { name?: string }; cause?: unknown } | undefined;
+      for (let depth = 0; cause && depth < 8; depth++, cause = cause.cause as typeof cause) {
+        const name = cause.name === 'Error' ? cause.constructor?.name : cause.name;
+        if (typeof name === 'string' && /^[A-Za-z][A-Za-z0-9]{0,79}$/.test(name)) classes.push(name);
+      }
+      j.failureClass = classes.join('>') || 'UnknownError'; delete j.lease; j.updatedAt = Date.now(); return j;
     });
     throw error;
   }
@@ -131,7 +138,9 @@ export async function prepareV2JevJob(id: string, client: PublicClient, options:
   const store = options.store || storage();
   const recheck = async (job: V2Job) => {
     if (!job.ownerTx) throw new V2ContextError('context', 'The accepted transaction is missing.');
-    const canonical = await readV2AcceptedTransaction(client, job.input.runtime, job.ownerTx, job.input.player, { allowLocal: options.allowLocal, requestId: job.input.requestId });
+    let canonical: Awaited<ReturnType<typeof readV2AcceptedTransaction>>;
+    try { canonical = await readV2AcceptedTransaction(client, job.input.runtime, job.ownerTx, job.input.player, { allowLocal: options.allowLocal, requestId: job.input.requestId }); }
+    catch (error) { if (error instanceof V2ContextError) throw error; throw new V2PreSendCheckError(error); }
     if (v2WorkerInputHash(canonical.input) !== job.inputHash) throw new V2ContextError('context', 'The canonical accepted day changed.');
   };
   return prepareV2Job(id, (job, lease) => async decision => {
@@ -319,5 +328,6 @@ async function recoverV2JobJournal(job: V2Job, client: PublicClient, account: Pr
 export function v2JobView(job: V2Job) {
   return { requestId: job.input.requestId, tokenId: job.input.tokenId, phase: job.phase, decisions: Object.keys(job.answers).length,
     updatedAt: job.updatedAt, ownerTx: job.ownerTx, finalTx: job.transactionHash, commitment: job.phase === 'ready' ? job.commitment : undefined,
-    retrySafe: job.phase === 'failed' || job.phase === 'expired' };
+    retrySafe: job.phase === 'failed' || job.phase === 'expired',
+    ...(job.failureCode && job.phase !== 'ready' ? { failureCode: job.failureCode, failureMessage: v2FailureMessage(job.failureCode) } : {}) };
 }

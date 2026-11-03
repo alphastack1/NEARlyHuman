@@ -39,7 +39,9 @@ export async function authenticate(addressValue: unknown, id: unknown, signature
   return { token: payload + '.' + mac(payload).toString('base64url'), expiresAt };
 }
 
-export function session(request: Request, required = true): Address | undefined {
+/** A MAC-verified session. The browser may cache this token, but expiry, chain
+ * and ownership are still enforced server-side on every protected request. */
+export function sessionDetails(request: Request): Session {
   const token = request.headers.get('authorization')?.replace(/^Bearer /, '') || '';
   try {
     if (token.length > 1024) throw Error();
@@ -49,11 +51,14 @@ export function session(request: Request, required = true): Address | undefined 
     if (actual.length !== expected.length || !timingSafeEqual(actual, expected)) throw Error();
     const value = JSON.parse(Buffer.from(payload, 'base64url').toString()) as Session;
     if (value.expiresAt <= now() || value.chainId !== serverConfig().chainId) throw Error();
-    return checkedAddress(value.address);
+    return { ...value, address: checkedAddress(value.address) };
   } catch {
-    if (required) throw new ServiceError('Connect your wallet to continue.', 'session', 401);
-    return undefined;
+    throw new ServiceError('Connect your wallet to continue.', 'session', 401);
   }
+}
+export function session(request: Request, required = true): Address | undefined {
+  try { return sessionDetails(request).address; }
+  catch (error) { if (required) throw error; return undefined; }
 }
 
 export async function cleanAuth() {

@@ -92,12 +92,14 @@ export default function V2Player({ packet, life, name, onPrepare, onHatch, onPur
     const controller = createV2WorldRenderer(host.current!, { state, onInspect: inspectObject, onMotion: ({ traveling }: { traveling: boolean }) => setTraveling(traveling) });
     controller.setInputEnabled(!suspended);
     controller.setOpening(opening);
+    controller.setDawn(state.alive ? 'waiting' : 'none');
     renderer.current = controller;
     controller.ready.then(() => setReady(true)).catch(() => setError(true));
     return () => { generation.current++; controller.destroy(); renderer.current = undefined; };
   }, [packet, life?.id, savedHome ? life?.revision : undefined, homeFirst]);
 
   useEffect(() => { renderer.current?.setPlaybackRate(example ? 2 : 1); }, [example, ready]);
+  useEffect(() => { if (!started && !complete) renderer.current?.setDawn(snapshot.alive ? 'waiting' : 'none'); }, [ready, started, complete]);
   useEffect(() => { if ((example || autoPlay) && ready && !suspended && !started && !complete) { exampleRemaining.current = EXAMPLE_LENGTH; void run(0); } }, [example, autoPlay, ready, suspended]);
   useEffect(() => {
     if (!example || !started || complete) return;
@@ -131,6 +133,7 @@ export default function V2Player({ packet, life, name, onPrepare, onHatch, onPur
     const start = Math.max(0, Math.min(receipts.length - 1, from));
     running.current = true;
     renderer.current?.setState(start ? receipts[start - 1]!.snapshot : initial, { history: receipts.slice(0, start), slot: start ? receipts[start - 1]!.slot : 0 });
+    renderer.current?.setDawn(start === 0 ? 'rise' : 'none');
     setSnapshot(start ? receipts[start - 1]!.snapshot : initial); setIndex(start - 1);
     try {
       for (const beat of beats) {
@@ -152,13 +155,14 @@ export default function V2Player({ packet, life, name, onPrepare, onHatch, onPur
         if (example && beat.receipt.role === 'main') { endExample(); return; }
       }
       if (example) { endExample(); return; }
-      running.current = false; setSnapshot(packet.result.state); setIndex(receipts.length - 1); setComplete(true); setInFlight(undefined); pause(false); sound.cue(packet.result.state.alive ? 'day' : 'back');
+      running.current = false; renderer.current?.setDawn('none'); setSnapshot(packet.result.state); setIndex(receipts.length - 1); setComplete(true); setInFlight(undefined); pause(false); sound.cue(packet.result.state.alive ? 'day' : 'back');
     } catch { if (generation.current === id) setError(true); }
   }
   function seek(value: number) {
     generation.current++; running.current = false; pause(true); setStarted(true); setComplete(false); setInspect(undefined); setInFlight(undefined); setNotice(undefined);
     const at = Math.min(receipts.length - 1, Math.max(-1, value));
     const state = at < 0 ? initial : receipts[at]!.snapshot;
+    renderer.current?.setDawn('none');
     renderer.current?.setState(state, { history: receipts.slice(0, at + 1), slot: at < 0 ? 0 : receipts[at]!.slot }); setSnapshot(state); setIndex(at);
   }
   function togglePlayback() {
@@ -171,6 +175,7 @@ export default function V2Player({ packet, life, name, onPrepare, onHatch, onPur
   }
   function finishDay() {
     if (!packet) return;
+    renderer.current?.setDawn('none');
     generation.current++; running.current = false; setInspect(undefined); setInFlight(undefined); setNotice(undefined); setStarted(true); setComplete(true);
     renderer.current?.setState(packet.result.state, { history: receipts, slot: receipts.at(-1)?.slot || 60 });
     setSnapshot(packet.result.state); setIndex(receipts.length - 1); pause(false);

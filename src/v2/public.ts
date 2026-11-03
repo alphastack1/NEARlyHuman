@@ -1,5 +1,6 @@
 import type { Address, Hex } from 'viem';
 import type { State, Trace } from './types';
+import type { GameNetworkId } from '../chain/networks';
 
 export interface V2World { chainId: number; collection: Address }
 export interface V2PublicLife extends V2World {
@@ -8,6 +9,7 @@ export interface V2PublicLife extends V2World {
 }
 export interface V2PublicConfig extends V2World {
   version: 2; rpcUrl: string; testnet: boolean; token: Address; tokenDecimals: number;
+  networkId?: GameNetworkId; availableNetworks?: GameNetworkId[];
   nativeMintPrice: string; tokenMintPriceMicro: string; multiplier: number; rulesHash: Hex; decisionConfig: Hex;
   verifier?: Address; actionModule?: Address; controllerCodeHash?: Hex; verifierCodeHash?: Hex; actionModuleCodeHash?: Hex; relayer?: Address; quoteSigner?: Address;
   guest?: { id: string; day?: number };
@@ -24,6 +26,7 @@ export interface V2OwnerJob {
   requestId: Hex; tokenId: string;
   phase: 'queued' | 'preparing' | 'prepared' | 'saving' | 'ready' | 'failure_due' | 'expiry_due' | 'failed' | 'expired' | 'quarantined';
   decisions: number; updatedAt: number; ownerTx?: Hex; finalTx?: Hex; commitment?: Hex; retrySafe: boolean;
+  failureCode?: string; failureMessage?: string;
 }
 /** Integer amounts cross HTTP as decimal strings; reconstruct only at wallet submission. */
 export interface V2OwnerQuote {

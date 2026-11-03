@@ -7,6 +7,7 @@ import { isHosted } from '../config';
 import { storage } from '../storage';
 import type { prepareV2 } from './preparation';
 import { validateV2Identity, verifyV2Runtime, v2PublicClient, V2ContextError, type V2RuntimeIdentity } from './context';
+import { networkForEvmChain } from '../../src/chain/networks';
 
 const publicAbi = parseAbi([
   'error ERC721NonexistentToken(uint256 tokenId)',
@@ -67,7 +68,9 @@ export async function readV2PublicConfig() {
     client.readContract({ ...at, functionName: 'token' }), client.readContract({ ...at, functionName: 'nativeMintPrice' }), client.readContract({ ...at, functionName: 'gasMultiplier' }),
   ]);
   if((await client.getBlock({blockNumber:block.number!})).hash!==block.hash)throw new V2ContextError('connection','Checking the home connection again.');
+  const network = networkForEvmChain(runtime.chainId);
   return { version: 2, chainId: runtime.chainId, collection: runtime.collection, rpcUrl, testnet: true, token, tokenDecimals: 6,
+    ...(network ? { networkId: network.id, availableNetworks: [network.id] } : {}),
     nativeMintPrice: mintPrice.toString(), tokenMintPriceMicro: '250000000', multiplier, rulesHash: runtime.rulesHash, decisionConfig: runtime.decisionConfig,
     verifier:runtime.verifier,actionModule:runtime.actionModule,controllerCodeHash:runtime.controllerCodeHash,verifierCodeHash:runtime.verifierCodeHash,actionModuleCodeHash:runtime.actionModuleCodeHash,relayer:runtime.relayer,quoteSigner:runtime.quoteSigner,
     ...(process.env.NEARLYHUMAN_V2_GUEST_ID && /^[1-9]\d{0,77}$/.test(process.env.NEARLYHUMAN_V2_GUEST_ID) ? {guest:{id:process.env.NEARLYHUMAN_V2_GUEST_ID,...(process.env.NEARLYHUMAN_V2_GUEST_DAY&&/^[1-9]\d{0,9}$/.test(process.env.NEARLYHUMAN_V2_GUEST_DAY)?{day:Number(process.env.NEARLYHUMAN_V2_GUEST_DAY)}:{})}}:{}) };
