@@ -1,0 +1,72 @@
+{
+  "scope": "Actual public native NEAR contract and sole Cloud ledger; wallet requests were signed through real Meteor Web in the Codex profile. Independent read-only canonical/state/trace/certificate/packet/budget validation; no service write or inference by this verifier.",
+  "checkedAt": "2026-11-03T12:48:17.207Z",
+  "runtime": {
+    "version": 2,
+    "networkId": "near-testnet",
+    "network": "testnet",
+    "collection": "game.nearlyhuman-dev-20261102-26c8bd.testnet",
+    "rpcUrl": "https://test.rpc.fastnear.com",
+    "codeHash": "BMxLckeFy9Sg2ynJB9CpkPdXjzA6v1c1JwL26WzHpscV",
+    "rulesHash": "0xdbba15bd27ab533240cf3d24e0df997d850ca3c4ba598e7d222b3061216d5363",
+    "decisionConfig": "0x5f8f7f1d79381d02783c3960fa2b8f12da19cac75f6b483aece39f0f73766892",
+    "relayer": "relay.nearlyhuman-dev-20261102-26c8bd.testnet",
+    "quoteSigner": "o1P3lNiomtJnS4HQyJyjakTH53m0ESzPC5Buw6KEgU0="
+  },
+  "block": {
+    "height": "276050916",
+    "hash": "8uaUFd8Q2neqtxjznG2NfyjvcdRdABcauVU6QpZk3PMK",
+    "timestamp": "1793710090"
+  },
+  "id": "1",
+  "day": 2,
+  "name": "FERN",
+  "owner": "nearlyhuman-dev-20261102-26c8bd.testnet",
+  "requestId": "0x5e76cbd5128ea4a4f09ddaf48baaf25b2832c87e8f389bcd7435f9da7f28fc84",
+  "commitment": "0xc6a7a7f199189308a546ec26ef180a224c4b4292b5ff7f038c55f61e8caa8100",
+  "ownerTx": "E3TtAyfXGyRtyUqtgRcdKGmZKALNYHL5BRWXbMGc8uRx",
+  "finalTx": "EmqTXgnHFg4Z5vz4WCfQHVPhMtWpYi5LgjHVNiYG5azy",
+  "paidSends": 5,
+  "chargedMicroUSD": 634,
+  "project": "Plant Wood tree",
+  "receiptCount": 60,
+  "quoteRetired": true,
+  "aiHoldInactive": true,
+  "gasHoldAbsent": true,
+  "canonicalMatch": true,
+  "phase": "ready",
+  "pass": true,
+  "origin": "https://nearlyhuman.netlify.app",
+  "publicReplayMatches": true,
+  "progress": [
+    {
+      "id": "b9fd431052264feedf7ee4ff5befee759a78968b9a3a88929d6208df6acf79dc",
+      "stage": "plan",
+      "label": "Plant Wood tree"
+    },
+    {
+      "id": "5d20d22949a6f53676f07f47a95c2327559bb6193085cf81cbdfef9a1aecaa6f",
+      "stage": "routine",
+      "label": "Water the garden",
+      "slot": 21
+    },
+    {
+      "id": "7f5139a89547a7a3258e70c2f96a26b2ad642a9d2456a4405ae9022e6b0b3a1f",
+      "stage": "routine",
+      "label": "Have breakfast",
+      "slot": 31
+    },
+    {
+      "id": "7a2e941b3eda75dca6028d6119cd95b98681f8f9e7fe193e139573b588899365",
+      "stage": "routine",
+      "label": "Enjoy a little quiet",
+      "slot": 41
+    },
+    {
+      "id": "be8aa3fdfe99aa749c846d2639db629ef7b98dad30b88a7489b3fa358326eb40",
+      "stage": "routine",
+      "label": "Take a nap",
+      "slot": 51
+    }
+  ]
+}

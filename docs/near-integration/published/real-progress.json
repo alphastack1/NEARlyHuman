@@ -1,0 +1,181 @@
+{
+  "scope": "Actual published Meteor/Jev day, observing the real authenticated job responses and rendered app only. No synthetic responses, extra inference, polling, signatures or service writes by this observer.",
+  "events": [
+    {
+      "at": "2026-11-03T12:47:01.683Z",
+      "status": 200,
+      "requestId": "0x5e76cbd5128ea4a4f09ddaf48baaf25b2832c87e8f389bcd7435f9da7f28fc84",
+      "tokenId": "1",
+      "phase": "preparing",
+      "progress": [],
+      "ownerTx": "E3TtAyfXGyRtyUqtgRcdKGmZKALNYHL5BRWXbMGc8uRx",
+      "screenshot": "native-live-01-preparing-0.png"
+    },
+    {
+      "at": "2026-11-03T12:47:04.835Z",
+      "status": 200,
+      "requestId": "0x5e76cbd5128ea4a4f09ddaf48baaf25b2832c87e8f389bcd7435f9da7f28fc84",
+      "tokenId": "1",
+      "phase": "preparing",
+      "progress": [
+        {
+          "id": "b9fd431052264feedf7ee4ff5befee759a78968b9a3a88929d6208df6acf79dc",
+          "stage": "plan",
+          "label": "Plant Wood tree"
+        },
+        {
+          "id": "5d20d22949a6f53676f07f47a95c2327559bb6193085cf81cbdfef9a1aecaa6f",
+          "stage": "routine",
+          "label": "Water the garden",
+          "slot": 21
+        }
+      ],
+      "ownerTx": "E3TtAyfXGyRtyUqtgRcdKGmZKALNYHL5BRWXbMGc8uRx",
+      "screenshot": "native-live-02-preparing-2.png"
+    },
+    {
+      "at": "2026-11-03T12:47:07.034Z",
+      "status": 200,
+      "requestId": "0x5e76cbd5128ea4a4f09ddaf48baaf25b2832c87e8f389bcd7435f9da7f28fc84",
+      "tokenId": "1",
+      "phase": "preparing",
+      "progress": [
+        {
+          "id": "b9fd431052264feedf7ee4ff5befee759a78968b9a3a88929d6208df6acf79dc",
+          "stage": "plan",
+          "label": "Plant Wood tree"
+        },
+        {
+          "id": "5d20d22949a6f53676f07f47a95c2327559bb6193085cf81cbdfef9a1aecaa6f",
+          "stage": "routine",
+          "label": "Water the garden",
+          "slot": 21
+        },
+        {
+          "id": "7f5139a89547a7a3258e70c2f96a26b2ad642a9d2456a4405ae9022e6b0b3a1f",
+          "stage": "routine",
+          "label": "Have breakfast",
+          "slot": 31
+        }
+      ],
+      "ownerTx": "E3TtAyfXGyRtyUqtgRcdKGmZKALNYHL5BRWXbMGc8uRx",
+      "screenshot": "native-live-03-preparing-3.png"
+    },
+    {
+      "at": "2026-11-03T12:47:09.532Z",
+      "status": 200,
+      "requestId": "0x5e76cbd5128ea4a4f09ddaf48baaf25b2832c87e8f389bcd7435f9da7f28fc84",
+      "tokenId": "1",
+      "phase": "preparing",
+      "progress": [
+        {
+          "id": "b9fd431052264feedf7ee4ff5befee759a78968b9a3a88929d6208df6acf79dc",
+          "stage": "plan",
+          "label": "Plant Wood tree"
+        },
+        {
+          "id": "5d20d22949a6f53676f07f47a95c2327559bb6193085cf81cbdfef9a1aecaa6f",
+          "stage": "routine",
+          "label": "Water the garden",
+          "slot": 21
+        },
+        {
+          "id": "7f5139a89547a7a3258e70c2f96a26b2ad642a9d2456a4405ae9022e6b0b3a1f",
+          "stage": "routine",
+          "label": "Have breakfast",
+          "slot": 31
+        },
+        {
+          "id": "7a2e941b3eda75dca6028d6119cd95b98681f8f9e7fe193e139573b588899365",
+          "stage": "routine",
+          "label": "Enjoy a little quiet",
+          "slot": 41
+        }
+      ],
+      "ownerTx": "E3TtAyfXGyRtyUqtgRcdKGmZKALNYHL5BRWXbMGc8uRx",
+      "screenshot": "native-live-04-preparing-4.png"
+    },
+    {
+      "at": "2026-11-03T12:47:12.636Z",
+      "status": 200,
+      "requestId": "0x5e76cbd5128ea4a4f09ddaf48baaf25b2832c87e8f389bcd7435f9da7f28fc84",
+      "tokenId": "1",
+      "phase": "saving",
+      "progress": [
+        {
+          "id": "b9fd431052264feedf7ee4ff5befee759a78968b9a3a88929d6208df6acf79dc",
+          "stage": "plan",
+          "label": "Plant Wood tree"
+        },
+        {
+          "id": "5d20d22949a6f53676f07f47a95c2327559bb6193085cf81cbdfef9a1aecaa6f",
+          "stage": "routine",
+          "label": "Water the garden",
+          "slot": 21
+        },
+        {
+          "id": "7f5139a89547a7a3258e70c2f96a26b2ad642a9d2456a4405ae9022e6b0b3a1f",
+          "stage": "routine",
+          "label": "Have breakfast",
+          "slot": 31
+        },
+        {
+          "id": "7a2e941b3eda75dca6028d6119cd95b98681f8f9e7fe193e139573b588899365",
+          "stage": "routine",
+          "label": "Enjoy a little quiet",
+          "slot": 41
+        },
+        {
+          "id": "be8aa3fdfe99aa749c846d2639db629ef7b98dad30b88a7489b3fa358326eb40",
+          "stage": "routine",
+          "label": "Take a nap",
+          "slot": 51
+        }
+      ],
+      "ownerTx": "E3TtAyfXGyRtyUqtgRcdKGmZKALNYHL5BRWXbMGc8uRx",
+      "screenshot": "native-live-05-saving-5.png"
+    },
+    {
+      "at": "2026-11-03T12:47:18.267Z",
+      "status": 200,
+      "requestId": "0x5e76cbd5128ea4a4f09ddaf48baaf25b2832c87e8f389bcd7435f9da7f28fc84",
+      "tokenId": "1",
+      "phase": "ready",
+      "progress": [
+        {
+          "id": "b9fd431052264feedf7ee4ff5befee759a78968b9a3a88929d6208df6acf79dc",
+          "stage": "plan",
+          "label": "Plant Wood tree"
+        },
+        {
+          "id": "5d20d22949a6f53676f07f47a95c2327559bb6193085cf81cbdfef9a1aecaa6f",
+          "stage": "routine",
+          "label": "Water the garden",
+          "slot": 21
+        },
+        {
+          "id": "7f5139a89547a7a3258e70c2f96a26b2ad642a9d2456a4405ae9022e6b0b3a1f",
+          "stage": "routine",
+          "label": "Have breakfast",
+          "slot": 31
+        },
+        {
+          "id": "7a2e941b3eda75dca6028d6119cd95b98681f8f9e7fe193e139573b588899365",
+          "stage": "routine",
+          "label": "Enjoy a little quiet",
+          "slot": 41
+        },
+        {
+          "id": "be8aa3fdfe99aa749c846d2639db629ef7b98dad30b88a7489b3fa358326eb40",
+          "stage": "routine",
+          "label": "Take a nap",
+          "slot": 51
+        }
+      ],
+      "ownerTx": "E3TtAyfXGyRtyUqtgRcdKGmZKALNYHL5BRWXbMGc8uRx",
+      "finalTx": "EmqTXgnHFg4Z5vz4WCfQHVPhMtWpYi5LgjHVNiYG5azy",
+      "screenshot": "native-live-06-ready-5.png"
+    }
+  ],
+  "errors": []
+}

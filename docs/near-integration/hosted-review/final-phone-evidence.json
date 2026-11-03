@@ -1,0 +1,127 @@
+{
+  "scope": "Published final candidate GET-only public phone UI review. One owned Codex Browser tab with page-local storage; no wallet selected/connected, quote/auth/AI/payment, or movie playback.",
+  "checkedAt": "2026-11-03T12:48:24.143Z",
+  "origin": "https://nearlyhuman.netlify.app",
+  "sourceCommit": "768aff93f3f59f721cf925eea3efb07da674fbe4",
+  "entryScripts": [
+    "/assets/index-BWmA2cQo.js"
+  ],
+  "nativePublicNftHref": "https://testnet.nearblocks.io/nft-tokens/game.nearlyhuman-dev-20261102-26c8bd.testnet/tokens/1",
+  "publicPortraitDecoded": true,
+  "realTwoWorldPicker": true,
+  "nativeFERNReturnContext": true,
+  "robinhoodDraftReturnContext": true,
+  "errors": [],
+  "writes": [],
+  "observations": [
+    {
+      "name": "native-public-profile-390",
+      "url": "https://nearlyhuman.netlify.app/?networkId=near-testnet&collection=game.nearlyhuman-dev-20261102-26c8bd.testnet&rooster=1&day=1",
+      "width": 390,
+      "bodyWidth": 390,
+      "clipped": [],
+      "heading": "FERN",
+      "text": "FERN\nLV00\nDAY 01\nPlant Daisy\n\nA day with FERN.\n\nWatch day\nFERN\nNEAR Testnet · NFT #1\n↗\nDAY 2\nLV02\n0 NHC\nVisit home\nDays\nShare\nHatch your own"
+    },
+    {
+      "name": "native-public-profile-320",
+      "url": "https://nearlyhuman.netlify.app/?networkId=near-testnet&collection=game.nearlyhuman-dev-20261102-26c8bd.testnet&rooster=1&day=1",
+      "width": 320,
+      "bodyWidth": 320,
+      "clipped": [],
+      "heading": "FERN",
+      "text": "FERN\nLV00\nDAY 01\nPlant Daisy\n\nA day with FERN.\n\nWatch day\nFERN\nNEAR Testnet · NFT #1\n↗\nDAY 2\nLV02\n0 NHC\nVisit home\nDays\nShare\nHatch your own"
+    },
+    {
+      "name": "native-public-profile-430",
+      "url": "https://nearlyhuman.netlify.app/?networkId=near-testnet&collection=game.nearlyhuman-dev-20261102-26c8bd.testnet&rooster=1&day=1",
+      "width": 430,
+      "bodyWidth": 430,
+      "clipped": [],
+      "heading": "FERN",
+      "text": "FERN\nLV00\nDAY 01\nPlant Daisy\n\nA day with FERN.\n\nWatch day\nFERN\nNEAR Testnet · NFT #1\n↗\nDAY 2\nLV02\n0 NHC\nVisit home\nDays\nShare\nHatch your own"
+    },
+    {
+      "name": "native-exact-home-390",
+      "url": "https://nearlyhuman.netlify.app/?networkId=near-testnet&collection=game.nearlyhuman-dev-20261102-26c8bd.testnet&rooster=1&day=1",
+      "width": 390,
+      "bodyWidth": 390,
+      "clipped": [],
+      "text": "FERN\nLV00\nDAY 01\nPlant Daisy\n\nA day with FERN.\n\nWatch day"
+    },
+    {
+      "name": "two-world-picker-390",
+      "url": "https://nearlyhuman.netlify.app/?networkId=near-testnet&collection=game.nearlyhuman-dev-20261102-26c8bd.testnet&rooster=1&day=1",
+      "width": 390,
+      "bodyWidth": 390,
+      "clipped": [],
+      "heading": "Choose network",
+      "text": "FERN\nLV00\nDAY 01\nPlant Daisy\n\nA day with FERN.\n\nWatch day\nChoose network\nRobinhood\nTestnet\nNEAR\nTestnet\nRefresh networks\n\nEach network has its own roosters."
+    },
+    {
+      "name": "two-world-picker-320",
+      "url": "https://nearlyhuman.netlify.app/?networkId=near-testnet&collection=game.nearlyhuman-dev-20261102-26c8bd.testnet&rooster=1&day=1",
+      "width": 320,
+      "bodyWidth": 320,
+      "clipped": [],
+      "heading": "Choose network",
+      "text": "FERN\nLV00\nDAY 01\nPlant Daisy\n\nA day with FERN.\n\nWatch day\nChoose network\nRobinhood\nTestnet\nNEAR\nTestnet\nRefresh networks\n\nEach network has its own roosters."
+    },
+    {
+      "name": "robinhood-hatch-390",
+      "url": "https://nearlyhuman.netlify.app/?chainId=46630&collection=0x30cb5213fa94020a95893ddb6b07470dbf7a9efc",
+      "width": 390,
+      "bodyWidth": 390,
+      "clipped": [],
+      "heading": "A new rooster",
+      "text": "A new rooster\nRobinhood\nTestnet\nName your rooster\nStrengths\nHardy, handy or upbeat?\nBalanced\n0.0004 ETH\nChange\nConnect wallet\nConnecting is free"
+    },
+    {
+      "name": "native-return-context-390",
+      "url": "https://nearlyhuman.netlify.app/?networkId=near-testnet&collection=game.nearlyhuman-dev-20261102-26c8bd.testnet&rooster=1&day=1",
+      "width": 390,
+      "bodyWidth": 390,
+      "clipped": [],
+      "heading": "Menu",
+      "text": "FERN\nLV00\nDAY 01\nPlant Daisy\n\nA day with FERN.\n\nOpening home…\nMenu\nNEAR\nTestnet\nFERN\nDAY 2 · LV2\nDays\nBelongings\nPurse\nShare\nYour roosters\nHatch a rooster\nSound off"
+    },
+    {
+      "name": "native-meteor-choice-390",
+      "url": "https://nearlyhuman.netlify.app/?networkId=near-testnet&collection=game.nearlyhuman-dev-20261102-26c8bd.testnet&rooster=1&day=1",
+      "width": 390,
+      "bodyWidth": 390,
+      "clipped": [],
+      "heading": "Choose your wallet",
+      "text": "FERN\nLV00\nDAY 01\nPlant Daisy\n\nA day with FERN.\n\nOpening home…\nChoose your wallet\nNEAR\nTestnet\nConnect to hatch\nMeteor Wallet\nOther NEAR wallets"
+    },
+    {
+      "name": "native-meteor-choice-320",
+      "url": "https://nearlyhuman.netlify.app/?networkId=near-testnet&collection=game.nearlyhuman-dev-20261102-26c8bd.testnet&rooster=1&day=1",
+      "width": 320,
+      "bodyWidth": 320,
+      "clipped": [],
+      "heading": "Choose your wallet",
+      "text": "FERN\nLV00\nDAY 01\nPlant Daisy\n\nA day with FERN.\n\nWatch day\nChoose your wallet\nNEAR\nTestnet\nConnect to hatch\nMeteor Wallet\nOther NEAR wallets"
+    }
+  ],
+  "screens": [
+    "native-public-profile-390.png",
+    "native-public-profile-320.png",
+    "native-public-profile-430.png",
+    "native-exact-home-390.png",
+    "two-world-picker-390.png",
+    "two-world-picker-320.png",
+    "robinhood-hatch-390.png",
+    "native-return-context-390.png",
+    "native-meteor-choice-390.png",
+    "native-meteor-choice-320.png"
+  ],
+  "result": "PASS",
+  "permanentScreenshots": [
+    "native-public-profile-390.png",
+    "native-public-profile-320.png",
+    "two-world-picker-320.png",
+    "native-meteor-choice-320.png"
+  ],
+  "releaseEvidenceNote": "Captured after publication of main 768aff93f3f59f721cf925eea3efb07da674fbe4. These evidence files were saved locally; no subsequent deployment was triggered."
+}
