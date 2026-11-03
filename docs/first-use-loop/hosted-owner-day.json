@@ -1,0 +1,51 @@
+{
+  "scope": "Actual hosted UI and Netlify Cloud worker readback; one new native NFT, one accepted real Jev day. Node-binding wallet and page-local client storage are controlled; all chain/API/model/Blobs outcomes are actual. No signing/provider/cloud write by this readback.",
+  "checkedAt": "2026-11-03T10:16:59.441Z",
+  "block": "147633538",
+  "blockHash": "0x8124fd82da1fd6952124126280af2ca7bc6d5cbfb9d52992dfde5862f4c7557b",
+  "world": {
+    "chainId": 46630,
+    "collection": "0x30cb5213fa94020a95893ddb6b07470dbf7a9efc",
+    "decisionConfig": "0x5f8f7f1d79381d02783c3960fa2b8f12da19cac75f6b483aece39f0f73766892"
+  },
+  "name": "BASIL",
+  "id": "6",
+  "day": 1,
+  "requestId": "0x48e43e6fd8a7c30b18b6bd374d78ee0c43c87f3a95c9f887f4fc122bc00637b9",
+  "commitment": "0xbf348e43eea9d7052c567d9b00e9fc0c00eb187150ae839755ddd783d30b7522",
+  "finalTx": "0x43c6f2bd74e04b733465b0b5dd8ea605e5bc9fe8102d4e207bbe3805837b04f6",
+  "finalizationGas": "1870121",
+  "jobPhase": "ready",
+  "model": [
+    "typesafe/jev-1.13-20260917"
+  ],
+  "paidSends": 5,
+  "chargedMicroUSD": 575,
+  "providerEntriesComplete": true,
+  "quoteRetired": true,
+  "aiHoldInactive": true,
+  "gasHoldAbsent": true,
+  "purseMicro": "0",
+  "rewardMicro": "0",
+  "project": "Plant Daisy",
+  "browserErrors": 0,
+  "ownerTransactions": [
+    {
+      "functionName": "mintNFT",
+      "hash": "0x9da7725a2e7263c3da2ba933ee7581d2b00fef99e639218bf6efb5d6ed581937",
+      "nonce": 76,
+      "status": "confirmed",
+      "blockNumber": "147632696",
+      "gasUsed": "836668"
+    },
+    {
+      "functionName": "acceptDay",
+      "hash": "0x651592a00bc356831885ad7e47219bc2a4ff1280beeffd38f643bfd45a378205",
+      "nonce": 77,
+      "status": "confirmed",
+      "blockNumber": "147632808",
+      "gasUsed": "942820"
+    }
+  ],
+  "pass": true
+}
