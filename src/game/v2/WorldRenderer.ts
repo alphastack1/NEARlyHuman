@@ -1,13 +1,12 @@
 import Phaser from 'phaser';
 import { fixtureCanvas, FIXTURE_SIZES, type FixtureArt, type ArtOptions } from '../../art/fixtures';
 import { PROP_URLS } from '../../art/asset-urls';
-import type { RoosterPose } from '../../art/rooster';
+import { roosterCanvas, ROOSTER_FRAME, type RoosterPose } from '../../art/rooster';
 import { Op, type State, type Receipt } from '../../v2/types';
 import { v2Personality } from '../../v2/personality';
 import { PLANTS, RECIPES } from '../../v2/catalog';
-import { landscape, bedArt, itemArt, wellArt, workbenchArt, shadowArt } from './art';
+import { landscape, bedArt, itemArt, wellArt, workbenchArt, shadowArt, accentFixture } from './art';
 import { pixelViewport } from './pixel-grid';
-import { v2RoosterCanvas, V2_ROOSTER_FRAME } from './rooster-art';
 import { WORLD_WIDTH, WORLD_HEIGHT, BEDS, ANCHORS, findRoute, receiptStops, type Point, type InspectTarget } from './layout';
 import { openingEase, openingTileTime } from '../opening';
 
@@ -27,7 +26,7 @@ export interface V2WorldController {
   resize(): void;
   destroy(): void;
 }
-interface Fixture { kind: FixtureArt; image: Phaser.GameObjects.Image; x: number; y: number; key: string }
+interface Fixture { kind: FixtureArt; image: Phaser.GameObjects.Image; x: number; y: number; key: string; opts: ArtOptions }
 interface Film {
   receipt: Receipt; stops: Point[]; stop: number; route: Point[]; phase: 'travel' | 'contact' | 'work' | 'home';
   elapsed: number; work: number; impact: boolean; bedEntered?: boolean; onImpact?: () => void; resolve: () => void;
@@ -54,6 +53,7 @@ class LifeScene extends Phaser.Scene {
   private marks!: Phaser.GameObjects.Graphics;
   private effects!: Phaser.GameObjects.Graphics;
   private ambient!: Phaser.GameObjects.Graphics;
+  private sunlight!: Phaser.GameObjects.Graphics;
   private night!: Phaser.GameObjects.Rectangle;
   private lampGlow!: Phaser.GameObjects.Graphics;
   private point: Point = { x: 312, y: 79 };
@@ -90,16 +90,17 @@ class LifeScene extends Phaser.Scene {
   preload(): void { for (const [kind, url] of Object.entries(PROP_URLS)) this.load.image(`v2-asset-${kind}`, url); }
   create(): void {
     this.textures.addCanvas('v2-landscape', landscape(this.state.seed)); this.add.image(0, 0, 'v2-landscape').setOrigin(0).setDepth(-100);
+    this.sunlight = this.add.graphics().setDepth(-80);
     const prop = (kind: FixtureArt, x: number, y: number, target?: InspectTarget, opts: ArtOptions = {}) => this.addFixture(kind, x, y, target, opts);
     prop('window', 136, 48, { kind: 'fixture', label: 'Window', index: 1 });
     prop('fridge', 72, 80, { kind: 'fixture', label: 'Pantry', index: 3 }); prop('pantry', 120, 80);
     const counter = this.add.graphics().setDepth(50); counter.fillStyle(0x60442d).fillRect(82, 53, 143, 28); counter.fillStyle(0xa77946).fillRect(84, 55, 139, 23); counter.fillStyle(0xd5a76b).fillRect(84, 55, 139, 3);
     prop('stove', 176, 80, { kind: 'fixture', label: 'Stove', index: 0 }); prop('prep', 208, 80, { kind: 'fixture', label: 'Kitchen counter', index: 4 });
-    prop('plant', 47, 87); prop('shelf', 207, 37); prop('table', 124, 160); prop('plant', 56, 183);
+    prop('plant', 47, 87); prop('shelf', 207, 37, undefined, { variant: 1 }); prop('table', 124, 160); prop('plant', 56, 183);
     prop('bed', 312, 112, { kind: 'fixture', label: 'Bed', index: 5 }); prop('bedside', 354, 101); prop('cupboard', 432, 80, { kind: 'fixture', label: 'Supplies', index: 6 });
-    prop('plant', 395, 79); prop('painting', 284, 48); prop('painting', 449, 153); prop('shelf', 345, 177);
+    prop('plant', 395, 79); prop('painting', 284, 48, undefined, { variant: 2 }); prop('painting', 449, 153); prop('shelf', 345, 177, undefined, { variant: 1 });
     prop('baseSeat', 80, 336, { kind: 'fixture', label: 'Armchair', index: 7 }); prop('plant', 115, 323); prop('painting', 69, 292); prop('painting', 172, 292); prop('plant', 193, 379);
-    prop('chair', 168, 336, { kind: 'fixture', label: 'Handmade chair', index: 2 }); prop('sink', 336, 320, { kind: 'fixture', label: 'Washroom', index: 8 }); prop('plant', 301, 327); prop('painting', 335, 280);
+    prop('chair', 168, 336, { kind: 'fixture', label: 'Handmade chair', index: 2 }); prop('sink', 336, 320, { kind: 'fixture', label: 'Washroom', index: 8 }); prop('plant', 301, 327); prop('painting', 335, 280, undefined, { variant: 1 });
     prop('plant', 304, 402); prop('shelf', 434, 287); prop('plant', 470, 406);
     this.textures.addCanvas('v2-bench', workbenchArt()); this.add.image(432, 323, 'v2-bench').setOrigin(.5, 1).setDepth(323).setInteractive().on('pointerup', (pointer: Phaser.Input.Pointer) => this.inspect({ kind: 'workshop', label: 'Workshop' }, pointer));
     this.textures.addCanvas('v2-well', wellArt()); this.add.image(280, 536, 'v2-well').setOrigin(.5, 1).setDepth(536).setInteractive().on('pointerup', (pointer: Phaser.Input.Pointer) => this.inspect({ kind: 'well', label: 'Well' }, pointer));
@@ -111,7 +112,7 @@ class LifeScene extends Phaser.Scene {
     }
     this.foreground = this.add.graphics(); this.effects = this.add.graphics().setDepth(950); this.ambient = this.add.graphics().setDepth(960); this.marks = this.add.graphics().setDepth(970);
     this.shadow = this.add.image(this.point.x, this.point.y + 1, this.shadowTexture(20, 6)).setAlpha(.25);
-    this.actor = this.add.image(this.point.x, this.point.y, this.roosterTexture('idle')).setOrigin(V2_ROOSTER_FRAME.footX / V2_ROOSTER_FRAME.width, V2_ROOSTER_FRAME.footY / V2_ROOSTER_FRAME.height).setInteractive({ pixelPerfect: true, alphaTolerance: 1 });
+    this.actor = this.add.image(this.point.x, this.point.y, this.roosterTexture('idle')).setOrigin(ROOSTER_FRAME.footX / ROOSTER_FRAME.width, ROOSTER_FRAME.footY / ROOSTER_FRAME.height).setInteractive({ pixelPerfect: true, alphaTolerance: 1 });
     this.actor.on('pointerup', (pointer: Phaser.Input.Pointer) => { if (this.allowPointer(pointer) && !this.dragging?.moved) this.attention = this.elapsed + 1400; });
     this.held = this.add.image(0, 0, this.itemTexture(6)).setVisible(false);
     this.blanket = this.add.image(312, 112, this.fixtureTexture('bedCover', {})).setOrigin(.5, 1).setDepth(115).setVisible(true);
@@ -134,11 +135,11 @@ class LifeScene extends Phaser.Scene {
     const key = `v2-fixture-${kind}-${JSON.stringify(opts)}`; if (this.textures.exists(key)) return key;
     const asset = kind === 'pantry' ? 'prep' : kind === 'bedCover' ? 'bed' : kind;
     if (this.textures.exists(`v2-asset-${asset}`) && !opts.damaged && !opts.patched && !opts.open) {
-      if (kind !== 'bedCover') return `v2-asset-${asset}`;
+      if (kind !== 'bedCover' && kind !== 'plant') return `v2-asset-${asset}`;
       const source = this.textures.get(`v2-asset-${asset}`).getSourceImage() as HTMLImageElement, c = document.createElement('canvas'); c.width = source.width; c.height = source.height;
-      const ctx = c.getContext('2d')!; ctx.drawImage(source, 0, 0); ctx.clearRect(0, 0, c.width, 25); this.textures.addCanvas(key, c); return key;
+      const ctx = c.getContext('2d')!; ctx.drawImage(source, 0, 0); if (kind === 'bedCover') ctx.clearRect(0, 0, c.width, 25); this.textures.addCanvas(key, accentFixture(c, kind)); return key;
     }
-    this.textures.addCanvas(key, fixtureCanvas(kind, opts)); return key;
+    this.textures.addCanvas(key, accentFixture(fixtureCanvas(kind, opts), kind)); return key;
   }
   private addFixture(kind: FixtureArt, x: number, y: number, target?: InspectTarget, opts: ArtOptions = {}): void {
     const key = this.fixtureTexture(kind, opts), [width] = FIXTURE_SIZES[kind];
@@ -147,10 +148,10 @@ class LifeScene extends Phaser.Scene {
     // An odd-sized texture still starts on a whole world pixel.
     image.setOrigin(Math.floor(image.width / 2) / image.width, 1);
     if (target) image.setInteractive(new Phaser.Geom.Rectangle(-3, -3, image.width + 6, image.height + 8), Phaser.Geom.Rectangle.Contains).on('pointerup', (pointer: Phaser.Input.Pointer) => this.inspect(target, pointer));
-    this.fixtures.push({ kind, image, x, y, key });
+    this.fixtures.push({ kind, image, x, y, key, opts });
   }
   private roosterTexture(pose: RoosterPose): string {
-    if (this.roosterSeed !== this.state.seed) { this.roosterSeed = this.state.seed; for (const p of POSES) { const key = `v2-rooster-${p}`; if (this.textures.exists(key)) this.textures.remove(key); this.textures.addCanvas(key, v2RoosterCanvas(this.state.seed, p)); } }
+    if (this.roosterSeed !== this.state.seed) { this.roosterSeed = this.state.seed; for (const p of POSES) { const key = `v2-rooster-${p}`; if (this.textures.exists(key)) this.textures.remove(key); this.textures.addCanvas(key, roosterCanvas(this.state.seed, p)); } }
     return `v2-rooster-${pose}`;
   }
   private itemTexture(index: number): string { const key = `v2-item-${index}`; if (!this.textures.exists(key)) this.textures.addCanvas(key, itemArt(index)); return key; }
@@ -165,7 +166,7 @@ class LifeScene extends Phaser.Scene {
     const before = this.state; this.state = state; if (!this.initialized) return;
     for (let i = 0; i < 4; i++) { if (!before || JSON.stringify(before.plots[i]) !== JSON.stringify(state.plots[i]) || this.textureSerial === 0) this.replaceBed(i); this.covers[i]!.setVisible(!!state.house.umbrellaLife[i]); }
     for (const f of this.fixtures) {
-      let opts: ArtOptions = {};
+      let opts: ArtOptions = { ...f.opts };
       if (f.kind === 'stove') opts = { damaged: !!(state.house.damage & 1), patched: !!state.house.stovePatch };
       if (f.kind === 'window') opts = { damaged: !!(state.house.damage & 2), braced: state.house.windowBrace };
       if (f.kind === 'chair') { opts = { damaged: !!(state.house.damage & 4), braced: state.house.chairBrace }; f.image.setVisible(state.house.chairLife > 0); f.image.setY(state.house.chairAnchor ? 384 : f.y).setDepth(state.house.chairAnchor ? 384 : f.y); }
@@ -325,11 +326,16 @@ class LifeScene extends Phaser.Scene {
     if (working && f && FOOD_OPS.has(f.receipt.op)) item = f.receipt.op === Op.Drink ? f.receipt.arg : f.receipt.op === Op.Coffee ? 35 : f.receipt.arg || 2;
     if (working && f && WORK_OPS.has(f.receipt.op) && !f.impact) item = 37;
     if (working && f?.receipt.op === Op.EnjoyFlower) item = f.receipt.arg;
-    const handHeight = working && f && FOOD_OPS.has(f.receipt.op) ? 24 : item === 37 ? 21 : 18;
+    const handHeight = working && f && FOOD_OPS.has(f.receipt.op) ? 19 : item === 37 ? 17 : 14;
     this.held.setVisible(item >= 0 && this.state.alive); if (item >= 0) this.held.setTexture(this.itemTexture(item)).setPosition(Math.round(this.point.x + this.facing * 13), Math.round(this.point.y - handHeight - bob - (item === 37 ? Math.floor(this.elapsed / 170) % 2 * 4 : 0))).setFlipX(this.facing < 0 && (item === 36 || item === 37)).setDepth(this.point.y + 3);
   }
   private drawEffects(): void {
     const g = this.effects, a = this.ambient; g.clear(); a.clear(); const px = (color: number, x: number, y: number, w = 1, h = 1, alpha = 1) => g.fillStyle(color, alpha).fillRect(Math.round(x), Math.round(y), w, h);
+    // Window light lives on the floor layer, below props and the untouched NFT sprite.
+    const daylight = this.timeSlot < 6 ? .3 : this.timeSlot > 45 ? Math.max(0, (60 - this.timeSlot) / 15) : 1;
+    const windowLight = daylight * (this.state.house.damage & 2 ? .055 : .13), drift = Math.floor(this.elapsed / 3200) % 2;
+    this.sunlight.clear().fillStyle(0xffdc8e, windowLight).fillRect(121 + drift, 77, 12, 31).fillRect(138 + drift, 77, 12, 31);
+    this.sunlight.fillStyle(0xffe5a8, windowLight * .45).fillRect(122 + drift, 108, 28, 5);
     const f = this.film, t = Math.floor(this.elapsed / 170) % 3, working = f && f.phase !== 'travel' && f.phase !== 'home';
     if (working && f) {
       const op = f.receipt.op, x = this.point.x, y = this.point.y;
@@ -349,7 +355,11 @@ class LifeScene extends Phaser.Scene {
     // Slow moving light, leaf flicks and butterflies give the place a pulse without inventing events.
     for (let i = 0; i < 4; i++) { const x = 350 + i * 34 + Math.sin(this.elapsed / 2300 + i * 3) * 10, y = 488 + i * 44 + Math.sin(this.elapsed / 1700 + i) * 8; a.fillStyle(i % 2 ? 0xd7ce97 : 0xb7c37c, .72); a.fillRect(Math.round(x), Math.round(y), 2, 1); }
     const butterflyX = 252 + Math.sin(this.elapsed / 3600) * 28, butterflyY = 616 + Math.cos(this.elapsed / 2400) * 16, wing = Math.floor(this.elapsed / 180) % 2;
-    a.fillStyle(0xe6dfb1).fillRect(Math.round(butterflyX) - 3, Math.round(butterflyY) - wing, 3, 2 + wing).fillRect(Math.round(butterflyX) + 1, Math.round(butterflyY) - wing, 3, 2 + wing); a.fillStyle(0x6d6340).fillRect(Math.round(butterflyX), Math.round(butterflyY), 1, 3);
+    a.fillStyle(0xf1c777).fillRect(Math.round(butterflyX) - 3, Math.round(butterflyY) - wing, 3, 2 + wing).fillRect(Math.round(butterflyX) + 1, Math.round(butterflyY) - wing, 3, 2 + wing); a.fillStyle(0x6d6340).fillRect(Math.round(butterflyX), Math.round(butterflyY), 1, 3);
+    // A cloth hem and two leaf tips move by one native pixel; nothing advances game state.
+    const breeze = Math.floor(this.elapsed / 1100) % 3 === 0 ? 1 : 0;
+    a.fillStyle(0xece5c4).fillRect(96 + breeze, 546, 23, 1); a.fillStyle(0x87c1bd).fillRect(145 + breeze, 541, 14, 1); a.fillStyle(0xe6ad8b).fillRect(168 + breeze, 538, 9, 1);
+    a.fillStyle(0x7ca75a, .8).fillRect(394 + breeze, 50, 2, 1).fillRect(303 - breeze, 373, 2, 1);
     for (let i = 0; i < 4; i++) if (this.state.plots[i]!.kind && !this.state.plots[i]!.ticks) { const p = BEDS[i]!, blink = (this.elapsed / 500 + i) % 5; if (blink < 1) { a.fillStyle(0xf0dfa0, .75).fillRect(p.x + 20, p.y - 40, 1, 3).fillRect(p.x + 19, p.y - 39, 3, 1); } }
     this.marks.clear();
     if (this.selected && this.selected.until > this.elapsed) { const target = this.selected.target, p = target.kind === 'bed' ? BEDS[target.index || 0]! : target.kind === 'well' ? { x: 280, y: 533 } : target.kind === 'workshop' ? { x: 432, y: 321 } : target.kind === 'mailbox' ? { x: 424, y: 728 } : this.point;

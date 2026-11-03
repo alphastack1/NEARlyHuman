@@ -71,3 +71,5 @@ Before publication, the public-chain run saved41 real Jev days across two NPCs u
 The [V2 design](design/ECONOMY_V2.md), [contract guide](contracts/v2/README.md), [approved visual reference](design/references/VR-01-approved-house-and-care.png) and [99-board mockup gallery](design/mockups/index.html) preserve the intended game and visual direction.
 
 The [virtual-pet flow and pixel refinement](docs/vpet-refinement/README.md) maps the full player journey, cites the reference games, and records independent phone/menu/input reviews of the subsequent usability pass.
+
+The [whole-game presentation pass](docs/life-polish/README.md) extends that review through waiting, recovery, history, belongings and remembered lives. It restores the original procedural rooster artwork, adds restrained environmental color and gives the interface a quiet optional sound layer with reachable mute controls.

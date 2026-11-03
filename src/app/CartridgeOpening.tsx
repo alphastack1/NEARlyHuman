@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, type ReactNode } from 'react';
 import './cartridgeOpening.css';
 
 export type CartridgePhase = 'assembling' | 'title' | 'leaving' | 'closed';
@@ -16,7 +16,7 @@ function HouseMark() {
  </svg>;
 }
 
-export function CartridgeOpening({phase,onStart}:{phase:Exclude<CartridgePhase,'closed'>;onStart:()=>void}) {
+export function CartridgeOpening({phase,onStart,children}:{phase:Exclude<CartridgePhase,'closed'>;onStart:()=>void;children?:ReactNode}) {
  const start=useRef<HTMLButtonElement>(null),skip=useRef<HTMLButtonElement>(null);
  const titleSeen=useRef(false);if(phase==='title')titleSeen.current=true;
  const action=useRef(onStart);action.current=onStart;
@@ -27,6 +27,7 @@ export function CartridgeOpening({phase,onStart}:{phase:Exclude<CartridgePhase,'
  useEffect(()=>{
   const key=(event:KeyboardEvent)=>{
    if(event.key!=='Enter'&&event.key!==' '&&event.key!=='Escape')return;
+   if(event.target instanceof Element&&event.target.closest('.v2-sound-icon'))return;
    event.preventDefault();event.stopPropagation();
    if(!event.repeat)action.current();
   };
@@ -41,5 +42,6 @@ export function CartridgeOpening({phase,onStart}:{phase:Exclude<CartridgePhase,'
    <button ref={start} className="cartridge-start" disabled={phase!=='title'} onClick={event=>{event.stopPropagation();onStart();}}><i aria-hidden="true"/>START<i aria-hidden="true"/></button>
   </div>
   {phase==='assembling'&&<button ref={skip} className="cartridge-skip" onClick={event=>{event.stopPropagation();onStart();}}>Skip<span aria-hidden="true"> ▸▸</span></button>}
+  {children}
  </section>;
 }

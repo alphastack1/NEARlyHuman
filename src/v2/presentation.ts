@@ -110,6 +110,10 @@ export function filmBeats(receipts: Receipt[]): FilmBeat[] {
 }
 
 export interface Inspection { kind: 'bed' | 'well' | 'workshop' | 'mailbox' | 'fixture'; index?: number; label?: string }
+export function endingNote(state: State): string {
+  if (state.alive) return '';
+  return ['', 'Health ran out.', 'Food ran out.', 'Water ran out.', 'A wound became fatal.', 'Illness became fatal.', 'An infection became fatal.', 'A rare accident.'][state.deathCause] || 'This little life has ended.';
+}
 export interface InspectDetail { title: string; note: string; stock?: { name: string; count: number }[]; progress?: number }
 export function inspectDetail(target: Inspection, s: State): InspectDetail {
   if (target.kind === 'bed') {
@@ -119,10 +123,12 @@ export function inspectDetail(target: Inspection, s: State): InspectDetail {
     const period = spec && p.left < spec.yields ? spec.repeat : spec?.ticks;
     return { title: plantName(p.kind), note: p.ticks === 0 ? 'Ready to gather' : `${p.ticks} growing ${p.ticks === 1 ? 'day' : 'days'} to go${p.moisture === 0 ? ' · thirsty soil' : ''}`, progress: p.ticks === 0 ? 1 : 1 - p.ticks / (period || 1) };
   }
-  if (target.kind === 'well') return { title: 'The garden well', note: 'One visit waters every growing bed.' };
+  if (target.kind === 'well') return { title: 'The garden well', note: 'One visit waters all four beds.' };
   if (target.kind === 'workshop') return { title: 'The workshop', note: `${s.inventory[6] || 0} wood tucked away`, stock: RECIPES.map(r => ({ name: r.name, count: s.inventory[r.output] || 0 })) };
-  if (target.kind === 'mailbox') return { title: 'The morning post', note: 'Supplies arrive here. Handmade things leave here.', stock: s.inventory.flatMap((n, i) => n > 0 ? [{ name: itemName(i), count: n }] : []) };
+  if (target.kind === 'mailbox') return { title: 'The post box', note: 'Supplies in. Flowers, fruit and crafts out.', stock: s.inventory.flatMap((n, i) => n > 0 && i >= 22 && i < 34 ? [{ name: itemName(i), count: n }] : []) };
   const label = target.label || 'Home';
+  if (/pantry/i.test(label)) return { title: label, note: 'Food and care, tucked away.', stock: s.inventory.flatMap((n, i) => n > 0 && i < 6 ? [{ name: itemName(i), count: n }] : []) };
+  if (/supplies/i.test(label)) return { title: label, note: 'A few useful things for later.', stock: s.inventory.flatMap((n, i) => n > 0 && i >= 7 && i < 22 ? [{ name: itemName(i), count: n }] : []) };
   const note = /stove/i.test(label) ? (s.house.damage & 1 ? 'Could use a repair.' : s.house.powerOut ? 'The power is out.' : 'Ready for something warm.') : /chair/i.test(label) ? (s.house.damage & 4 ? 'A little wobbly.' : 'A good place to sit.') : /window/i.test(label) ? (s.house.damage & 2 ? 'A draft slips through.' : 'A view of the garden.') : /bed/i.test(label) ? 'A quiet place to recharge.' : 'A little corner of home.';
   return { title: label, note };
 }

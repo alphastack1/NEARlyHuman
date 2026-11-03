@@ -1,0 +1,37 @@
+{
+  "scope": "Actual MISO/SUNNY public snapshots, films and day lists. Controlled public-address wallet returns only account/network methods; all signing/sending rejected. Days delays/failure and future request deadline are controlled GET presentation fixtures. Unresolved mint hash is a dummy UI fixture and never checked onchain. No application POST, quote, AI or chain write.",
+  "errors": [],
+  "writes": [],
+  "facts": [
+    {
+      "case": "different-life-history",
+      "oldMisoRowsHidden": true,
+      "noFalseEmptyDuringRead": true,
+      "sunnyDay1Returned": true,
+      "walletMethods": [
+        "eth_requestAccounts",
+        "wallet_switchEthereumChain"
+      ]
+    },
+    {
+      "case": "history-read-retry",
+      "reads": 2,
+      "oldErrorCleared": true,
+      "rowsRecovered": true
+    },
+    {
+      "case": "unresolved-first-hatch-close",
+      "returnsToEntryWithRecovery": true
+    },
+    {
+      "case": "future-deadline",
+      "closeActionHidden": true
+    }
+  ],
+  "screenshots": [
+    "history-loading-new-life",
+    "history-sunny-ready",
+    "history-retry-recovered",
+    "pending-first-hatch-return"
+  ]
+}

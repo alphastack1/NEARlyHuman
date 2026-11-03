@@ -2,18 +2,20 @@ import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Icon, type IconName } from '../Icons';
 import { createV2WorldRenderer, type V2WorldController } from '../../game/v2';
 import type { V2PublicLife } from '../../v2/public';
-import type { Receipt, State } from '../../v2/types';
-import { filmBeats, inspectDetail, quietInterlude, receiptNote, receiptTitle, type Inspection, type V2FilmPacket } from '../../v2/presentation';
+import { Op, type Receipt, type State } from '../../v2/types';
+import { endingNote, filmBeats, inspectDetail, quietInterlude, receiptNote, receiptTitle, type Inspection, type V2FilmPacket } from '../../v2/presentation';
 import '../v2Playback.css';
 import type { CartridgePhase } from '../CartridgeOpening';
+import { LifeSoundButton, useLifeSound } from './LifeSound';
 
-interface Props { packet?: V2FilmPacket; life?: V2PublicLife; name?: string; onPrepare?: () => void; onHatch?: () => void; onPurse?: () => void; onExit?: () => void; onMenu?: () => void; onProfile?: () => void; onLatest?: () => void; suspended?: boolean; opening?: CartridgePhase; prepareLabel?: string; homeFirst?: boolean; example?: boolean; onEndExample?: () => void }
+interface Props { packet?: V2FilmPacket; life?: V2PublicLife; name?: string; onPrepare?: () => void; onHatch?: () => void; onPurse?: () => void; onExit?: () => void; onMenu?: () => void; onProfile?: () => void; onLatest?: () => void; suspended?: boolean; opening?: CartridgePhase; prepareLabel?: string; homeFirst?: boolean; example?: boolean; onEndExample?: () => void; hatchLabel?: string; autoPlay?: boolean }
 const EXAMPLE_LENGTH = 28_000;
 const NEED_ICONS: IconName[] = ['heart', 'food', 'water', 'energy', 'morale'];
 const NEED_LABELS = ['Health', 'Food', 'Water', 'Energy', 'Mood'];
 const NEED_COLORS = ['#ef6c65', '#e6b46a', '#5db6df', '#f3d45e', '#a0bd72'];
 
-export default function V2Player({ packet, life, name, onPrepare, onHatch, onPurse, onExit, onMenu, onProfile, onLatest, suspended, opening = 'closed', prepareLabel, homeFirst, example, onEndExample }: Props) {
+export default function V2Player({ packet, life, name, onPrepare, onHatch, onPurse, onExit, onMenu, onProfile, onLatest, suspended, opening = 'closed', prepareLabel, homeFirst, example, onEndExample, hatchLabel = 'Hatch your own', autoPlay }: Props) {
+  const sound = useLifeSound();
   const receipts = packet?.result.receipts || [];
   const initial = receipts[0]?.before || packet?.result.state || life!.state;
   const savedHome = !packet;
@@ -49,13 +51,13 @@ export default function V2Player({ packet, life, name, onPrepare, onHatch, onPur
   const detail = inspect ? inspectDetail(inspect, snapshot) : undefined;
   const earned = packet?.rewardMicro && BigInt(packet.rewardMicro) > 0n ? (Number(BigInt(packet.rewardMicro)) / 1e6).toLocaleString(undefined, { maximumFractionDigits: 6 }) : '';
   const title = homeView ? snapshot.alive ? snapshot.day === 0 ? `${roosterName} is home.` : `${roosterName}, at home.` : 'A little life, remembered.' : !started ? `A day with ${roosterName}.` : complete ? snapshot.alive ? 'A little day, well lived.' : 'A little life, remembered.' : approaching ? receiptTitle(approaching) : current ? receiptTitle(current) : 'A new morning.';
-  const note = complete ? snapshot.alive ? `Day ${targetDay} · Level ${packet?.result.state.level}${earned ? ` · +${earned} NHC` : ''}` : earned ? `+${earned} NHC kept in the purse` : '' : approaching ? '' : current ? current.op === 10 && current.success && earned ? `Sent with care · +${earned} NHC` : receiptNote(current) : '';
+  const note = !snapshot.alive && (homeView || complete) ? `${endingNote(snapshot)}${earned ? ` · +${earned} NHC kept in the purse` : ''}` : complete ? `Day ${targetDay} · Level ${packet?.result.state.level}${earned ? ` · +${earned} NHC` : ''}` : approaching ? '' : current ? current.op === 10 && current.success && earned ? `Sent with care · +${earned} NHC` : receiptNote(current) : '';
   const prepareAction = (complete || homeView) && !!onPrepare && snapshot.alive;
   const hatchAction = (complete || homeView) && !prepareAction && !!onHatch;
-  const primaryLabel = !ready ? 'Opening home…' : error ? 'Try again' : onLatest && (complete || homeView) ? 'Latest home' : prepareAction ? prepareLabel || 'Prepare tomorrow' : hatchAction ? 'Hatch your own' : homeView ? 'Back home' : complete ? 'Watch again' : 'Watch day';
+  const primaryLabel = !ready ? 'Opening home…' : error ? 'Try again' : onLatest && (complete || homeView) ? 'Latest home' : prepareAction ? prepareLabel || 'Prepare tomorrow' : hatchAction ? hatchLabel : homeView ? 'Back home' : complete ? 'Watch again' : 'Watch day';
 
   function pause(value: boolean) { pausedRef.current = value; setPaused(value); renderer.current?.setPaused(value); }
-  function inspectObject(target: Inspection) { resumeInspection.current = !pausedRef.current; pause(true); setInspect(target); }
+  function inspectObject(target: Inspection) { resumeInspection.current = !pausedRef.current; pause(true); setInspect(target); sound.cue('select'); }
   function closeInspect() { setInspect(undefined); if (resumeInspection.current && !suspended) pause(false); resumeInspection.current = false; }
   useEffect(() => {
     renderer.current?.setInputEnabled(!suspended);
@@ -63,6 +65,10 @@ export default function V2Player({ packet, life, name, onPrepare, onHatch, onPur
     else if (!suspended && suspension.current.active) { const resume = suspension.current.resume; suspension.current = { active: false, resume: false }; if (resume) pause(false); }
   }, [suspended, ready]);
   useEffect(() => { renderer.current?.setOpening(opening); }, [opening, ready]);
+  useEffect(() => {
+    sound.playing(ready && started && snapshot.alive && !paused && !complete && !suspended && !inspect && opening === 'closed');
+    return () => sound.playing(false);
+  }, [sound.playing, ready, started, snapshot.alive, paused, complete, suspended, inspect, opening]);
 
   useEffect(() => {
     const state = homeFirst ? homeState : initial;
@@ -76,7 +82,7 @@ export default function V2Player({ packet, life, name, onPrepare, onHatch, onPur
   }, [packet, life?.id, savedHome ? life?.revision : undefined, homeFirst]);
 
   useEffect(() => { renderer.current?.setPlaybackRate(example ? 2 : 1); }, [example, ready]);
-  useEffect(() => { if (example && ready && !suspended && !started) { exampleRemaining.current = EXAMPLE_LENGTH; void run(0); } }, [example, ready, suspended]);
+  useEffect(() => { if ((example || autoPlay) && ready && !suspended && !started && !complete) { exampleRemaining.current = EXAMPLE_LENGTH; void run(0); } }, [example, autoPlay, ready, suspended]);
   useEffect(() => {
     if (!example || !started || complete) return;
     let previous = performance.now();
@@ -119,12 +125,15 @@ export default function V2Player({ packet, life, name, onPrepare, onHatch, onPur
         await renderer.current?.playReceipt(beat.receipt, { duration: beat.duration, onImpact: () => {
           if (generation.current !== id) return;
           setIndex(beat.end); setSnapshot(beat.receipt.snapshot); setInFlight({ receipt: beat.receipt, impacted: true });
+          if (!beat.receipt.snapshot.alive && beat.receipt.before.alive) sound.cue('back');
+          else if (beat.receipt.success && beat.receipt.op === Op.Pickup) sound.cue('parcel');
+          else if (beat.receipt.success && beat.receipt.role === 'main' && beat.receipt.op !== Op.QuietMain) sound.cue('project');
         } });
         if (generation.current !== id) return;
         if (example && beat.receipt.role === 'main') { endExample(); return; }
       }
       if (example) { endExample(); return; }
-      running.current = false; setSnapshot(packet.result.state); setIndex(receipts.length - 1); setComplete(true); setInFlight(undefined); pause(false);
+      running.current = false; setSnapshot(packet.result.state); setIndex(receipts.length - 1); setComplete(true); setInFlight(undefined); pause(false); sound.cue(packet.result.state.alive ? 'day' : 'back');
     } catch { if (generation.current === id) setError(true); }
   }
   function seek(value: number) {
@@ -156,7 +165,7 @@ export default function V2Player({ packet, life, name, onPrepare, onHatch, onPur
     else void run(0);
   }
 
-  return <main className={`v2-stage${opening !== 'closed' ? ' v2-has-opening' : ''}`} aria-label={`${roosterName}'s home`}>
+  return <main className={`v2-stage${opening !== 'closed' ? ' v2-has-opening' : ''}`} aria-label={`${roosterName}'s home`} inert={!!suspended}>
     <div className="v2-world" ref={host}/>
     <header className="v2-hud v2-pixel-frame" ref={top}>
       <div className="v2-identity">
@@ -167,7 +176,7 @@ export default function V2Player({ packet, life, name, onPrepare, onHatch, onPur
         <Icon name={icon} size={16} color={NEED_COLORS[i]}/><span className="v2-pips">{[0, 1, 2, 3, 4].map(p => <i key={p} style={{ backgroundColor: snapshot.needs[i]! > p * 2000 ? NEED_COLORS[i] : undefined }}/>)}</span>
       </div>)}</div>
       {undertaking && !complete && <div className={`v2-intention${mainDone ? ' v2-intention-done' : ''}`}><Icon name={mainDone ? 'check' : 'leaf'} size={16}/><span>{undertaking}</span></div>}
-      {ready && started && !complete && !inspect && <button className="v2-follow v2-icon-button" onClick={() => renderer.current?.followActor()} aria-label="Follow rooster"><Icon name="house" size={16}/></button>}
+      {ready && !inspect && <button className="v2-follow v2-icon-button" onClick={() => renderer.current?.followActor()} aria-label="Find rooster" title={`Find ${roosterName}`}><Icon name="focus" size={16}/></button>}
     </header>
 
     <footer className={`v2-dock${inspect ? ' v2-dock-inspect' : ''}`} ref={bottom}>
@@ -176,9 +185,10 @@ export default function V2Player({ packet, life, name, onPrepare, onHatch, onPur
         <p>{detail.note}</p>
         {detail.progress !== undefined && <div className="v2-grow"><span style={{ width: `${Math.max(0, detail.progress) * 100}%` }}/></div>}
         {!!detail.stock?.length && <div className="v2-stock">{detail.stock.map(item => <span key={item.name}>{item.name}<b>×{item.count}</b></span>)}</div>}
+        {inspect?.kind === 'mailbox' && prepareAction && <button className="v2-inspect-post v2-primary" onClick={() => { closeInspect(); onPrepare?.(); }}><Icon name="mail" size={16}/>{life?.pendingRequest ? prepareLabel || 'Open day' : snapshot.day === 0 ? 'Pack first post' : "Pack tomorrow's post"}</button>}
       </section> : <section className="v2-story v2-pixel-frame" aria-live="polite">
         <div className="v2-caption"><p>{error ? 'A little pause. Try the day again.' : title}</p>{!error && note && <span>{note}</span>}{traveling && started && !complete && <i className="v2-travel-dots" aria-label="Walking">···</i>}</div>
-        {example ? <div className="v2-example-actions"><button className="v2-primary" onClick={() => { endExample(); onHatch?.(); }}><Icon name="leaf" size={16}/>Hatch your own</button><button className="v2-example-back" onClick={endExample}>Back</button></div> : (!started || complete || error) ? <><div className="v2-start-actions">
+        {example ? <div className="v2-example-actions"><button className="v2-primary" onClick={() => { endExample(); onHatch?.(); }}><Icon name="leaf" size={16}/>Hatch your own</button><button className="v2-example-back" onClick={endExample}>Back</button><LifeSoundButton/></div> : (!started || complete || error) ? <><div className="v2-start-actions">
           <button className="v2-primary" disabled={!ready} onClick={primaryAction}><Icon name={prepareAction ? 'mail' : hatchAction ? 'leaf' : savedHome ? 'back' : 'play'} size={16}/>{primaryLabel}</button>
           {complete && hatchAction && <button className="v2-icon-button" onClick={() => void run(0)} aria-label="Watch again"><Icon name="play"/></button>}
           {(complete || homeView) && onPurse && <button className="v2-icon-button" onClick={onPurse} aria-label="Open purse"><Icon name="wallet"/></button>}

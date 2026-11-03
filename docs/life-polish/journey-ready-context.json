@@ -1,0 +1,48 @@
+{
+  "scope": "Focused presentation proof. A controlled before-day0 life and pending job lead to the actual public SUNNY Day1 packet and commitment. Job readiness, replay delay/error and exact-deadline request are controlled GET responses. No wallet, application POST, inference or chain transaction. This is not a new accepted/paid day.",
+  "actual": {
+    "id": "3",
+    "day": 1,
+    "commitment": "0x897194faac2bbc6d95c55f60eb780c7a91040cd326b6495102990f5750a45f75"
+  },
+  "errors": [],
+  "writes": [],
+  "facts": [
+    {
+      "case": "late-ready",
+      "currentSheetPreserved": true,
+      "noLateError": true,
+      "oneClickStartsReadyFilm": true,
+      "replayReads": 2,
+      "requestReads": 0
+    },
+    {
+      "case": "late-error",
+      "currentSheetPreserved": true,
+      "noLateError": true,
+      "oneClickStartsReadyFilm": true,
+      "replayReads": 2,
+      "requestReads": 0
+    },
+    {
+      "case": "automatic-ready",
+      "preplayWatchPreserved": true,
+      "automaticPlayback": false,
+      "replayReads": 1,
+      "requestReads": 0
+    },
+    {
+      "case": "exact-deadline",
+      "closeActionHidden": true,
+      "replayReads": 0,
+      "requestReads": 1
+    }
+  ],
+  "screenshots": [
+    "late-ready-stays-stock",
+    "late-ready-one-click-watch",
+    "late-error-stays-stock",
+    "late-error-one-click-watch",
+    "automatic-ready-preplay"
+  ]
+}

@@ -6,6 +6,33 @@ import { BEDS, WORLD_HEIGHT, WORLD_WIDTH } from './layout';
 
 const noise = (x: number, y: number, seed: number) => { let h = Math.imul(x + 17, 374761393) ^ Math.imul(y + 31, 668265263) ^ seed; h = Math.imul(h ^ h >>> 13, 1274126177); return (h ^ h >>> 16) >>> 0; };
 
+/** Small material accents apply only to scenery copies, never to rooster art. */
+export function accentFixture(source: HTMLCanvasElement, kind: string): HTMLCanvasElement {
+  const palettes: Record<string, Record<string, string>> = {
+    mailbox: { '456d78': '327f91', '64929a': '62adba', '9cb6ae': 'b3ded3', '30515f': '2b6070', 'bd5143': 'd45e4d' },
+    bedside: { c3bd98: 'd8b979', e8ddb5: 'f3d58c', f5e9c5: 'ffebb0', d1c79f: 'd5b177' },
+    window: { '527e95': '518ba7', '7caed0': '7fc1db', a3cbdf: 'b2dce8' },
+    painting: { b96862: 'd27274', e0a083: 'f0ae8d', '78a8ba': '73afc3', '86b3bf': '81bfcf', '87b4bc': '88c9cc' },
+  };
+  if (!palettes[kind] && kind !== 'plant') return source;
+  const context = source.getContext('2d')!, image = context.getImageData(0, 0, source.width, source.height), pixels = image.data;
+  for (let i = 0; i < pixels.length; i += 4) {
+    if (!pixels[i + 3]) continue;
+    const r = pixels[i]!, g = pixels[i + 1]!, b = pixels[i + 2]!;
+    const key = [r, g, b].map(n => n.toString(16).padStart(2, '0')).join(''), replacement = palettes[kind]?.[key];
+    if (replacement) { pixels[i] = parseInt(replacement.slice(0, 2), 16); pixels[i + 1] = parseInt(replacement.slice(2, 4), 16); pixels[i + 2] = parseInt(replacement.slice(4, 6), 16); }
+    else if (kind === 'plant' && g > 55 && g > r * 1.08 && g > b * 1.05) { pixels[i] = Math.min(255, r + 1); pixels[i + 1] = Math.min(255, g + 10); pixels[i + 2] = Math.min(255, b + 3); }
+  }
+  context.putImageData(image, 0, 0); return source;
+}
+
+function textile(p: Paint, x: number, y: number, w: number, h: number, colors: readonly string[]): void {
+  p(colors[0]!, x, y, w, h); p('#c7b784', x + 1, y + 1, w - 2, h - 2); p(colors[1]!, x + 3, y + 3, w - 6, h - 6);
+  p(colors[2]!, x + 4, y + 4, w - 8, 1); p(colors[0]!, x + 4, y + h - 5, w - 8, 1);
+  for (let a = x + 7; a < x + w - 6; a += 8) for (let b = y + 7; b < y + h - 6; b += 8) { p(colors[2]!, a, b, 3, 1); p(colors[2]!, a + 1, b - 1, 1, 3); }
+  for (let a = x + 3; a < x + w - 3; a += 5) { p('#e2ca89', a, y + 1, 2, 1); p('#e2ca89', a, y + h - 2, 2, 1); }
+}
+
 /** Hard-edged contact shadow on the same one-pixel grid as the furniture. */
 export function shadowArt(width: number, height: number): HTMLCanvasElement {
   return canvasArt(width, height, p => {
@@ -18,12 +45,12 @@ export function shadowArt(width: number, height: number): HTMLCanvasElement {
 export function landscape(seed: string): HTMLCanvasElement {
   const n = homeArtSeed(seed), c = canvasArt(WORLD_WIDTH, WORLD_HEIGHT, p => {
     p('#4e6a43', 0, 0, WORLD_WIDTH, WORLD_HEIGHT);
-    p('#82a15e', 28, 440, 456, 350); p('#90ac69', 30, 442, 452, 2);
+    p('#83aa60', 28, 440, 456, 350); p('#a4c777', 30, 442, 452, 2);
     for (let y = 448; y < 784; y += 5) for (let x = 32; x < 480; x += 6) {
-      const z = noise(x, y, n); if (z % 5 === 0) { p(z % 2 ? '#739553' : '#99b36c', x, y, 3, 1); p('#779956', x + 1, y - 1, 1, 3); }
+      const z = noise(x, y, n); if (z % 5 === 0) { p(z % 2 ? '#719b51' : '#acc779', x, y, 3, 1); p('#78a253', x + 1, y - 1, 1, 3); }
     }
     // The garden is a recognizable place, with four permanent soil beds and room to walk between them.
-    p('#6a7e4d', 341, 474, 142, 204); p('#b8a475', 343, 476, 138, 200); p('#c8b282', 346, 479, 132, 194);
+    p('#688950', 341, 474, 142, 204); p('#baa776', 343, 476, 138, 200); p('#cfb985', 346, 479, 132, 194);
     for (let y = 481; y < 670; y += 5) for (let x = 348; x < 475; x += 7) if (noise(x, y, n) % 4 === 0) p('#b29d72', x, y, 2, 1);
     for (const bed of BEDS) { p('#9a8157', bed.x - 28, bed.y - 30, 56, 36); p('#d4bf8c', bed.x - 27, bed.y - 29, 54, 1); }
     const stone = (x: number, y: number, w = 22, h = 10) => { p('#8d8a6b', x, y, w, h); p('#c4bc93', x + 1, y, w - 2, h - 2); p('#ddd2a5', x + 2, y, w - 5, 1); p('#b2a77f', x + 1, y + h - 3, w - 2, 1); };
@@ -38,13 +65,15 @@ export function landscape(seed: string): HTMLCanvasElement {
     p('#c7c2a1', 0, 800, 512, 9); p('#e3d8b5', 0, 800, 512, 1); p('#8b8e7b', 0, 809, 512, 2); p('#53636b', 0, 811, 512, 21);
     for (let x = 0; x < 512; x += 25) { p('#b2b296', x, 801, 1, 7); p('#e6d894', x + 4, 827, 13, 2); }
     // Ordinary little domestic details, deliberately outside the routes to work and care.
-    for (const [x, y] of [[58, 473], [104, 740], [207, 490], [284, 699], [468, 703], [61, 648]]) {
-      p('#547441', x - 6, y + 1, 13, 4); p('#6c904d', x - 4, y - 3, 9, 6); p('#a7bb70', x - 1, y - 6, 3, 3); p('#efe5be', x + 3, y - 7, 2, 2); p('#dfbd5c', x + 3, y - 6, 1, 1);
+    const flowerColors = ['#f2d16d', '#e19a92', '#b79aca', '#f0e7bd'];
+    for (const [i, [x, y]] of [[58, 473], [104, 740], [207, 490], [284, 699], [468, 703], [61, 648], [351, 466], [475, 466], [475, 683]].entries()) {
+      p('#4e773e', x! - 6, y! + 1, 13, 4); p('#709c4f', x! - 4, y! - 3, 9, 6); p('#aecb77', x! - 1, y! - 6, 3, 3);
+      p(flowerColors[i % flowerColors.length]!, x! + 2, y! - 8, 3, 3); p(flowerColors[i % flowerColors.length]!, x! + 1, y! - 7, 5, 1); p('#fff0bd', x! + 3, y! - 7, 1, 1);
     }
     // Two fence posts, a slack washing line and a slow little sheet give the yard a home.
     post(72, 529); post(184, 529); p('#6b6145', 76, 522, 109, 1);
     p('#c9cbb0', 93, 523, 29, 27); p('#e2dfbf', 94, 523, 27, 24); p('#b5bea0', 99, 524, 2, 23); p('#f0e9c8', 103, 523, 16, 1);
-    p('#61868b', 143, 523, 18, 21); p('#91a6a0', 145, 524, 14, 17); p('#4e747d', 152, 525, 2, 17); p('#ad8b51', 97, 520, 2, 5); p('#ad8b51', 118, 520, 2, 5); p('#ad8b51', 146, 520, 2, 5);
+    p('#438d98', 143, 523, 18, 21); p('#87c1bd', 145, 524, 14, 17); p('#377780', 152, 525, 2, 17); p('#d1866b', 166, 523, 13, 18); p('#e6ad8b', 167, 524, 10, 15); p('#ad8b51', 97, 520, 2, 5); p('#ad8b51', 118, 520, 2, 5); p('#ad8b51', 146, 520, 2, 5); p('#ad8b51', 171, 520, 2, 5);
     // A picnic table is scenery, not a fifth productive slot.
     p('#526c42', 108, 673, 72, 11); p('#4f412e', 117, 647, 7, 31); p('#4f412e', 162, 647, 7, 31); p('#a07849', 112, 641, 61, 27); p('#c59b62', 112, 641, 61, 3); p('#785a37', 112, 650, 61, 1); p('#785a37', 112, 659, 61, 1); p('#61472d', 105, 667, 76, 6); p('#b18b55', 106, 667, 74, 2); p('#efe0b9', 137, 645, 14, 16); p('#c5b58f', 138, 652, 12, 1);
     p('#725934', 141, 643, 5, 6); p('#9ca869', 140, 638, 7, 6); p('#c2c386', 142, 637, 3, 3);
@@ -52,6 +81,11 @@ export function landscape(seed: string): HTMLCanvasElement {
   const ctx = c.getContext('2d')!; ctx.imageSmoothingEnabled = false;
   ctx.drawImage(houseCanvas(n), 0, 0, 512, 440, 0, 0, 512, 440);
   const paint: Paint = (color, x, y, w, h) => { ctx.fillStyle = color; ctx.fillRect(Math.round(x), Math.round(y), Math.round(w), Math.round(h)); };
+  // A few complementary textiles give each room an identity within the warm wood house.
+  textile(paint, 335, 116, 58, 37, ['#285a60', '#44848a', '#73a8a0']);
+  textile(paint, 231, 253, 27, 156, ['#31594d', '#467e68', '#7ea47a']);
+  textile(paint, 61, 349, 113, 41, ['#784638', '#b16f56', '#d29573']);
+  textile(paint, 302, 387, 44, 24, ['#3a6670', '#6a9d9e', '#a3c3b4']);
   // The former small garden annex becomes a covered, open-front workshop.
   paint('#735139', 384, 272, 96, 144);
   for (let y = 273; y < 415; y += 6) { paint(y % 12 ? '#c79d66' : '#d0a46b', 386, y, 91, 5); paint('#e0b77c', 386, y, 91, 1); for (let x = 393 + (y % 12 ? 0 : 15); x < 476; x += 31) paint('#b18653', x, y, 1, 5); }
@@ -111,7 +145,7 @@ export function wellArt(): HTMLCanvasElement {
   return canvasArt(60, 75, p => {
     p('#537044', 6, 63, 49, 8); p('#4d4938', 10, 43, 40, 27); p('#9f9e83', 12, 46, 36, 22); p('#c0bca0', 13, 46, 34, 2);
     for (let y = 49; y < 68; y += 6) { p('#807f68', 13, y, 34, 1); for (let x = 15 + y % 2 * 5; x < 47; x += 10) p('#777865', x, y, 1, 6); }
-    p('#4b5148', 12, 42, 36, 10); p('#c3bea1', 12, 42, 36, 3); p('#d6ceaa', 14, 42, 31, 1); p('#334f56', 18, 46, 23, 3); p('#719493', 21, 47, 14, 1);
+    p('#4b5148', 12, 42, 36, 10); p('#c3bea1', 12, 42, 36, 3); p('#d6ceaa', 14, 42, 31, 1); p('#2c6473', 18, 46, 23, 3); p('#76c4ce', 21, 47, 14, 1); p('#c2e9de', 28, 47, 3, 1);
     for (const x of [11, 45]) { p('#4b3c2d', x, 16, 5, 39); p('#9c7748', x + 1, 17, 3, 37); p('#c39b62', x + 1, 17, 1, 36); }
     p('#53402e', 5, 14, 50, 9); p('#a37c47', 8, 9, 44, 11); p('#bf965b', 13, 4, 34, 11); p('#d3b077', 15, 4, 29, 2); p('#806039', 8, 18, 44, 3); p('#4d3b2b', 27, 20, 4, 23); p('#b8aa7c', 28, 21, 1, 22);
     p('#4c6361', 23, 37, 12, 11); p('#9aaca2', 24, 37, 10, 2); p('#6f8884', 25, 39, 8, 7); p('#d0c59c', 26, 33, 6, 2); p('#d0c59c', 24, 34, 1, 5); p('#d0c59c', 33, 34, 1, 5);
@@ -125,6 +159,7 @@ export function workbenchArt(): HTMLCanvasElement {
     p('#4e4030', 7, 2, 54, 18); p('#9b7b4b', 8, 3, 52, 16); p('#bb9658', 9, 4, 50, 1); p('#655238', 16, 5, 1, 13); p('#655238', 39, 5, 1, 13);
     p('#616d69', 14, 7, 13, 3); p('#9ea79a', 14, 7, 12, 1); p('#b18c52', 18, 9, 3, 8); p('#5c7070', 33, 6, 3, 11); p('#bbc3ae', 33, 6, 2, 5); p('#b58f52', 45, 6, 3, 11); p('#697e79', 43, 7, 8, 4);
     p('#9a6f3e', 14, 18, 26, 5); p('#ddbb7c', 14, 18, 25, 1); p('#677b77', 45, 20, 11, 3); p('#abb9a5', 45, 20, 10, 1); p('#ad8a50', 52, 22, 9, 2);
+    p('#2c6578', 53, 13, 7, 7); p('#66aebc', 54, 13, 5, 6); p('#bae0d7', 54, 13, 4, 1); p('#d7aa57', 55, 8, 1, 6); p('#e7c579', 57, 9, 1, 5);
   });
 }
 
@@ -169,8 +204,55 @@ export function itemArt(index: number): HTMLCanvasElement {
     if (index === 31) { p('#684a2f', 2, 12, 16, 4); p('#b78b50', 4, 14, 12, 3); p('#e1ba76', 3, 12, 14, 1); p('#725437', 9, 2, 2, 11); p('#e6d9b0', 11, 3, 6, 8); p('#bcac81', 11, 10, 6, 1); return; }
     if (index === 32) { p('#714e30', 5, 6, 11, 11); p('#c69a5d', 6, 7, 9, 9); p('#4b3b2c', 9, 8, 4, 4); p('#8a623a', 3, 6, 15, 2); p('#b48248', 6, 3, 9, 4); p('#dfb87c', 8, 3, 5, 1); p('#674c32', 10, 16, 2, 3); return; }
     if (index === 33) { p('#57412e', 2, 6, 16, 12); p('#a77b45', 3, 7, 14, 10); p('#cba265', 3, 7, 14, 2); p('#6f5130', 3, 11, 14, 2); p('#d4ba73', 5, 7, 2, 10); p('#d4ba73', 14, 7, 2, 10); p('#d9c189', 9, 11, 3, 3); return; }
-    if (index >= 22 && index <= 25) { const colors = ['#eee7c8', '#e5b350', '#a38ab7', '#cb6970']; p('#44663e', 10, 7, 2, 11); p('#769953', 6, 13, 5, 2); p(colors[index - 22]!, 6, 3, 10, 6); p(colors[index - 22]!, 9, 1, 4, 10); p('#e9c569', 10, 5, 2, 2); return; }
-    if (index >= 26 && index <= 29) { const colors = ['#cb6553', '#6484aa', '#8c6c9e', '#c36a50']; p('#4d6840', 9, 3, 2, 3); p('#8a9c55', 11, 3, 5, 2); p('#5d4238', 4, 7, 12, 10); p(colors[index - 26]!, 5, 6, 10, 10); p(index === 26 ? '#edbc7c' : '#b9b1b1', 6, 8, 2, 2); if (index === 28) { p('#b19cc0', 7, 8, 1, 1); p('#4f375d', 9, 7, 1, 8); p('#4f375d', 5, 11, 10, 1); } return; }
+    if (index === 22) {
+      p('#41683e', 10, 9, 2, 10); p('#7ca356', 6, 14, 5, 2); p('#7ca356', 11, 16, 4, 2);
+      p('#d5d5b8', 8, 1, 5, 11); p('#d5d5b8', 5, 4, 11, 5);
+      for (const [x, y, w, h] of [[9, 1, 3, 4], [9, 9, 3, 3], [5, 5, 4, 3], [12, 5, 4, 3], [6, 3, 3, 3], [12, 3, 3, 3], [6, 8, 3, 3], [12, 8, 3, 3]]) p('#f6f0d5', x!, y!, w!, h!);
+      p('#d6a348', 8, 4, 5, 5); p('#edc45d', 9, 5, 3, 3); p('#fff0ad', 9, 5, 1, 1); return;
+    }
+    if (index === 23) {
+      p('#41683e', 9, 10, 2, 9); p('#7ca356', 5, 15, 5, 2); p('#6a964d', 11, 13, 4, 2);
+      p('#b87a35', 6, 2, 8, 11); p('#b87a35', 4, 5, 12, 5); p('#e4a440', 5, 4, 10, 7); p('#e4a440', 7, 2, 6, 11);
+      p('#f2c45b', 6, 4, 8, 2); p('#f2c45b', 5, 6, 3, 3); p('#f2c45b', 11, 7, 4, 2); p('#f2c45b', 8, 10, 3, 2);
+      p('#ce8a32', 8, 6, 4, 4); p('#ffdb77', 9, 6, 2, 2); return;
+    }
+    if (index === 24) {
+      for (const [x, top] of [[6, 6], [10, 2], [14, 5]]) {
+        p('#507544', x!, top! + 3, 1, 15 - top!);
+        for (let y = top!; y < 12; y += 3) { p('#6a517d', x! - 1, y, 3, 3); p('#a487be', x! - 1, y, 2, 2); p('#d0b7dc', x! - 1, y, 1, 1); }
+      }
+      p('#6f9852', 7, 15, 3, 1); p('#6f9852', 8, 16, 2, 1); p('#6f9852', 11, 14, 3, 1); p('#6f9852', 11, 15, 2, 1); return;
+    }
+    if (index === 25) {
+      p('#41683e', 10, 9, 2, 10); p('#6e9953', 6, 14, 5, 2); p('#8bb366', 7, 13, 3, 1); p('#6e9953', 12, 16, 3, 1);
+      p('#8d4458', 6, 3, 9, 7); p('#8d4458', 5, 5, 11, 4); p('#ba5b70', 6, 4, 9, 6); p('#d77987', 7, 3, 6, 2); p('#d77987', 6, 5, 3, 3); p('#d77987', 8, 9, 5, 2);
+      p('#f0a5aa', 7, 4, 3, 1); p('#943c55', 9, 5, 4, 1); p('#943c55', 8, 6, 1, 3); p('#dc8190', 10, 6, 2, 2); p('#527e44', 9, 11, 4, 2); return;
+    }
+    if (index === 26) {
+      // A seeded, pointed heart is distinct from the broad apple, even without its label.
+      p('#713b40', 5, 5, 11, 2); p('#713b40', 4, 7, 13, 4); p('#713b40', 5, 11, 11, 2); p('#713b40', 6, 13, 9, 2); p('#713b40', 8, 15, 5, 2); p('#713b40', 9, 17, 3, 1);
+      p('#d6535b', 6, 6, 9, 5); p('#d6535b', 5, 8, 11, 2); p('#d6535b', 6, 11, 9, 2); p('#d6535b', 7, 13, 7, 2); p('#d6535b', 9, 15, 3, 2); p('#ed8e7d', 5, 8, 1, 3);
+      p('#41683e', 9, 2, 2, 4); p('#6d984d', 6, 4, 9, 2); p('#6d984d', 4, 5, 5, 2); p('#8eb264', 7, 4, 3, 1); p('#557e43', 11, 5, 5, 2); p('#557e43', 9, 5, 3, 3);
+      for (const [x, y] of [[7, 8], [12, 8], [9, 11], [13, 11], [8, 13], [10, 15]]) p('#f8d895', x!, y!, 1, 1); return;
+    }
+    if (index === 27) {
+      p('#4d7044', 9, 2, 1, 4); p('#7ba058', 10, 3, 5, 2);
+      for (const [x, y] of [[4, 6], [10, 5], [7, 11], [13, 11]]) {
+        p('#354e70', x! + 1, y!, 3, 5); p('#354e70', x!, y! + 1, 5, 3); p('#6088b8', x! + 1, y! + 1, 3, 3);
+        p('#a2c0db', x! + 1, y! + 1, 1, 1); p('#416383', x! + 2, y! + 2, 1, 1);
+      } return;
+    }
+    if (index === 28) {
+      p('#79583c', 9, 1, 2, 5); p('#567c45', 12, 2, 6, 3); p('#8aae62', 14, 1, 3, 2); p('#6f9651', 11, 4, 4, 2); p('#7ba058', 6, 2, 3, 1); p('#7ba058', 5, 3, 1, 2);
+      for (const [x, y] of [[4, 6], [8, 6], [12, 6], [6, 10], [10, 10], [8, 14]]) {
+        p('#503b68', x! + 1, y!, 2, 4); p('#503b68', x!, y! + 1, 4, 2); p('#9070aa', x! + 1, y! + 1, 2, 2); p('#c3a3cd', x! + 1, y! + 1, 1, 1);
+      } return;
+    }
+    if (index === 29) {
+      p('#79583a', 10, 1, 2, 5); p('#c09b59', 10, 2, 1, 2); p('#557e43', 12, 2, 5, 3); p('#93b567', 13, 1, 3, 2);
+      p('#824335', 5, 5, 4, 1); p('#824335', 12, 5, 4, 1); p('#824335', 3, 6, 15, 3); p('#824335', 2, 9, 17, 4); p('#824335', 3, 13, 15, 3); p('#824335', 5, 16, 5, 2); p('#824335', 12, 16, 4, 1);
+      p('#d86b46', 5, 6, 4, 2); p('#d86b46', 12, 6, 4, 2); p('#d86b46', 4, 8, 13, 5); p('#d86b46', 5, 13, 11, 3); p('#d86b46', 6, 16, 8, 1); p('#b95540', 14, 10, 3, 4); p('#ed9b62', 5, 8, 2, 4); p('#ffd097', 5, 8, 1, 2); return;
+    }
     p('#536d71', 7, 2, 6, 3); p('#a5d6d7', 7, 4, 6, 12); p('#3f9bd0', 6, 7, 8, 11); p('#78c7e7', 7, 8, 2, 8); p('#c5e9e2', 7, 8, 1, 5);
   });
 }

@@ -1,0 +1,102 @@
+{
+  "checkedAt": "2026-11-03T04:29:06.568Z",
+  "scope": "Actual integrated local UI, audio service, AudioContext and oscillators. Actual SUNNY public packet/snapshot with controlled DEV owner address. No human-listening claim; scheduling/gain/lifecycle measured. No wallet, quote, inference, chain transaction or application write.",
+  "errors": [],
+  "writes": [],
+  "cases": [
+    {
+      "case": "actual app remains silent before gesture",
+      "pass": true
+    },
+    {
+      "case": "actual film starts sparse music after gesture",
+      "evidence": {
+        "contextCount": 1,
+        "contexts": [
+          {
+            "state": "running",
+            "master": 0.1599999964237213
+          }
+        ],
+        "active": 2,
+        "created": 3
+      },
+      "pass": true
+    },
+    {
+      "case": "opening menu pauses melody scheduling",
+      "evidence": {
+        "contextCount": 1,
+        "contexts": [
+          {
+            "state": "running",
+            "master": 0.1599999964237213
+          }
+        ],
+        "active": 0,
+        "created": 4
+      },
+      "pass": true
+    },
+    {
+      "case": "muted film resume stays quiet",
+      "evidence": {
+        "contextCount": 1,
+        "contexts": [
+          {
+            "state": "suspended",
+            "master": 0
+          }
+        ],
+        "active": 0,
+        "created": 4
+      },
+      "pass": true
+    },
+    {
+      "case": "on toggle reuses one context",
+      "evidence": {
+        "contextCount": 1,
+        "contexts": [
+          {
+            "state": "running",
+            "master": 0.1599999964237213
+          }
+        ],
+        "active": 2,
+        "created": 7
+      },
+      "pass": true
+    },
+    {
+      "case": "explicit pause stops melody scheduling",
+      "evidence": {
+        "contextCount": 1,
+        "contexts": [
+          {
+            "state": "running",
+            "master": 0.1599999964237213
+          }
+        ],
+        "active": 0,
+        "created": 8
+      },
+      "pass": true
+    },
+    {
+      "case": "finished day leaves no background melody",
+      "evidence": {
+        "contextCount": 1,
+        "contexts": [
+          {
+            "state": "running",
+            "master": 0.1599999964237213
+          }
+        ],
+        "active": 0,
+        "created": 12
+      },
+      "pass": true
+    }
+  ]
+}

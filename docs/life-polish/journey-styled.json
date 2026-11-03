@@ -1,0 +1,33 @@
+{
+  "scope": "Actual source and actual SUNNY Day1 snapshot/film with controlled DEV presentation states. Pending phases, inventory, balances and dead flag are synthetic to inspect UI; not economic/chain claims. Public request/job GETs controlled where specified. Page-local memory storage and wallet whose sole permission request cancels; no signatures/quote/AI/chain writes.",
+  "actual": {
+    "id": "3",
+    "day": 1,
+    "commitment": "0x897194faac2bbc6d95c55f60eb780c7a91040cd326b6495102990f5750a45f75"
+  },
+  "errors": [],
+  "writes": [],
+  "screens": [
+    {
+      "name": "styled-approve",
+      "text": "SUNNY\nLV01\nDAY 01\nPlant Daisy\n\nSUNNY, at home.\n\nPrepare tomorrow\nWatch day 1\nPermission to hatch\n\nAllow 250 NHC, then hatch BEAN.\n\nCheck permission",
+      "overflow": false
+    },
+    {
+      "name": "styled-job-preparing",
+      "text": "SUNNY\nLV01\nDAY 01\nPlant Daisy\n\nSUNNY, at home.\n\nPrepare tomorrow\nWatch day 1\nA day is taking shape\n\nChoosing the day’s little plans.\n\nPost\nPlans\nSaved\nBack home\nCheck again",
+      "overflow": false
+    },
+    {
+      "name": "styled-job-saving",
+      "text": "SUNNY\nLV01\nDAY 01\nPlant Daisy\n\nSUNNY, at home.\n\nPrepare tomorrow\nWatch day 1\nA day is taking shape\n\nPutting the day safely away.\n\nPost\nPlans\nSaved\nBack home\nCheck again",
+      "overflow": false
+    },
+    {
+      "name": "styled-stock-320",
+      "text": "SUNNY\nLV01\nDAY 01\nPlant Daisy\n\nSUNNY, at home.\n\nPrepare tomorrow\nWatch day 1\nBelongings\nFor home\nWater\n×2\nSeeds\nDaisy seed\n×1\nFrom garden\nStrawberry\n×3\nWorkshop\nWood\n×4\nToy boat\n×1",
+      "overflow": false
+    }
+  ],
+  "facts": []
+}

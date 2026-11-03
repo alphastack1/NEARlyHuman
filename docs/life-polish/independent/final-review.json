@@ -1,0 +1,123 @@
+{
+  "checkedAt": "2026-11-03T04:37:17.804Z",
+  "scope": "Narrow independent post-repair review of5reported issues plus keyboard/focus/audio. Actual public SUNNY/MISO records; controlled DEV owner identity, synthetic249.999999purse and remembereddehydration. Audio nodes and keyboard/pointer gestures are actual. No wallet, appwrite, quote, inference or chaintransaction. Settledscreens fast-forward finiteCSS entrances only.",
+  "cases": [
+    {
+      "case": "title speaker Space/Enter toggle sound without starting game",
+      "pass": true
+    },
+    {
+      "case": "muted example stays silent and all three footer controls fit320",
+      "audio": {
+        "active": 0,
+        "created": 1,
+        "states": [
+          {
+            "state": "suspended",
+            "master": 0
+          }
+        ]
+      },
+      "bounds": [
+        {
+          "label": "Hatch your own",
+          "x": 21,
+          "y": 505,
+          "width": 170,
+          "height": 46
+        },
+        {
+          "label": "Back",
+          "x": 197,
+          "y": 506,
+          "width": 54,
+          "height": 44
+        },
+        {
+          "label": "Turn sound on",
+          "x": 257,
+          "y": 507,
+          "width": 42,
+          "height": 42
+        }
+      ],
+      "pass": true
+    },
+    {
+      "case": "mute remains available on hatch sheet",
+      "pass": true
+    },
+    {
+      "case": "exact six-decimal balance matches unavailable250birth",
+      "pass": true
+    },
+    {
+      "case": "care/garden supplies live in discoverable categories",
+      "pass": true
+    },
+    {
+      "case": "background Player is inert under an active sheet",
+      "pass": true
+    },
+    {
+      "case": "past belongings explicitly identifyDay27",
+      "pass": true
+    },
+    {
+      "case": "remembered owner sees anotherlife/cause and retainswithdrawal",
+      "text": "A little life, remembered.\n\nWater ran out.\nHatch another",
+      "pass": true
+    }
+  ],
+  "screens": [
+    {
+      "name": "final-title-muted-320",
+      "text": "NEARlyHuman\nSTART",
+      "overflow": false
+    },
+    {
+      "name": "final-example-muted-320",
+      "text": "MISO\nLV27\nEXAMPLE\nGather the ready garden\n\nJust a moment.\n\nHatch your own\nBack",
+      "overflow": false
+    },
+    {
+      "name": "final-near-birth-purse",
+      "text": "SUNNY\nLV01\nDAY 01\nPlant Daisy\n\nSUNNY, at home.\n\nPrepare tomorrow\nWatch day 1\nSUNNY’s purse\n249.999999\nNHC\nWithdraw to wallet",
+      "overflow": false
+    },
+    {
+      "name": "final-care-bandage",
+      "text": "SUNNY\nLV01\nDAY 01\nPlant Daisy\n\nSUNNY, at home.\n\nPrepare tomorrow\nWatch day 1\nTomorrow's post\n×1\n×1\n×1\nCare\nGarden\nHouse\nWater\nAt home ×2\nBread\nAt home ×2\nMilk\n×1\nMedicine\n×1\nCoffee\n×1\nSteak\n×1\nBandage\n×1\nStart day 2\nSupplies included · network + preparation fee",
+      "overflow": false
+    },
+    {
+      "name": "final-garden-compost",
+      "text": "SUNNY\nLV01\nDAY 01\nPlant Daisy\n\nSUNNY, at home.\n\nPrepare tomorrow\nWatch day 1\nTomorrow's post\n×1\n×1\n×1\nCare\nGarden\nHouse\nDaisy\n3 days\nMarigold\n3 days\nLavender\n6 days\nRose\n8 days\nStrawberry\n3 days\nBlueberry\n6 days\nGrape\n8 days\nApple\n8 days\nWood tree\n6 days\nCompost\n×1\nStart day 2\nSupplies included · network + preparation fee",
+      "overflow": false
+    },
+    {
+      "name": "final-house-four",
+      "text": "SUNNY\nLV01\nDAY 01\nPlant Daisy\n\nSUNNY, at home.\n\nPrepare tomorrow\nWatch day 1\nTomorrow's post\n×1\n×1\n×1\nCare\nGarden\nHouse\nToolkit\n×1\nUmbrella\n×1\nMatches\n×1\nSoap\n×1\nStart day 2\nSupplies included · network + preparation fee",
+      "overflow": false
+    },
+    {
+      "name": "final-historical-stock-320",
+      "text": "MISO\nLV26\nDAY 27\nMake a comfort bowl\n\nA day with MISO.\n\nWatch day\nDay 27 belongings\nFor home\nWater\n×2\nBread\n×1\nCoffee\n×1\nFrom garden\nStrawberry\n×1\nApple\n×2\nWorkshop\nWood\n×4\nToy boat\n×1",
+      "overflow": false
+    },
+    {
+      "name": "final-remembered-cause",
+      "text": "SUNNY\nLV01\nDAY 01\n\nA little life, remembered.\n\nWater ran out.\nHatch another",
+      "overflow": false
+    },
+    {
+      "name": "final-remembered-purse",
+      "text": "SUNNY\nLV01\nDAY 01\n\nA little life, remembered.\n\nWater ran out.\nHatch another\nSUNNY’s purse\n347.125\nNHC\n\nStill yours to take home.\n\nWithdraw to wallet\nHatch another · 250 NHC",
+      "overflow": false
+    }
+  ],
+  "errors": [],
+  "writes": [],
+  "harnessNotes": "The first combined remembered check queried the action before its renderer-ready transition. A focused follow-up waits for the actual Hatch another action, then verifies cause and withdrawal; it passed with no application change. Provisional failed captures/reports remain only in TEMP. No hidden financial result or transaction is inferred.",
+  "pass": true
+}
