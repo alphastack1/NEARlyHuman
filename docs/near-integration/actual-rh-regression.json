@@ -1,0 +1,39 @@
+{
+  "scope": "Independent actual RH Testnet contract plus local candidate public replay readback. No private ledger, wallet key, auth token, inference, transaction signing or service mutation.",
+  "checkedAt": "2026-11-03T12:27:33.896Z",
+  "id": "7",
+  "name": "SAGE",
+  "day": 1,
+  "networkId": "robinhood-testnet",
+  "chainId": 46630,
+  "collection": "0x30cb5213fa94020a95893ddb6b07470dbf7a9efc",
+  "block": "147693180",
+  "blockHash": "0x13dbf0a469319cc84cbc66ed74bf0bcc8c4814fb24214871011c3a3191a40162",
+  "requestId": "0x5f0bab0822d79fbdf0e84248b24a9c78ba350873ad453a034f383fec48ae2179",
+  "commitment": "0x8bfeab37db7013e7ac783da8510f2bd35987e4c96cc692f05ee0450d06ec1833",
+  "stateHash": "0xf027fb41af2bc3f19dba054c21bfb85de0f3489dcd63825fc71adae4b19c1c1f",
+  "traceHash": "0xe3057ff954367f90b609bfaca511aa2e692d58fe9c8725c5295a9707206d23a6",
+  "certificateHash": "0x2c62ab4f2de7be258538a782c94ad71419aeb839ff83c555ce8431b4aba6415a",
+  "receiptCount": 60,
+  "semanticReplayReceiptsHash": "0x74ca5b4fed77751bf62a785a7b849e659dbbad15f3fd8f0a49f2f5324892ee85",
+  "owner": "0x131C15fD2d9151F361213d8e8BC2a188Dc0149c6",
+  "pending": false,
+  "rewardMicro": "0",
+  "project": "Plant Daisy",
+  "ownerReceipts": [
+    {
+      "method": "mintNFT",
+      "hash": "0x01717f1cd0f8d429458d31d8367dd81d333c846c24639ceefedfacc6dc1341f3",
+      "block": "147691223",
+      "gasUsed": "769031"
+    },
+    {
+      "method": "acceptDay",
+      "hash": "0x5700b504591421227b2309928459678189714b3a5c697a7625555e2d741f486f",
+      "block": "147691432",
+      "gasUsed": "825956"
+    }
+  ],
+  "browserErrors": 0,
+  "pass": true
+}

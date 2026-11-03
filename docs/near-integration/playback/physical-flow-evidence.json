@@ -1,0 +1,96 @@
+{
+  "checkedAt": "2026-11-03T12:37:29.568Z",
+  "scope": "Final physical-flow presentation refinement: actual native FERN Day1 uninterrupted playback plus isolated synthetic representative care/craft/irrigation renderer checks. No funded actions or service writes.",
+  "actualDay": {
+    "origin": "http://127.0.0.1:5193",
+    "network": {
+      "networkId": "near-testnet",
+      "collection": "game.nearlyhuman-dev-20261102-26c8bd.testnet"
+    },
+    "requestId": "0xfcc462ce5887760d33443b457d9d847f75805b21e173809da85d9b020ff3f080",
+    "commitment": "0x1a88440adf5984ed5e69459ed9f2185f4faa91c7da5d991a954d871b600d7887",
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "elapsedMs": 92036,
+    "complete": true,
+    "hiddenSamples": 0,
+    "receiptCount": 60,
+    "referenceIntegrity": [
+      {
+        "scope": "Exact Response.json parsed replay.packet object returned to the real application, captured before React receives it; same reference serialized again after natural completion.",
+        "requestId": "0xfcc462ce5887760d33443b457d9d847f75805b21e173809da85d9b020ff3f080",
+        "commitment": "0x1a88440adf5984ed5e69459ed9f2185f4faa91c7da5d991a954d871b600d7887",
+        "receiptCount": 60,
+        "url": "http://127.0.0.1:5193/api/near/v2/replay/1?day=1&networkId=near-testnet&collection=game.nearlyhuman-dev-20261102-26c8bd.testnet",
+        "beforeResultHash": "efbb8376fe182ef25fd82c7b694f7903ec41922611c19cda5b9d74a91de4b5e1",
+        "afterResultHash": "efbb8376fe182ef25fd82c7b694f7903ec41922611c19cda5b9d74a91de4b5e1",
+        "beforePacketHash": "224eed0a55af2831641f940db81351d8a96feb31283cdfb21cba86250eff2224",
+        "afterPacketHash": "224eed0a55af2831641f940db81351d8a96feb31283cdfb21cba86250eff2224",
+        "unchanged": true
+      }
+    ],
+    "finalViewStateEqualsResult": true,
+    "errors": [],
+    "writes": [],
+    "seedSequence": {
+      "emptyHandsBeforeCupboardPickup": true,
+      "seedCarriedFromCupboardToBed": true,
+      "seedRemovedAtCanonicalPlantImpact": true
+    }
+  },
+  "focusedFixtures": {
+    "scope": "Isolated synthetic representative care/craft/free-irrigation rendering, real production renderer, normal travel speed, 1200ms work budget; no chain/API operations.",
+    "cases": [
+      {
+        "name": "care",
+        "impacts": 1,
+        "unchanged": true,
+        "finalMatches": true,
+        "samples": 112
+      },
+      {
+        "name": "craft",
+        "impacts": 1,
+        "unchanged": true,
+        "finalMatches": true,
+        "samples": 181
+      },
+      {
+        "name": "water",
+        "impacts": 1,
+        "unchanged": true,
+        "finalMatches": true,
+        "samples": 359
+      }
+    ],
+    "errors": [],
+    "writes": []
+  },
+  "purePlans": {
+    "cases": 28,
+    "watering": "well fill→bed work→well can return; no bottled-water debit",
+    "sameItemIncident": "PASS: coffee milk1, double-milk breakfast2, spoon wood3 despite larger net loss",
+    "incidentalLossIgnored": true,
+    "receiptMutation": false,
+    "result": "PASS"
+  },
+  "finalSourceHashes": {
+    "src/game/v2/layout.ts": "54ac88b6d95dfddbf15c6fb56fa78b85f4c8b5450976cb4f84dd7080985a0cbb",
+    "src/game/v2/WorldRenderer.ts": "5aa841daf521696a9bfbc2bac27d3ef3fa7efb76ac9364d38a2ec712b9cbeab0",
+    "src/art/rooster.ts": "77394d48de4e07c9bbeb2734c7fd5bb2e6c16789032eec957cfd22eaea793f54",
+    "src/art/rooster-data.ts": "bf21c7a5f5d58bb4718b6258a60710a01cc08b1573b6dce3899292d53fe38907"
+  },
+  "screenshots": [
+    "fern-day1-pantry-putaway.png",
+    "fern-day1-seed-pickup.png",
+    "fern-day1-planted-without-bottle-badge.png",
+    "fern-day1-physical-flow-complete.png",
+    "fixture-watering-contact.png",
+    "fixture-crafting-contact.png",
+    "fixture-bandage-contact.png"
+  ],
+  "result": "PASS",
+  "sourceNote": "After the actual full-day run, same-item incidental-loss recipe caps and the multi-bed dry-warning preview were refined. Those branches were verified by focused pure cases and the subsequent isolated renderer fixture, without repeating an unaffected full film."
+}

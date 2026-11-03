@@ -4,7 +4,7 @@ import type { V2PublicLife } from './views';
 const xml = (s: string) => s.replace(/[<>&"']/g, c => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;', "'": '&apos;' }[c]!));
 
 /** Stable procedural identity, with current saved garden/workshop/life details. */
-export function v2LifePortrait(life: V2PublicLife): string {
+export function v2LifePortrait(life: Pick<V2PublicLife, 'state' | 'name'>): string {
   const s = life.state, remembered = !s.alive;
   const floor = remembered ? '#737a70' : '#b18a58', wall = remembered ? '#b7b9a8' : '#e7dfba';
   const art = roosterSvg(s.seed, 32, remembered ? 'dead' : 'idle').replace(/<svg[^>]*>/, '<g>').replace('</svg>', '</g>');

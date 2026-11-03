@@ -17,6 +17,11 @@ export async function handleApi(request: Request): Promise<Response> {
   try {
     const url = new URL(request.url);
     const path = url.pathname.replace(/^\/\.netlify\/functions\/api(?:\/|$)/, '/api/');
+    if (path.startsWith('/api/near/v2/')) return (await import('./near/http')).handleNearApi(request);
+    if (path === '/api/game/worlds') {
+      if (request.method !== 'GET') return json({ error: { code: 'method', message: 'Open this page again.' } }, 405);
+      return json(await (await import('./game-worlds')).readGameWorlds());
+    }
     if (path.startsWith('/api/v2/')) return handleV2Api(request);
     if (path.length > 512) throw notFound();
     const post = request.method === 'POST';

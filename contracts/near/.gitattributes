@@ -1,0 +1,4 @@
+# Preserve the byte-exact sources recorded for the deployed Wasm artifact.
+# Rust accepts these line endings on every supported build host.
+src/lib.rs -text whitespace=cr-at-eol
+src/kernel.rs -text whitespace=cr-at-eol

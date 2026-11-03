@@ -7,10 +7,13 @@ export function NetworkMark() {
 
 /** Only actual served deployments are supplied here; catalog entries alone never
  * become a connection or transaction target. */
-export function NetworkPicker({ networks, currentId, disabled = false, onSelect, onClose }: {
+export function NetworkPicker({ networks, currentId, disabled = false, loading = false, discoveryFailed = false, onRetry, onSelect, onClose }: {
   networks: readonly GameNetwork[];
   currentId?: GameNetworkId;
   disabled?: boolean;
+  loading?: boolean;
+  discoveryFailed?: boolean;
+  onRetry?: () => void;
   onSelect: (network: GameNetwork) => void;
   onClose?: () => void;
 }) {
@@ -23,6 +26,8 @@ export function NetworkPicker({ networks, currentId, disabled = false, onSelect,
         <span className="v2-network-selection" aria-hidden="true">{network.id === currentId ? <Icon name="check" size={16}/> : <i className="v2-network-chevron"/>}</span>
       </button>)}
     </div>
+    {loading && <div className="v2-network-loading" role="status"><Icon name="wallet" size={16}/><span>Opening networks…</span></div>}
+    {!loading && onRetry && <button className="v2-text-button" disabled={disabled} onClick={onRetry}>{discoveryFailed ? 'Try networks again' : 'Refresh networks'}</button>}
     <p className="v2-small-note v2-network-explanation">Each network has its own roosters.</p>
     {onClose && <button className="v2-text-button" disabled={disabled} onClick={onClose}>Back</button>}
   </>;

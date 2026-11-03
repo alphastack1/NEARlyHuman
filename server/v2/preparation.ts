@@ -60,6 +60,13 @@ export interface V2PreparationOptions {
 }
 export type V2ChoiceProvider = (decision: V2Decision) => Promise<V2Selection>;
 
+/** Chain adapters validate their own accepted receipt and identity before entering
+ * the shared deterministic mind/replay kernel. This shape contains game facts,
+ * never an invented EVM address or numeric chain ID for a native chain. */
+export type V2PreparationInput = Pick<V2FrozenInput, 'version' | 'requestId' | 'day' | 'kitMask' | 'shipping' | 'deadline' | 'daySeed' | 'base' | 'baseHash' | 'pressure' | 'reservedReward'> & {
+  runtime: Pick<V2FrozenInput['runtime'], 'rulesHash' | 'decisionConfig'>;
+};
+
 const digest = (value: unknown): Hex => keccak256(toHex(JSON.stringify(value)));
 const K = 50_000n * 1_000_000n;
 const reward = (points: number, pressure: bigint) => BigInt(points) * 1_000_000n * K / (10n * (K + pressure));
@@ -95,13 +102,19 @@ export function offerV2Candidates(context: Context, candidates: Candidate[]): Ca
  */
 export async function prepareV2(rawInput: V2FrozenInput, provider: V2ChoiceProvider, options: V2PreparationOptions = {}) {
   const input = validateV2FrozenInput(rawInput, options.allowLocal);
+  return prepareV2Core(input, v2WorkerInputHash(input), provider, options);
+}
+
+/** Shared preparation implementation. The frozen hash commits to the complete
+ * adapter-specific native/EVM input, including its real chain/account domain. */
+export async function prepareV2Core(input: V2PreparationInput, frozenHash: Hex, provider: V2ChoiceProvider, options: V2PreparationOptions = {}) {
+  if (!/^0x[0-9a-f]{64}$/i.test(frozenHash)) throw new V2ContextError('context', 'The accepted input needs another check.');
   const base = decodeState(input.base);
   if (input.version !== 2 || base.day + 1 !== input.day || base.level !== base.day || !base.alive
     || keccak256(input.base).toLowerCase() !== input.baseHash.toLowerCase()
     || input.runtime.decisionConfig.toLowerCase() !== v2DecisionConfig(input.runtime.rulesHash)) throw new V2ContextError('context', 'This accepted day needs another check.');
   const now = options.nowSeconds || (() => Math.floor(Date.now() / 1000));
   const checkDeadline = () => { if (now() > Number(input.deadline)) throw new V2ContextError('expired', 'This attempt has expired. The saved day is unchanged.'); };
-  const frozenHash = v2WorkerInputHash(input);
   let dailyPlan: V2DailyPlan | undefined, plannedCandidate: Candidate | undefined, paidChoices = 0;
   if (options.plan) {
     checkDeadline();

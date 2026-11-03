@@ -7,11 +7,11 @@ import { v2Personality } from '../../v2/personality';
 import { PLANTS, RECIPES } from '../../v2/catalog';
 import { landscape, bedArt, itemArt, wellArt, workbenchArt, shadowArt, accentFixture } from './art';
 import { pixelViewport } from './pixel-grid';
-import { WORLD_WIDTH, WORLD_HEIGHT, BEDS, ANCHORS, findRoute, receiptStops, type Point, type InspectTarget } from './layout';
+import { WORLD_WIDTH, WORLD_HEIGHT, BEDS, ANCHORS, findRoute, receiptStops, receiptLegs, receiptItems, type ReceiptLeg, type ItemStack, type Point, type InspectTarget } from './layout';
 import { openingEase, openingTileTime } from '../opening';
 
 export type { InspectTarget } from './layout';
-export interface V2WorldOptions { state: State; onInspect?: (target: InspectTarget) => void; onMotion?: (motion: { traveling: boolean }) => void }
+export interface V2WorldOptions { state: State; onInspect?: (target: InspectTarget) => void; onMotion?: (motion: { traveling: boolean; purpose?: 'fetching' | 'storing' | 'watering' }) => void }
 export interface V2WorldController {
   ready: Promise<void>;
   setState(state: State, options?: { receipt?: Receipt; slot?: number; history?: readonly Receipt[] }): void;
@@ -29,7 +29,7 @@ export interface V2WorldController {
 }
 interface Fixture { kind: FixtureArt; image: Phaser.GameObjects.Image; x: number; y: number; key: string; opts: ArtOptions }
 interface Film {
-  receipt: Receipt; stops: Point[]; stop: number; route: Point[]; phase: 'travel' | 'contact' | 'work' | 'dismount';
+  receipt: Receipt; stops: Point[]; legs: ReceiptLeg[]; stop: number; route: Point[]; phase: 'travel' | 'contact' | 'work' | 'dismount';
   elapsed: number; work: number; workBudget: number; stopImpacted: boolean; travelSpeed: number; impact: boolean; bedEntered?: boolean; onImpact?: () => void; resolve: () => void;
 }
 const POSES: RoosterPose[] = ['idle', 'breathe', 'preen', 'stretch', 'perk', 'doze', 'peek', 'walk-a', 'walk-b', 'blink', 'sleep', 'use', 'eat', 'treat', 'garden', 'repair', 'hurt', 'dead'];
@@ -50,6 +50,7 @@ class LifeScene extends Phaser.Scene {
   private actor!: Phaser.GameObjects.Image;
   private shadow!: Phaser.GameObjects.Image;
   private held!: Phaser.GameObjects.Image;
+  private heldExtras: Phaser.GameObjects.Image[] = [];
   private workpiece!: Phaser.GameObjects.Image;
   private blanket!: Phaser.GameObjects.Image;
   private foreground!: Phaser.GameObjects.Graphics;
@@ -90,6 +91,8 @@ class LifeScene extends Phaser.Scene {
   private focusPoint?: Point;
   private dragging?: { x: number; y: number; camera: Point; moved: boolean };
   private carrying = -1;
+  private cargo: ItemStack[] = [];
+  private motionPurpose?: 'fetching' | 'storing' | 'watering';
   private harvestOutcome?: { item: number; until: number };
   private lastTraveling = false;
   private selected?: { target: InspectTarget; until: number };
@@ -132,6 +135,7 @@ class LifeScene extends Phaser.Scene {
     this.actor = this.add.image(this.point.x, this.point.y, this.roosterTexture('idle')).setOrigin(ROOSTER_FRAME.footX / ROOSTER_FRAME.width, ROOSTER_FRAME.footY / ROOSTER_FRAME.height).setInteractive({ pixelPerfect: true, alphaTolerance: 1 });
     this.actor.on('pointerup', (pointer: Phaser.Input.Pointer) => { if (this.allowPointer(pointer) && !this.dragging?.moved) this.attention = this.elapsed + 1400; });
     this.held = this.add.image(0, 0, this.itemTexture(6)).setVisible(false);
+    for (let i = 0; i < 2; i++) this.heldExtras.push(this.add.image(0, 0, this.itemTexture(6)).setVisible(false).setScale(.7));
     this.workpiece = this.add.image(432, 303, this.itemTexture(30)).setOrigin(.5, 1).setDepth(324).setVisible(false);
     this.blanket = this.add.image(312, 112, this.fixtureTexture('bedCover', {})).setOrigin(.5, 1).setDepth(115).setVisible(true);
     this.night = this.add.rectangle(0, 0, WORLD_WIDTH, WORLD_HEIGHT, 0x172439, 1).setOrigin(0).setDepth(1000).setAlpha(0);
@@ -200,19 +204,33 @@ class LifeScene extends Phaser.Scene {
   }
   private drawInventory(): void {
     const g = this.foreground; g.clear().setDepth(381); const px = (c: number, x: number, y: number, w: number, h: number) => g.fillStyle(c).fillRect(x, y, w, h);
-    for (let i = 0; i < Math.min(12, this.state.inventory[6] || 0); i++) { const x = 402 + i % 4 * 9, y = 375 - Math.floor(i / 4) * 6; px(0x62452d, x, y, 12, 6); px(0xba9155, x + 1, y, 10, 4); px(0xe0bc7b, x + 1, y + 1, 3, 3); px(0x7e5b36, x + 5, y + 1, 4, 1); }
+    for (let i = 0; i < Math.min(12, this.storedStock(6)); i++) { const x = 402 + i % 4 * 9, y = 375 - Math.floor(i / 4) * 6; px(0x62452d, x, y, 12, 6); px(0xba9155, x + 1, y, 10, 4); px(0xe0bc7b, x + 1, y + 1, 3, 3); px(0x7e5b36, x + 5, y + 1, 4, 1); }
     for (let i = 0; i < 4; i++) {
       const item = 30 + i, crafting = this.film?.receipt.op === Op.Craft && this.film.impact && RECIPES[this.film.receipt.arg]?.output === item && !this.film.receipt.before.inventory[item];
-      if (this.state.inventory[item] && !crafting) { const key = `v2-display-${i}`; const old = this.children.getByName(key) as Phaser.GameObjects.Image | null; if (!old) this.add.image(404 + i * 17, 303, this.itemTexture(item)).setOrigin(.5, 1).setDepth(324).setName(key); }
+      if (this.storedStock(item) && !crafting) { const key = `v2-display-${i}`; const old = this.children.getByName(key) as Phaser.GameObjects.Image | null; if (!old) this.add.image(404 + i * 17, 303, this.itemTexture(item)).setOrigin(.5, 1).setDepth(324).setName(key); }
       else this.children.getByName(`v2-display-${i}`)?.destroy();
     }
     if (this.state.house.shelterLife) { px(0x51412e, 349, 477, 3, 195); px(0x51412e, 478, 477, 3, 195); px(0xc7bc8b, 350, 477, 130, 3); for (let x = 354; x < 478; x += 9) px(0xb5ae7b, x, 478, 3, 7); }
     if (this.state.house.mess) { for (let i = 0; i < Math.min(10, this.state.house.mess); i++) { const x = 101 + i * 17 % 103, y = 100 + i * 29 % 73; px(0x9a7750, x, y, 3, 2); px(0xb48c55, x + 3, y + 1, 2, 1); } }
   }
+  private storedStock(item: number): number {
+    // A multi-bed harvest is shown before its one canonical inventory impact.
+    // Until that impact its newly gathered goods were never in storage.
+    const inHands = this.film?.receipt.op === Op.Harvest && !this.film.impact ? 0 : this.cargo.filter(s => s.item === item).reduce((n, s) => n + s.quantity, 0);
+    return Math.max(0, (this.state.inventory[item] || 0) - inHands);
+  }
+  private addCargo(items: readonly ItemStack[]): void {
+    for (const stack of items) { const old = this.cargo.find(s => s.item === stack.item); if (old) old.quantity += stack.quantity; else this.cargo.push({ ...stack }); }
+    this.drawInventory();
+  }
+  private removeCargo(items: readonly ItemStack[]): void {
+    for (const stack of items) { const old = this.cargo.find(s => s.item === stack.item); if (old) old.quantity = Math.max(0, old.quantity - stack.quantity); }
+    this.cargo = this.cargo.filter(s => s.quantity > 0); this.drawInventory();
+  }
 
   setState(state: State, options: { receipt?: Receipt; slot?: number; history?: readonly Receipt[] } = {}): void {
     this.cancelFilm(); if (!this.initialized) { this.state = state; return; }
-    const different = state.seed !== this.state.seed; this.applyState(state); this.focusPoint = undefined; this.carrying = -1; this.harvestOutcome = undefined; this.reaction = undefined; this.parcel = undefined;
+    const different = state.seed !== this.state.seed; this.cargo = []; this.applyState(state); this.focusPoint = undefined; this.carrying = -1; this.harvestOutcome = undefined; this.reaction = undefined; this.parcel = undefined;
     if (different) { this.point = { x: 312, y: 79 }; this.perch = undefined; this.perchOffset = { x: 0, y: 0 }; this.roosterTexture('idle'); }
     // An explicit film seek may jump. Ordinary receipt playback always walks its route.
     const history = options.history || (options.receipt ? [options.receipt] : []);
@@ -239,13 +257,14 @@ class LifeScene extends Phaser.Scene {
         this.cancelFilm(); this.paused = false; this.focusPoint = undefined; this.reaction = undefined; this.sleeping = this.sleeping && receipt.op === Op.Quiet; this.blanket.setVisible(this.sleeping); this.timeSlot = receipt.slot; this.applyState(receipt.before);
         if (receipt.op !== Op.Quiet && receipt.op !== Op.QuietMain) this.harvestOutcome = undefined;
         for (const e of receipt.events) { if (e.source === 'rain') this.rainUntil = Math.ceil((receipt.slot + 1) / 10) * 10; if (e.source === 'seedEater' || e.source === 'visitor') { this.visitorUntil = Math.ceil((receipt.slot + 1) / 10) * 10; this.visitorBed = Math.min(3, e.target); } }
-        this.carrying = receipt.op === Op.Ship ? 34 : receipt.op === Op.Plant ? 12 + receipt.variant : receipt.op === Op.Craft ? 6 : receipt.op === Op.Well ? 36 : -1;
+        this.cargo = []; this.carrying = -1;
         const requestedWork = options.duration ?? (receipt.role === 'main' ? 2500 : receipt.op === Op.Quiet ? 650 : 1150);
         // The parcel opens here, not while walking away: leave time to see each real supply.
         const work = receipt.op === Op.Pickup && pickedUpGoods(receipt) ? Math.max(1900, requestedWork) : requestedWork;
         const bedtime = receipt.events.some(e => e.kind === 'bedtime'), alreadyInBed = this.point.x > 286 && this.point.x < 333 && this.point.y < 116;
         const bedEntered = alreadyInBed && (receipt.op === Op.Rest || bedtime);
-        this.film = { receipt, stops: bedEntered ? [] : receiptStops(receipt, this.point), stop: 0, route: [], phase: 'travel', elapsed: 0, work: Math.max(250, work), workBudget: Math.max(250, work), stopImpacted: false, travelSpeed: 0, impact: false, bedEntered, onImpact: options.onImpact, resolve };
+        const legs = bedEntered ? [] : receiptLegs(receipt, this.point);
+        this.film = { receipt, stops: legs.map(leg => leg.at), legs, stop: 0, route: [], phase: 'travel', elapsed: 0, work: Math.max(250, work), workBudget: Math.max(250, work), stopImpacted: false, travelSpeed: 0, impact: false, bedEntered, onImpact: options.onImpact, resolve };
         if (receipt.op === Op.Pickup) this.mailbox(false);
         this.planLeg();
       };
@@ -266,42 +285,47 @@ class LifeScene extends Phaser.Scene {
     for (const point of f.route) { distance += Math.hypot(point.x - previous.x, point.y - previous.y); previous = point; }
     const profile = v2Personality(this.state.seed), base = profile.tempo === 'brisk' ? .102 : profile.tempo === 'unhurried' ? .082 : .092;
     f.travelSpeed = base * (1 + Math.min(.28, Math.max(0, distance - 240) / 600 * .28));
-    f.work = GARDEN_TOURS.has(f.receipt.op) ? f.workBudget / Math.max(1, f.stops.length) : f.workBudget;
+    const leg = f.legs[f.stop];
+    f.work = leg?.kind === 'pickup' ? 420 : leg?.kind === 'store' ? 320 : leg?.kind === 'fill' ? 680 : f.workBudget / Math.max(1, f.legs.filter(l => l.kind === 'work').length);
     f.phase = f.route.length ? 'travel' : 'contact'; f.elapsed = 0; f.stopImpacted = false; this.motion(!!f.route.length);
   }
   private contactFacing(f: Film): void {
     const target = f.stops[f.stop]; if (!target) return;
     const bed = BEDS.find(p => Math.abs(p.x - target.x) < 8 && Math.abs(p.y + 17 - target.y) < 8);
     const fixture = [...this.fixtures].sort((a, b) => Math.hypot(a.image.x - target.x, a.image.y - target.y) - Math.hypot(b.image.x - target.x, b.image.y - target.y))[0];
-    const x = bed?.x ?? (f.receipt.op === Op.Craft || f.receipt.op === Op.BuildChair || f.receipt.op === Op.BuildShelter ? 432 : f.receipt.op === Op.Well ? 280 : fixture?.image.x);
+    const leg = f.legs[f.stop];
+    const x = bed?.x ?? (leg?.storage === 'supplies' ? 432 : leg?.storage === 'pantry' ? 72 : leg?.storage === 'workshop' ? 432 : f.receipt.op === Op.Craft || f.receipt.op === Op.BuildChair || f.receipt.op === Op.BuildShelter ? 432 : f.receipt.op === Op.Well ? 280 : fixture?.image.x);
     if (x !== undefined && Math.abs(x - this.point.x) > 3) this.facing = x < this.point.x ? -1 : 1;
     else if (bed || FOOD_OPS.has(f.receipt.op) || f.receipt.op === Op.Well) this.facing = 1;
   }
-  private impactTime(f: Film): number { return f.receipt.op === Op.Pickup && pickedUpGoods(f.receipt) ? 350 : Math.max(120, f.work - Math.min(420, f.work * .3)); }
+  private impactTime(f: Film): number { return f.legs[f.stop]?.kind === 'work' && f.receipt.op === Op.Pickup && pickedUpGoods(f.receipt) ? 350 : Math.max(120, f.work - Math.min(420, f.work * .3)); }
   private stopImpact(f: Film): void {
     f.stopImpacted = true;
+    const leg = f.legs[f.stop];
+    if (leg?.kind === 'pickup') { this.addCargo(leg.items || []); return; }
+    if (leg?.kind === 'store') { this.removeCargo(leg.items || []); if (leg.tool !== undefined) this.carrying = -1; return; }
+    if (leg?.kind === 'fill') { this.carrying = leg.tool ?? -1; return; }
     const bed = BEDS.findIndex(p => Math.abs(p.x - this.point.x) < 8 && Math.abs(p.y + 17 - this.point.y) < 8);
     if (f.receipt.success && GARDEN_TOURS.has(f.receipt.op) && bed >= 0) {
       const next = f.receipt.snapshot.plots[bed]!; this.plotPreview.set(bed, next); this.replaceBed(bed, next);
       if (f.receipt.op === Op.Harvest) {
         const output = PLANTS[f.receipt.before.plots[bed]!.kind]?.output;
-        this.carrying = output !== undefined && f.receipt.snapshot.inventory[output]! > f.receipt.before.inventory[output]! ? output : -1;
+        if (output !== undefined && f.receipt.snapshot.inventory[output]! > f.receipt.before.inventory[output]!) this.addCargo([{ item: output, quantity: 1 }]);
       }
     }
-    if (f.stop >= f.stops.length - 1) this.impact();
+    if (!f.legs.slice(f.stop + 1).some(l => l.kind === 'work')) this.impact();
   }
   private mailbox(open: boolean): void { const p = this.fixtures.find(f => f.kind === 'mailbox'); if (p) { const key = this.fixtureTexture('mailbox', { open, parcel: open }); p.image.setTexture(key); p.key = key; } }
   private impact(): void {
-    const f = this.film; if (!f || f.impact) return; f.impact = true; this.applyState(f.receipt.snapshot); f.onImpact?.();
+    const f = this.film; if (!f || f.impact) return; f.impact = true;
+    this.removeCargo(receiptItems(f.receipt, 'inputs'));
+    const outputs = receiptItems(f.receipt, 'outputs');
+    if (f.receipt.op !== Op.Harvest) this.addCargo(outputs);
+    this.applyState(f.receipt.snapshot); f.onImpact?.();
     if (f.receipt.op === Op.Pickup) {
       this.mailbox(false); this.carrying = -1;
       const items = f.receipt.snapshot.inventory.flatMap((n, i) => Array(Math.min(3, Math.max(0, n - f.receipt.before.inventory[i]!))).fill(i) as number[]).slice(0, 3);
       if (items.length) this.parcel = { items, at: this.actorClock, until: this.actorClock + 1500 };
-    }
-    else if (f.receipt.op === Op.Craft && f.receipt.success) this.carrying = RECIPES[f.receipt.arg]?.output ?? -1;
-    else if (f.receipt.op === Op.Harvest && f.receipt.success) {
-      if (this.carrying < 0) this.carrying = f.receipt.snapshot.inventory.findIndex((n, i) => n > f.receipt.before.inventory[i]!);
-      if (this.carrying >= 0) this.harvestOutcome = { item: this.carrying, until: this.actorClock + 1100 };
     }
     else if (f.receipt.op === Op.Ship) { this.mailbox(true); this.carrying = -1; }
     if ((f.receipt.op === Op.Shoo || f.receipt.op === Op.Bait) && f.receipt.success) this.visitorUntil = 0;
@@ -311,8 +335,11 @@ class LifeScene extends Phaser.Scene {
       this.reaction = { until: this.actorClock + Math.min(500, Math.max(250, f.work - f.elapsed)), pose: physical ? 'hurt' : 'perk', surprise: !physical };
     }
   }
-  private finish(): void { const f = this.film; if (!f) return; this.impact(); this.film = undefined; this.carrying = -1; this.drawInventory(); this.motion(false); f.resolve(); }
-  private motion(traveling: boolean): void { if (traveling !== this.lastTraveling) { this.lastTraveling = traveling; this.options.onMotion?.({ traveling }); } }
+  private finish(): void { const f = this.film; if (!f) return; this.impact(); this.film = undefined; this.carrying = -1; this.cargo = []; this.drawInventory(); this.motion(false); f.resolve(); }
+  private motion(traveling: boolean): void {
+    const leg = this.film?.legs[this.film.stop], purpose = leg?.kind === 'pickup' ? 'fetching' : leg?.kind === 'store' ? 'storing' : leg?.kind === 'fill' ? 'watering' : undefined;
+    if (traveling !== this.lastTraveling || purpose !== this.motionPurpose) { this.lastTraveling = traveling; this.motionPurpose = purpose; this.options.onMotion?.({ traveling, purpose }); }
+  }
   setPaused(paused: boolean): void { this.paused = paused; this.motion(!!this.film && this.film.phase === 'travel' && !paused); }
   setPlaybackRate(rate: number): void { this.playbackRate = Number.isFinite(rate) ? Math.max(1, Math.min(2, rate)) : 1; }
   setInputEnabled(enabled: boolean): void { this.interactionEnabled = enabled; if (this.input) this.input.enabled = enabled; if (!enabled) this.dragging = undefined; }
@@ -360,13 +387,17 @@ class LifeScene extends Phaser.Scene {
         f.elapsed += filmDelta;
         if (f.phase === 'contact') {
           this.contactFacing(f);
-          const contactHold = GARDEN_TOURS.has(f.receipt.op) ? 130 : f.stops.length > 1 ? 220 : 180;
+          const leg = f.legs[f.stop], realWork = !leg || leg.kind === 'work';
+          const contactHold = realWork && GARDEN_TOURS.has(f.receipt.op) ? 130 : 150;
           if (f.elapsed >= contactHold) {
             const bedtime = f.receipt.events.some(e => e.kind === 'bedtime');
             if ((f.receipt.op === Op.Rest || bedtime) && !f.bedEntered) { f.bedEntered = true; f.phase = 'travel'; f.route = [{ x: 312, y: 121 }, { x: 312, y: 79 }]; this.motion(true); }
             else {
-            if (f.stop < f.stops.length - 1 && !GARDEN_TOURS.has(f.receipt.op)) { f.stop++; this.planLeg(); }
-            else { f.phase = 'work'; f.elapsed = 0; if (f.receipt.op === Op.Pickup) this.mailbox(pickedUpGoods(f.receipt)); if (f.receipt.op === Op.Leisure && f.receipt.variant !== 1) this.perch = f.receipt.variant === 2 ? { x: 0, y: -17 } : { x: -8, y: -18 }; if (f.receipt.op === Op.Rest || bedtime) { this.blanket.setVisible(true); this.sleeping = true; } }
+            f.phase = 'work'; f.elapsed = 0;
+            if (leg?.kind === 'fill') this.carrying = leg.tool ?? -1;
+            if (realWork && f.receipt.op === Op.Pickup) this.mailbox(pickedUpGoods(f.receipt));
+            if (realWork && f.receipt.op === Op.Leisure && f.receipt.variant !== 1) this.perch = f.receipt.variant === 2 ? { x: 0, y: -17 } : { x: -8, y: -18 };
+            if (realWork && (f.receipt.op === Op.Rest || bedtime)) { this.blanket.setVisible(true); this.sleeping = true; }
             }
           }
         } else {
@@ -392,7 +423,7 @@ class LifeScene extends Phaser.Scene {
     }
   }
   private drawActor(): void {
-    const f = this.film, inTransit = !!f && f.phase === 'travel', working = !!f && f.phase === 'work', clock = this.actorClock;
+    const f = this.film, inTransit = !!f && f.phase === 'travel', atContact = !!f && f.phase === 'work', leg = f?.legs[f.stop], working = atContact && (!leg || leg.kind === 'work'), clock = this.actorClock;
     const bedtime = !!f?.receipt.events.some(e => e.kind === 'bedtime');
     const quietClock = clock + Number.parseInt(this.state.seed.slice(-4), 16) % 17 * 137 + (f?.receipt.slot || 0) * 97;
     let pose: RoosterPose = 'idle';
@@ -403,6 +434,7 @@ class LifeScene extends Phaser.Scene {
     else if (working && f?.receipt.op === Op.Quiet && f.receipt.role === 'routine') pose = f.stopImpacted ? 'perk' : 'peek';
     else if (this.sleeping) pose = 'sleep';
     else if (inTransit) pose = Math.floor(this.walked / 12) % 2 ? 'walk-a' : 'walk-b';
+    else if (atContact && !working) pose = 'use';
     else if (working && f && f.stopImpacted && f.receipt.op !== Op.Quiet && f.receipt.op !== Op.QuietMain) pose = f.receipt.success ? 'perk' : 'peek';
     else if (working && f) pose = FOOD_OPS.has(f.receipt.op) ? (Math.floor(clock / 260) % 3 === 0 ? 'use' : 'eat') : f.receipt.op === Op.Well && f.stop === 0 ? 'use' : GARDEN_OPS.has(f.receipt.op) ? 'garden' : WORK_OPS.has(f.receipt.op) ? 'repair' : f.receipt.op === Op.Treat ? 'treat' : f.receipt.op === Op.Leisure ? f.receipt.variant === 1 ? v2Personality(this.state.seed).signature : Math.floor(clock / 600) % 2 ? 'preen' : 'doze' : f.receipt.op === Op.Quiet || f.receipt.op === Op.QuietMain ? Math.floor(quietClock / 220) % 8 >= 5 ? v2Personality(this.state.seed).signature : 'breathe' : 'use';
     else if (this.attention > this.elapsed) pose = 'perk';
@@ -414,20 +446,22 @@ class LifeScene extends Phaser.Scene {
     const actorX = Math.round(this.point.x + this.perchOffset.x), actorY = Math.round(this.point.y + this.perchOffset.y);
     this.actor.setTexture(this.roosterTexture(pose)).setPosition(actorX, actorY).setFlipX(this.facing < 0).setDepth(inBed ? 114 : this.point.y + 1);
     this.shadow.setTexture(this.shadowTexture(pose === 'doze' ? 24 : 20, 6)).setPosition(Math.round(this.point.x), Math.round(this.point.y + 1)).setDepth(this.point.y - 1).setVisible(Math.abs(this.perchOffset.y) < 4);
-    let item = this.carrying;
+    let item = this.carrying >= 0 ? this.carrying : this.cargo[0]?.item ?? -1;
     if (item < 0 && this.harvestOutcome && this.harvestOutcome.until > clock && (!f || f.receipt.op === Op.Quiet || f.receipt.op === Op.QuietMain)) item = this.harvestOutcome.item;
     if (working && f && FOOD_OPS.has(f.receipt.op)) {
       const op = f.receipt.op;
-      const ingredients = op === Op.Coffee ? [35] : op === Op.Drink || op === Op.Eat ? [f.receipt.arg] : op === Op.RawSteak || op === Op.CookSteak ? [3] : op === Op.Breakfast ? [f.receipt.arg, f.receipt.variant] : op === Op.Bowl ? [2, 1] : op === Op.Sandwich ? [2, 3] : [2];
+      const ingredients = op === Op.Coffee ? [35] : receiptItems(f.receipt, 'inputs').map(stack => stack.item);
       const at = Math.min(ingredients.length - 1, Math.floor(f.elapsed / this.impactTime(f) * ingredients.length));
-      item = f.stopImpacted ? -1 : ingredients[at]!;
+      item = f.stopImpacted ? -1 : ingredients[at] ?? -1;
     }
     if (working && f && WORK_OPS.has(f.receipt.op) && !f.stopImpacted) item = 37;
     if (working && f && !f.stopImpacted && f.receipt.op === Op.Treat) item = f.receipt.arg === 2 ? 11 : 4;
     if (working && f && !f.stopImpacted && [Op.Wash, Op.DeepClean].includes(f.receipt.op) && f.receipt.before.inventory[10]! > f.receipt.snapshot.inventory[10]!) item = 10;
     if (working && f?.receipt.op === Op.EnjoyFlower) item = f.receipt.arg;
     const handHeight = working && f && FOOD_OPS.has(f.receipt.op) ? 19 : item === 37 ? 17 : 14;
-    this.held.setVisible(item >= 0 && this.state.alive); if (item >= 0) this.held.setTexture(this.itemTexture(item)).setPosition(Math.round(this.point.x + this.facing * 13), Math.round(this.point.y - handHeight - (item === 37 ? Math.floor(clock / 170) % 2 * 4 : 0))).setFlipX(this.facing < 0 && (item === 36 || item === 37)).setDepth(this.point.y + 3);
+    const grouped = this.cargo.length > 1 && !working && this.carrying < 0;
+    this.held.setVisible(item >= 0 && this.state.alive).setScale(grouped ? .8 : 1); if (item >= 0) this.held.setTexture(this.itemTexture(item)).setPosition(Math.round(this.point.x + this.facing * 15), Math.round(this.point.y - handHeight - (item === 37 ? Math.floor(clock / 170) % 2 * 4 : 0))).setFlipX(this.facing < 0 && (item === 36 || item === 37)).setDepth(this.point.y + 3);
+    for (const [i, extra] of this.heldExtras.entries()) { const stack = grouped ? this.cargo[i + 1] : undefined; extra.setVisible(!!stack && this.state.alive); if (stack) extra.setTexture(this.itemTexture(stack.item)).setPosition(Math.round(this.point.x + this.facing * (21 + i * 4)), Math.round(this.point.y - 8 - i * 8)).setDepth(this.point.y + 4 + i); }
   }
   private drawStock(): void {
     const g = this.stock; g.clear(); for (const image of this.stockIcons) image.setVisible(false);
@@ -444,14 +478,25 @@ class LifeScene extends Phaser.Scene {
     }
     if (this.openingPhase !== 'closed' || this.sleeping || !this.state.alive) return;
     const nearby = (p: Point, radius: number) => Math.hypot(this.point.x - p.x, this.point.y - p.y) < radius;
-    const stock = (ids: number[]) => ids.filter(id => this.state.inventory[id]! > 0).slice(0, 3).map(id => ({ item: id, quantity: this.state.inventory[id]! }));
+    const stock = (ids: number[]) => ids.filter(id => this.storedStock(id) > 0).slice(0, 3).map(id => ({ item: id, quantity: this.storedStock(id) }));
     let chips: { item: number; quantity: number }[] = [], at = { x: 72, y: 116 };
-    if (nearby(ANCHORS.pantry, 65)) { chips = stock([0, 2, 1, 3, 4, 5]); if (!chips.length) chips = [{ item: 2, quantity: 0 }]; }
+    if (nearby(ANCHORS.pantry, 65)) { chips = stock([0, 2, 1, 3, 5, 26, 27, 28, 29]); if (!chips.length) chips = [{ item: 2, quantity: 0 }]; }
+    else if (nearby(ANCHORS.supplies, 55)) { chips = stock([13, 14, 15, 16, 17, 18, 19, 20, 21, 4, 7, 8, 9, 10, 11, 12, 22, 23, 24, 25]); at = { x: 432, y: 116 }; }
     else if (nearby(ANCHORS.workshop, 63)) { chips = stock([6, 30, 31, 32, 33]); if (!chips.length) chips = [{ item: 6, quantity: 0 }]; at = { x: 432, y: 354 }; }
     else {
       const bed = BEDS.findIndex(p => nearby({ x: p.x, y: p.y + 17 }, 35));
-      if (bed >= 0 && this.state.plots[bed]!.kind) { const p = BEDS[bed]!, plot = this.state.plots[bed]!; chips = [{ item: 0, quantity: plot.moisture }]; at = { x: p.x, y: p.y + 38 }; }
-      else if (nearby(ANCHORS.well, 38)) { chips = [{ item: 0, quantity: this.state.inventory[0]! }]; at = { x: 280, y: 577 }; }
+      const nearbyPlot = bed >= 0 ? this.plotPreview.get(bed) || this.state.plots[bed]! : undefined;
+      if (bed >= 0 && nearbyPlot?.kind && nearbyPlot.moisture === 0) {
+        const p = BEDS[bed]!, x = p.x, y = p.y + 26;
+        // A hollow drop above cracked soil is a care cue, never a bottle count.
+        g.fillStyle(0x192f3b, .94).fillRect(x - 12, y - 8, 25, 23);
+        g.fillStyle(0xe4bc70).fillRect(x, y - 5, 1, 2).fillRect(x - 2, y - 3, 1, 2).fillRect(x + 2, y - 3, 1, 2).fillRect(x - 3, y - 1, 1, 3).fillRect(x + 3, y - 1, 1, 3).fillRect(x - 2, y + 2, 5, 1);
+        g.fillStyle(0x9c7950).fillRect(x - 8, y + 7, 17, 2); g.fillStyle(0xe4bc70).fillRect(x - 1, y + 6, 1, 3).fillRect(x + 1, y + 9, 2, 1); return;
+      }
+      else if (nearby(ANCHORS.well, 38)) {
+        // The well supplies irrigation freely; bottled drinking water lives indoors.
+        this.stockIcons[0]!.setTexture(this.itemTexture(36)).setPosition(280, 563).setVisible(true); return;
+      }
     }
     const digits = ['111101101101111', '010110010010111', '111001111100111', '111001111001111', '101101111001001', '111100111001111', '111100111101111', '111001001001001', '111101111101111', '111101111001111'];
     const width = chips.length * 34 + 3, left = Math.round(at.x - width / 2), top = at.y - 12;
@@ -476,13 +521,13 @@ class LifeScene extends Phaser.Scene {
     this.sunlight.clear().fillStyle(0xffdc8e, windowLight).fillRect(121 + drift, 77, 12, 31).fillRect(138 + drift, 77, 12, 31);
     this.sunlight.fillStyle(0xffe5a8, windowLight * .45).fillRect(122 + drift, 108, 28, 5);
     this.workpiece.setVisible(false);
-    const f = this.film, clock = this.actorClock, t = Math.floor(clock / 170) % 3, working = f && f.phase === 'work';
+    const f = this.film, clock = this.actorClock, t = Math.floor(clock / 170) % 3, leg = f?.legs[f.stop], working = f && f.phase === 'work' && (!leg || leg.kind === 'work');
+    if (f?.phase === 'work' && leg?.kind === 'fill' && !f.stopImpacted) { px(0x94d4df, 272 + t * 3, 508, 6, 1); px(0xcce9d8, 277 + t, 510, 4, 1); }
     if (working && f) {
       const op = f.receipt.op, x = this.point.x + this.perchOffset.x, y = this.point.y + this.perchOffset.y;
       if ((op === Op.Rest || this.sleeping) && !(op === Op.Quiet && f.receipt.role === 'routine') && this.attention <= this.elapsed) { px(0xe4e4c9, x + 13, y - 35 - t * 3, 5, 1); px(0xe4e4c9, x + 16 - t, y - 33 - t * 3, 2, 1); px(0xe4e4c9, x + 12, y - 31 - t * 3, 5, 1); }
       if (!f.stopImpacted) {
-        if (op === Op.Well && f.stop > 0) for (let i = 0; i < 5; i++) px(0x9bd2da, x + this.facing * (12 + i * 2), y - 22 + (i + t) % 5 * 3, 1, 2);
-        if (op === Op.Well && f.stop === 0) { px(0x94d4df, 272 + t * 3, 508, 6, 1); px(0xcce9d8, 277 + t, 510, 4, 1); }
+        if (op === Op.Well) for (let i = 0; i < 5; i++) px(0x9bd2da, x + this.facing * (12 + i * 2), y - 22 + (i + t) % 5 * 3, 1, 2);
         if (op === Op.Plant || op === Op.Harvest) { const color = op === Op.Plant ? 0xb29765 : 0x8ea765; px(color, x + this.facing * (10 + t * 2), y - 6 - t * 3, 2, 1, .75); px(op === Op.Plant ? 0x8a704d : 0xb3be82, x + this.facing * (15 - t), y - 3 - (t + 1) % 3 * 3, 1, 1, .65); }
         if (WORK_OPS.has(op)) for (let i = 0; i < 3; i++) if ((t + i) % 2) { px(0xf0d895, x + this.facing * (17 + i * 3), y - 23 - i * 4, 1, 3); px(0xf0d895, x + this.facing * (16 + i * 3), y - 22 - i * 4, 3, 1); }
         if (op === Op.Craft) {

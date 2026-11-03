@@ -27,7 +27,11 @@ export interface V2OwnerJob {
   phase: 'queued' | 'preparing' | 'prepared' | 'saving' | 'ready' | 'failure_due' | 'expiry_due' | 'failed' | 'expired' | 'quarantined';
   decisions: number; updatedAt: number; ownerTx?: Hex; finalTx?: Hex; commitment?: Hex; retrySafe: boolean;
   failureCode?: string; failureMessage?: string;
+  progress?: V2ChoiceProgress[];
 }
+/** A completed, validated model reply. Labels describe choices, not a claim
+ * that the cinematic action or onchain save has already completed. */
+export interface V2ChoiceProgress {id:string;stage:'plan'|'routine'|'acute'|'focus';label:string;slot?:number}
 /** Integer amounts cross HTTP as decimal strings; reconstruct only at wallet submission. */
 export interface V2OwnerQuote {
   admission: { id: Hex; player: Address; tokenId: string; baseRevision: number; kitMask: string; shipping: boolean; processingFee: string; multiplier: number; expiresAt: string; decisionConfig: Hex };

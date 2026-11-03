@@ -1,4 +1,7 @@
 import { Op, type Receipt } from '../../v2/types';
+import { RECIPES } from '../../v2/catalog';
+import { itemStorage, type StorageKind } from '../../v2/storage';
+export { itemStorage, type StorageKind } from '../../v2/storage';
 
 export const TILE = 16, WORLD_WIDTH = 512, WORLD_HEIGHT = 832;
 export interface Point { x: number; y: number }
@@ -6,7 +9,7 @@ export interface Rect { x: number; y: number; w: number; h: number }
 export interface InspectTarget { kind: 'bed' | 'well' | 'workshop' | 'mailbox' | 'fixture'; index?: number; label?: string }
 export const BEDS: readonly Point[] = [{ x: 376, y: 536 }, { x: 456, y: 536 }, { x: 376, y: 632 }, { x: 456, y: 632 }];
 export const ANCHORS = {
-  pantry: { x: 72, y: 89 }, stove: { x: 168, y: 89 }, counter: { x: 216, y: 89 }, window: { x: 136, y: 89 },
+  pantry: { x: 72, y: 89 }, supplies: { x: 432, y: 89 }, stove: { x: 168, y: 89 }, counter: { x: 216, y: 89 }, window: { x: 136, y: 89 },
   bed: { x: 312, y: 137 }, seat: { x: 88, y: 345 }, chair: { x: 168, y: 345 }, wash: { x: 328, y: 329 },
   hall: { x: 248, y: 233 }, workshop: { x: 424, y: 329 }, well: { x: 280, y: 553 }, mailbox: { x: 408, y: 745 },
   garden: { x: 328, y: 601 }, doorway: { x: 328, y: 457 },
@@ -84,7 +87,7 @@ export function findRoute(from: Point, to: Point, house?: NavigationHouse): Poin
 }
 export function bedApproach(index: number): Point { const bed = BEDS[index] || BEDS[0]!; return { x: bed.x, y: bed.y + 17 }; }
 /** All contacts are presentation targets, never simulation choices. */
-export function receiptStops(r: Receipt, here: Point): Point[] {
+function actionStops(r: Receipt, here: Point): Point[] {
   if (r.events.some(e => e.kind === 'bedtime')) return [ANCHORS.bed];
   switch (r.op) {
     case Op.Quiet: case Op.QuietMain: return [];
@@ -109,3 +112,50 @@ export function receiptStops(r: Receipt, here: Point): Point[] {
     default: return [];
   }
 }
+
+export interface ItemStack { item: number; quantity: number }
+export interface ReceiptLeg { at: Point; kind: 'pickup' | 'work' | 'store' | 'fill'; items?: ItemStack[]; storage?: StorageKind; tool?: number }
+export function receiptItems(r: Receipt, direction: 'inputs' | 'outputs'): ItemStack[] {
+  const inputIds: Partial<Record<Op, number[]>> = {
+    [Op.Breakfast]: [r.arg, r.variant], [Op.Eat]: [r.arg], [Op.Drink]: [r.arg],
+    [Op.Treat]: [r.arg === 2 ? 11 : 4], [Op.Wash]: [10], [Op.DeepClean]: [10],
+    [Op.Ship]: r.before.inventory.flatMap((_, id) => id >= 22 ? [id] : []),
+    [Op.Coffee]: r.variant === 2 ? [5, 1] : [5], [Op.Toast]: [2], [Op.CookSteak]: [3],
+    [Op.Bowl]: [2, 1], [Op.Sandwich]: [2, 3], [Op.Repair]: [7], [Op.Plant]: [12 + r.variant],
+    [Op.Craft]: [6], [Op.RestoreSoil]: [12], [Op.BuildChair]: [6, 7], [Op.BuildShelter]: [6, 7],
+    [Op.Patch]: [6], [Op.BackupHeat]: [6, 9], [Op.CoverPlot]: [8], [Op.Douse]: [0],
+    [Op.BraceRain]: [7], [Op.CoverRain]: [8], [Op.Bait]: [r.arg], [Op.RawSteak]: [3], [Op.EnjoyFlower]: [r.arg],
+  };
+  const allowed = direction === 'inputs' ? inputIds[r.op] || [] : [Op.Pickup, Op.Harvest, Op.Craft].includes(r.op) ? r.before.inventory.map((_, i) => i) : [];
+  return r.before.inventory.flatMap((before, item) => {
+    if (!allowed.includes(item)) return [];
+    const difference = direction === 'inputs' ? before - r.snapshot.inventory[item]! : r.snapshot.inventory[item]! - before;
+    // A slot can also spoil or lose the same supply to an incident. Only fetch
+    // the actual recipe, e.g. one milk for coffee, two for a milk-only breakfast.
+    const recipe = r.op === Op.Craft && item === 6 ? RECIPES[r.arg]?.wood || 0 : inputIds[r.op]?.filter(id => id === item).length || 0;
+    const quantity = direction === 'inputs' && r.op !== Op.Ship ? Math.min(difference, recipe) : difference;
+    return quantity > 0 ? [{ item, quantity }] : [];
+  });
+}
+function storageLegs(items: ItemStack[], kind: 'pickup' | 'store'): ReceiptLeg[] {
+  const groups = new Map<StorageKind, ItemStack[]>();
+  for (const stack of items) { const key = itemStorage(stack.item), group = groups.get(key) || []; group.push(stack); groups.set(key, group); }
+  return [...groups].map(([storage, goods]) => ({ at: ANCHORS[storage], kind, items: goods, storage }));
+}
+/** A single saved action may need a few physical sublegs. All quantities come
+ * from that receipt; fetching or putting away never consumes a second item. */
+export function receiptLegs(r: Receipt, here: Point): ReceiptLeg[] {
+  if (r.events.some(e => e.kind === 'bedtime')) return [{ at: ANCHORS.bed, kind: 'work' }];
+  const inputs = receiptItems(r, 'inputs'), outputs = receiptItems(r, 'outputs');
+  if (r.op === Op.Well) return [
+    { at: ANCHORS.well, kind: 'fill', tool: 36 },
+    ...r.before.plots.flatMap((p, i): ReceiptLeg[] => p.kind && p.moisture < 2 ? [{ at: bedApproach(i), kind: 'work' }] : []),
+    { at: ANCHORS.well, kind: 'store', tool: 36 },
+  ];
+  const work = actionStops(r, here).map((at): ReceiptLeg => ({ at, kind: 'work' }));
+  // Treatments and enjoying a flower still happen at a real contact when the
+  // original routine can be performed wherever the rooster happens to stand.
+  if (!work.length && inputs.length) work.push({ at: storageLegs(inputs, 'pickup').at(-1)!.at, kind: 'work' });
+  return [...storageLegs(inputs, 'pickup'), ...work, ...storageLegs(outputs, 'store')];
+}
+export function receiptStops(r: Receipt, here: Point): Point[] { return receiptLegs(r, here).map(leg => leg.at); }

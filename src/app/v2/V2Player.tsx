@@ -1,13 +1,14 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Icon, type IconName } from '../Icons';
 import { createV2WorldRenderer, type V2WorldController } from '../../game/v2';
-import type { V2PublicLife } from '../../v2/public';
+import type { GamePublicLife as V2PublicLife } from '../../chain/game-types';
 import { Op, type Receipt, type State } from '../../v2/types';
 import { endingNote, filmBeats, inspectDetail, quietInterlude, receiptEventNote, receiptNote, receiptQuietTitle, receiptTitle, receiptTravelTitle, type Inspection, type V2FilmPacket } from '../../v2/presentation';
 import { dayMemory } from '../../v2/day-memory';
 import '../v2Playback.css';
 import type { CartridgePhase } from '../CartridgeOpening';
 import { LifeSoundButton, useLifeSound } from './LifeSound';
+import { NeedFeedback, visibleNeedChanges } from './NeedFeedback';
 
 interface Props { packet?: V2FilmPacket; life?: V2PublicLife; name?: string; onPrepare?: () => void; onHatch?: () => void; onPurse?: () => void; onExit?: () => void; onMenu?: () => void; onProfile?: () => void; onLatest?: () => void; suspended?: boolean; opening?: CartridgePhase; prepareLabel?: string; homeFirst?: boolean; example?: boolean; onEndExample?: () => void; hatchLabel?: string; autoPlay?: boolean }
 const EXAMPLE_LENGTH = 28_000;
@@ -28,6 +29,10 @@ export default function V2Player({ packet, life, name, onPrepare, onHatch, onPur
   const [complete, setComplete] = useState(false);
   const [ready, setReady] = useState(false);
   const [traveling, setTraveling] = useState(false);
+  const [motionPurpose, setMotionPurpose] = useState<'fetching' | 'storing' | 'watering'>();
+  const [needFeedback, setNeedFeedback] = useState<{ serial: number; changes: number[] }>();
+  const needFeedbackRemaining = useRef(0), needFeedbackSerial = useRef(0);
+  const displayedNeeds = useRef([...snapshot.needs]);
   const [inFlight, setInFlight] = useState<{ receipt: Receipt; impacted: boolean }>();
   const [inspect, setInspect] = useState<Inspection>();
   const [error, setError] = useState(false);
@@ -56,7 +61,8 @@ export default function V2Player({ packet, life, name, onPrepare, onHatch, onPur
   const memory = packet ? dayMemory(packet) : undefined;
   const quietBeat = inFlight && quietInterlude(inFlight.receipt) ? inFlight.receipt : undefined;
   const bedtimeApproach = inFlight && !inFlight.impacted && (inFlight.receipt.op === Op.Rest || inFlight.receipt.events.some(e => e.kind === 'bedtime'));
-  const title = homeView ? snapshot.alive ? snapshot.day === 0 ? `${roosterName} is home.` : `${roosterName}, at home.` : 'A little life, remembered.' : !started ? `A day with ${roosterName}.` : complete ? memory?.headline || 'A little day, well lived.' : bedtimeApproach ? receiptTravelTitle(inFlight.receipt) : traveling && inFlight ? receiptTravelTitle(inFlight.receipt, inFlight.impacted && inFlight.receipt.op === Op.Pickup) : quietBeat ? receiptQuietTitle(quietBeat) : approaching ? receiptTitle(approaching) : current ? receiptTitle(current) : 'A new morning.';
+  const physicalPurpose = motionPurpose && inFlight ? { fetching: 'Getting the supplies.', storing: 'Putting things away.', watering: 'Fetching garden water.' }[motionPurpose] : undefined;
+  const title = homeView ? snapshot.alive ? snapshot.day === 0 ? `${roosterName} is home.` : `${roosterName}, at home.` : 'A little life, remembered.' : !started ? `A day with ${roosterName}.` : complete ? memory?.headline || 'A little day, well lived.' : physicalPurpose || (bedtimeApproach ? receiptTravelTitle(inFlight.receipt) : traveling && inFlight ? receiptTravelTitle(inFlight.receipt, inFlight.impacted && inFlight.receipt.op === Op.Pickup) : quietBeat ? receiptQuietTitle(quietBeat) : approaching ? receiptTitle(approaching) : current ? receiptTitle(current) : 'A new morning.');
   const note = !snapshot.alive && (homeView || complete) ? `${endingNote(snapshot)}${earned ? ` · +${earned} NHC kept in the purse` : ''}` : complete ? [memory?.hint, earned ? `+${earned} NHC` : ''].filter(Boolean).join(' · ') : notice || (quietBeat || approaching ? '' : current ? current.op === Op.Ship && current.success && earned ? `Sent with care · +${earned} NHC` : receiptNote(current) : '');
   const prepareAction = (complete || homeView) && !!onPrepare && snapshot.alive;
   const hatchAction = (complete || homeView) && !prepareAction && !!onHatch;
@@ -85,11 +91,21 @@ export default function V2Player({ packet, life, name, onPrepare, onHatch, onPur
     }, 100);
     return () => clearInterval(timer);
   }, [notice, suspended]);
+  useEffect(() => {
+    if (!needFeedback) return;
+    let previous = performance.now();
+    const timer = setInterval(() => {
+      const now = performance.now(), elapsed = now - previous; previous = now;
+      if (!pausedRef.current && !suspended && !document.hidden) needFeedbackRemaining.current -= elapsed;
+      if (needFeedbackRemaining.current <= 0) setNeedFeedback(undefined);
+    }, 80);
+    return () => clearInterval(timer);
+  }, [needFeedback, suspended]);
 
   useEffect(() => {
     const state = homeFirst ? homeState : initial;
-    setReady(false); setError(false); setStarted(false); setComplete(false); setIndex(-1); setSnapshot(state); setInFlight(undefined); setNotice(undefined); exampleRemaining.current = EXAMPLE_LENGTH;
-    const controller = createV2WorldRenderer(host.current!, { state, onInspect: inspectObject, onMotion: ({ traveling }: { traveling: boolean }) => setTraveling(traveling) });
+    setReady(false); setError(false); setStarted(false); setComplete(false); setIndex(-1); setSnapshot(state); setInFlight(undefined); setNotice(undefined); setNeedFeedback(undefined); setMotionPurpose(undefined); displayedNeeds.current = [...state.needs]; exampleRemaining.current = EXAMPLE_LENGTH;
+    const controller = createV2WorldRenderer(host.current!, { state, onInspect: inspectObject, onMotion: ({ traveling, purpose }) => { setTraveling(traveling); setMotionPurpose(purpose); } });
     controller.setInputEnabled(!suspended);
     controller.setOpening(opening);
     controller.setDawn(state.alive ? 'waiting' : 'none');
@@ -129,11 +145,12 @@ export default function V2Player({ packet, life, name, onPrepare, onHatch, onPur
   async function run(from = 0) {
     if (!packet || !receipts.length) return;
     const id = ++generation.current;
-    setInspect(undefined); setNotice(undefined); setStarted(true); setComplete(false); pause(false);
+    setInspect(undefined); setNotice(undefined); setNeedFeedback(undefined); setMotionPurpose(undefined); setStarted(true); setComplete(false); pause(false);
     const start = Math.max(0, Math.min(receipts.length - 1, from));
     running.current = true;
     renderer.current?.setState(start ? receipts[start - 1]!.snapshot : initial, { history: receipts.slice(0, start), slot: start ? receipts[start - 1]!.slot : 0 });
     renderer.current?.setDawn(start === 0 ? 'rise' : 'none');
+    displayedNeeds.current = [...(start ? receipts[start - 1]!.snapshot : initial).needs];
     setSnapshot(start ? receipts[start - 1]!.snapshot : initial); setIndex(start - 1);
     try {
       for (const beat of beats) {
@@ -143,6 +160,9 @@ export default function V2Player({ packet, life, name, onPrepare, onHatch, onPur
         setInFlight({ receipt: beat.receipt, impacted: false });
         await renderer.current?.playReceipt(beat.receipt, { duration: beat.duration, onImpact: () => {
           if (generation.current !== id) return;
+          const changes = visibleNeedChanges(beat.receipt, displayedNeeds.current);
+          displayedNeeds.current = [...beat.receipt.snapshot.needs];
+          if (changes.some(Boolean)) { needFeedbackRemaining.current = 950; setNeedFeedback({ serial: ++needFeedbackSerial.current, changes }); }
           setIndex(beat.end); setSnapshot(beat.receipt.snapshot); setInFlight({ receipt: beat.receipt, impacted: true });
           const incident = receiptEventNote(beat.receipt);
           if (incident) { noticeRemaining.current = 2600; setNotice(incident); }
@@ -159,9 +179,10 @@ export default function V2Player({ packet, life, name, onPrepare, onHatch, onPur
     } catch { if (generation.current === id) setError(true); }
   }
   function seek(value: number) {
-    generation.current++; running.current = false; pause(true); setStarted(true); setComplete(false); setInspect(undefined); setInFlight(undefined); setNotice(undefined);
+    generation.current++; running.current = false; pause(true); setStarted(true); setComplete(false); setInspect(undefined); setInFlight(undefined); setNotice(undefined); setNeedFeedback(undefined); setMotionPurpose(undefined);
     const at = Math.min(receipts.length - 1, Math.max(-1, value));
     const state = at < 0 ? initial : receipts[at]!.snapshot;
+    displayedNeeds.current = [...state.needs];
     renderer.current?.setDawn('none');
     renderer.current?.setState(state, { history: receipts.slice(0, at + 1), slot: at < 0 ? 0 : receipts[at]!.slot }); setSnapshot(state); setIndex(at);
   }
@@ -169,14 +190,16 @@ export default function V2Player({ packet, life, name, onPrepare, onHatch, onPur
     if (pausedRef.current) { if (running.current) pause(false); else void run(index + 1); } else pause(true);
   }
   function endExample() {
-    generation.current++; running.current = false; setStarted(false); setComplete(false); setInFlight(undefined); setInspect(undefined); setNotice(undefined); pause(false);
+    generation.current++; running.current = false; setStarted(false); setComplete(false); setInFlight(undefined); setInspect(undefined); setNotice(undefined); setNeedFeedback(undefined); setMotionPurpose(undefined); pause(false);
+    displayedNeeds.current = [...initial.needs];
     renderer.current?.setState(initial, { slot: 0 }); setSnapshot(initial); setIndex(-1);
     endExampleAction.current?.();
   }
   function finishDay() {
     if (!packet) return;
     renderer.current?.setDawn('none');
-    generation.current++; running.current = false; setInspect(undefined); setInFlight(undefined); setNotice(undefined); setStarted(true); setComplete(true);
+    generation.current++; running.current = false; setInspect(undefined); setInFlight(undefined); setNotice(undefined); setNeedFeedback(undefined); setMotionPurpose(undefined); setStarted(true); setComplete(true);
+    displayedNeeds.current = [...packet.result.state.needs];
     renderer.current?.setState(packet.result.state, { history: receipts, slot: receipts.at(-1)?.slot || 60 });
     setSnapshot(packet.result.state); setIndex(receipts.length - 1); pause(false);
   }
@@ -198,6 +221,7 @@ export default function V2Player({ packet, life, name, onPrepare, onHatch, onPur
       </div>
       <div className="v2-needs">{NEED_ICONS.map((icon, i) => <div className="v2-need" key={icon} role="meter" aria-label={NEED_LABELS[i]} aria-valuenow={Math.round(snapshot.needs[i]! / 100)} aria-valuemin={0} aria-valuemax={100} title={`${NEED_LABELS[i]} ${Math.round(snapshot.needs[i]! / 100)}%`}>
         <Icon name={icon} size={16} color={NEED_COLORS[i]}/><span className="v2-pips">{[0, 1, 2, 3, 4].map(p => <i key={p} style={{ backgroundColor: snapshot.needs[i]! > p * 2000 ? NEED_COLORS[i] : undefined }}/>)}</span>
+        {needFeedback && <NeedFeedback key={`${needFeedback.serial}:${i}`} delta={needFeedback.changes[i]!} color={NEED_COLORS[i]!} paused={paused || !!suspended || !!inspect}/>}
       </div>)}</div>
       {undertaking && !complete && <div className={`v2-intention${mainDone ? ' v2-intention-done' : ''}`}><Icon name={mainDone ? 'check' : 'leaf'} size={16}/><span>{undertaking}</span></div>}
       {ready && !inspect && <button className="v2-follow v2-icon-button" onClick={() => renderer.current?.followActor()} aria-label="Find rooster" title={`Find ${roosterName}`}><Icon name="focus" size={16}/></button>}

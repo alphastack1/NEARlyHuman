@@ -12,6 +12,8 @@ import { acceptV2OwnerDay, getV2OwnerJob, quoteV2OwnerDay, wakeV2OwnerDay } from
 
 const json = (value: unknown, status = 200, cache = 'no-store') => new Response(JSON.stringify(value, (_, v) => typeof v === 'bigint' ? v.toString() : v), { status, headers: { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': cache } });
 function world(url: URL, required = false) {
+  const network=url.searchParams.get('networkId');
+  if(network!==null&&network!=='robinhood-testnet')throw new V2PublicError('not_found','Choose the exact life to visit.');
   const chain = url.searchParams.get('chainId'), collection = url.searchParams.get('collection');
   if (!required && chain === null && collection === null) return;
   if (!chain || !/^\d{1,6}$/.test(chain) || !collection || !/^0x[0-9a-f]{40}$/i.test(collection)) throw new V2PublicError('not_found', 'Choose the exact life to visit.');
@@ -21,6 +23,11 @@ export async function handleV2Api(request: Request): Promise<Response> {
   try {
     const url = new URL(request.url), path = url.pathname.replace(/^\/\.netlify\/functions\/api(?:\/|$)/, '/api/');
     if (path.length > 512) throw new V2PublicError('not_found', 'This page has wandered off.');
+    // New multi-world clients bind every request, including quotes/payments,
+    // to an exact served world. Existing RH clients without a scope retain the
+    // current-world API; an explicit foreign scope must never be reinterpreted.
+    const requestedWorld=world(url);
+    if(requestedWorld){const {runtime}=v2ViewConnection();if(requestedWorld.chainId!==runtime.chainId||requestedWorld.collection.toLowerCase()!==runtime.collection.toLowerCase())throw new V2PublicError('not_found','Choose the exact life to visit.');}
     if (request.method === 'POST') {
       const origin = request.headers.get('origin');
       if (origin && !serverConfig().allowedOrigins.includes(origin)) throw new ServiceError('Open NEARlyHuman to continue.', 'origin', 403);

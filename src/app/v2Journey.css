@@ -1709,3 +1709,24 @@
     font-size: 7px !important;
   }
 }
+.v2-native-deposit { margin: 2px 0; color: #d4dfc3; text-align: center; font-size: 8px; line-height: 1.9; }
+.v2-native-deposit small { display: block; color: #a5beb2; font-size: 7px; }
+.v2-network-loading { display: flex; align-items: center; justify-content: center; gap: 10px; padding: 16px 4px; color: #d6dba9; font-size: 8px; line-height: 1.8; }
+.v2-network-loading .pixel-icon { animation: v2-loading-pixel 1s steps(2,end) infinite; }
+.v2-wallet-handoff { display: flex; flex-direction: column; gap: 14px; text-align: center; }
+.v2-wallet-handoff .v2-pending-status { margin: 0; }
+.v2-wallet-handoff .v2-fee-note { line-height: 1.9; }
+.v2-choice-stream { list-style: none; margin: 0; padding: 0 3px; display: flex; flex-direction: column; gap: 7px; max-height: min(240px,24svh); overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; scrollbar-color: #719487 transparent; text-align: left; }
+.v2-choice-stream>li { display: flex; align-items: center; gap: 12px; flex-shrink: 0; padding: 9px 11px; background: #21434c; border-left: 3px solid #789c87; animation: v2-choice-arrive .36s steps(4,end) both; }
+.v2-choice-stream>li[data-latest=true] { border-color: #f2d981; background: #305454; }
+.v2-choice-mark { color: #aed6b4; display: flex; flex-shrink: 0; }
+.v2-choice-stream>li>span:last-child { min-width: 0; display: flex; flex-direction: column; gap: 6px; }
+.v2-choice-stream small { color: #adc1af; font-size: 6px; line-height: 1.5; }
+.v2-choice-stream strong { color: #f0e6ba; font-size: 8px; line-height: 1.8; font-weight: 400; overflow-wrap: anywhere; }
+.v2-sheet-body:has(.v2-choice-stream) .v2-process-graphic { height: 116px; flex-shrink: 0; }
+.v2-process-graphic[data-stage=saving] .v2-process-core { border-color: #b9dce9; box-shadow: 0 0 0 5px #9dc4db1a; }
+@keyframes v2-choice-arrive { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+@media(max-height:640px) {
+  .v2-sheet-body:has(.v2-choice-stream) { gap: 10px; }
+  .v2-sheet-body:has(.v2-choice-stream) .v2-process-graphic { height: 88px; }
+}

@@ -1,0 +1,99 @@
+{
+  "scope": "Actual FERN #1 Day1 local-source browser controls: seek before real breakfast, resume to canonical impact, pause actual +30/+33 badges, resize same impact390/320. Explicit synthetic text-only long-label stress and pure selection edge fixtures. No wallet/service writes or model calls.",
+  "errors": [],
+  "writes": [],
+  "checks": [
+    {
+      "actualBreakfast": [
+        {
+          "delta": 3000,
+          "text": "+30%"
+        },
+        {
+          "delta": 3300,
+          "text": "+33%"
+        }
+      ],
+      "energyCostQuiet": true
+    },
+    {
+      "longPercentLayoutStress": {
+        "x": 79.09375,
+        "width": 41.3125,
+        "right": 120.40625
+      }
+    },
+    {
+      "selectivity": {
+        "plant": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "passive": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "capped": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "hurt": [
+          -768,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    }
+  ],
+  "captures": [
+    {
+      "name": "actual-breakfast-390",
+      "boxes": [
+        {
+          "x": 105.421875,
+          "y": 44.5625,
+          "width": 33.75,
+          "height": 11.4375,
+          "text": "+30%"
+        },
+        {
+          "x": 178.125,
+          "y": 44.5625,
+          "width": 33.75,
+          "height": 11.4375,
+          "text": "+33%"
+        }
+      ]
+    },
+    {
+      "name": "actual-breakfast-320",
+      "boxes": [
+        {
+          "x": 83.75,
+          "y": 38,
+          "width": 32,
+          "height": 11,
+          "text": "+30%"
+        },
+        {
+          "x": 144,
+          "y": 38,
+          "width": 32,
+          "height": 11,
+          "text": "+33%"
+        }
+      ]
+    }
+  ]
+}

@@ -10,6 +10,8 @@ import { readV2AcceptedTransaction } from './chain';
 import { expandV2History, encodeTrace, Op } from '../../src/v2';
 import { reconcileV2QuoteFunding } from './quotes';
 import { classifyV2PreparationFailure, V2PreSendCheckError, v2FailureMessage, type V2FailureStage } from './failures';
+import {appendV2Progress,publicV2Progress} from './progress';
+import type {V2ChoiceProgress} from '../../src/v2/public';
 
 export interface V2Job {
   version: 2; id: string; campaignId: string; input: V2FrozenInput; inputHash: Hex;
@@ -23,6 +25,7 @@ export interface V2Job {
   journal?: V2RelayJournal;
   journals?: V2RelayJournal[];
   failureCode?: string; failureStage?: V2FailureStage; failureClass?: string; createdAt: number; updatedAt: number;
+  progress?:V2ChoiceProgress[];
 }
 export interface V2JobLease { id: string; generation: number }
 const keyOf = (input: V2FrozenInput) => `v2/jobs/${input.runtime.chainId}/${input.runtime.collection.toLowerCase()}/${input.requestId.toLowerCase()}`;
@@ -136,6 +139,7 @@ export async function prepareV2Job(
 /** Standard real-provider composition; each new paid send rechecks the accepted onchain identity. */
 export async function prepareV2JevJob(id: string, client: PublicClient, options: { store?: DurableStore; allowLocal?: boolean } = {}) {
   const store = options.store || storage();
+  const progress=async(lease:V2JobLease,value:V2ChoiceProgress)=>updateV2Record<V2Job>(store,id,()=>{throw Error('Missing accepted day');},j=>{fence(j,lease);if(j.phase!=='preparing')throw new V2LeaseLost();j.progress=appendV2Progress(j.progress,value);j.updatedAt=Date.now();return j;});
   const recheck = async (job: V2Job) => {
     if (!job.ownerTx) throw new V2ContextError('context', 'The accepted transaction is missing.');
     let canonical: Awaited<ReturnType<typeof readV2AcceptedTransaction>>;
@@ -149,7 +153,10 @@ export async function prepareV2JevJob(id: string, client: PublicClient, options:
       const value = await sendV2(request, async (hash, input) => { await recheck(job); await beforeSend(hash, input); });
       return { value, costMicroUSD: value.exchange.costMicroUSD };
     }, store);
-    return decodeV2Choice(reply);
+    const selected=decodeV2Choice(reply),candidate=decision.candidates.find(a=>a.key===selected.key);
+    if(!candidate)throw new V2ContextError('context','The selected model action changed.');
+    await progress(lease,{id:request.inputHash,stage:decision.mode,label:candidate.label,slot:decision.slot});
+    return selected;
   }, { ...options, configure: async (job, lease) => {
     await recheck(job);
     return { offer: offerV2MindCandidates, plan: async choices => {
@@ -158,7 +165,7 @@ export async function prepareV2JevJob(id: string, client: PublicClient, options:
         const value = await sendV2(request, async (hash, input) => { await recheck(job); await beforeSend(hash, input); });
         return { value, costMicroUSD: value.exchange.costMicroUSD };
       }, store);
-      return decodeV2Plan(reply, choices);
+      const plan=decodeV2Plan(reply,choices);await progress(lease,{id:request.inputHash,stage:'plan',label:plan.mainLabel});return plan;
     } };
   } });
 }
@@ -326,8 +333,9 @@ async function recoverV2JobJournal(job: V2Job, client: PublicClient, account: Pr
 
 /** Safe API projection; private raw transaction journals and provider caches stay private. */
 export function v2JobView(job: V2Job) {
+  const progress=publicV2Progress(job.progress);
   return { requestId: job.input.requestId, tokenId: job.input.tokenId, phase: job.phase, decisions: Object.keys(job.answers).length,
     updatedAt: job.updatedAt, ownerTx: job.ownerTx, finalTx: job.transactionHash, commitment: job.phase === 'ready' ? job.commitment : undefined,
     retrySafe: job.phase === 'failed' || job.phase === 'expired',
-    ...(job.failureCode && job.phase !== 'ready' ? { failureCode: job.failureCode, failureMessage: v2FailureMessage(job.failureCode) } : {}) };
+    ...(job.failureCode && job.phase !== 'ready' ? { failureCode: job.failureCode, failureMessage: v2FailureMessage(job.failureCode) } : {}),...(progress?{progress}:{}) };
 }

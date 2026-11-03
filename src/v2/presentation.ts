@@ -1,5 +1,6 @@
 import { ITEMS, Op, type DayResult, type Receipt, type State } from './types';
 import { PLANTS, RECIPES } from './catalog';
+import { itemStorage } from './storage';
 
 /** The film is a view of the canonical result. It never chooses or settles a day. */
 export interface V2FilmPacket {
@@ -182,8 +183,8 @@ export function inspectDetail(target: Inspection, s: State): InspectDetail {
   if (target.kind === 'workshop') return { title: 'The workshop', note: `${s.inventory[6] || 0} wood tucked away`, stock: RECIPES.map(r => ({ name: r.name, count: s.inventory[r.output] || 0 })) };
   if (target.kind === 'mailbox') return { title: 'The post box', note: 'Supplies in. Flowers, fruit and crafts out.', stock: s.inventory.flatMap((n, i) => n > 0 && i >= 22 && i < 34 ? [{ name: itemName(i), count: n }] : []) };
   const label = target.label || 'Home';
-  if (/pantry/i.test(label)) return { title: label, note: 'Food and care, tucked away.', stock: s.inventory.flatMap((n, i) => n > 0 && i < 6 ? [{ name: itemName(i), count: n }] : []) };
-  if (/supplies/i.test(label)) return { title: label, note: 'A few useful things for later.', stock: s.inventory.flatMap((n, i) => n > 0 && i >= 7 && i < 22 ? [{ name: itemName(i), count: n }] : []) };
+  if (/pantry/i.test(label)) return { title: label, note: 'Food and drink, tucked away.', stock: s.inventory.flatMap((n, i) => n > 0 && itemStorage(i) === 'pantry' ? [{ name: itemName(i), count: n }] : []) };
+  if (/supplies/i.test(label)) return { title: label, note: 'A few useful things for later.', stock: s.inventory.flatMap((n, i) => n > 0 && itemStorage(i) === 'supplies' ? [{ name: itemName(i), count: n }] : []) };
   const note = /stove/i.test(label) ? (s.house.damage & 1 ? 'Could use a repair.' : s.house.powerOut ? 'The power is out.' : 'Ready for something warm.') : /chair/i.test(label) ? (s.house.damage & 4 ? 'A little wobbly.' : 'A good place to sit.') : /window/i.test(label) ? (s.house.damage & 2 ? 'A draft slips through.' : 'A view of the garden.') : /bed/i.test(label) ? 'A quiet place to recharge.' : 'A little corner of home.';
   return { title: label, note };
 }

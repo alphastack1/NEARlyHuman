@@ -57,16 +57,16 @@ async function read<T>(path: string, body?: unknown): Promise<T> {
   return data as T;
 }
 export const v2Api = {
-  config: () => read<V2PublicConfig>('/config'),
-  guest: () => read<{life:V2PublicLife;packet:unknown;commitment:string}>('/guest'),
-  lives: (owner:string,cursor?:string) => read<V2LifePage>('/lives?'+new URLSearchParams({owner,...(cursor?{cursor}:{})})),
-  owned: (owner:string,cursor?:string) => read<V2LifePage>('/lives?'+new URLSearchParams({owner,...(cursor?{cursor}:{})})),
+  config: (world?:V2World) => read<V2PublicConfig>('/config'+query(world)),
+  guest: (world?:V2World) => read<{life:V2PublicLife;packet:unknown;commitment:string}>('/guest'+query(world)),
+  lives: (owner:string,cursor?:string,world?:V2World) => read<V2LifePage>('/lives?'+new URLSearchParams({owner,...(cursor?{cursor}:{}),...(world?{chainId:String(world.chainId),collection:world.collection}:{})})),
+  owned: (owner:string,cursor?:string,world?:V2World) => read<V2LifePage>('/lives?'+new URLSearchParams({owner,...(cursor?{cursor}:{}),...(world?{chainId:String(world.chainId),collection:world.collection}:{})})),
   days: (id:string,before?:number,world?:V2World) => {const params=new URLSearchParams(world?{chainId:String(world.chainId),collection:world.collection}:{});if(before!==undefined)params.set('before',String(before));return read<V2DaysPage>('/days/'+encodeURIComponent(id)+(params.size?'?'+params:''));},
-  request: (requestId:Hex) => read<V2PublicRequest>('/request/'+encodeURIComponent(requestId)),
-  quote: (tokenId: string, kitMask: string, shipping = true) => read<V2OwnerQuote>('/quote', { tokenId, kitMask, shipping }),
-  accept: (transactionHash: Hex, requestId: Hex) => read<V2OwnerJob>('/accept', { transactionHash, requestId }),
-  job: (requestId: Hex) => read<V2OwnerJob>('/job/' + encodeURIComponent(requestId)),
-  wake: (requestId: Hex) => read<V2OwnerJob>('/wake', { requestId }),
+  request: (requestId:Hex,world?:V2World) => read<V2PublicRequest>('/request/'+encodeURIComponent(requestId)+query(world)),
+  quote: (tokenId: string, kitMask: string, shipping = true,world?:V2World) => read<V2OwnerQuote>('/quote'+query(world), { tokenId, kitMask, shipping }),
+  accept: (transactionHash: Hex, requestId: Hex,world?:V2World) => read<V2OwnerJob>('/accept'+query(world), { transactionHash, requestId }),
+  job: (requestId: Hex,world?:V2World) => read<V2OwnerJob>('/job/' + encodeURIComponent(requestId)+query(world)),
+  wake: (requestId: Hex,world?:V2World) => read<V2OwnerJob>('/wake'+query(world), { requestId }),
   life: (id: string, world?: V2World) => read<{ life: V2PublicLife }>('/rooster/' + encodeURIComponent(id) + query(world)),
   day: (id: string, day: number, world?: V2World) => read<V2PublicDay>('/day/' + encodeURIComponent(id) + '/' + day + query(world)),
   replay: (id: string, day?: number, world?: V2World) => {

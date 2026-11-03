@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Icon } from '../Icons';
 
 export function DayFlow({ stage, complete = false }: { stage: 0 | 1 | 2; complete?: boolean }) {
@@ -10,9 +10,28 @@ export function DayFlow({ stage, complete = false }: { stage: 0 | 1 | 2; complet
 export function ProcessGraphic({ stage }: { stage: 'mint' | 'wallet' | 'chain' | 'ai' | 'saving' | 'ready' | 'failed' }) {
   const icon = stage === 'ai' ? 'brain' : stage === 'ready' ? 'check' : stage === 'failed' ? 'info' : stage === 'wallet' ? 'wallet' : stage === 'mint' ? 'leaf' : 'book';
   return <div className="v2-process-graphic" data-stage={stage} aria-hidden="true">
-    <div className="v2-process-orbit"><i/><i/><i/><i/></div><div className="v2-process-core">{stage === 'chain' ? <svg width="40" height="32" viewBox="0 0 20 16" shapeRendering="crispEdges"><path fill="currentColor" d="M0 1h8v8H0zm2 2v4h4V3zm10 4h8v8h-8zm2 2v4h4V9zM6 6h2v2h3v2h3v2h-3v-2H8V8H6z" fillRule="evenodd"/></svg> : <Icon name={icon} size={32}/>}</div>
+    <div className="v2-process-orbit"><i/><i/><i/><i/></div><div className="v2-process-core">{stage === 'chain' || stage === 'saving' ? <svg width="40" height="32" viewBox="0 0 20 16" shapeRendering="crispEdges"><path fill="currentColor" d="M0 1h8v8H0zm2 2v4h4V3zm10 4h8v8h-8zm2 2v4h4V9zM6 6h2v2h3v2h3v2h-3v-2H8V8H6z" fillRule="evenodd"/></svg> : <Icon name={icon} size={32}/>}</div>
     <div className="v2-process-packets"><i/><i/><i/></div>
   </div>;
+}
+
+/** Only completed, validated replies enter this log. Polling never fabricates
+ * progress, and stable reply IDs keep an old choice from animating twice. */
+export function ChoiceStream({ choices, saving }: { choices: readonly { id: string; stage: 'plan' | 'routine' | 'acute' | 'focus'; label: string; slot?: number }[]; saving: boolean }) {
+  const list = useRef<HTMLOListElement>(null);
+  useEffect(() => { if (list.current) list.current.scrollTop = list.current.scrollHeight; }, [choices.length]);
+  useEffect(() => {
+    const element = list.current; if (!element) return;
+    const observer = new ResizeObserver(() => { element.scrollTop = element.scrollHeight; });
+    observer.observe(element); return () => observer.disconnect();
+  }, [!!choices.length]);
+  if (!choices.length) return null;
+  return <ol ref={list} className="v2-choice-stream" role="log" aria-label="Jev’s completed choices" aria-live="polite" aria-relevant="additions">
+    {choices.map((choice, index) => <li key={choice.id} data-latest={!saving && index === choices.length - 1}>
+      <span className="v2-choice-mark"><Icon name={choice.stage === 'plan' ? 'brain' : 'check'} size={16}/></span>
+      <span><small>{choice.stage === 'plan' ? 'Day plan' : choice.stage === 'acute' ? 'Care' : choice.stage === 'focus' ? 'A little focus' : 'Routine'}</small><strong>{choice.label}</strong></span>
+    </li>)}
+  </ol>;
 }
 
 export function BirthReveal({ id, name, egg, rooster, explorer, transaction, onHome, onRetry, busy }: {
