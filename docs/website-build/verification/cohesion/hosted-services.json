@@ -1,0 +1,271 @@
+{
+  "checkedAt": "2026-11-04T08:49:34.020Z",
+  "pass": true,
+  "entry": "/assets/index-CvNtLYVT.js",
+  "checks": [
+    {
+      "path": "/",
+      "status": 200,
+      "url": "https://nearlyhuman.netlify.app/",
+      "type": "text/html; charset=UTF-8",
+      "bytes": 3495,
+      "sha256": "6e8e622bae1f8f3c19d1625f1858969df159e866e1d4ee496c232bd76e0f1a0c",
+      "title": "NEARlyHuman — A little life. A mind of its own.",
+      "canonical": "https://nearlyhuman.netlify.app/"
+    },
+    {
+      "path": "/assets/index-CvNtLYVT.js",
+      "status": 200,
+      "url": "https://nearlyhuman.netlify.app/assets/index-CvNtLYVT.js",
+      "type": "application/javascript; charset=UTF-8",
+      "bytes": 221579,
+      "sha256": "7ed71ec01cfa51395212555bb40cd6dfad9a26e70ead6a3294abfc76842977ff"
+    },
+    {
+      "path": "/the-game",
+      "status": 200,
+      "url": "https://nearlyhuman.netlify.app/the-game/",
+      "type": "text/html; charset=UTF-8",
+      "bytes": 2746,
+      "sha256": "66d3d9938f37de60ab9da8e77e908f46730fda1bb1f0da07470c7b6ee4f5465a",
+      "title": "The game · NEARlyHuman",
+      "canonical": "https://nearlyhuman.netlify.app/the-game"
+    },
+    {
+      "path": "/docs",
+      "status": 200,
+      "url": "https://nearlyhuman.netlify.app/docs/",
+      "type": "text/html; charset=UTF-8",
+      "bytes": 2744,
+      "sha256": "e1ffc3e5f67875d51a254d4c68584e77bc33897e1b19f9ff6ba4d6363a39462c",
+      "title": "The player handbook · NEARlyHuman",
+      "canonical": "https://nearlyhuman.netlify.app/docs"
+    },
+    {
+      "path": "/docs/first-day",
+      "status": 200,
+      "url": "https://nearlyhuman.netlify.app/docs/first-day/",
+      "type": "text/html; charset=UTF-8",
+      "bytes": 2611,
+      "sha256": "c4ad9b7c3ca4f4eedf45ee51eed99f5d59ddc9832094b863c930be4054bed51e",
+      "title": "Your first day · NEARlyHuman",
+      "canonical": "https://nearlyhuman.netlify.app/docs/first-day"
+    },
+    {
+      "path": "/docs/garden",
+      "status": 200,
+      "url": "https://nearlyhuman.netlify.app/docs/garden/",
+      "type": "text/html; charset=UTF-8",
+      "bytes": 2662,
+      "sha256": "2c8b99e1202096ae218eca2b6e6152d8f432e0e158454b9b70a9f1f7ead4b717",
+      "title": "The garden · NEARlyHuman",
+      "canonical": "https://nearlyhuman.netlify.app/docs/garden"
+    },
+    {
+      "path": "/docs/contracts",
+      "status": 200,
+      "url": "https://nearlyhuman.netlify.app/docs/contracts/",
+      "type": "text/html; charset=UTF-8",
+      "bytes": 2740,
+      "sha256": "fa9ed9efce250fc065c79c932405166cc5cf65631a9ffadd0d1ffe08cf0d2bec",
+      "title": "Contracts &amp; official links · NEARlyHuman",
+      "canonical": "https://nearlyhuman.netlify.app/docs/contracts"
+    },
+    {
+      "path": "/project",
+      "status": 200,
+      "url": "https://nearlyhuman.netlify.app/project/",
+      "type": "text/html; charset=UTF-8",
+      "bytes": 2840,
+      "sha256": "fc85303953051426cca021537ffccec78aa8c7c6603d6f4c2024c900a60240e2",
+      "title": "The project · NEARlyHuman",
+      "canonical": "https://nearlyhuman.netlify.app/project"
+    },
+    {
+      "path": "/source/contracts.zip",
+      "status": 200,
+      "url": "https://nearlyhuman.netlify.app/source/contracts.zip",
+      "type": "application/zip",
+      "bytes": 190741,
+      "sha256": "96eb30080976baf50f386e131e338ad69d8575c410210fa55fe2cfeb85e83053"
+    },
+    {
+      "path": "/source/manifest.json",
+      "status": 200,
+      "url": "https://nearlyhuman.netlify.app/source/manifest.json",
+      "type": "application/json",
+      "bytes": 3859,
+      "sha256": "7565eae079b1d779667a68f45947b833fc50bb035fc9525a6e3ff3913e08908c",
+      "publicKeys": [
+        "schemaVersion",
+        "project",
+        "scope",
+        "fullRepositoryIncluded",
+        "download",
+        "files",
+        "compilation",
+        "referenceDeployments",
+        "note"
+      ]
+    },
+    {
+      "path": "/site/hero-home.webp",
+      "status": 200,
+      "url": "https://nearlyhuman.netlify.app/site/hero-home.webp",
+      "type": "image/webp",
+      "bytes": 501190,
+      "sha256": "64a08bee18b511f840e8161cf39b4edfa2ef9d4b6a3a3f4500b687feef965bee"
+    },
+    {
+      "path": "/site/handbook.webp",
+      "status": 200,
+      "url": "https://nearlyhuman.netlify.app/site/handbook.webp",
+      "type": "image/webp",
+      "bytes": 121772,
+      "sha256": "04817a19e667c74cdb55a3add19b0f2fb6d10c01d24fcb2ca425431163c854cd"
+    },
+    {
+      "path": "/site/social-card.png",
+      "status": 200,
+      "url": "https://nearlyhuman.netlify.app/site/social-card.png",
+      "type": "image/png",
+      "bytes": 520288,
+      "sha256": "37bb3551576f6d71453f883ffe29e8adc685a8f3aeb68a0b38cf1f3fd7b6937d"
+    },
+    {
+      "path": "/sitemap.xml",
+      "status": 200,
+      "url": "https://nearlyhuman.netlify.app/sitemap.xml",
+      "type": "application/xml",
+      "bytes": 1465,
+      "sha256": "3d81d1a0edaca1615cb762cc56ef0642ea795d197b19cd67598a58a7bf5384e4"
+    },
+    {
+      "path": "/robots.txt",
+      "status": 200,
+      "url": "https://nearlyhuman.netlify.app/robots.txt",
+      "type": "text/plain; charset=UTF-8",
+      "bytes": 129,
+      "sha256": "319cfd0ecaa8939533ea42381e0c9db34e921c558d09ee73db50e0b761a0b2fa"
+    },
+    {
+      "path": "/api/game/worlds",
+      "status": 200,
+      "url": "https://nearlyhuman.netlify.app/api/game/worlds",
+      "type": "application/json; charset=utf-8",
+      "bytes": 1984,
+      "sha256": "cf05f45530f007cc2f58b7e548d6f5256ea9e0dbb53f099b0bd2b3d101e6bfe5",
+      "publicKeys": [
+        "version",
+        "worlds",
+        "defaultNetworkId"
+      ]
+    },
+    {
+      "path": "/api/v2/config",
+      "status": 200,
+      "url": "https://nearlyhuman.netlify.app/api/v2/config",
+      "type": "application/json; charset=utf-8",
+      "bytes": 1078,
+      "sha256": "f3a5e91b066788ebdf395aaf61c1736d2f9fcacb8b3883d6e51e958abf09709e",
+      "publicKeys": [
+        "version",
+        "chainId",
+        "collection",
+        "rpcUrl",
+        "testnet",
+        "token",
+        "tokenDecimals",
+        "networkId",
+        "availableNetworks"
+      ]
+    },
+    {
+      "path": "/api/v2/rooster/7?chainId=46630&collection=0x30cb5213fa94020a95893ddb6b07470dbf7a9efc",
+      "status": 200,
+      "url": "https://nearlyhuman.netlify.app/api/v2/rooster/7?chainId=46630&collection=0x30cb5213fa94020a95893ddb6b07470dbf7a9efc",
+      "type": "application/json; charset=utf-8",
+      "bytes": 1678,
+      "sha256": "df1ecc9ffc08f69faa95c9d1aa5e50a81966c75fd59ae3ff54de31c8868fe232",
+      "publicKeys": [
+        "life"
+      ],
+      "life": {
+        "name": "SAGE",
+        "day": 2,
+        "alive": true,
+        "pending": false
+      }
+    },
+    {
+      "path": "/api/v2/nft/7?chainId=46630&collection=0x30cb5213fa94020a95893ddb6b07470dbf7a9efc",
+      "status": 200,
+      "url": "https://nearlyhuman.netlify.app/api/v2/nft/7?chainId=46630&collection=0x30cb5213fa94020a95893ddb6b07470dbf7a9efc",
+      "type": "application/json; charset=utf-8",
+      "bytes": 734,
+      "sha256": "1319d587bb6886d172bbc7185f495291161c19271286ab1537ae40e78967fdff",
+      "publicKeys": [
+        "name",
+        "description",
+        "image",
+        "external_url",
+        "attributes"
+      ]
+    },
+    {
+      "path": "/api/v2/nft/7/image.svg?chainId=46630&collection=0x30cb5213fa94020a95893ddb6b07470dbf7a9efc&art=website-release",
+      "status": 200,
+      "url": "https://nearlyhuman.netlify.app/api/v2/nft/7/image.svg?chainId=46630&collection=0x30cb5213fa94020a95893ddb6b07470dbf7a9efc&art=website-release",
+      "type": "image/svg+xml; charset=utf-8",
+      "bytes": 45911,
+      "sha256": "78120f90f955c26de17503088b3b014c5287591a7014bc6961e62b2204b0e6c1",
+      "newPortrait": true,
+      "selfContained": true,
+      "name": "SAGE — saved day 2"
+    },
+    {
+      "path": "/api/near/v2/rooster/1?networkId=near-testnet&collection=game.nearlyhuman-dev-20261102-26c8bd.testnet",
+      "status": 200,
+      "url": "https://nearlyhuman.netlify.app/api/near/v2/rooster/1?networkId=near-testnet&collection=game.nearlyhuman-dev-20261102-26c8bd.testnet",
+      "type": "application/json; charset=utf-8",
+      "bytes": 1667,
+      "sha256": "c50ce32fc05935a931ec1ec9bef74303367a2967ec21be0998262ba42da5ec9e",
+      "publicKeys": [
+        "life"
+      ],
+      "life": {
+        "name": "FERN",
+        "day": 3,
+        "alive": true,
+        "pending": false
+      }
+    },
+    {
+      "path": "/api/near/v2/nft/1?networkId=near-testnet&collection=game.nearlyhuman-dev-20261102-26c8bd.testnet",
+      "status": 200,
+      "url": "https://nearlyhuman.netlify.app/api/near/v2/nft/1?networkId=near-testnet&collection=game.nearlyhuman-dev-20261102-26c8bd.testnet",
+      "type": "application/json; charset=utf-8",
+      "bytes": 760,
+      "sha256": "531c2f455c765f0bd914215f6e3c7b0d0b4a251e2d878ee26a5cf9d38d0ffcf0",
+      "publicKeys": [
+        "name",
+        "description",
+        "image",
+        "external_url",
+        "attributes"
+      ]
+    },
+    {
+      "path": "/api/near/v2/nft/1/image.svg?networkId=near-testnet&collection=game.nearlyhuman-dev-20261102-26c8bd.testnet&art=website-release",
+      "status": 200,
+      "url": "https://nearlyhuman.netlify.app/api/near/v2/nft/1/image.svg?networkId=near-testnet&collection=game.nearlyhuman-dev-20261102-26c8bd.testnet&art=website-release",
+      "type": "image/svg+xml; charset=utf-8",
+      "bytes": 55025,
+      "sha256": "3df2ae1502535891deb3ed6e25c314afb5e3f433434fa4efd280666d8641fd6f",
+      "newPortrait": true,
+      "selfContained": true,
+      "name": "FERN — saved day 3"
+    }
+  ],
+  "noWritesOrAiOrWalletOperations": true
+}

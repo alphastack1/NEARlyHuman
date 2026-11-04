@@ -29,3 +29,9 @@ The deployed site, source archive and NFT endpoints are available independently 
 At 14:35:21 Bangkok time, the image/first-load optimization was published once through Netlify as deployment `6aeae02e3af56a46fb3f2476`. It preserves the website design, canonical rooster and both testnet services. [Changes, measurements and hosted verification](PERFORMANCE.md).
 
 After the owner's subsequent sign-in, the Codex Browser can open the repository, public visibility indicator and visual README. No account warning was visible. Anonymous requests still return 404, while CLI/app authentication remains invalid. This distinction is unresolved; signed-in rendering is verified, public accessibility and repository synchronization are pending.
+
+## Website and app cohesion follow-up
+
+At **15:48:23 Bangkok time**, the three-wave website/app UI refinement was published once through Netlify as deployment `6aeaf152f8d1e84f51b04ced`, from local candidate `36c5951`. It unifies menu materials and colors, improves responsive navigation/guide presentation/search context, and fixes selected/hover, switch and empty-review details. [Review waves, final screenshots and hosted checks](COHESION_REFINEMENT.md).
+
+Hosted public/app flows, both testnet services and the unchanged function runtime/schedule passed. Gameplay, economic rules, canonical rooster art, source archive and financial/service state were not changed. No intermediate production deployment was used.

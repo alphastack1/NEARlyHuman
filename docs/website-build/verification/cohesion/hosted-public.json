@@ -1,0 +1,249 @@
+{
+  "pass": true,
+  "at": "2026-11-04T08:49:23.030Z",
+  "checks": [
+    "Natural signing question returns guide answers.",
+    "Inline/focused search shares query through edits, close and reopen.",
+    "More menu dismisses by Escape with focus return, or outside pointer.",
+    "Contract world switch updates collection and scoped app link.",
+    {
+      "width": 320,
+      "height": 568,
+      "textScale": 1,
+      "path": "/",
+      "overflow": false,
+      "strip": 737.109375,
+      "buttons": [
+        {
+          "label": "More pages",
+          "font": "16px",
+          "width": 44,
+          "height": 44
+        },
+        {
+          "label": "Home",
+          "font": "12px",
+          "width": 46.203125,
+          "height": 47
+        },
+        {
+          "label": "The game",
+          "font": "12px",
+          "width": 68.59375,
+          "height": 47
+        },
+        {
+          "label": "Guide",
+          "font": "12px",
+          "width": 46.59375,
+          "height": 47
+        },
+        {
+          "label": "Open App↗",
+          "font": "12px",
+          "width": 85.671875,
+          "height": 44
+        }
+      ]
+    },
+    {
+      "width": 390,
+      "height": 667,
+      "textScale": 1,
+      "path": "/docs/first-day",
+      "overflow": false,
+      "buttons": [
+        {
+          "label": "More pages",
+          "font": "16px",
+          "width": 44,
+          "height": 44
+        },
+        {
+          "label": "Home",
+          "font": "13px",
+          "width": 60.890625,
+          "height": 47
+        },
+        {
+          "label": "The game",
+          "font": "13px",
+          "width": 85.15625,
+          "height": 47
+        },
+        {
+          "label": "Guide",
+          "font": "13px",
+          "width": 61.3125,
+          "height": 47
+        },
+        {
+          "label": "Open App↗",
+          "font": "13px",
+          "width": 105.15625,
+          "height": 44
+        }
+      ]
+    },
+    {
+      "width": 1440,
+      "height": 800,
+      "textScale": 1,
+      "path": "/",
+      "overflow": false,
+      "strip": 778.34375,
+      "buttons": [
+        {
+          "label": "Home",
+          "font": "16px",
+          "width": 82.9375,
+          "height": 49
+        },
+        {
+          "label": "The game",
+          "font": "16px",
+          "width": 112.796875,
+          "height": 49
+        },
+        {
+          "label": "Guide",
+          "font": "16px",
+          "width": 83.453125,
+          "height": 49
+        },
+        {
+          "label": "Project",
+          "font": "16px",
+          "width": 94.875,
+          "height": 49
+        },
+        {
+          "label": "Open App↗",
+          "font": "16px",
+          "width": 144.03125,
+          "height": 43
+        }
+      ]
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "textScale": 1.3,
+      "path": "/docs/garden",
+      "overflow": false,
+      "buttons": [
+        {
+          "label": "More pages",
+          "font": "16px",
+          "width": 44,
+          "height": 44
+        },
+        {
+          "label": "Home",
+          "font": "16.9px",
+          "width": 71.359375,
+          "height": 47
+        },
+        {
+          "label": "The game",
+          "font": "16.9px",
+          "width": 102.890625,
+          "height": 47
+        },
+        {
+          "label": "Guide",
+          "font": "16.9px",
+          "width": 71.90625,
+          "height": 47
+        },
+        {
+          "label": "Open App↗",
+          "font": "16.9px",
+          "width": 122.6875,
+          "height": 44
+        }
+      ]
+    },
+    {
+      "width": 768,
+      "height": 1024,
+      "textScale": 1,
+      "path": "/docs",
+      "overflow": false,
+      "buttons": [
+        {
+          "label": "More pages",
+          "font": "17px",
+          "width": 44,
+          "height": 44
+        },
+        {
+          "label": "Home",
+          "font": "16px",
+          "width": 72.9375,
+          "height": 49
+        },
+        {
+          "label": "The game",
+          "font": "16px",
+          "width": 102.796875,
+          "height": 49
+        },
+        {
+          "label": "Guide",
+          "font": "16px",
+          "width": 73.453125,
+          "height": 49
+        },
+        {
+          "label": "Open App↗",
+          "font": "16px",
+          "width": 144.03125,
+          "height": 43
+        }
+      ]
+    },
+    {
+      "width": 1440,
+      "height": 1000,
+      "textScale": 1,
+      "path": "/project",
+      "overflow": false,
+      "buttons": [
+        {
+          "label": "Home",
+          "font": "16px",
+          "width": 82.9375,
+          "height": 49
+        },
+        {
+          "label": "The game",
+          "font": "16px",
+          "width": 112.796875,
+          "height": 49
+        },
+        {
+          "label": "Guide",
+          "font": "16px",
+          "width": 83.453125,
+          "height": 49
+        },
+        {
+          "label": "Project",
+          "font": "16px",
+          "width": 94.875,
+          "height": 49
+        },
+        {
+          "label": "Open App↗",
+          "font": "16px",
+          "width": 144.03125,
+          "height": 43
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "writes": [],
+  "scope": "Read-only public interactions. Text scale is a scoped stress probe, not an assertion about every OS text-inflation behavior."
+}

@@ -30,4 +30,10 @@ Browser work used the Codex profile and run-owned tabs. Dev previews used per-pa
 
 ## Release
 
-Final hosted publication and readback are recorded after the reviewed build is deployed. GitHub synchronization remains separate while its saved connection rejects authentication. The verified candidate is committed locally; no intermediate production release is used.
+Published once at **15:48:23 Bangkok time** (08:48:23 UTC) from local candidate commit `36c5951`, Netlify deployment `6aeaf152f8d1e84f51b04ced`. The direct deployment has a null Netlify Git commit reference. No intermediate production release was used.
+
+Hosted checks passed: 8 compiled assets match the verified local bytes, all 10 public interaction/responsive cases pass, and the production app opening/hatch/two-world/draft-preservation flow passes. The 23 service/source checks pass for Robinhood and native NEAR testnet lives and NFT portraits. All three existing functions retain Node24, API-v2 metadata, background preparation mode and the five-minute reconciliation schedule.
+
+[Hosted asset/function proof](verification/cohesion/hosted-assets.json) · [public flow proof](verification/cohesion/hosted-public.json) · [app flow proof](verification/cohesion/hosted-app.json) · [testnet service proof](verification/cohesion/hosted-services.json). Public and native-hatch screenshots linked above have been refreshed from the live site. Menu/packing/empty-review captures remain actual source-preview renders of the same verified CSS and UI.
+
+GitHub synchronization remains separate while its saved connection rejects authentication. Source and verification records are committed locally. No credentials, ledgers, service settings or mainnet were changed.
