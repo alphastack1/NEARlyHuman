@@ -1,0 +1,314 @@
+{
+  "reviewedAt": "2026-11-04T11:03:31.418Z",
+  "scope": "Actual local production build; static heads and module import graph. No browser, network, signing, inference, ledger or deployment operation.",
+  "sourceIndexSha256": "991155852c3f64f39f68846815c1884e72dbb46c4a4454306ec0692ad38ec7d4",
+  "builtIndexSha256": "329a5a9446f3aab7d4bd1c0082552bea5e8be3e4763d3a60202d88ec2f558a48",
+  "entryScript": "index-CmFzcQV3.js",
+  "routeChecks": [
+    {
+      "pathname": "/",
+      "canonical": "https://nearlyhuman.netlify.app/",
+      "title": "NEARlyHuman — A little life. A mind of its own.",
+      "pass": true
+    },
+    {
+      "pathname": "/the-game",
+      "canonical": "https://nearlyhuman.netlify.app/the-game",
+      "title": "The game · NEARlyHuman",
+      "pass": true
+    },
+    {
+      "pathname": "/project",
+      "canonical": "https://nearlyhuman.netlify.app/project",
+      "title": "The project · NEARlyHuman",
+      "pass": true
+    },
+    {
+      "pathname": "/explore",
+      "canonical": "https://nearlyhuman.netlify.app/explore",
+      "title": "Explore lives · NEARlyHuman",
+      "pass": true
+    },
+    {
+      "pathname": "/docs",
+      "canonical": "https://nearlyhuman.netlify.app/docs",
+      "title": "The player handbook · NEARlyHuman",
+      "pass": true
+    },
+    {
+      "pathname": "/docs/first-day",
+      "canonical": "https://nearlyhuman.netlify.app/docs/first-day",
+      "title": "Your first day · NEARlyHuman",
+      "pass": true
+    },
+    {
+      "pathname": "/docs/worlds-wallets",
+      "canonical": "https://nearlyhuman.netlify.app/docs/worlds-wallets",
+      "title": "Worlds & wallets · NEARlyHuman",
+      "pass": true
+    },
+    {
+      "pathname": "/docs/care-supplies",
+      "canonical": "https://nearlyhuman.netlify.app/docs/care-supplies",
+      "title": "Care & supplies · NEARlyHuman",
+      "pass": true
+    },
+    {
+      "pathname": "/docs/strengths-personality",
+      "canonical": "https://nearlyhuman.netlify.app/docs/strengths-personality",
+      "title": "Strengths & personality · NEARlyHuman",
+      "pass": true
+    },
+    {
+      "pathname": "/docs/garden",
+      "canonical": "https://nearlyhuman.netlify.app/docs/garden",
+      "title": "The garden · NEARlyHuman",
+      "pass": true
+    },
+    {
+      "pathname": "/docs/workshop",
+      "canonical": "https://nearlyhuman.netlify.app/docs/workshop",
+      "title": "The workshop · NEARlyHuman",
+      "pass": true
+    },
+    {
+      "pathname": "/docs/weather-visitors",
+      "canonical": "https://nearlyhuman.netlify.app/docs/weather-visitors",
+      "title": "Weather & visitors · NEARlyHuman",
+      "pass": true
+    },
+    {
+      "pathname": "/docs/nft-purse",
+      "canonical": "https://nearlyhuman.netlify.app/docs/nft-purse",
+      "title": "Your NFT & its purse · NEARlyHuman",
+      "pass": true
+    },
+    {
+      "pathname": "/docs/nhc",
+      "canonical": "https://nearlyhuman.netlify.app/docs/nhc",
+      "title": "NHC · NEARlyHuman",
+      "pass": true
+    },
+    {
+      "pathname": "/docs/sharing-transfers",
+      "canonical": "https://nearlyhuman.netlify.app/docs/sharing-transfers",
+      "title": "Sharing & transfers · NEARlyHuman",
+      "pass": true
+    },
+    {
+      "pathname": "/docs/remembered-lives",
+      "canonical": "https://nearlyhuman.netlify.app/docs/remembered-lives",
+      "title": "Remembered lives · NEARlyHuman",
+      "pass": true
+    },
+    {
+      "pathname": "/docs/jev-saving",
+      "canonical": "https://nearlyhuman.netlify.app/docs/jev-saving",
+      "title": "Jev & saving · NEARlyHuman",
+      "pass": true
+    },
+    {
+      "pathname": "/docs/contracts",
+      "canonical": "https://nearlyhuman.netlify.app/docs/contracts",
+      "title": "Contracts & official links · NEARlyHuman",
+      "pass": true
+    },
+    {
+      "pathname": "/docs/troubleshooting",
+      "canonical": "https://nearlyhuman.netlify.app/docs/troubleshooting",
+      "title": "Help & recovery · NEARlyHuman",
+      "pass": true
+    },
+    {
+      "pathname": "/docs/privacy-data",
+      "canonical": "https://nearlyhuman.netlify.app/docs/privacy-data",
+      "title": "Public life & your data · NEARlyHuman",
+      "pass": true
+    },
+    {
+      "pathname": "/life/near-testnet/1",
+      "canonical": "https://nearlyhuman.netlify.app/life/near-testnet/1",
+      "title": "FERN #1 · NEARlyHuman",
+      "pass": true
+    },
+    {
+      "pathname": "/life/robinhood-testnet/1",
+      "canonical": "https://nearlyhuman.netlify.app/life/robinhood-testnet/1",
+      "title": "MISO #1 · NEARlyHuman",
+      "pass": true
+    },
+    {
+      "pathname": "/life/robinhood-testnet/2",
+      "canonical": "https://nearlyhuman.netlify.app/life/robinhood-testnet/2",
+      "title": "PEEP #2 · NEARlyHuman",
+      "pass": true
+    },
+    {
+      "pathname": "/life/robinhood-testnet/7",
+      "canonical": "https://nearlyhuman.netlify.app/life/robinhood-testnet/7",
+      "title": "SAGE #7 · NEARlyHuman",
+      "pass": true
+    },
+    {
+      "pathname": "/life/robinhood-testnet/3",
+      "canonical": "https://nearlyhuman.netlify.app/life/robinhood-testnet/3",
+      "title": "SUNNY #3 · NEARlyHuman",
+      "pass": true
+    },
+    {
+      "pathname": "/life/robinhood-testnet/4",
+      "canonical": "https://nearlyhuman.netlify.app/life/robinhood-testnet/4",
+      "title": "PIPOOPIP #4 · NEARlyHuman",
+      "pass": true
+    },
+    {
+      "pathname": "/life/robinhood-testnet/5",
+      "canonical": "https://nearlyhuman.netlify.app/life/robinhood-testnet/5",
+      "title": "SPROUT #5 · NEARlyHuman",
+      "pass": true
+    },
+    {
+      "pathname": "/life/robinhood-testnet/6",
+      "canonical": "https://nearlyhuman.netlify.app/life/robinhood-testnet/6",
+      "title": "BASIL #6 · NEARlyHuman",
+      "pass": true
+    },
+    {
+      "pathname": "/life/robinhood-testnet/8",
+      "canonical": "https://nearlyhuman.netlify.app/life/robinhood-testnet/8",
+      "title": "MAPLE #8 · NEARlyHuman",
+      "pass": true
+    }
+  ],
+  "sitemap": {
+    "routes": 29,
+    "matchesActualCatalog": true
+  },
+  "robots": {
+    "pass": true
+  },
+  "socialImage": {
+    "width": 1200,
+    "height": 630,
+    "bytes": 520288,
+    "sha256": "37bb3551576f6d71453f883ffe29e8adc685a8f3aeb68a0b38cf1f3fd7b6937d",
+    "matchesSource": true,
+    "validPng": true
+  },
+  "loading": {
+    "htmlPreloads": [
+      "/assets/rolldown-runtime-XKyaHtl9.js",
+      "/assets/preload-helper-BLdHbfdN.js"
+    ],
+    "initialStaticClosure": [
+      "index-CmFzcQV3.js",
+      "preload-helper-BLdHbfdN.js",
+      "rolldown-runtime-XKyaHtl9.js"
+    ],
+    "publicSiteStaticClosure": [
+      "Icons-7hwgFswg.js",
+      "Site-Dp0yFfkZ.js",
+      "index-CmFzcQV3.js",
+      "preload-helper-BLdHbfdN.js",
+      "rolldown-runtime-XKyaHtl9.js"
+    ],
+    "publicLivesStaticClosure": [
+      "Icons-7hwgFswg.js",
+      "Lives-Cqqkd8_n.js",
+      "Site-Dp0yFfkZ.js",
+      "index-CmFzcQV3.js",
+      "pixels-RB1xir0_.js",
+      "preload-helper-BLdHbfdN.js",
+      "rolldown-runtime-XKyaHtl9.js",
+      "v2-items-Dm9HDTvf.js"
+    ],
+    "publicLivesBranchBytes": 382531,
+    "publicBranchBytes": 343299,
+    "unexpectedGameWalletAuthChunks": [],
+    "entryDynamicImports": [
+      "GameEntry-DignFwsL.js",
+      "Site-Dp0yFfkZ.js"
+    ],
+    "gameDynamicImports": [
+      "App-M9QgP_Wn.js",
+      "V2App-aj2iaVud.js"
+    ],
+    "chunks": [
+      {
+        "name": "Icons-7hwgFswg.js",
+        "bytes": 42269,
+        "sha256": "e2067ce6503896fb30d491089a34323dfb760070233d880338a024a16247637c",
+        "staticImports": [
+          "index-CmFzcQV3.js"
+        ]
+      },
+      {
+        "name": "Site-Dp0yFfkZ.js",
+        "bytes": 77191,
+        "sha256": "aacb2b4e26a59f7b2104ebd32cc7117de4528311803c501b4e50decceb4b9cf6",
+        "staticImports": [
+          "rolldown-runtime-XKyaHtl9.js",
+          "index-CmFzcQV3.js",
+          "Icons-7hwgFswg.js",
+          "preload-helper-BLdHbfdN.js"
+        ]
+      },
+      {
+        "name": "index-CmFzcQV3.js",
+        "bytes": 221594,
+        "sha256": "f29c1fe6e1c7e9ef4a6f7cbeb985fb9dbb674a2454157e77d686d1e0acdfad04",
+        "staticImports": [
+          "rolldown-runtime-XKyaHtl9.js",
+          "preload-helper-BLdHbfdN.js"
+        ]
+      },
+      {
+        "name": "preload-helper-BLdHbfdN.js",
+        "bytes": 1519,
+        "sha256": "8aec9ff75ffa86a03d51268b63126abadb3754aa5a6b6c5bb16e4e2446a63dee",
+        "staticImports": []
+      },
+      {
+        "name": "rolldown-runtime-XKyaHtl9.js",
+        "bytes": 726,
+        "sha256": "548d1dbf321e7d2ae804fcc158b588706a7c52f8ca175de1490c6ccb4dbe55b7",
+        "staticImports": []
+      }
+    ]
+  },
+  "assets": [
+    {
+      "url": "/assets/index-CmFzcQV3.js",
+      "exists": true
+    },
+    {
+      "url": "/assets/rolldown-runtime-XKyaHtl9.js",
+      "exists": true
+    },
+    {
+      "url": "/assets/preload-helper-BLdHbfdN.js",
+      "exists": true
+    },
+    {
+      "url": "/assets/Icons-7hwgFswg.js",
+      "exists": true
+    }
+  ],
+  "hosting": {
+    "apiRewritePrecedesSpaFallback": true,
+    "netlifyConfigUnchangedFromHead": true
+  },
+  "canonicalArt": [
+    {
+      "file": "src/art/rooster.ts",
+      "sha256": "77394d48de4e07c9bbeb2734c7fd5bb2e6c16789032eec957cfd22eaea793f54",
+      "unchanged": true
+    },
+    {
+      "file": "src/art/rooster-data.ts",
+      "sha256": "bf21c7a5f5d58bb4718b6258a60710a01cc08b1573b6dce3899292d53fe38907",
+      "unchanged": true
+    }
+  ],
+  "pass": true
+}

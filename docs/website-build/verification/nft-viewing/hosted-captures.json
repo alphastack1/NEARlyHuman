@@ -1,0 +1,291 @@
+{
+  "at": "2026-11-04T11:09:48.099Z",
+  "views": [
+    {
+      "name": "explore-phone",
+      "path": "/explore?world=robinhood-testnet",
+      "width": 390,
+      "height": 844,
+      "heading": "Meet the roosters.",
+      "text": "Lives of their ownMeet the roosters.Different homes. Different habits. A day worth watching.WorldNEAR TestnetRobinhood TestnetDiscoverLongest livesFilterAll livesLivingRememberedNewest lives first8 livesMAPLE#81 day livedLiving1 of 4 beds plantedVisit →SAGE#72 days livedLiving2 of 4 beds plantedVisit →BASIL#61 day livedLiving1 of 4 beds plantedVisit →SPROUT#51 day livedLiving1 of 4 beds plantedVisit →PIPOOPIP#41 day livedLiving1 of 4 beds planted",
+      "overflow": false,
+      "images": [
+        {
+          "loaded": true,
+          "width": 149.5
+        },
+        {
+          "loaded": true,
+          "width": 149.5
+        },
+        {
+          "loaded": true,
+          "width": 149.5
+        },
+        {
+          "loaded": true,
+          "width": 149.5
+        },
+        {
+          "loaded": true,
+          "width": 149.5
+        },
+        {
+          "loaded": true,
+          "width": 149.5
+        },
+        {
+          "loaded": true,
+          "width": 149.5
+        },
+        {
+          "loaded": true,
+          "width": 149.5
+        }
+      ],
+      "heavy": []
+    },
+    {
+      "name": "explore-desktop",
+      "path": "/explore?world=robinhood-testnet&sort=longest",
+      "width": 1440,
+      "height": 1000,
+      "heading": "Meet the roosters.",
+      "text": "Lives of their ownMeet the roosters.Different homes. Different habits. A day worth watching.WorldNEAR TestnetRobinhood TestnetDiscoverLongest livesFilterAll livesLivingRememberedCompleted game days · equal days share a rank8 lives#1MISO#128 days livedLiving1 of 4 beds plantedVisit →#2PEEP#213 days livedLiving3 of 4 beds plantedVisit →#3SAGE#72 days livedLiving2 of 4 beds plantedVisit →#4SUNNY#31 day livedLiving1 of 4 beds plantedVisit →#4PIPOOPIP",
+      "overflow": false,
+      "images": [
+        {
+          "loaded": true,
+          "width": 299.25
+        },
+        {
+          "loaded": true,
+          "width": 299.25
+        },
+        {
+          "loaded": true,
+          "width": 299.25
+        },
+        {
+          "loaded": true,
+          "width": 299.25
+        },
+        {
+          "loaded": true,
+          "width": 299.25
+        },
+        {
+          "loaded": true,
+          "width": 299.25
+        },
+        {
+          "loaded": true,
+          "width": 299.25
+        },
+        {
+          "loaded": true,
+          "width": 299.25
+        }
+      ],
+      "heavy": []
+    },
+    {
+      "name": "life-phone",
+      "path": "/life/robinhood-testnet/8",
+      "width": 390,
+      "height": 844,
+      "heading": "MAPLE#8",
+      "text": "Explore lives/Robinhood/#8Robinhood TestnetNEARlyHuman NFTMAPLE#8ShareLivingDay 1Visit home ↗Watch day 1→Owned by0x131C15fD…Dc0149c6 ↗StrengthsBody2Wits2Spirit1View NFT on explorer ↗About this NFT →Garden1 of 4 beds plantedGarden guide →Daisy2 wet nights to growUnplantedUnplantedUnplantedNHC purse0NHCEarned from shipments.How NHC works →BelongingsWater×2Bread×2Saved daysDay 1Watch →Onchain details⌄NetworkRobinhood TestnetStandardERC-721Collection",
+      "overflow": false,
+      "images": [
+        {
+          "loaded": true,
+          "width": 315
+        },
+        {
+          "loaded": true,
+          "width": 51
+        },
+        {
+          "loaded": true,
+          "width": 40
+        },
+        {
+          "loaded": true,
+          "width": 40
+        }
+      ],
+      "heavy": []
+    },
+    {
+      "name": "life-desktop",
+      "path": "/life/robinhood-testnet/1",
+      "width": 1440,
+      "height": 1000,
+      "heading": "MISO#1",
+      "text": "Explore lives/Robinhood/#1Robinhood TestnetNEARlyHuman NFTMISO#1ShareLivingDay 28Visit home ↗Watch day 28→Owned by0x131C15fD…Dc0149c6 ↗StrengthsBody2Wits2Spirit1View NFT on explorer ↗About this NFT →Garden1 of 4 beds plantedGarden guide →Apple1 wet night to growUnplantedUnplantedUnplantedNHC purse0NHCEarned from shipments.How NHC works →BelongingsWater×2Bread×2Coffee×1Wood×4Strawberry×1Apple×3Toy boat×1Saved daysDay 28Watch →Day 27Watch →Day 26Wa",
+      "overflow": false,
+      "images": [
+        {
+          "loaded": true,
+          "width": 627.53125
+        },
+        {
+          "loaded": true,
+          "width": 58
+        },
+        {
+          "loaded": true,
+          "width": 40
+        },
+        {
+          "loaded": true,
+          "width": 40
+        },
+        {
+          "loaded": true,
+          "width": 40
+        },
+        {
+          "loaded": true,
+          "width": 40
+        },
+        {
+          "loaded": true,
+          "width": 40
+        },
+        {
+          "loaded": true,
+          "width": 40
+        },
+        {
+          "loaded": true,
+          "width": 40
+        }
+      ],
+      "heavy": []
+    },
+    {
+      "name": "near-life",
+      "path": "/life/near-testnet/1",
+      "width": 390,
+      "height": 844,
+      "heading": "FERN#1",
+      "text": "Explore lives/NEAR/#1NEAR TestnetNEARlyHuman NFTFERN#1ShareLivingDay 3Visit home ↗Watch day 3→Owned bynearlyhuma….testnet ↗StrengthsBody2Wits2Spirit1View NFT on explorer ↗About this NFT →Garden2 of 4 beds plantedGarden guide →DaisyReady to harvestWood tree4 wet nights to growUnplantedUnplantedNHC purse0NHCEarned from shipments.How NHC works →BelongingsWater×2Bread×1Saved daysDay 3Watch →Day 2Watch →Day 1Watch →Onchain details⌄NetworkNEAR TestnetS",
+      "overflow": false,
+      "images": [
+        {
+          "loaded": true,
+          "width": 315
+        },
+        {
+          "loaded": true,
+          "width": 51
+        },
+        {
+          "loaded": true,
+          "width": 51
+        },
+        {
+          "loaded": true,
+          "width": 40
+        },
+        {
+          "loaded": true,
+          "width": 40
+        }
+      ],
+      "heavy": []
+    },
+    {
+      "name": "explore-narrow",
+      "path": "/explore?world=robinhood-testnet",
+      "width": 320,
+      "height": 568,
+      "heading": "Meet the roosters.",
+      "text": "Lives of their ownMeet the roosters.Different homes. Different habits. A day worth watching.WorldNEAR TestnetRobinhood TestnetDiscoverLongest livesFilterAll livesLivingRememberedNewest lives first8 livesMAPLE#81 day livedLiving1 of 4 beds plantedVisit →SAGE#72 days livedLiving2 of 4 beds plantedVisit →BASIL#61 day livedLiving1 of 4 beds plantedVisit →SPROUT#51 day livedLiving1 of 4 beds plantedVisit →PIPOOPIP#41 day livedLiving1 of 4 beds planted",
+      "overflow": false,
+      "images": [
+        {
+          "loaded": true,
+          "width": 122.5
+        },
+        {
+          "loaded": true,
+          "width": 122.5
+        },
+        {
+          "loaded": true,
+          "width": 122.5
+        },
+        {
+          "loaded": true,
+          "width": 122.5
+        },
+        {
+          "loaded": true,
+          "width": 122.5
+        },
+        {
+          "loaded": true,
+          "width": 122.5
+        },
+        {
+          "loaded": true,
+          "width": 122.5
+        },
+        {
+          "loaded": true,
+          "width": 122.5
+        }
+      ],
+      "heavy": []
+    },
+    {
+      "name": "life-narrow",
+      "path": "/life/robinhood-testnet/8",
+      "width": 320,
+      "height": 568,
+      "heading": "MAPLE#8",
+      "text": "Explore lives/Robinhood/#8Robinhood TestnetNEARlyHuman NFTMAPLE#8ShareLivingDay 1Visit home ↗Watch day 1→Visit home ↗Owned by0x131C15fD…Dc0149c6 ↗StrengthsBody2Wits2Spirit1View NFT on explorer ↗About this NFT →Garden1 of 4 beds plantedGarden guide →Daisy2 wet nights to growUnplantedUnplantedUnplantedNHC purse0NHCEarned from shipments.How NHC works →BelongingsWater×2Bread×2Saved daysDay 1Watch →Onchain details⌄NetworkRobinhood TestnetStandardERC-7",
+      "overflow": false,
+      "images": [
+        {
+          "loaded": true,
+          "width": 259
+        },
+        {
+          "loaded": true,
+          "width": 51
+        },
+        {
+          "loaded": true,
+          "width": 40
+        },
+        {
+          "loaded": true,
+          "width": 40
+        }
+      ],
+      "heavy": []
+    },
+    {
+      "name": "explore-near",
+      "path": "/explore?world=near-testnet",
+      "width": 390,
+      "height": 844,
+      "heading": "Meet the roosters.",
+      "text": "Lives of their ownMeet the roosters.Different homes. Different habits. A day worth watching.WorldNEAR TestnetRobinhood TestnetDiscoverLongest livesFilterAll livesLivingRememberedNewest lives first1 lifeFERN#13 days livedLiving2 of 4 beds plantedVisit →Saved onchain · 06:09 PM",
+      "overflow": false,
+      "images": [
+        {
+          "loaded": true,
+          "width": 315
+        }
+      ],
+      "heavy": []
+    }
+  ],
+  "errors": [],
+  "writes": []
+}

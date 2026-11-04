@@ -1,0 +1,100 @@
+{
+  "pass": true,
+  "at": "2026-11-04T11:09:14.063Z",
+  "records": {
+    "near-testnet": {
+      "collection": "game.nearlyhuman-dev-20261102-26c8bd.testnet",
+      "count": 1,
+      "height": "276186385",
+      "stale": false,
+      "first": [
+        {
+          "id": "1",
+          "name": "FERN",
+          "level": 3,
+          "rank": 1
+        }
+      ]
+    },
+    "robinhood-testnet": {
+      "collection": "0x30cb5213fa94020a95893ddb6b07470dbf7a9efc",
+      "count": 8,
+      "height": "148311541",
+      "stale": false,
+      "first": [
+        {
+          "id": "1",
+          "name": "MISO",
+          "level": 28,
+          "rank": 1
+        },
+        {
+          "id": "2",
+          "name": "PEEP",
+          "level": 13,
+          "rank": 2
+        },
+        {
+          "id": "7",
+          "name": "SAGE",
+          "level": 2,
+          "rank": 3
+        }
+      ]
+    }
+  },
+  "checks": [
+    {
+      "path": "/api/explore/lives?world=near-testnet&sort=longest&limit=3",
+      "status": 200,
+      "cache": "no-store"
+    },
+    {
+      "path": "/api/explore/lives?world=robinhood-testnet&sort=longest&limit=3",
+      "status": 200,
+      "cache": "no-store"
+    },
+    {
+      "path": "/api/explore/lives?world=robinhood-testnet&sort=longest&limit=3&cursor=eyJ2IjoxLCJzbmFwc2hvdCI6ImJhOWI0YTZlMTY5ODA4NDBlZGJlZjhlMjA5YTNmNGNjNmU1YzllOGNlNDk4N2QxNzY5NTIzNTllYzBjMDYwYjYiLCJvZmZzZXQiOjMsInF1ZXJ5IjoiYzNlNGM5NzA5MzUwOTE1YjgzODExMjE4OWJmYmE5OWJmNGNjNmNkMDIwNWRjZDg3NzI4NTc0OTJmOTUzZjA3YyJ9",
+      "status": 200,
+      "cache": "no-store"
+    },
+    {
+      "path": "/api/explore/lives?world=robinhood-testnet&sort=longest&q=MAPLE%20%238",
+      "status": 200,
+      "cache": "no-store"
+    },
+    {
+      "path": "/life/robinhood-testnet/8",
+      "status": 200,
+      "cache": "public,max-age=0,must-revalidate"
+    },
+    {
+      "path": "/api/v2/nft/8?chainId=46630&collection=0x30cb5213fa94020a95893ddb6b07470dbf7a9efc&viewingRelease=1",
+      "status": 200,
+      "cache": "public,max-age=30"
+    },
+    {
+      "path": "/life/near-testnet/1",
+      "status": 200,
+      "cache": "public,max-age=0,must-revalidate"
+    },
+    {
+      "path": "/api/near/v2/nft/1?networkId=near-testnet&collection=game.nearlyhuman-dev-20261102-26c8bd.testnet&viewingRelease=1",
+      "status": 200,
+      "cache": "public,max-age=30"
+    },
+    {
+      "path": "/life/robinhood-testnet/999999999",
+      "status": 200,
+      "cache": "public,max-age=0,must-revalidate"
+    },
+    {
+      "path": "/source/contracts.zip",
+      "status": 200,
+      "cache": "public,max-age=0,must-revalidate"
+    }
+  ],
+  "sourceArchiveSha256": "96eb30080976baf50f386e131e338ad69d8575c410210fa55fe2cfeb85e83053",
+  "noSignaturesTransactionsAiOrLedgerReset": true
+}

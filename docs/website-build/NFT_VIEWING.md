@@ -43,4 +43,12 @@ No paid model call, wallet signature, testnet/mainnet transaction, service-ledge
 
 ## Publication
 
-The owner reports the GitHub account is soft-banned and is resolving it. Commits stay local; the final hosted candidate is published directly through Netlify. Because the API changed, package the updated API with all three existing Node24/API-v2 functions and retain the reconciliation schedule. Do not substitute an old API bundle or drop functions for a static-only upload. Hosted identity and final readback follow the finished release.
+Published once at **18:05:53 Bangkok time** (11:05:53 UTC), deployment `6aeb1185c9b13b8dc8d87c39`, from source commit `570060a`. GitHub remains soft-banned according to the owner; commits are local and the release used Netlify's direct upload. Its Netlify Git commit reference is null.
+
+The updated API and all three existing Node24/API-v2 functions were packaged and verified; background preparation and the five-minute reconciliation schedule remain intact. Twelve hosted compiled assets match local bytes. The new live directory returns complete fresh snapshots for one NEAR and eight Robinhood lives, cursor continuation preserves the snapshot, and MAPLE name/ID search succeeds. Both NFT JSON endpoints now advertise their exact public life page. Known identity HTTP metadata and the future-life fallback work on the hosted site, and the current contracts ZIP keeps its original SHA256.
+
+All eight hosted responsive views render without horizontal overflow or eager game/wallet modules. An actual hosted click path passes Explore → MAPLE → Visit home, and selected saved days auto-start for MAPLE/RH and FERN/NEAR. Zero browser errors or API writes occurred in that check. No signature, funded inference, chain transaction or financial/service ledger reset was used for this release.
+
+[Hosted directory/metadata proof](verification/nft-viewing/hosted-directory.json) · [assets/functions](verification/nft-viewing/hosted-assets.json) · [responsive captures](verification/nft-viewing/hosted-captures.json) · [hosted journey](verification/nft-viewing/hosted-journey.json) · [final compiled import graph](verification/nft-viewing/build.json). The four representative screenshots above are refreshed from the live release.
+
+The future burn module was committed separately as `bc1924c`; it was not deployed or activated. A rollout-choice question remains pending. No existing testnet life or token was migrated. Mainnet and hackathon submission were not performed in this viewing-page sprint.

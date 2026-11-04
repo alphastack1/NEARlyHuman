@@ -41,3 +41,9 @@ Hosted public/app flows, both testnet services and the unchanged function runtim
 At **16:13:28 Bangkok time**, deployment `6aeaf733faf58a2bc25f99f3` published the focused onboarding fixes from `f83a399`: critical-startup readiness, supply-target preservation, concise welcome/network help, zero-balance funding/return refresh and a quieter preparation escape. [Full review and real first-day evidence](FIRST_DAY_REFINEMENT.md).
 
 MAPLE #8 was actually hatched on Robinhood testnet and completed day 1 using five real Jev responses and the standard onchain save. Ownership, level 1/alive state and absence of a pending request were verified afterward. This created one authorized NFT/day and their ordinary financial records; it did not alter rules, budgets, credentials, previous ledgers, canonical art or mainnet. The native NEAR readback remains healthy; no fresh Meteor mint is claimed for this follow-up.
+
+## NFT viewing and discovery follow-up
+
+At **18:05:53 Bangkok time**, deployment `6aeb1185c9b13b8dc8d87c39` published the public Explore/Longest lives and exact-life pages from local source `570060a`. It includes the bounded public directory, native/RH profile details, canonical metadata links and direct saved-film handoffs. [Research, critique fixes and hosted evidence](NFT_VIEWING.md).
+
+The owner confirmed GitHub's account soft-ban, so this release used direct Netlify upload with the updated API and all three existing Node24/API-v2 functions. Hosted assets, directory/metadata, both worlds and actual public-to-game journey checks passed. No intermediate production deployment or paid gameplay was used. The separately verified future0.5% burn module remains undeployed, pending rollout scope; current contracts, token balances and financial/service records were not replaced.
