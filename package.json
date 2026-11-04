@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "tsx server/dev.ts",
-    "build": "tsc --noEmit && vite build",
+    "build": "tsc --noEmit && vite build && tsx scripts/site/build-public-pages.ts && tsx scripts/site/export-contracts.ts",
     "check": "tsc --noEmit",
     "preview": "vite preview --host 127.0.0.1",
     "test:domain": "tsx --test src/domain/domain.test.ts src/domain/behavior-memory.test.ts src/domain/choice-policy.test.ts",

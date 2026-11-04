@@ -1,0 +1,187 @@
+{
+  "life": {
+    "version": 2,
+    "chainId": 46630,
+    "collection": "0x30cb5213fa94020a95893ddb6b07470dbf7a9efc",
+    "id": "3",
+    "owner": "0x131C15fD2d9151F361213d8e8BC2a188Dc0149c6",
+    "name": "SUNNY",
+    "revision": 1,
+    "state": {
+      "version": 2,
+      "seed": "0xc6556eeceb5059969ecc2462e423a4684fcf2417c013921bb556ee56f627b355",
+      "day": 1,
+      "level": 1,
+      "alive": true,
+      "deathCause": 0,
+      "stats": [
+        2,
+        2,
+        1
+      ],
+      "needs": [
+        10000,
+        9500,
+        9300,
+        10000,
+        8236
+      ],
+      "inventory": [
+        2,
+        0,
+        2,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "conditions": [
+        {
+          "severity": 0,
+          "onsetDay": 0,
+          "dueDay": 0,
+          "resolved": false
+        },
+        {
+          "severity": 0,
+          "onsetDay": 0,
+          "dueDay": 0,
+          "resolved": false
+        },
+        {
+          "severity": 0,
+          "onsetDay": 0,
+          "dueDay": 0,
+          "resolved": false
+        },
+        {
+          "severity": 0,
+          "onsetDay": 0,
+          "dueDay": 0,
+          "resolved": false
+        },
+        {
+          "severity": 0,
+          "onsetDay": 0,
+          "dueDay": 0,
+          "resolved": false
+        },
+        {
+          "severity": 0,
+          "onsetDay": 0,
+          "dueDay": 0,
+          "resolved": false
+        },
+        {
+          "severity": 0,
+          "onsetDay": 0,
+          "dueDay": 0,
+          "resolved": false
+        },
+        {
+          "severity": 0,
+          "onsetDay": 0,
+          "dueDay": 0,
+          "resolved": false
+        }
+      ],
+      "plots": [
+        {
+          "kind": 1,
+          "ticks": 2,
+          "left": 1,
+          "moisture": 1,
+          "dry": 0,
+          "soilBlocked": false
+        },
+        {
+          "kind": 0,
+          "ticks": 0,
+          "left": 0,
+          "moisture": 0,
+          "dry": 0,
+          "soilBlocked": false
+        },
+        {
+          "kind": 0,
+          "ticks": 0,
+          "left": 0,
+          "moisture": 0,
+          "dry": 0,
+          "soilBlocked": false
+        },
+        {
+          "kind": 0,
+          "ticks": 0,
+          "left": 0,
+          "moisture": 0,
+          "dry": 0,
+          "soilBlocked": false
+        }
+      ],
+      "house": {
+        "mess": 0,
+        "damage": 1,
+        "chairLife": 0,
+        "chairAnchor": 0,
+        "shelterLife": 0,
+        "umbrellaLife": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "stovePatch": 0,
+        "windowPatch": 0,
+        "chairBrace": false,
+        "windowBrace": false,
+        "dripDiverted": false,
+        "backupHeat": false,
+        "powerOut": false,
+        "fire": 0
+      },
+      "goal": 0,
+      "goalCreatedDay": 0,
+      "goalReviewDay": 0,
+      "recent": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    "purseMicro": "0",
+    "purseNonce": "0",
+    "observedBlock": "148150888",
+    "observedBlockHash": "0xd6ea88f1ee928f597b1c773aff881ee63a96c030dfa4f47a44932fd42ff3919a"
+  }
+}

@@ -871,6 +871,10 @@ function JourneyWorld({ selectedWorld, availableWorlds, snapshot, onWorldSwitch,
     </>}
     <div className="v2-menu-account"><button className="v2-text-button" disabled={busy} onClick={() => void run('connect')}><Icon name="leaf" size={16}/>Your roosters</button><button className="v2-text-button" disabled={busy} onClick={() => hatch()}>Hatch a rooster</button></div>
     <LifeSoundToggle/>
+    <nav className="v2-menu-site-links" aria-label="Website and player guide">
+      <a className="v2-text-button" href="/" target="_blank" rel="noopener noreferrer">Website ↗</a>
+      <a className="v2-text-button" href="/docs" target="_blank" rel="noopener noreferrer">Player guide ↗</a>
+    </nav>
   </>;
 
   const handoffTitle = walletOpening?.phase === 'signin' ? 'Verify your wallet' : 'Ready to confirm';

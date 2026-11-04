@@ -1,0 +1,187 @@
+{
+  "life": {
+    "version": 2,
+    "chainId": 46630,
+    "collection": "0x30cb5213fa94020a95893ddb6b07470dbf7a9efc",
+    "id": "1",
+    "owner": "0x131C15fD2d9151F361213d8e8BC2a188Dc0149c6",
+    "name": "MISO",
+    "revision": 28,
+    "state": {
+      "version": 2,
+      "seed": "0xb0becfe76db3ae6756067938ef42cffd5cadd89823779358ea960064f86c56da",
+      "day": 28,
+      "level": 28,
+      "alive": true,
+      "deathCause": 0,
+      "stats": [
+        2,
+        2,
+        1
+      ],
+      "needs": [
+        9732,
+        8000,
+        9300,
+        10000,
+        8454
+      ],
+      "inventory": [
+        2,
+        0,
+        2,
+        0,
+        0,
+        1,
+        4,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        3,
+        0,
+        1,
+        0,
+        0
+      ],
+      "conditions": [
+        {
+          "severity": 0,
+          "onsetDay": 0,
+          "dueDay": 0,
+          "resolved": false
+        },
+        {
+          "severity": 0,
+          "onsetDay": 0,
+          "dueDay": 0,
+          "resolved": false
+        },
+        {
+          "severity": 1,
+          "onsetDay": 28,
+          "dueDay": 30,
+          "resolved": false
+        },
+        {
+          "severity": 0,
+          "onsetDay": 0,
+          "dueDay": 0,
+          "resolved": false
+        },
+        {
+          "severity": 0,
+          "onsetDay": 0,
+          "dueDay": 0,
+          "resolved": false
+        },
+        {
+          "severity": 0,
+          "onsetDay": 0,
+          "dueDay": 0,
+          "resolved": false
+        },
+        {
+          "severity": 0,
+          "onsetDay": 0,
+          "dueDay": 0,
+          "resolved": false
+        },
+        {
+          "severity": 0,
+          "onsetDay": 0,
+          "dueDay": 0,
+          "resolved": false
+        }
+      ],
+      "plots": [
+        {
+          "kind": 8,
+          "ticks": 1,
+          "left": 3,
+          "moisture": 1,
+          "dry": 0,
+          "soilBlocked": false
+        },
+        {
+          "kind": 0,
+          "ticks": 0,
+          "left": 0,
+          "moisture": 0,
+          "dry": 0,
+          "soilBlocked": false
+        },
+        {
+          "kind": 0,
+          "ticks": 0,
+          "left": 0,
+          "moisture": 0,
+          "dry": 0,
+          "soilBlocked": false
+        },
+        {
+          "kind": 0,
+          "ticks": 0,
+          "left": 0,
+          "moisture": 0,
+          "dry": 0,
+          "soilBlocked": false
+        }
+      ],
+      "house": {
+        "mess": 0,
+        "damage": 0,
+        "chairLife": 0,
+        "chairAnchor": 0,
+        "shelterLife": 0,
+        "umbrellaLife": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "stovePatch": 0,
+        "windowPatch": 0,
+        "chairBrace": false,
+        "windowBrace": false,
+        "dripDiverted": false,
+        "backupHeat": false,
+        "powerOut": false,
+        "fire": 0
+      },
+      "goal": 0,
+      "goalCreatedDay": 0,
+      "goalReviewDay": 0,
+      "recent": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    "purseMicro": "0",
+    "purseNonce": "0",
+    "observedBlock": "148150899",
+    "observedBlockHash": "0xa9cb73aebb410daac9dd35953ad3f4b080fefef3155d3fd715a7c001140bd0bf"
+  }
+}

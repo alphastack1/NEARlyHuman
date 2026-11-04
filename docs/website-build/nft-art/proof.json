@@ -1,0 +1,113 @@
+{
+  "observedAt": "2026-11-04T05:13:01.644Z",
+  "realPublicStates": true,
+  "syntheticStates": false,
+  "noAiCalls": true,
+  "noPaidOrWalletOperations": true,
+  "records": [
+    {
+      "key": "rh-7",
+      "name": "SAGE",
+      "id": "7",
+      "day": 2,
+      "world": "Robinhood Testnet",
+      "observedBlock": "148150851",
+      "stateHash": "6c137e1d93d95f4db970231542ed6342a91b3df706bf94ac9e16ad3e25fc011b",
+      "beforeImageHash": "59b28347527c00845460acfccb9c1e20956bd328cea6d483d908e59b4ad2e104",
+      "afterImageHash": "78120f90f955c26de17503088b3b014c5287591a7014bc6961e62b2204b0e6c1",
+      "inputUnchanged": true,
+      "source": "https://nearlyhuman.netlify.app/api/v2/rooster/7?chainId=46630&collection=0x30cb5213fa94020a95893ddb6b07470dbf7a9efc"
+    },
+    {
+      "key": "rh-6",
+      "name": "BASIL",
+      "id": "6",
+      "day": 1,
+      "world": "Robinhood Testnet",
+      "observedBlock": "148150868",
+      "stateHash": "341524fd5f62e2f2b4484044c89ebfcaa7deea74039f2daa9e2d7f5d18a85831",
+      "beforeImageHash": "7bbfdb6b4a1da1307a5c2a470eb5258a0c57d34b10e8ab1077872146429c523f",
+      "afterImageHash": "347dd6da4a178c1013449bbbed00b4de2ef1b8ea127d13ba7c09ad900e8dd6ba",
+      "inputUnchanged": true,
+      "source": "https://nearlyhuman.netlify.app/api/v2/rooster/6?chainId=46630&collection=0x30cb5213fa94020a95893ddb6b07470dbf7a9efc"
+    },
+    {
+      "key": "rh-5",
+      "name": "SPROUT",
+      "id": "5",
+      "day": 1,
+      "world": "Robinhood Testnet",
+      "observedBlock": "148150872",
+      "stateHash": "4a1240fbb8144e49a1e93cf278e551223be39b957d2cfe80512da2b74aad31d8",
+      "beforeImageHash": "7e84ebc63d4ab8eb57f15c3a7777efe96a37e8e03bf76048e0cc19f7fcae16b2",
+      "afterImageHash": "8960f10a9cac6c1091b7fd4701c6f6bd4f96aa1b5786ac3014a367da526525bb",
+      "inputUnchanged": true,
+      "source": "https://nearlyhuman.netlify.app/api/v2/rooster/5?chainId=46630&collection=0x30cb5213fa94020a95893ddb6b07470dbf7a9efc"
+    },
+    {
+      "key": "rh-4",
+      "name": "PIPOOPIP",
+      "id": "4",
+      "day": 1,
+      "world": "Robinhood Testnet",
+      "observedBlock": "148150876",
+      "stateHash": "bc66bb596d78a6d027dc457be768f4fdec5aeb7f9a67c402a50d50f843dd43a7",
+      "beforeImageHash": "56df32d84f57f38d1becba94e5fa18543d5c59ad444213e40acde9a170ea835f",
+      "afterImageHash": "df46258d9780a87dd0abb2f9ff314993f7094185635f2b6619f009ad63807814",
+      "inputUnchanged": true,
+      "source": "https://nearlyhuman.netlify.app/api/v2/rooster/4?chainId=46630&collection=0x30cb5213fa94020a95893ddb6b07470dbf7a9efc"
+    },
+    {
+      "key": "rh-3",
+      "name": "SUNNY",
+      "id": "3",
+      "day": 1,
+      "world": "Robinhood Testnet",
+      "observedBlock": "148150888",
+      "stateHash": "09df095ad90b527b949d01f19e701a3a99264638936c77b46f3886f6c6be7c6a",
+      "beforeImageHash": "d62883f1c7a473ba23c6580f0d7976079f1cf235174c79bfdd13ef0913dba215",
+      "afterImageHash": "69fe19fc3e1e4322e5d2cbabb3aae87ca84044f9d9510c1b84bb7bb3e68b42ae",
+      "inputUnchanged": true,
+      "source": "https://nearlyhuman.netlify.app/api/v2/rooster/3?chainId=46630&collection=0x30cb5213fa94020a95893ddb6b07470dbf7a9efc"
+    },
+    {
+      "key": "rh-2",
+      "name": "PEEP",
+      "id": "2",
+      "day": 13,
+      "world": "Robinhood Testnet",
+      "observedBlock": "148150897",
+      "stateHash": "b6546cf2e40ac5152ec1b359fef86b84839499808810ac7411aac056ab26db00",
+      "beforeImageHash": "4c698c31942dd616a4f958b87d4cd2ff249d2d443197e4fe655f19ebed465424",
+      "afterImageHash": "461644b59bd44e541aca58f4dbe0608e904152e78dda499aa64edc807fd5645f",
+      "inputUnchanged": true,
+      "source": "https://nearlyhuman.netlify.app/api/v2/rooster/2?chainId=46630&collection=0x30cb5213fa94020a95893ddb6b07470dbf7a9efc"
+    },
+    {
+      "key": "rh-1",
+      "name": "MISO",
+      "id": "1",
+      "day": 28,
+      "world": "Robinhood Testnet",
+      "observedBlock": "148150899",
+      "stateHash": "86e28a17b9f2710c59dd899d6adbe3a9c7e52a2800777c350de4c4eddb7262ee",
+      "beforeImageHash": "fc81957ffe0df8908c1b9f5cf5034e10bcb93deafed3742d93202937552d4208",
+      "afterImageHash": "fe6167cc072b482ce57bce4a57a99eafd2c3df40c96327f26fe802859448a2b9",
+      "inputUnchanged": true,
+      "source": "https://nearlyhuman.netlify.app/api/v2/rooster/1?chainId=46630&collection=0x30cb5213fa94020a95893ddb6b07470dbf7a9efc"
+    },
+    {
+      "key": "near-1",
+      "name": "FERN",
+      "id": "1",
+      "day": 3,
+      "world": "NEAR Testnet",
+      "observedBlock": "276150506",
+      "stateHash": "a458b09ea6cd956a316f9aa150937d86bde3fb68ca8d0ed33f63603329c3a939",
+      "beforeImageHash": "d65160087d166c5d9098b569feb3c817cbf5c6cf2438161dbf5300f9a0a536bb",
+      "afterImageHash": "3df2ae1502535891deb3ed6e25c314afb5e3f433434fa4efd280666d8641fd6f",
+      "inputUnchanged": true,
+      "source": "https://nearlyhuman.netlify.app/api/near/v2/rooster/1?networkId=near-testnet&collection=game.nearlyhuman-dev-20261102-26c8bd.testnet"
+    }
+  ]
+}

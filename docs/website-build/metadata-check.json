@@ -1,0 +1,13 @@
+{
+  "date": "2026-11-04",
+  "command": "npx tsx scripts/site/check-public-pages.ts",
+  "scope": "Isolated built-template fixture in ignored TEMP; no full app build or deployment",
+  "pages": 19,
+  "articles": 15,
+  "assetReferencesPreserved": 2,
+  "escaping": true,
+  "noMissingImageAdvertised": true,
+  "optionalImageIncludedWhenPresent": true,
+  "allPageAssetsAndBodyPreserved": true,
+  "pass": true
+}

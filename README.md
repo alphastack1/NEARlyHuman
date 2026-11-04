@@ -1,93 +1,118 @@
-# NEARlyHuman
+<p align="center">
+  <a href="https://nearlyhuman.netlify.app/app?v2=1">
+    <img src="docs/media/readme-cover.webp" alt="NEARlyHuman — an AI-led life game in a sunlit pixel home" width="1200" />
+  </a>
+</p>
 
-A little life. A mind of its own.
+<p align="center">
+  <strong>Hatch a rooster. Bring the supplies. Watch it choose what happens next.</strong>
+</p>
 
-NEARlyHuman is a retro, phone-first life game powered by **NEAR AI Cloud's Jev model**. Hatch a rooster NFT, leave a few supplies, and watch it decide what to grow, make, use or send away. Its home, inventory, saved intentions and earned-token purse travel with the NFT. Nothing ages while you are away.
+<p align="center">
+  <a href="https://nearlyhuman.netlify.app/app?v2=1"><strong>Open App ↗</strong></a>
+  &nbsp; · &nbsp;
+  <a href="https://nearlyhuman.netlify.app">Website</a>
+  &nbsp; · &nbsp;
+  <a href="https://nearlyhuman.netlify.app/docs">Player handbook</a>
+  &nbsp; · &nbsp;
+  <a href="https://nearlyhuman.netlify.app/docs/contracts">Contracts & source</a>
+</p>
 
-**Hackathon track:** `nfts` — **NFTs That Do Something**. The asset carries continuing behavior, a changing portrait, possessions and rights to real onchain token units.
+NEARlyHuman is a phone-first virtual pet game powered by **Jev on NEAR AI Cloud**. Its home, garden, inventory, saved intentions and token purse stay with its NFT.
 
-**Play on testnet:** [nearlyhuman.netlify.app](https://nearlyhuman.netlify.app). Visit [MISO's exact life](https://nearlyhuman.netlify.app/?rooster=1&chainId=46630&collection=0x30cb5213fa94020a95893ddb6b07470dbf7a9efc), or hatch your own. The [release sequence](docs/OVERNIGHT_REFINEMENT.md) records the implementation and verification boundaries.
+<p align="center">
+  <img src="docs/media/gameplay.gif" alt="Actual saved NEARlyHuman gameplay: a rooster moving through its home and daily routines" width="340" />
+</p>
 
-## A day in a little home
+<p align="center">Recorded saved gameplay, sped up.</p>
 
-Choose a testnet world, name a rooster, connect its wallet, then explicitly hatch. Optional **Strengths** and alternate payments open on demand; the balanced defaults are ready to use. Meet the newly hatched NFT and pack its first post. An optional short example has a visible exit. Returning owners arrive at their saved home ready to prepare tomorrow; a newly completed day offers its film first.
+## Prepare a day. See what it becomes.
 
-Choose up to three different supplies, with at most one seed packet or sapling. Jev plans one substantial undertaking and a morning order, then chooses smaller routines such as breakfast, watering, treatment, rest or leisure. The rooster walks through connected rooms, outside to the mailbox, into its garden and over to the workbench. The completed day is saved before its film plays.
-
-Four beds support four flowers, four fruits and one wood-tree variety, with three-, six- or eight-day initial growth. Repeat crops have finite yields. The workshop makes spoons, toy boats, birdhouses and large chests from accumulated wood. Jev may keep produce, enjoy it, eat it or carry finished goods to the outgoing mailbox. A harvest does not guarantee a sale.
-
-Touch objects to inspect them, revisit saved days, share an exact life, or prepare another day. Pause, seek and Finish day change only presentation.
-
-## Ownership with behavior
-
-Shipping earned finished goods can credit **NHC**, a six-decimal utility token: ERC-20 on Robinhood and NEP-141 on native NEAR. Gifted care supplies and raw wood cannot be shipped. Each NFT has its own allocation backed by actual units in its world's contract vault. The current owner can withdraw, including while a day is preparing or after the rooster dies. A remembered life retains its NFT and purse.
-
-An owner can burn **250 NHC** from one selected purse to hatch another NFT atomically. Robinhood wallet-token payment uses an exact approval followed by birth; native NEAR burns the wallet's units directly without an ERC-20 approval. Transferring the NFT transfers its saved life, inventory and remaining purse rights; pending days temporarily lock transfers. Native NEAR supports direct NFT transfer, approval and enumeration; asynchronous `nft_transfer_call` is deliberately disabled.
-
-Each contract verifies material consumption, growth, crafting, death and shipment points through the same deterministic reducer. Each world has its own reward bucket and cumulative lifetime issuance, which reduce later shipment rewards. Birth burns do not reset that pressure. **Lives, inventory, purses and token supplies remain separate between chains; there is no bridge.** NHC has no promised cash redemption.
-
-## Testnet deployment and trust
-
-V2 supports two chain-specific testnet worlds, sharing the game and original procedural rooster artwork. Native NEAR has been verified against its actual public contract with real Meteor Web signing and Jev; Robinhood has a separate real mint-and-day regression. Individual evidence records identify staged and hosted checks.
-
-| World | Wallet | Native hatch price |
+| 01 · Hatch | 02 · Prepare | 03 · Watch |
 | --- | --- | --- |
-| Robinhood Chain Testnet, chain 46630 | Rabby or another EVM wallet | 0.0004 test ETH |
-| Native NEAR Testnet | Meteor through NEAR Connect | 0.1 test NEAR |
+| Name your rooster and hatch its NFT. | Choose up to three different supplies. | Jev chooses a project and the routines around it. |
 
-Robinhood contracts:
+Follow the rooster through its house and yard as it collects supplies and looks after itself. Four beds support flowers, fruit and wood trees; the workshop makes spoons, toy boats, birdhouses and chests. Weather, visitors and household problems interrupt the routine.
 
-| Asset | Address |
-| --- | --- |
-| Collection/controller | [0x30cb5213fa94020a95893ddb6b07470dbf7a9efc](https://explorer.testnet.chain.robinhood.com/address/0x30cb5213fa94020a95893ddb6b07470dbf7a9efc) |
-| NHC token | [0x4DC12133f8B71E9FD7e3571d6FAda84a5DdBE5a2](https://explorer.testnet.chain.robinhood.com/address/0x4DC12133f8B71E9FD7e3571d6FAda84a5DdBE5a2) |
+**The day saves before its film plays.** Upcoming choices stay hidden. Pause, inspect or revisit a saved day without advancing another one. Nothing ages while you are away.
 
-The native NEAR collection and NEP-141 token share one contract account: [game.nearlyhuman-dev-20261102-26c8bd.testnet](https://testnet.nearblocks.io/address/game.nearlyhuman-dev-20261102-26c8bd.testnet). Native token-funded births and purse withdrawals attach a refundable storage deposit; unused storage funding is returned and FT registration is handled atomically when needed. Network/preparation fees are separate from NHC. Actual addresses, code hashes and receipts are recorded for [Robinhood](contracts/v2/deployments/robinhood-testnet.json) and [native NEAR](contracts/near/deployments/testnet.json). Neither mainnet is enabled.
+## An NFT with a saved life
 
-Jev receives finite legal choices through NEAR AI's `/v1/systemone` endpoint. A signed quote reserves inference and relay capacity before a day is accepted. The durable worker caches choices, stores the replay packet and submits its trace for contract verification. Operational failures leave the biological save unchanged; retry is a fresh attempt, without deleting or refunding confirmed transactions.
+<p align="center">
+  <img src="docs/media/nft-lives.webp" alt="Eight real saved rooster NFTs, each with its original character and a dynamically illustrated home and garden" width="1200" />
+</p>
 
-The relay is trusted to call Jev and select delegated actions. Offchain inference is not claimed to be trustless or attested. Each contract derives inventory and rewards rather than accepting an arbitrary supplied balance. Game randomness suits a casual game. Native NEAR uses NEP-413 wallet verification, domain-bound Ed25519 admissions and immutable operation IDs for interrupted-wallet recovery; its [contract and custody review](docs/near-integration/CONTRACT.md) records the implemented authority and explicit transfer-call limitation.
+Each portrait reflects its recorded life: planted beds, growth, crafted objects and household condition. The original procedural rooster artwork stays exact; the world around it changes.
 
-## Build and inspect
+- **A home and inventory.** Plants, materials, supplies and finished goods stay with that NFT.
+- **Continuing behavior.** Strengths, preferences and saved intentions influence later choices.
+- **A backed purse.** Eligible shipments can credit NHC allocated to the NFT, backed by real token units in its world's vault.
+- **Transferable ownership.** The saved life and remaining purse rights move with the NFT. A pending day temporarily locks transfers.
 
-Use **Node 24 or newer** for the application and NEAR SDK:
+Owners can withdraw NHC—even after the rooster dies—or burn **250 NHC** to hatch another rooster. Remembered lives retain their NFT and purse. NHC is a game utility token with no promised cash redemption.
+
+[Explore ownership](https://nearlyhuman.netlify.app/docs/nft-purse) · [Garden rules](https://nearlyhuman.netlify.app/docs/garden) · [Workshop recipes](https://nearlyhuman.netlify.app/docs/workshop) · [NHC & reward rules](https://nearlyhuman.netlify.app/docs/nhc)
+
+## AI decisions, checked outcomes
+
+**NEAR AI Cloud** supplies Jev's decisions from a finite legal action set. A durable worker stores the choices and replay, then submits the action trace. **Contracts** check the life rules and derive the saved state and rewards.
+
+Inference and relaying remain trusted offchain services, not trustless or attested AI. Native NEAR implements **NEP-171 NFTs and NEP-141 tokens**; Robinhood uses **ERC-721 and ERC-20**. Both share the same deterministic life rules.
+
+Built for the **2026 NEAR Hackathon · `nfts` · NFTs That Do Something**: ownership carries behavior, possessions, history and purse rights.
+
+## Two testnet worlds
+
+| World | Wallet | Enter |
+| --- | --- | --- |
+| **NEAR Testnet** | Meteor through NEAR Connect | [Open NEAR](https://nearlyhuman.netlify.app/app?v2=1&networkId=near-testnet&collection=game.nearlyhuman-dev-20261102-26c8bd.testnet) |
+| **Robinhood Testnet** · chain 46630 | Rabby or another EVM wallet | [Open Robinhood](https://nearlyhuman.netlify.app/app?v2=1&chainId=46630&collection=0x30cb5213fa94020a95893ddb6b07470dbf7a9efc) |
+
+Lives, inventory and NHC remain separate between worlds; there is no bridge. Hatching and accepting a new day use the selected world's testnet funds. Wallet sign-in is a separate free message. The app shows payments before confirmation.
+
+[Wallets & testnet funds](https://nearlyhuman.netlify.app/docs/worlds-wallets) · [Deployed contracts](https://nearlyhuman.netlify.app/docs/contracts) · [Download contract sources](https://nearlyhuman.netlify.app/source/contracts.zip)
+
+## Try the hosted demo
+
+1. **Open [MISO's saved life](https://nearlyhuman.netlify.app/?rooster=1&chainId=46630&collection=0x30cb5213fa94020a95893ddb6b07470dbf7a9efc).** See that exact Robinhood NFT and home. Inspect public details or watch a saved day without a wallet or new inference.
+2. **Search [the handbook](https://nearlyhuman.netlify.app/docs).** Try `seeds`, `minting` or `dead` to find the corresponding rules.
+3. **Hatch through [Open App](https://nearlyhuman.netlify.app/app?v2=1).** Choose a world, connect its wallet and confirm. Pack supplies, review the fee and accept the day. Jev prepares it, the chain saves it, and the film becomes ready.
+
+## Run it locally
+
+Use **Node 24 or newer**.
 
 ```sh
+git clone --depth 1 https://github.com/alphastack1/NEARlyHuman.git
+cd NEARlyHuman
 npm ci
-npm run dev
 npm run build
+npm run preview
 ```
 
-Configure the V2 values in [.env.example](.env.example), then open `http://127.0.0.1:5173/?v2=1`. Paid routes also need server credentials, testnet gas and an explicitly funded durable campaign. Credentials stay outside the repository and browser bundle. Use one active funded worker store; the [cutover guide](docs/overnight/wave4/NETLIFY_CUTOVER.md) preserves accounting and seals a retired local allowance.
+Open **http://127.0.0.1:4173**. You should see the website and public guide pages. The build also generates page metadata, a sitemap and the contracts-only source archive.
 
-| Area | Source |
+The static preview does not run the game API. Use the hosted app to play.
+
+<details>
+<summary><strong>API-backed development</strong></summary>
+
+Configure [.env.example](.env.example), then use `npm run dev`. This requires your own service credentials, testnet relay funds and an explicitly funded durable AI campaign. Credentials stay outside the repository and browser bundle. Follow the [development guide](docs/DEVELOPMENT.md) for setup and operating boundaries.
+
+</details>
+
+## Find your way through the source
+
+| Area | Location |
 | --- | --- |
-| Life rules, catalog and codecs | `src/v2/` |
-| Player journey and physical world | `src/app/v2/`, `src/game/v2/`, `src/art/` |
-| Jev, quotes and durable workers | `server/v2/`, `netlify/functions/` |
-| Robinhood verifier, NFT, token and purse | `contracts/v2/`, `src/chain/v2-client.ts` |
-| Native NEAR authority, NFT, FT and purse | `contracts/near/`, `scripts/near/contract-build.ps1` |
-| Native wallet, authentication and workers | `src/chain/near-*.ts`, `server/near/` |
-| World switching and chain-specific API adapters | `src/chain/game-*.ts`, `src/app/game-api.ts`, `server/game-worlds.ts` |
+| Website, handbook and public navigation | [`src/site/`](src/site/) |
+| Player flow, world rendering and original art | [`src/app/v2/`](src/app/v2/) · [`src/game/v2/`](src/game/v2/) · [`src/art/`](src/art/) |
+| Shared life rules and catalog | [`src/v2/`](src/v2/) |
+| Jev, durable workers and API | [`server/v2/`](server/v2/) · [`server/near/`](server/near/) · [`netlify/functions/`](netlify/functions/) |
+| Chain contracts and reproducible source exports | [`contracts/v2/`](contracts/v2/) · [`contracts/near/`](contracts/near/) · [`scripts/site/`](scripts/site/) |
 
-No production build depends on ignored `TEMP/`. Pushing `main` triggers Netlify, so publication is deliberate and infrequent.
+The [documentation index](docs/index.md) leads to architecture, wallet integration, contract reviews and verification evidence. The [NFT art guide](docs/website-build/NFT_ART.md) records canonical artwork invariants and the distinction between real saved lives and controlled visual fixtures.
 
-## Verification and design
+---
 
-The [local controller/wallet proof](docs/overnight/wave4/CHAIN_REVIEW.md) advanced 100 accepted days with scripted legal choices, earned 521.964786 NHC, tested both 250-NHC birth routes and withdrew after death. These are isolated-chain authority tests, separate from paid Jev behavior.
-
-The [actual Meteor/Jev Day 1](docs/near-integration/actual-native-day.json) records a real Meteor Web mint and NEP-413 sign-in, one accepted paid day, **five real Jev sends** and **60 saved receipts** for FERN #1. An [independent public-contract review](docs/near-integration/actual-public-contract-review.json) matched every replay receipt, state/trace/certificate commitment, NFT metadata and purse backing. Its separate [local contract proof](docs/near-integration/CONTRACT.md) covers 82 TypeScript parity vectors and a closed 83-day earning/birth/death-withdrawal cycle. The [Robinhood regression](docs/near-integration/actual-rh-regression.json) verifies SAGE #7's real mint and first day against all 60 canonical receipts.
-
-Completed Jev replies leave little sealed thoughts before the distinct onchain-save stage. Upcoming choices stay hidden; the project appears as the rooster begins its actual work. During playback the rooster fetches consumed supplies, carries them to its task and stores finished goods. Care impacts briefly highlight actual need changes; quiet decay stays unobtrusive. These presentation steps do not create extra inventory, actions or rewards. The native wallet and interrupted-payment checks are recorded in [wallet and switching](docs/near-integration/WALLET_AND_SWITCHING.md).
-
-Rain, power cuts, pests, hungry visitors, illness and household damage follow bounded canonical event rules. Jev receives only current event targets, response windows and consequences. The [world-event balance research](docs/research/WORLD_EVENT_BALANCE.md) distinguishes implemented events from absent trading mechanics and records 450 controlled offline days, care-capacity limits and known rule tradeoffs. [Environment refinement](docs/refinements/environment-color/REVIEW.md) and [event presentation](docs/refinements/events/REVIEW.md) retain actual phone captures and clearly labeled rendering fixtures.
-
-The earlier Robinhood pre-publication run saved41 real Jev days across two NPCs using209 sends for$0.030202, with zero uncertain sends. MISO made a Toy boat from earned wood and kept it; both purses remained0NHC. [The earlier checkpoint](docs/overnight/wave5/JEV_REVIEW.md) separates observed behavior from the local earning proof. Drained policy transitions added truthful care/economy facts and [bounded produce/surplus shipping choices](docs/overnight/wave6/SHIPMENT_REVIEW.md) without forcing sales or changing contracts. [Independent chain checks](docs/overnight/wave5/RELIABILITY_REVIEW.md) and [actual rendered playback](docs/overnight/wave5/PLAYER_REVIEW.md) distinguish receipts, model calls, controlled fixtures and screenshots.
-
-The [V2 design](design/ECONOMY_V2.md), [contract guide](contracts/v2/README.md), [approved visual reference](design/references/VR-01-approved-house-and-care.png) and [99-board mockup gallery](design/mockups/index.html) preserve the intended game and visual direction.
-
-The [virtual-pet flow and pixel refinement](docs/vpet-refinement/README.md) maps the full player journey, cites the reference games, and records independent phone/menu/input reviews of the subsequent usability pass.
-
-The [whole-game presentation pass](docs/life-polish/README.md) extends that review through waiting, recovery, history, belongings and remembered lives. It restores the original procedural rooster artwork, adds restrained environmental color and gives the interface a quiet optional sound layer with reachable mute controls.
-
-The [full-day pacing and animation loop](docs/full-day-loop/README.md) follows complete real saved days at normal speed, improves physical task contact and camera continuity, and makes actual incidents, project outcomes and unfinished care visible without changing the original rooster art or saved facts.
+Built with React, Phaser, NEAR AI Cloud, NEAR SDK and OpenZeppelin. Rooster identity uses the project's original procedural artwork. Environmental illustrations and asset provenance are recorded in the [design guide](design/website-build/mockups/NOTES.md).

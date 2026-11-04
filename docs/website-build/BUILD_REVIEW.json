@@ -1,0 +1,323 @@
+{
+  "reviewedAt": "2026-11-04T06:11:32.862Z",
+  "scope": "Actual local production build; static heads and module import graph. No browser, network, signing, inference, ledger or deployment operation.",
+  "sourceIndexSha256": "991155852c3f64f39f68846815c1884e72dbb46c4a4454306ec0692ad38ec7d4",
+  "builtIndexSha256": "943a1514266c6d5679ad03c11e0888ca68749cf6d0d0fc72ee6375b13bc8855e",
+  "entryScript": "index-D4ctt7hE.js",
+  "routeChecks": [
+    {
+      "pathname": "/",
+      "canonical": "https://nearlyhuman.netlify.app/",
+      "title": "NEARlyHuman \u2014 A little life. A mind of its own.",
+      "pass": true
+    },
+    {
+      "pathname": "/the-game",
+      "canonical": "https://nearlyhuman.netlify.app/the-game",
+      "title": "The game \u00b7 NEARlyHuman",
+      "pass": true
+    },
+    {
+      "pathname": "/project",
+      "canonical": "https://nearlyhuman.netlify.app/project",
+      "title": "The project \u00b7 NEARlyHuman",
+      "pass": true
+    },
+    {
+      "pathname": "/docs",
+      "canonical": "https://nearlyhuman.netlify.app/docs",
+      "title": "The player handbook \u00b7 NEARlyHuman",
+      "pass": true
+    },
+    {
+      "pathname": "/docs/first-day",
+      "canonical": "https://nearlyhuman.netlify.app/docs/first-day",
+      "title": "Your first day \u00b7 NEARlyHuman",
+      "pass": true
+    },
+    {
+      "pathname": "/docs/worlds-wallets",
+      "canonical": "https://nearlyhuman.netlify.app/docs/worlds-wallets",
+      "title": "Worlds & wallets \u00b7 NEARlyHuman",
+      "pass": true
+    },
+    {
+      "pathname": "/docs/care-supplies",
+      "canonical": "https://nearlyhuman.netlify.app/docs/care-supplies",
+      "title": "Care & supplies \u00b7 NEARlyHuman",
+      "pass": true
+    },
+    {
+      "pathname": "/docs/strengths-personality",
+      "canonical": "https://nearlyhuman.netlify.app/docs/strengths-personality",
+      "title": "Strengths & personality \u00b7 NEARlyHuman",
+      "pass": true
+    },
+    {
+      "pathname": "/docs/garden",
+      "canonical": "https://nearlyhuman.netlify.app/docs/garden",
+      "title": "The garden \u00b7 NEARlyHuman",
+      "pass": true
+    },
+    {
+      "pathname": "/docs/workshop",
+      "canonical": "https://nearlyhuman.netlify.app/docs/workshop",
+      "title": "The workshop \u00b7 NEARlyHuman",
+      "pass": true
+    },
+    {
+      "pathname": "/docs/weather-visitors",
+      "canonical": "https://nearlyhuman.netlify.app/docs/weather-visitors",
+      "title": "Weather & visitors \u00b7 NEARlyHuman",
+      "pass": true
+    },
+    {
+      "pathname": "/docs/nft-purse",
+      "canonical": "https://nearlyhuman.netlify.app/docs/nft-purse",
+      "title": "Your NFT & its purse \u00b7 NEARlyHuman",
+      "pass": true
+    },
+    {
+      "pathname": "/docs/nhc",
+      "canonical": "https://nearlyhuman.netlify.app/docs/nhc",
+      "title": "NHC \u00b7 NEARlyHuman",
+      "pass": true
+    },
+    {
+      "pathname": "/docs/sharing-transfers",
+      "canonical": "https://nearlyhuman.netlify.app/docs/sharing-transfers",
+      "title": "Sharing & transfers \u00b7 NEARlyHuman",
+      "pass": true
+    },
+    {
+      "pathname": "/docs/remembered-lives",
+      "canonical": "https://nearlyhuman.netlify.app/docs/remembered-lives",
+      "title": "Remembered lives \u00b7 NEARlyHuman",
+      "pass": true
+    },
+    {
+      "pathname": "/docs/jev-saving",
+      "canonical": "https://nearlyhuman.netlify.app/docs/jev-saving",
+      "title": "Jev & saving \u00b7 NEARlyHuman",
+      "pass": true
+    },
+    {
+      "pathname": "/docs/contracts",
+      "canonical": "https://nearlyhuman.netlify.app/docs/contracts",
+      "title": "Contracts & official links \u00b7 NEARlyHuman",
+      "pass": true
+    },
+    {
+      "pathname": "/docs/troubleshooting",
+      "canonical": "https://nearlyhuman.netlify.app/docs/troubleshooting",
+      "title": "Help & recovery \u00b7 NEARlyHuman",
+      "pass": true
+    },
+    {
+      "pathname": "/docs/privacy-data",
+      "canonical": "https://nearlyhuman.netlify.app/docs/privacy-data",
+      "title": "Public life & your data \u00b7 NEARlyHuman",
+      "pass": true
+    }
+  ],
+  "sitemap": {
+    "routes": 19,
+    "matchesActualCatalog": true
+  },
+  "robots": {
+    "pass": true
+  },
+  "socialImage": {
+    "width": 1200,
+    "height": 630,
+    "bytes": 520288,
+    "sha256": "37bb3551576f6d71453f883ffe29e8adc685a8f3aeb68a0b38cf1f3fd7b6937d",
+    "matchesSource": true,
+    "validPng": true
+  },
+  "loading": {
+    "htmlPreloads": [
+      "/assets/rolldown-runtime-XKyaHtl9.js",
+      "/assets/preload-helper-BLdHbfdN.js"
+    ],
+    "initialStaticClosure": [
+      "index-D4ctt7hE.js",
+      "preload-helper-BLdHbfdN.js",
+      "rolldown-runtime-XKyaHtl9.js"
+    ],
+    "publicSiteStaticClosure": [
+      "Icons-kIwccDWy.js",
+      "Site-Cucz9YmZ.js",
+      "index-D4ctt7hE.js",
+      "preload-helper-BLdHbfdN.js",
+      "rolldown-runtime-XKyaHtl9.js"
+    ],
+    "publicBranchBytes": 338654,
+    "unexpectedGameWalletAuthChunks": [],
+    "entryDynamicImports": [
+      "GameEntry-UT79ndXj.js",
+      "Site-Cucz9YmZ.js"
+    ],
+    "gameDynamicImports": [
+      "App-JRtnTzwz.js",
+      "V2App-DsV0r8QI.js"
+    ],
+    "chunks": [
+      {
+        "name": "Icons-kIwccDWy.js",
+        "bytes": 42307,
+        "sha256": "dd254a2d5d73474454aa0b6fa2d5be51797ca2b3a6a228a060f7a446894f7e23",
+        "staticImports": [
+          "index-D4ctt7hE.js"
+        ]
+      },
+      {
+        "name": "Site-Cucz9YmZ.js",
+        "bytes": 72538,
+        "sha256": "5991a038cd588c8ca79a570fdfe9fa53de7814f7fa6d7047c459c0033dff64d0",
+        "staticImports": [
+          "rolldown-runtime-XKyaHtl9.js",
+          "index-D4ctt7hE.js",
+          "Icons-kIwccDWy.js"
+        ]
+      },
+      {
+        "name": "index-D4ctt7hE.js",
+        "bytes": 221564,
+        "sha256": "48ebe540d6f0476d4a0bc68090186842e8b10a4a985cd7513610491c4b8718f4",
+        "staticImports": [
+          "rolldown-runtime-XKyaHtl9.js",
+          "preload-helper-BLdHbfdN.js"
+        ]
+      },
+      {
+        "name": "preload-helper-BLdHbfdN.js",
+        "bytes": 1519,
+        "sha256": "8aec9ff75ffa86a03d51268b63126abadb3754aa5a6b6c5bb16e4e2446a63dee",
+        "staticImports": []
+      },
+      {
+        "name": "rolldown-runtime-XKyaHtl9.js",
+        "bytes": 726,
+        "sha256": "548d1dbf321e7d2ae804fcc158b588706a7c52f8ca175de1490c6ccb4dbe55b7",
+        "staticImports": []
+      }
+    ]
+  },
+  "assets": [
+    {
+      "url": "/assets/index-D4ctt7hE.js",
+      "exists": true
+    },
+    {
+      "url": "/assets/rolldown-runtime-XKyaHtl9.js",
+      "exists": true
+    },
+    {
+      "url": "/assets/preload-helper-BLdHbfdN.js",
+      "exists": true
+    },
+    {
+      "url": "/assets/Icons-kIwccDWy.js",
+      "exists": true
+    }
+  ],
+  "hosting": {
+    "apiRewritePrecedesSpaFallback": true,
+    "netlifyConfigUnchangedFromHead": true
+  },
+  "canonicalArt": [
+    {
+      "file": "src/art/rooster.ts",
+      "sha256": "77394d48de4e07c9bbeb2734c7fd5bb2e6c16789032eec957cfd22eaea793f54",
+      "unchanged": true
+    },
+    {
+      "file": "src/art/rooster-data.ts",
+      "sha256": "bf21c7a5f5d58bb4718b6258a60710a01cc08b1573b6dce3899292d53fe38907",
+      "unchanged": true
+    }
+  ],
+  "pass": true,
+  "sourceExport": {
+    "sourceFiles": 9,
+    "archiveEntries": 13,
+    "archiveBytes": 190741,
+    "archiveSha256": "96eb30080976baf50f386e131e338ad69d8575c410210fa55fe2cfeb85e83053",
+    "crcCheck": true,
+    "exactAllowlistOnly": true,
+    "allWhitelistedSourcesByteExact": true,
+    "manifestAndReadmeCopiesMatch": true,
+    "publicTextCopiesMatch": true,
+    "pinnedEvmBuildDependencies": {
+      "solc": "0.8.38",
+      "@openzeppelin/contracts": "5.6.1"
+    },
+    "files": [
+      {
+        "path": "contracts/v2/IV2LifeVerifier.sol",
+        "sha256": "95c62fc8d50f62a3f5b1fd7c4dd386ab02d79315ff0da54d964e41153f47de0a",
+        "byteExactToSource": true,
+        "publicTextCopyByteExact": true,
+        "matchesManifestHashAndSize": true
+      },
+      {
+        "path": "contracts/v2/NEARlyHumanV2.sol",
+        "sha256": "7c8dcd5cf1a930e3356b5230610de798e65a086ba343959dcd8744c5b7508c08",
+        "byteExactToSource": true,
+        "publicTextCopyByteExact": true,
+        "matchesManifestHashAndSize": true
+      },
+      {
+        "path": "contracts/v2/V2ActionModule.sol",
+        "sha256": "cd114d3a7ae857f8115f1ff708eb928060437837149a8842c029227d9686c787",
+        "byteExactToSource": true,
+        "publicTextCopyByteExact": true,
+        "matchesManifestHashAndSize": true
+      },
+      {
+        "path": "contracts/v2/V2LifeVerifier.sol",
+        "sha256": "27c1f90f4b929fd7ba142b465797b12822a39f9a17847866b432cbc29e202347",
+        "byteExactToSource": true,
+        "publicTextCopyByteExact": true,
+        "matchesManifestHashAndSize": true
+      },
+      {
+        "path": "contracts/v2/V2Types.sol",
+        "sha256": "0815013cf87b24e3f8d1e41ea37c952932e8abf28a33fcbb8a0f61d3cc7ce80d",
+        "byteExactToSource": true,
+        "publicTextCopyByteExact": true,
+        "matchesManifestHashAndSize": true
+      },
+      {
+        "path": "contracts/near/src/lib.rs",
+        "sha256": "3130b5de8279dcd642ba541ffc1cfc14da221250fdeecdf6d0324347f4623fce",
+        "byteExactToSource": true,
+        "publicTextCopyByteExact": true,
+        "matchesManifestHashAndSize": true
+      },
+      {
+        "path": "contracts/near/src/kernel.rs",
+        "sha256": "2bbc47bc5948af5c1001b3f42dc287610eb172fa3b5d74cbf74fe67a32c805e3",
+        "byteExactToSource": true,
+        "publicTextCopyByteExact": true,
+        "matchesManifestHashAndSize": true
+      },
+      {
+        "path": "contracts/near/Cargo.toml",
+        "sha256": "a02ca448aae9ff3cb7ef31aab3efd9bdd79501a117231ff493f499069f1a4d84",
+        "byteExactToSource": true,
+        "publicTextCopyByteExact": true,
+        "matchesManifestHashAndSize": true
+      },
+      {
+        "path": "contracts/near/Cargo.lock",
+        "sha256": "206398a65f2cd044bbddb167321089dcf97841a4e9627cb13e51afe7e2568799",
+        "byteExactToSource": true,
+        "publicTextCopyByteExact": true,
+        "matchesManifestHashAndSize": true
+      }
+    ],
+    "pass": true
+  }
+}

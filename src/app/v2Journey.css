@@ -908,6 +908,19 @@
 .v2-menu-account>button:last-child {
   color: #d7c987;
 }
+.v2-menu-site-links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 4px 18px;
+  border-top: 1px solid #496368;
+  padding-top: 3px;
+}
+.v2-menu-site-links>a {
+  min-height: 44px;
+  font-size: 8px;
+  color: #c5d8c0;
+}
 .v2-journey .v2-egg>img {
   width: 60px;
   height: 60px;

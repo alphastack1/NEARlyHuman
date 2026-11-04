@@ -1,0 +1,123 @@
+{
+  "time": "2026-11-04T06:05:40.404Z",
+  "assets": [
+    {
+      "url": "/source/contracts.zip",
+      "status": 200,
+      "type": "application/zip",
+      "bytes": 190741,
+      "sha256": "96eb30080976baf50f386e131e338ad69d8575c410210fa55fe2cfeb85e83053"
+    },
+    {
+      "url": "/source/manifest.json",
+      "status": 200,
+      "type": "application/json",
+      "bytes": 3859,
+      "sha256": "7565eae079b1d779667a68f45947b833fc50bb035fc9525a6e3ff3913e08908c"
+    },
+    {
+      "url": "/source/files/contracts/near/src/lib.rs.txt",
+      "status": 200,
+      "type": "text/plain; charset=utf-8",
+      "bytes": 30317,
+      "sha256": "3130b5de8279dcd642ba541ffc1cfc14da221250fdeecdf6d0324347f4623fce"
+    },
+    {
+      "url": "/site/handbook.webp",
+      "status": 200,
+      "type": "image/webp",
+      "bytes": 121772,
+      "sha256": "04817a19e667c74cdb55a3add19b0f2fb6d10c01d24fcb2ca425431163c854cd"
+    },
+    {
+      "url": "/sitemap.xml",
+      "status": 200,
+      "type": "application/xml",
+      "bytes": 1465,
+      "sha256": "3d81d1a0edaca1615cb762cc56ef0642ea795d197b19cd67598a58a7bf5384e4"
+    },
+    {
+      "url": "/robots.txt",
+      "status": 200,
+      "type": "text/plain; charset=utf-8",
+      "bytes": 129,
+      "sha256": "319cfd0ecaa8939533ea42381e0c9db34e921c558d09ee73db50e0b761a0b2fa"
+    }
+  ],
+  "browser": [
+    {
+      "path": "/",
+      "name": "home-desktop",
+      "width": 1440,
+      "height": 1000,
+      "h1": "A little life.A mind of its own.",
+      "overflow": false,
+      "visibleBrokenImages": [],
+      "heavyGameRequests": []
+    },
+    {
+      "path": "/",
+      "name": "home-phone",
+      "width": 390,
+      "height": 844,
+      "h1": "A little life.A mind of its own.",
+      "overflow": false,
+      "visibleBrokenImages": [],
+      "heavyGameRequests": []
+    },
+    {
+      "path": "/docs",
+      "name": "handbook-desktop",
+      "width": 1440,
+      "height": 1000,
+      "h1": "Player handbook",
+      "overflow": false,
+      "visibleBrokenImages": [],
+      "heavyGameRequests": []
+    },
+    {
+      "path": "/docs",
+      "name": "handbook-phone",
+      "width": 390,
+      "height": 844,
+      "h1": "Player handbook",
+      "overflow": false,
+      "visibleBrokenImages": [],
+      "heavyGameRequests": []
+    },
+    {
+      "path": "/docs/first-day",
+      "name": "first-day-phone",
+      "width": 390,
+      "height": 844,
+      "h1": "Your first day",
+      "overflow": false,
+      "visibleBrokenImages": [],
+      "heavyGameRequests": []
+    },
+    {
+      "path": "/project",
+      "name": "project-phone",
+      "width": 390,
+      "height": 844,
+      "h1": "A small game.A life you own.",
+      "overflow": false,
+      "visibleBrokenImages": [],
+      "heavyGameRequests": []
+    },
+    {
+      "path": "/docs/garden#growth",
+      "name": "garden-phone",
+      "width": 390,
+      "height": 844,
+      "h1": "The garden",
+      "overflow": false,
+      "visibleBrokenImages": [],
+      "heavyGameRequests": []
+    }
+  ],
+  "writeRequests": [],
+  "errors": [],
+  "clearSearch": true,
+  "pass": true
+}

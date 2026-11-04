@@ -1,6 +1,6 @@
 # V2 feasibility — small working experiments
 
-2 November 2026. This closes the preparatory research wave before the owner's six hourly implementation/refinement waves. It supports the [selected economy](../../design/ECONOMY_V2.md) and [transition boundaries](../../design/V2_TRANSITIONS.md). Application source and the live V1 game were unchanged. All financial execution here used isolated local chains; no developer wallet, external testnet funds, mainnet, paid AI or deployment credits were used.
+2 November 2026. This closes the historical preparatory research wave before the six implementation/refinement waves. It records design-stage economy and transition experiments. Application source and the live V1 game were unchanged during this work. All financial execution here used isolated local chains; no developer wallet, external testnet funds, mainnet, paid AI or deployment credits were used. See the [current economy](../ECONOMY.md) and [architecture](../ARCHITECTURE.md) for the later implementation.
 
 Three parallel builders tested biology/care, actual EVM economics and native NEAR custody. They reviewed each other's results. The PM independently replayed the clinical counterexample and reviewed source. A fresh adversarial reviewer then found exhausted-state, full-counter, process-isolation and evidence-identity issues, which were corrected before preservation.
 
@@ -133,6 +133,6 @@ The separate-receipt failure boundary follows [NEAR's asynchronous-call semantic
 
 ## Next work
 
-The [hourly sprint plan](../OVERNIGHT_REFINEMENT.md) now owns implementation and release. First build one unified owned-snapshot kernel with explicit IDs, phase order, a single inventory, legal-action roles and verifiable care certificates. Use these counterexamples and money fixtures as evidence rather than building an oversized test framework. Then integrate actual Jev choices, the revised map/public life/purse flow and real phone playtests.
+The subsequent implementation built one unified owned-snapshot kernel with explicit IDs, phase order, a single inventory, legal-action roles and verifiable care certificates. These counterexamples and money fixtures remain evidence for that work, rather than a substitute for current game execution. The [documentation index](../index.md) leads to the current source, contract and release records.
 
 The final sixth wave is authorized to publish the completed tested RH testnet candidate once. Mainnet remains deferred. Current local proof does not justify copying fixture issuers/terminal flags into that release, enabling unresolved async ownership, or claiming complete end-to-end gameplay before it exists.

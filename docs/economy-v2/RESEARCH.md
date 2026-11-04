@@ -1,6 +1,6 @@
 # V2 economy — decisions and evidence
 
-Research date: 2 November 2026. This record supports the selected [V2 design](../../design/ECONOMY_V2.md). It does not describe deployed contracts or predict token value, player population or Jev behavior. The current production source remains `3aa3c84b1ba80126a61fb8831ca35c590349e3c2`.
+Research date: 2 November 2026. This is a historical design-stage record, not a description of the later deployed contracts or a prediction of token value, player population or Jev behavior. Production source at that time was `3aa3c84b1ba80126a61fb8831ca35c590349e3c2`. See the [current economy guide](../ECONOMY.md) for the implemented loop.
 
 Three parallel specialist reviews covered integrated production/care, currency/reinvestment and settlement/ownership. A fourth independent reviewer challenged first-use clarity, fun and remaining complexity. The PM reconciled their findings, selected one baseline and reran the preserved models. No paid inference, live transaction, wallet edit or production deployment was needed.
 
@@ -126,7 +126,7 @@ NEAR external calls and callbacks execute independently and do not provide autom
 
 The developer's NEAR testnet account is funded and recorded separately. RH and NEAR have independent lives, supply and issuance budgets. There is no bridge or aggregate cross-chain ceiling in this design.
 
-Native fees are not game-token sinks. Three historical testnet receipts in [the earlier fee evidence](../economy-research/observed-fees.json) had processing fees below the relay execution-gas component alone. No test-ETH USD valuation was assumed. The public fee multiplier remains adjustable, but its launch value must follow actual end-to-end settlement, inference and hosting cost measurements. A busy game does not automatically mean a profitable operator.
+Native fees are not game-token sinks. Three historical testnet receipts in [the earlier fee evidence](legacy-observed-fees.json) had processing fees below the relay execution-gas component alone. No test-ETH USD valuation was assumed. The public fee multiplier remains adjustable, but its launch value must follow actual end-to-end settlement, inference and hosting cost measurements. A busy game does not automatically mean a profitable operator.
 
 ## Short experiment record
 
@@ -144,6 +144,6 @@ Native fees are not game-token sinks. Three historical testnet receipts in [the 
 
 See [standalone model instructions](../../scripts/economy-research/README.md). They use Python's standard library and Node built-ins, require no wallet/network/AI, create their outputs under ignored TEMP, and have no TEMP input dependency. Frozen profiles and compact evidence are permanent. Full daily traces can be regenerated without storing megabytes of redundant captures.
 
-The preserved manifest records source and evidence hashes. The older [provisional economy research](../economy-research/index.json) remains useful derivation history; its open questions and optional paid-seed/current-supply candidates are superseded by the selected V2 design where stated.
+The preserved manifest records source and evidence hashes. The older [provisional economy research](legacy-research-index.json) remains useful derivation history; its open questions and optional paid-seed/current-supply candidates were superseded by the selected V2 baseline where stated.
 
 The next work is a **small authoritative-transition and chain-cost prototype**, then the revised map/public-life/purse mockups and actual multi-day Jev play. Full incident survival, native NEAR transfer-call recovery, real reservations under concurrency, fee coverage and actual entertainment value require that implementation evidence. No further abstract parameter sweep is needed before it.
