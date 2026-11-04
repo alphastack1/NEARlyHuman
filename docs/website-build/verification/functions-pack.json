@@ -5,17 +5,17 @@
     {
       "name": "api",
       "runtime": "js",
-      "size": 2125578
+      "size": 2125601
     },
     {
       "name": "prepare-background",
       "runtime": "js",
-      "size": 2083410
+      "size": 2083433
     },
     {
       "name": "reconcile",
       "runtime": "js",
-      "size": 1646744
+      "size": 1646767
     }
   ]
 }

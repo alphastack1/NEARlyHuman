@@ -51,3 +51,5 @@ The owner confirmed GitHub's account soft-ban, so this release used direct Netli
 ## Clear website arrival and transfer-burn rollout
 
 At **19:49:59 Bangkok time**, deployment `6aeb29ead1d65b7175f8619f` published the persistent website introduction and contained saved-game showcase, together with the authorized testnet transfer-burn integration. Both current worlds expose enabled0.5% NHC transfer burn with an owner toggle. Original RH NFT identities and native NEAR state/history are preserved. A real CLOVER first day passed through the hosted Jev/chain flow. [Critique decisions, exact rollout and actual game evidence](ARRIVAL_REFINEMENT.md).
+
+At **20:14:37 Bangkok time**, the owner-requested art finish was published as `6aeb2fb1e19cf2d096230aa7` from `fa1f40f`: self-hosted display/body typography, stronger teal casing, ivory/forest/apricot materials and restrained game-prop art. Actual hosted phone/short-phone/desktop renders, font/asset bytes and both unchanged testnet runtime settings passed. [Final visual and hosted evidence](verification/arrival/art/hosted-readback.json).
