@@ -4,10 +4,9 @@
 # Preserve exact bytes of content-addressed recorded preview snapshots.
 public/assets/preview/*.json -text
 
-# Source fingerprints and canonical artwork must survive Windows checkouts.
-contracts/**/*.sol text eol=lf
-contracts/**/src/*.rs text eol=lf
-contracts/**/Cargo.toml text eol=lf
-contracts/**/Cargo.lock text eol=lf
+# Content-addressed contract inputs preserve their reviewed exact byte streams,
+# including the original native sources' recorded CRLF line endings.
+contracts/** -text
+# Canonical artwork was recorded with LF endings.
 src/art/rooster.ts text eol=lf
 src/art/rooster-data.ts text eol=lf
