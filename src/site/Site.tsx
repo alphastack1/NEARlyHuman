@@ -3,7 +3,7 @@ import '@fontsource/press-start-2p/latin-400.css';
 import { roosterSvg } from '../art/rooster';
 import { Icon, type IconName } from '../app/Icons';
 import { ARTICLES, GUIDE_GROUPS, getArticle, type GuideArticle } from './content';
-import { PROJECT } from './project';
+import { PROJECT, SITE_IMAGES } from './project';
 import { searchArticles } from './search';
 import './site.css';
 
@@ -45,7 +45,11 @@ function HeroScene({ small = false }: { small?: boolean }) {
     <div className="site-scene-sun" aria-hidden="true"/>
     <svg className="site-cloud cloud-one" viewBox="0 0 100 40" aria-hidden="true"><path d="M0 24h12V12h16V0h28v9h16v10h20v9h8v12H0z"/></svg>
     <svg className="site-cloud cloud-two" viewBox="0 0 100 40" aria-hidden="true"><path d="M0 24h12V12h16V0h28v9h16v10h20v9h8v12H0z"/></svg>
-    <img className="site-environment" src="/site/hero-home.webp" alt="A sunlit cottage with a four-bed garden, workbench and roadside mailbox" width="1448" height="1086" fetchPriority={small ? 'auto' : 'high'}/>
+    <picture className="site-environment-picture">
+      <source type="image/avif" srcSet={SITE_IMAGES.hero.avifSrcSet} sizes={small ? SITE_IMAGES.hero.smallSizes : SITE_IMAGES.hero.sizes}/>
+      <source type="image/webp" srcSet={SITE_IMAGES.hero.webpSrcSet} sizes={small ? SITE_IMAGES.hero.smallSizes : SITE_IMAGES.hero.sizes}/>
+      <img className="site-environment" src={SITE_IMAGES.hero.fallback} alt="A sunlit cottage with a four-bed garden, workbench and roadside mailbox" width="1448" height="1086" fetchPriority={small ? 'auto' : 'high'} loading={small ? 'lazy' : 'eager'} decoding="async"/>
+    </picture>
     <button type="button" className="site-scene-rooster" aria-label="Meet another rooster" onPointerEnter={() => setPeek(true)} onPointerLeave={() => setPeek(false)} onClick={() => setIdentity((identity + 1) % BIRDS.length)}>
       <img src={bird(BIRDS[identity], peek ? 'peek' : 'idle')} width="64" height="80" alt=""/><span className="site-rooster-shadow"/>
     </button>
@@ -112,7 +116,7 @@ function GuideNavigation({ current }: { current?: string }) {
 function DocsIndex({ onSearch }: { onSearch: () => void }) {
   const [filter, setFilter] = useState('');
   const results = searchArticles(filter);
-  return <div className="site-docs-index"><div className="site-guide-welcome"><div><h1>Player handbook</h1><p>How to play, care for your rooster and manage what you own.</p></div><img className="site-book-illustration" src="/site/handbook.webp" width="768" height="512" alt="" loading="lazy"/></div>
+  return <div className="site-docs-index"><div className="site-guide-welcome"><div><h1>Player handbook</h1><p>How to play, care for your rooster and manage what you own.</p></div><picture className="site-handbook-picture"><source type="image/avif" srcSet={SITE_IMAGES.handbook.avifSrcSet} sizes={SITE_IMAGES.handbook.sizes}/><source type="image/webp" srcSet={SITE_IMAGES.handbook.webpSrcSet} sizes={SITE_IMAGES.handbook.sizes}/><img className="site-book-illustration" src="/site/handbook-560.webp" width="768" height="512" alt="" loading="lazy" decoding="async"/></picture></div>
     <label className="site-guide-search"><span className="site-search-glass"/><input type="search" value={filter} onChange={e => setFilter(e.target.value)} placeholder="What would you like to know?" aria-label="Find a guide article"/><button type="button" onClick={onSearch} aria-label="Open focused guide search"><Icon name="focus" size={19}/></button></label>
     {filter.trim() ? <section className="site-index-results" aria-live="polite"><p className="site-result-label">{results.length ? `${results.length} ${results.length === 1 ? 'answer' : 'answers'}` : 'No matches for that one.'}</p>{results.map(article => <ArticleResult article={article} key={article.slug}/>)}{!results.length && <button className="site-button site-secondary" onClick={() => setFilter('')}>Browse all topics</button>}</section> : <>
       <a className="site-first-guide" href="/docs/first-day"><span className="site-first-egg"><PixelEgg/></span><span><small>Quick start</small><strong>Your first day</strong><span>Choose a world, hatch your rooster and prepare supplies.</span></span><span aria-hidden="true">→</span></a>

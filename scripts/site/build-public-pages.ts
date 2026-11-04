@@ -1,10 +1,16 @@
-import { mkdir, readFile, stat, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, readdir, stat, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { ARTICLES } from '../../src/site/content';
-import { PROJECT } from '../../src/site/project';
+import { PROJECT, SITE_IMAGES } from '../../src/site/project';
 
 export interface PublicPageMetadata { pathname: string; title: string; description: string }
+export interface PublicImagePreload { href: string; srcSet: string; sizes: string; type: 'image/avif' }
+export interface PublicPerformanceHints { siteModule: string; siteStylesheets: string[]; hero?: PublicImagePreload }
+export const HOME_HERO_PRELOAD: PublicImagePreload = {
+  href: SITE_IMAGES.hero.avifDefault, srcSet: SITE_IMAGES.hero.avifSrcSet,
+  sizes: SITE_IMAGES.hero.sizes, type: 'image/avif',
+};
 
 export const PUBLIC_PAGES: readonly PublicPageMetadata[] = [
   { pathname: '/', title: 'NEARlyHuman — A little life. A mind of its own.', description: 'Hatch a rooster NFT, leave a few supplies and watch an AI-led day unfold. A retro life game, with a home, belongings and history of its own.' },
@@ -28,13 +34,50 @@ function attribute(tag: string, name: string): string | undefined {
   return match?.[1] ?? match?.[2] ?? match?.[3];
 }
 
-/** Change only managed head metadata; Vite's body, module scripts and asset
- * links are preserved byte-for-byte. No server renderer or extra runtime. */
-export function pageHtml(template: string, page: PublicPageMetadata, origin: string, socialImage?: string): string {
+const PERFORMANCE_SCRIPT_ID = 'nh-public-performance';
+
+/** Start the public page's critical requests before the lazy React page is
+ * evaluated. The root template also serves old NFT/wallet URLs, so its hints
+ * intentionally apply only to an exact bare homepage visit. */
+export function performanceHead(page: PublicPageMetadata, hints?: PublicPerformanceHints): string {
+  if (!hints) return '';
+  const root = page.pathname === '/';
+  const payload = JSON.stringify({ siteModule: hints.siteModule, siteStylesheets: hints.siteStylesheets, hero: root ? hints.hero : undefined })
+    .replace(/</g, '\\u003c').replace(/\u2028/g, '\\u2028').replace(/\u2029/g, '\\u2029');
+  const gate = root ? "if(location.pathname!=='/'||location.search||location.hash)return;" : '';
+  // Preload CSS as a resource, not an already-applied stylesheet: Vite still
+  // creates/awaits its stylesheet, preventing a dynamic-style first-paint race.
+  return `    <script id="${PERFORMANCE_SCRIPT_ID}">(function(p){${gate}function add(a){if(Array.from(document.head.querySelectorAll('link')).some(function(l){return l.rel===a.rel&&l.getAttribute('href')===a.href}))return;var l=document.createElement('link');Object.keys(a).forEach(function(k){l[k]=a[k]});document.head.appendChild(l)}if(p.hero)add({rel:'preload',as:'image',type:p.hero.type,href:p.hero.href,imageSrcset:p.hero.srcSet,imageSizes:p.hero.sizes,fetchPriority:'high'});p.siteStylesheets.forEach(function(h){add({rel:'preload',as:'style',href:h,crossOrigin:'anonymous'})});add({rel:'modulepreload',href:p.siteModule,crossOrigin:'anonymous'})})(${payload});</script>`;
+}
+
+export async function discoverPublicHints(directory: string, hero?: PublicImagePreload): Promise<PublicPerformanceHints | undefined> {
+  const files = await readdir(path.join(directory, 'assets'));
+  const modules = files.filter(file => /^Site-[A-Za-z\d_-]+\.js$/.test(file));
+  const styles = files.filter(file => /^Site-[A-Za-z\d_-]+\.css$/.test(file));
+  // Small isolated metadata fixtures need no public split chunks. A real
+  // partial/ambiguous Site build must not emit a stale or guessed hint.
+  if (!modules.length && !styles.length) return;
+  if (modules.length !== 1 || styles.length !== 1) throw Error('Expected one public Site module and stylesheet. Build into a clean output directory.');
+  for (const file of [...modules, ...styles]) if (!(await stat(path.join(directory, 'assets', file))).isFile()) throw Error(`Public hint is not a built file: ${file}`);
+  if (hero) {
+    const sources = [hero.href, ...hero.srcSet.split(',').map(item => item.trim().split(/\s+/)[0]!)];
+    if (!hero.sizes.trim()) throw Error('The hero preload needs the same sizes as its picture.');
+    for (const source of new Set(sources)) {
+      if (!/^\/site\/[A-Za-z\d_-]+\.avif$/.test(source)) throw Error(`Unexpected public image hint: ${source}`);
+      if (!(await stat(path.join(directory, source.slice(1)))).isFile()) throw Error(`Missing public preload image: ${source}`);
+    }
+  }
+  return { siteModule: `/assets/${modules[0]}`, siteStylesheets: [`/assets/${styles[0]}`], ...(hero ? { hero } : {}) };
+}
+
+/** Update managed head metadata and resource hints. Vite's body, module
+ * scripts and asset links stay byte-for-byte; no server renderer is added. */
+export function pageHtml(template: string, page: PublicPageMetadata, origin: string, socialImage?: string, performanceHints?: PublicPerformanceHints): string {
   const match = template.match(/^([\s\S]*?<head\b[^>]*>)([\s\S]*?)(<\/head>[\s\S]*)$/i);
   if (!match) throw Error('The Vite template has no document head.');
   const [, before, originalHead, after] = match;
   const head = originalHead!
+    .replace(/<script\b[^>]*\bid=["']nh-public-performance["'][^>]*>[\s\S]*?<\/script>\s*/gi, '')
     .replace(/<title\b[^>]*>[\s\S]*?<\/title>\s*/gi, '')
     .replace(/<meta\b[^>]*>\s*/gi, tag => MANAGED_META.has((attribute(tag, 'name') || attribute(tag, 'property') || '').toLowerCase()) ? '' : tag)
     .replace(/<link\b[^>]*>\s*/gi, tag => (attribute(tag, 'rel') || '').toLowerCase().split(/\s+/).includes('canonical') ? '' : tag);
@@ -53,6 +96,8 @@ export function pageHtml(template: string, page: PublicPageMetadata, origin: str
     const imageUrl = new URL(socialImage, origin).href;
     metadata.push(meta('og:image', imageUrl, true), meta('og:image:alt', 'NEARlyHuman — a domestic pixel art home and garden.', true), meta('twitter:image', imageUrl));
   }
+  const hints = performanceHead(page, performanceHints);
+  if (hints) metadata.push(hints);
   return `${before}${head.trimEnd()}\n${metadata.join('\n')}\n  ${after}`;
 }
 
@@ -73,7 +118,7 @@ export function sitemap(pages: readonly PublicPageMetadata[], origin: string): s
   return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${pages.map(page => `  <url><loc>${escapeMarkup(new URL(page.pathname, origin).href)}</loc></url>`).join('\n')}\n</urlset>\n`;
 }
 
-export async function buildPublicPages(outDir = path.resolve('dist')) {
+export async function buildPublicPages(outDir = path.resolve('dist'), heroPreload = HOME_HERO_PRELOAD) {
   const directory = path.resolve(outDir), origin = new URL(PROJECT.siteUrl).origin;
   if (!origin.startsWith('https://')) throw Error('The public website origin must use HTTPS.');
   const unique = new Set<string>();
@@ -91,14 +136,15 @@ export async function buildPublicPages(outDir = path.resolve('dist')) {
   }
   const socialFile = path.join(directory, 'site', 'social-card.png');
   const socialImage = await stat(socialFile).then(info => info.isFile() && info.size > 0 ? '/site/social-card.png' : undefined).catch(() => undefined);
+  const performanceHints = await discoverPublicHints(directory, heroPreload);
   for (const page of PUBLIC_PAGES) {
     const target = path.join(directory, page.pathname.slice(1), 'index.html');
     await mkdir(path.dirname(target), { recursive: true });
-    await writeFile(target, pageHtml(template, page, origin, socialImage));
+    await writeFile(target, pageHtml(template, page, origin, socialImage, performanceHints));
   }
   await writeFile(path.join(directory, 'sitemap.xml'), sitemap(PUBLIC_PAGES, origin));
   await writeFile(path.join(directory, 'robots.txt'), `User-agent: *\nAllow: /\nDisallow: /api/\nDisallow: /.netlify/\nDisallow: /app\n\nSitemap: ${origin}/sitemap.xml\n`);
-  return { pages: PUBLIC_PAGES.length, articles: ARTICLES.length, assetReferencesPreserved: assets.length, socialImage: !!socialImage };
+  return { pages: PUBLIC_PAGES.length, articles: ARTICLES.length, assetReferencesPreserved: assets.length, socialImage: !!socialImage, earlyPublicHints: !!performanceHints, earlyHeroHint: !!performanceHints?.hero };
 }
 
 if (process.argv[1] && fileURLToPath(import.meta.url) === path.resolve(process.argv[1])) {

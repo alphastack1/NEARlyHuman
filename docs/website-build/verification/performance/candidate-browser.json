@@ -1,0 +1,462 @@
+{
+  "pass": true,
+  "at": "2026-11-04T07:31:19.862Z",
+  "origin": "http://127.0.0.1:5211",
+  "views": [
+    {
+      "heading": "A little life.A mind of its own.",
+      "overflow": false,
+      "images": [
+        {
+          "path": "/site/hero-home-640.avif",
+          "width": 312,
+          "naturalWidth": 312,
+          "loaded": true
+        },
+        {
+          "path": "embedded SVG",
+          "width": 51.19999694824219,
+          "naturalWidth": 96,
+          "loaded": true
+        },
+        {
+          "path": "embedded SVG",
+          "width": 35,
+          "naturalWidth": 96,
+          "loaded": true
+        },
+        {
+          "path": "embedded SVG",
+          "width": 35,
+          "naturalWidth": 96,
+          "loaded": true
+        }
+      ],
+      "preloads": [
+        {
+          "rel": "modulepreload",
+          "as": "",
+          "href": "/assets/rolldown-runtime-XKyaHtl9.js",
+          "priority": "auto"
+        },
+        {
+          "rel": "modulepreload",
+          "as": "",
+          "href": "/assets/preload-helper-BLdHbfdN.js",
+          "priority": "auto"
+        },
+        {
+          "rel": "preload",
+          "as": "image",
+          "href": "/site/hero-home-640.avif",
+          "priority": "high"
+        },
+        {
+          "rel": "preload",
+          "as": "style",
+          "href": "/assets/Site-Bk7vyzDC.css",
+          "priority": "auto"
+        },
+        {
+          "rel": "modulepreload",
+          "as": "",
+          "href": "/assets/Site-DOLYVCRB.js",
+          "priority": "auto"
+        },
+        {
+          "rel": "modulepreload",
+          "as": "script",
+          "href": "/assets/Icons-CdHzsodz.js",
+          "priority": "auto"
+        }
+      ],
+      "requests": [
+        "/",
+        "/assets/index-BffltC9S.js",
+        "/assets/rolldown-runtime-XKyaHtl9.js",
+        "/assets/preload-helper-BLdHbfdN.js",
+        "/site/hero-home-640.avif",
+        "/assets/Site-Bk7vyzDC.css",
+        "/assets/Site-DOLYVCRB.js",
+        "/assets/Icons-CdHzsodz.js",
+        "/assets/latin-400-CLnn3_69.css",
+        "/assets/press-start-2p-latin-400-normal-_wFEWmAB.woff2"
+      ],
+      "viewport": {
+        "width": 390,
+        "height": 844,
+        "dpr": 2
+      },
+      "path": "/",
+      "name": "phone"
+    },
+    {
+      "heading": "A little life.A mind of its own.",
+      "overflow": false,
+      "images": [
+        {
+          "path": "/site/hero-home-960.avif",
+          "width": 296,
+          "naturalWidth": 296,
+          "loaded": true
+        },
+        {
+          "path": "embedded SVG",
+          "width": 51.19999694824219,
+          "naturalWidth": 96,
+          "loaded": true
+        },
+        {
+          "path": "embedded SVG",
+          "width": 32,
+          "naturalWidth": 96,
+          "loaded": true
+        },
+        {
+          "path": "embedded SVG",
+          "width": 32,
+          "naturalWidth": 96,
+          "loaded": true
+        }
+      ],
+      "preloads": [
+        {
+          "rel": "modulepreload",
+          "as": "",
+          "href": "/assets/rolldown-runtime-XKyaHtl9.js",
+          "priority": "auto"
+        },
+        {
+          "rel": "modulepreload",
+          "as": "",
+          "href": "/assets/preload-helper-BLdHbfdN.js",
+          "priority": "auto"
+        },
+        {
+          "rel": "preload",
+          "as": "image",
+          "href": "/site/hero-home-640.avif",
+          "priority": "high"
+        },
+        {
+          "rel": "preload",
+          "as": "style",
+          "href": "/assets/Site-Bk7vyzDC.css",
+          "priority": "auto"
+        },
+        {
+          "rel": "modulepreload",
+          "as": "",
+          "href": "/assets/Site-DOLYVCRB.js",
+          "priority": "auto"
+        },
+        {
+          "rel": "modulepreload",
+          "as": "script",
+          "href": "/assets/Icons-CdHzsodz.js",
+          "priority": "auto"
+        }
+      ],
+      "requests": [
+        "/",
+        "/assets/index-BffltC9S.js",
+        "/assets/rolldown-runtime-XKyaHtl9.js",
+        "/assets/preload-helper-BLdHbfdN.js",
+        "/site/hero-home-960.avif",
+        "/assets/Site-Bk7vyzDC.css",
+        "/assets/Site-DOLYVCRB.js",
+        "/assets/Icons-CdHzsodz.js",
+        "/assets/latin-400-CLnn3_69.css",
+        "/assets/press-start-2p-latin-400-normal-_wFEWmAB.woff2"
+      ],
+      "viewport": {
+        "width": 360,
+        "height": 780,
+        "dpr": 3
+      },
+      "path": "/",
+      "name": "dense-phone"
+    },
+    {
+      "heading": "A little life.A mind of its own.",
+      "overflow": false,
+      "images": [
+        {
+          "path": "/site/hero-home-960.avif",
+          "width": 733.65625,
+          "naturalWidth": 726,
+          "loaded": true
+        },
+        {
+          "path": "embedded SVG",
+          "width": 64,
+          "naturalWidth": 96,
+          "loaded": true
+        },
+        {
+          "path": "embedded SVG",
+          "width": 52,
+          "naturalWidth": 96,
+          "loaded": true
+        },
+        {
+          "path": "embedded SVG",
+          "width": 52,
+          "naturalWidth": 96,
+          "loaded": true
+        },
+        {
+          "path": "embedded SVG",
+          "width": 52,
+          "naturalWidth": 96,
+          "loaded": true
+        }
+      ],
+      "preloads": [
+        {
+          "rel": "modulepreload",
+          "as": "",
+          "href": "/assets/rolldown-runtime-XKyaHtl9.js",
+          "priority": "auto"
+        },
+        {
+          "rel": "modulepreload",
+          "as": "",
+          "href": "/assets/preload-helper-BLdHbfdN.js",
+          "priority": "auto"
+        },
+        {
+          "rel": "preload",
+          "as": "image",
+          "href": "/site/hero-home-640.avif",
+          "priority": "high"
+        },
+        {
+          "rel": "preload",
+          "as": "style",
+          "href": "/assets/Site-Bk7vyzDC.css",
+          "priority": "auto"
+        },
+        {
+          "rel": "modulepreload",
+          "as": "",
+          "href": "/assets/Site-DOLYVCRB.js",
+          "priority": "auto"
+        },
+        {
+          "rel": "modulepreload",
+          "as": "script",
+          "href": "/assets/Icons-CdHzsodz.js",
+          "priority": "auto"
+        }
+      ],
+      "requests": [
+        "/",
+        "/assets/index-BffltC9S.js",
+        "/assets/rolldown-runtime-XKyaHtl9.js",
+        "/assets/preload-helper-BLdHbfdN.js",
+        "/site/hero-home-960.avif",
+        "/assets/Site-Bk7vyzDC.css",
+        "/assets/Site-DOLYVCRB.js",
+        "/assets/Icons-CdHzsodz.js",
+        "/assets/latin-400-CLnn3_69.css",
+        "/assets/press-start-2p-latin-400-normal-_wFEWmAB.woff2"
+      ],
+      "viewport": {
+        "width": 1440,
+        "height": 1000,
+        "dpr": 1
+      },
+      "path": "/",
+      "name": "desktop"
+    },
+    {
+      "heading": "Player handbook",
+      "overflow": false,
+      "images": [
+        {
+          "path": "/site/handbook-320.avif",
+          "width": 280,
+          "naturalWidth": 279,
+          "loaded": true
+        }
+      ],
+      "preloads": [
+        {
+          "rel": "modulepreload",
+          "as": "",
+          "href": "/assets/rolldown-runtime-XKyaHtl9.js",
+          "priority": "auto"
+        },
+        {
+          "rel": "modulepreload",
+          "as": "",
+          "href": "/assets/preload-helper-BLdHbfdN.js",
+          "priority": "auto"
+        },
+        {
+          "rel": "preload",
+          "as": "style",
+          "href": "/assets/Site-Bk7vyzDC.css",
+          "priority": "auto"
+        },
+        {
+          "rel": "modulepreload",
+          "as": "",
+          "href": "/assets/Site-DOLYVCRB.js",
+          "priority": "auto"
+        },
+        {
+          "rel": "modulepreload",
+          "as": "script",
+          "href": "/assets/Icons-CdHzsodz.js",
+          "priority": "auto"
+        }
+      ],
+      "requests": [
+        "/docs",
+        "/assets/index-BffltC9S.js",
+        "/assets/rolldown-runtime-XKyaHtl9.js",
+        "/assets/preload-helper-BLdHbfdN.js",
+        "/assets/Site-Bk7vyzDC.css",
+        "/assets/Site-DOLYVCRB.js",
+        "/assets/Icons-CdHzsodz.js",
+        "/assets/latin-400-CLnn3_69.css",
+        "/assets/press-start-2p-latin-400-normal-_wFEWmAB.woff2",
+        "/site/handbook-320.avif"
+      ],
+      "viewport": {
+        "width": 1440,
+        "height": 1000,
+        "dpr": 1
+      },
+      "path": "/docs",
+      "name": "guide"
+    },
+    {
+      "heading": "Player handbook",
+      "overflow": false,
+      "images": [],
+      "preloads": [
+        {
+          "rel": "modulepreload",
+          "as": "",
+          "href": "/assets/rolldown-runtime-XKyaHtl9.js",
+          "priority": "auto"
+        },
+        {
+          "rel": "modulepreload",
+          "as": "",
+          "href": "/assets/preload-helper-BLdHbfdN.js",
+          "priority": "auto"
+        },
+        {
+          "rel": "preload",
+          "as": "style",
+          "href": "/assets/Site-Bk7vyzDC.css",
+          "priority": "auto"
+        },
+        {
+          "rel": "modulepreload",
+          "as": "",
+          "href": "/assets/Site-DOLYVCRB.js",
+          "priority": "auto"
+        },
+        {
+          "rel": "modulepreload",
+          "as": "script",
+          "href": "/assets/Icons-CdHzsodz.js",
+          "priority": "auto"
+        }
+      ],
+      "requests": [
+        "/docs",
+        "/assets/index-BffltC9S.js",
+        "/assets/rolldown-runtime-XKyaHtl9.js",
+        "/assets/preload-helper-BLdHbfdN.js",
+        "/assets/Site-Bk7vyzDC.css",
+        "/assets/Site-DOLYVCRB.js",
+        "/assets/Icons-CdHzsodz.js",
+        "/assets/latin-400-CLnn3_69.css",
+        "/assets/press-start-2p-latin-400-normal-_wFEWmAB.woff2"
+      ],
+      "viewport": {
+        "width": 390,
+        "height": 844,
+        "dpr": 2
+      },
+      "path": "/docs",
+      "name": "guide-phone"
+    },
+    {
+      "heading": "A small game.A life you own.",
+      "overflow": false,
+      "images": [
+        {
+          "path": "/api/v2/nft/1/image.svg",
+          "width": 270,
+          "naturalWidth": 640,
+          "loaded": true
+        }
+      ],
+      "preloads": [
+        {
+          "rel": "modulepreload",
+          "as": "",
+          "href": "/assets/rolldown-runtime-XKyaHtl9.js",
+          "priority": "auto"
+        },
+        {
+          "rel": "modulepreload",
+          "as": "",
+          "href": "/assets/preload-helper-BLdHbfdN.js",
+          "priority": "auto"
+        },
+        {
+          "rel": "preload",
+          "as": "style",
+          "href": "/assets/Site-Bk7vyzDC.css",
+          "priority": "auto"
+        },
+        {
+          "rel": "modulepreload",
+          "as": "",
+          "href": "/assets/Site-DOLYVCRB.js",
+          "priority": "auto"
+        },
+        {
+          "rel": "modulepreload",
+          "as": "script",
+          "href": "/assets/Icons-CdHzsodz.js",
+          "priority": "auto"
+        }
+      ],
+      "requests": [
+        "/project",
+        "/assets/index-BffltC9S.js",
+        "/assets/rolldown-runtime-XKyaHtl9.js",
+        "/assets/preload-helper-BLdHbfdN.js",
+        "/assets/Site-Bk7vyzDC.css",
+        "/assets/Site-DOLYVCRB.js",
+        "/assets/Icons-CdHzsodz.js",
+        "/assets/latin-400-CLnn3_69.css",
+        "/api/v2/nft/1/image.svg",
+        "/assets/press-start-2p-latin-400-normal-_wFEWmAB.woff2"
+      ],
+      "viewport": {
+        "width": 390,
+        "height": 844,
+        "dpr": 2
+      },
+      "path": "/project",
+      "name": "project"
+    }
+  ],
+  "handoff": {
+    "path": "/app",
+    "surface": "game"
+  },
+  "errors": [],
+  "blocked": [],
+  "scope": "GET-only browser QA. No cache/profile clearing, signing, paid AI, or financial writes."
+}
