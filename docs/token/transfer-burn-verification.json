@@ -1,0 +1,39 @@
+{
+  "scope": "Actual ephemeral local EVM execution only; no external RPC, private credentials, deployed game mutation, AI or financial service operation.",
+  "compiler": "0.8.38+commit.1835d247.Emscripten.clang",
+  "chainId": 31337,
+  "cases": [
+    "Explicit enabled constructor, controller, fixed 50bps and six decimals",
+    "Mint is untaxed and one 100-NHC transfer delivers99.5, burns0.5, emits matching supply events",
+    "Floor rounding, zero and first nonzero 200-micro threshold",
+    "Self-transfer requires gross balance and only removes its burn",
+    "Only immutable controller may toggle, mint or call explicit burns",
+    "Controller toggles off and back on without a mutable rate or recipient",
+    "transferFrom consumes gross allowance, including self-transfer; infinite allowance stays infinite",
+    "Mined insufficient-balance transferFrom reverts its prior allowance write atomically",
+    "Explicit vault burn reduces supply without a second transfer fee",
+    "Maximum uint256 preview and actual transfer do not overflow fee multiplication",
+    "Backed purses and gross withdrawal, constructor burn=true",
+    "250-NHC wallet birth is allowance-backed direct burn, constructor burn=true",
+    "Purse birth preserves backing and owner-only toggle forwarding, constructor burn=true",
+    "After owner enables burn, ordinary wallet-to-vault transfers are taxed too; initial flag=true",
+    "Backed purses and gross withdrawal, constructor burn=false",
+    "250-NHC wallet birth is allowance-backed direct burn, constructor burn=false",
+    "Purse birth preserves backing and owner-only toggle forwarding, constructor burn=false",
+    "After owner enables burn, ordinary wallet-to-vault transfers are taxed too; initial flag=false"
+  ],
+  "protectedDeploymentFiles": {
+    "before": "1b8c6f65b80e48498dd1a8980bf7fbd78808f81eeb02cd144bb65e1c08b374c6",
+    "after": "1b8c6f65b80e48498dd1a8980bf7fbd78808f81eeb02cd144bb65e1c08b374c6",
+    "unchanged": true
+  },
+  "pass": true,
+  "artifact": {
+    "runtimeBytes": 3310,
+    "bytecodeSha256": "54d6922b20f4cb9aa281fe23a64eff1a34ccf37891d79ae2ea3b2e95ebdfa37d",
+    "sources": {
+      "contracts/token/NHCTransferBurn.sol": "83a10898a2148b32b8eaad8fa7b032825261f5a10093d2f1cd217dc101169b83",
+      "contracts/token/test/TransferBurnHarness.sol": "0edc9bc40067aa5a69881513b8425f79ff0f794521bafa4102e2ea65837de10c"
+    }
+  }
+}
