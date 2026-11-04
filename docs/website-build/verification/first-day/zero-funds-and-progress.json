@@ -1,13 +1,14 @@
 {
   "pass": true,
-  "time": "2026-11-04T09:10:03.618Z",
+  "time": "2026-11-04T09:28:17.821Z",
   "checks": [
     {
       "check": "Known connected zero testnet balance has visible working faucet link",
       "width": 390,
       "height": 844,
       "balance": "0 ETH",
-      "link": "https://faucet.testnet.chain.robinhood.com/"
+      "link": "https://faucet.testnet.chain.robinhood.com/",
+      "computedFontSize": "13px"
     },
     {
       "check": "Controlled balance changes on return focus and faucet link disappears",
@@ -26,7 +27,8 @@
       "width": 320,
       "height": 568,
       "balance": "0 ETH",
-      "link": "https://faucet.testnet.chain.robinhood.com/"
+      "link": "https://faucet.testnet.chain.robinhood.com/",
+      "computedFontSize": "13px"
     },
     {
       "check": "Controlled balance changes on return focus and faucet link disappears",

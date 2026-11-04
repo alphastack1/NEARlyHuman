@@ -35,3 +35,9 @@ After the owner's subsequent sign-in, the Codex Browser can open the repository,
 At **15:48:23 Bangkok time**, the three-wave website/app UI refinement was published once through Netlify as deployment `6aeaf152f8d1e84f51b04ced`, from local candidate `36c5951`. It unifies menu materials and colors, improves responsive navigation/guide presentation/search context, and fixes selected/hover, switch and empty-review details. [Review waves, final screenshots and hosted checks](COHESION_REFINEMENT.md).
 
 Hosted public/app flows, both testnet services and the unchanged function runtime/schedule passed. Gameplay, economic rules, canonical rooster art, source archive and financial/service state were not changed. No intermediate production deployment was used.
+
+## Landing-to-first-day follow-up
+
+At **16:13:28 Bangkok time**, deployment `6aeaf733faf58a2bc25f99f3` published the focused onboarding fixes from `f83a399`: critical-startup readiness, supply-target preservation, concise welcome/network help, zero-balance funding/return refresh and a quieter preparation escape. [Full review and real first-day evidence](FIRST_DAY_REFINEMENT.md).
+
+MAPLE #8 was actually hatched on Robinhood testnet and completed day 1 using five real Jev responses and the standard onchain save. Ownership, level 1/alive state and absence of a pending request were verified afterward. This created one authorized NFT/day and their ordinary financial records; it did not alter rules, budgets, credentials, previous ledgers, canonical art or mainnet. The native NEAR readback remains healthy; no fresh Meteor mint is claimed for this follow-up.

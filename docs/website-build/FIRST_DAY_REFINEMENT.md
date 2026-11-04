@@ -18,4 +18,22 @@ The production build passes, including 19 public metadata pages and the unchange
 
 ## Hosted verification
 
-The final live check uses one developer-wallet Robinhood testnet NFT and its first day. It will exercise the actual hosted screens, two onchain transactions and real Jev preparation, with public transaction/state evidence and no private keys in the browser or repository. A key-backed test provider exercises the app's EIP-1193 interface; this does not claim to test a native Rabby extension's own confirmation dialog. Results and hosted deployment identity are recorded after the run.
+Published once at **16:13:28 Bangkok time** (09:13:28 UTC), Netlify deployment `6aeaf733faf58a2bc25f99f3`, from local source commit `f83a399`. This was a direct deployment of the verified build; its Netlify Git commit reference is null. The hosted compiled files match the local candidate, and the three existing Node24/API-v2 functions retain background preparation and the five-minute reconciliation schedule. The 23 read-only service/source checks pass for both testnets.
+
+The actual hosted first-day check **passed**, completed at 16:24:43 Bangkok time:
+
+- Minted **MAPLE #8** into the developer wallet on Robinhood testnet, with the existing procedural rooster generator.
+- Followed the real egg reveal and Meet MAPLE → Prepare day 1 controls. Packed Daisy seed, Water and Bread through Garden/Care tab changes; the final parcel preserved all three.
+- Used one free wallet sign-in, one player hatch transaction and one player day-start transaction. Jev returned **five real responses**, followed by the normal relay's onchain finalization.
+- Watched the complete saved day without skipping to the end. The morning post, supply collection, household routines, planting and bedtime played through. The ending reports Daisy planted and offers Prepare tomorrow.
+- Independent public readback confirms owner `0x131C15fD2d9151F361213d8e8BC2a188Dc0149c6`, day 1, level 1, alive, revision 1 and no pending request. The dynamic NFT portrait uses canonical rooster art and reflects the saved life.
+
+[Open MAPLE's public life](https://nearlyhuman.netlify.app/?rooster=8&chainId=46630&collection=0x30cb5213fa94020a95893ddb6b07470dbf7a9efc) · [mint transaction](https://explorer.testnet.chain.robinhood.com/tx/0xa2ce311657fef99a2729f324434b0a372871436de2268772255f69dca95dade1) · [day-start transaction](https://explorer.testnet.chain.robinhood.com/tx/0xe56ad21c8e41930a527648fe5360058abe821126c829eeffb098ca3c40ead9a0).
+
+The real run used a key-backed test provider at the app's EIP-1193 interface. The private key stayed in the local operator process, which was terminated after the run. This verifies actual player transactions, authentication and hosted service results; it does not claim to test the native Rabby extension's own dialog. The operator initially rejected the app's canonical root NFT URL, then needed a fresh browser binding when resuming. These were test-tool restrictions, fixed without production edits, a second mint, a duplicate day or any ledger reset. The run resumed the same day-zero NFT before its first day-start transaction. Recorded end-to-end wall time includes that instrumentation recovery and is not a user-speed benchmark.
+
+The actual paid/chain run covers Robinhood testnet. Native NEAR remains covered by hosted service readback and network/UI checks; no fresh Meteor mint is claimed in this pass. No mainnet operation was performed.
+
+[Real run and progress record](verification/first-day/live-run.json) · [final public NFT/life readback](verification/first-day/hosted-life.json) · [hosted asset/function proof](verification/first-day/hosted-assets.json) · [both testnets' service/source proof](verification/first-day/hosted-services.json).
+
+[Hatched NFT](verification/first-day/maple-hatched.png) · [packed supplies](verification/first-day/packed-first-day.png) · [first-day review](verification/first-day/review-first-day.png) · [saving](verification/first-day/saving-day.png) · [morning post](verification/first-day/first-post.png) · [day completed](verification/first-day/day-finished.png) · [empty-wallet help](verification/first-day/empty-wallet.png).

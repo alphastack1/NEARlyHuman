@@ -1,0 +1,85 @@
+{
+  "pass": true,
+  "at": "2026-11-04T09:14:25.060Z",
+  "deploy": {
+    "id": "6aeaf733faf58a2bc25f99f3",
+    "state": "ready",
+    "commit": null,
+    "published": "2026-11-04T09:13:28.604Z"
+  },
+  "checked": [
+    {
+      "path": "/assets/index-D5vt-e8g.js",
+      "bytes": 221579,
+      "sha256": "e5f3b7fc4c56287669b20513de1a90c473984736658e4c3daccf274db1595702"
+    },
+    {
+      "path": "/assets/CartridgeOpening-B876KVTq.css",
+      "bytes": 3576,
+      "sha256": "b70892e5a441db2790f72e10e35c78bd3b18b6e89e4920f322fc42a69a7b67bc"
+    },
+    {
+      "path": "/assets/CartridgeOpening-Ml6Rkwaq.js",
+      "bytes": 26827,
+      "sha256": "3399c98e5486606d00e1a3e7ea67bf20f9db0c9191653fdb523bfbe413dd296f"
+    },
+    {
+      "path": "/assets/index-CLz-1EHE.css",
+      "bytes": 692,
+      "sha256": "56a801854abd725d369bd682593d9ff13235709990fadcfb22f375cb9839c8db"
+    },
+    {
+      "path": "/assets/Site-BdWWJFae.css",
+      "bytes": 57817,
+      "sha256": "300f010d8c946aeaea87cb951556541a22fc2a0f85336832864096a5027f6653"
+    },
+    {
+      "path": "/assets/Site-BEmiAhg3.js",
+      "bytes": 75472,
+      "sha256": "7d6b83370ed0907fe1ab2ca387abc481e7ccda8082fca341afb96bd92dfc45ff"
+    },
+    {
+      "path": "/assets/V2App-B3FKslP0.css",
+      "bytes": 51104,
+      "sha256": "012c95a69f7406eaef024582f9790949008fa000d9fd0d0bcac1841591f35b3b"
+    },
+    {
+      "path": "/assets/V2App-C1xNw_Al.js",
+      "bytes": 207432,
+      "sha256": "080e02d128c9e451f7f834b4d9ce1bcc6c0cf9bc3b8e1e705829787fb64c15b8"
+    }
+  ],
+  "functions": [
+    {
+      "name": "api",
+      "runtime": "nodejs24.x",
+      "mode": "stream",
+      "buildData": {
+        "bootstrapVersion": "2.14.0",
+        "runtimeAPIVersion": 2
+      },
+      "schedule": null
+    },
+    {
+      "name": "prepare-background",
+      "runtime": "nodejs24.x",
+      "mode": "background",
+      "buildData": {
+        "bootstrapVersion": "2.14.0",
+        "runtimeAPIVersion": 2
+      },
+      "schedule": null
+    },
+    {
+      "name": "reconcile",
+      "runtime": "nodejs24.x",
+      "mode": "stream",
+      "buildData": {
+        "bootstrapVersion": "2.14.0",
+        "runtimeAPIVersion": 2
+      },
+      "schedule": "*/5 * * * *"
+    }
+  ],
+  "noFinancialWrites": true
+}
