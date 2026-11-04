@@ -24,17 +24,33 @@ function WindowBar({ title, icon = 'house', children }: { title: string; icon?: 
 }
 function Header({ path, onSearch }: { path: string; onSearch: () => void }) {
   const [menu, setMenu] = useState(false);
+  const menuTrigger = useRef<HTMLButtonElement>(null), menuPanel = useRef<HTMLElement>(null);
+  useEffect(() => {
+    if (!menu) return;
+    const outside = (event: PointerEvent) => {
+      if (event.target instanceof Node && !menuTrigger.current?.contains(event.target) && !menuPanel.current?.contains(event.target)) setMenu(false);
+    };
+    const escape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') { event.preventDefault(); setMenu(false); menuTrigger.current?.focus(); }
+    };
+    document.addEventListener('pointerdown', outside);
+    document.addEventListener('keydown', escape);
+    return () => { document.removeEventListener('pointerdown', outside); document.removeEventListener('keydown', escape); };
+  }, [menu]);
+  const openSearch = () => { setMenu(false); onSearch(); };
   return <header className="site-header">
     <div className="site-brandbar"><a href="/" className="site-brand" aria-label="NEARlyHuman home"><span className="site-brand-icon"><BrandMark/></span><span>NEARlyHuman</span></a>
       <a href="/docs/worlds-wallets" className="site-worlds"><span className="site-world-names">NEAR + Robinhood · </span>Testnet</a>
+      <button ref={menuTrigger} className="site-more" type="button" aria-label="More pages" aria-expanded={menu} aria-controls="site-more-pages" onClick={() => setMenu(!menu)}><Icon name={menu ? 'close' : 'menu'} size={18}/></button>
       <span className="site-brand-squares" aria-hidden="true"><i/><i/></span>
     </div>
     <div className="site-navrow"><nav aria-label="Main navigation">
       <a href="/" className={`site-tab ${path === '/' ? 'is-current' : ''}`} aria-current={path === '/' ? 'page' : undefined}>Home</a>
       <a href="/the-game" className={`site-tab ${path === '/the-game' ? 'is-current' : ''}`} aria-current={path === '/the-game' ? 'page' : undefined}>The game</a>
       <a href="/docs" className={`site-tab ${path.startsWith('/docs') ? 'is-current' : ''}`} aria-current={path.startsWith('/docs') ? 'page' : undefined}>Guide</a>
-    </nav><div className="site-nav-actions"><button type="button" className="site-search-toggle" onClick={onSearch} aria-label="Search the guide"><span className="site-search-glass"/><span className="site-search-label">Search</span><kbd>Ctrl K</kbd></button><AppLink/><button className="site-more" type="button" aria-label="More pages" aria-expanded={menu} onClick={() => setMenu(!menu)}><Icon name={menu ? 'close' : 'menu'} size={18}/></button></div></div>
-    {menu && <nav className="site-more-menu" aria-label="More pages"><a href="/project">About the project<Arrow/></a><a href="/docs/contracts">Contracts & source<Arrow/></a><button onClick={() => { setMenu(false); onSearch(); }}>Search the guide<span className="site-search-glass"/></button></nav>}
+      <a href="/project" className={`site-tab site-project-tab ${path === '/project' ? 'is-current' : ''}`} aria-current={path === '/project' ? 'page' : undefined}>Project</a>
+    </nav><div className="site-nav-actions"><button type="button" className="site-search-toggle" onClick={openSearch} aria-label="Search the guide"><span className="site-search-glass"/><span className="site-search-label">Search</span><kbd>Ctrl K</kbd></button><AppLink/></div></div>
+    {menu && <nav ref={menuPanel} id="site-more-pages" className="site-more-menu" aria-label="More pages"><a href="/project" aria-current={path === '/project' ? 'page' : undefined}>About the project<Arrow/></a><a href="/docs/contracts" aria-current={path === '/docs/contracts' ? 'page' : undefined}>Contracts & source<Arrow/></a><button type="button" onClick={openSearch}>Search the guide<span className="site-search-glass"/></button></nav>}
   </header>;
 }
 
@@ -99,26 +115,24 @@ function GamePage() {
 function ArticleResult({ article, onNavigate }: { article: GuideArticle; onNavigate?: () => void }) {
   return <a className="site-search-result" href={`/docs/${article.slug}`} onClick={onNavigate}><Icon name={GROUP_ICONS[article.group] || 'book'} size={20}/><span><strong>{article.title}</strong><small>{article.summary}</small></span><span aria-hidden="true">→</span></a>;
 }
-function Search({ onClose }: { onClose: () => void }) {
-  const [query, setQuery] = useState('');
+function Search({ query, onQueryChange, onClose }: { query: string; onQueryChange: (query: string) => void; onClose: () => void }) {
   const dialog = useRef<HTMLDialogElement>(null), input = useRef<HTMLInputElement>(null);
   const results = searchArticles(query);
   useEffect(() => { const node = dialog.current!; node.showModal(); input.current?.focus(); return () => { if (node.open) node.close(); }; }, []);
-  return <dialog ref={dialog} className="site-search-dialog" onCancel={onClose} onClick={event => { if (event.target === dialog.current) { const rect = dialog.current!.getBoundingClientRect(); if (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom) onClose(); } }}>
+  return <dialog ref={dialog} className="site-search-dialog" onCancel={onClose} onKeyDownCapture={event => { if (event.key === 'Escape') { event.preventDefault(); event.stopPropagation(); onClose(); } }} onClick={event => { if (event.target === dialog.current) { const rect = dialog.current!.getBoundingClientRect(); if (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom) onClose(); } }}>
     <WindowBar title="Search the guide" icon="book"><button type="button" onClick={onClose} aria-label="Close search"><Icon name="close" size={15}/></button></WindowBar>
-    <div className="site-dialog-search"><span className="site-search-glass"/><input ref={input} type="search" value={query} maxLength={160} onChange={e => setQuery(e.target.value)} placeholder="Try seeds, wallet or saved days…" aria-label="Search the guide" onKeyDown={e => { if (e.key === 'ArrowDown') { e.preventDefault(); dialog.current?.querySelector<HTMLAnchorElement>('.site-search-result')?.focus(); } }}/>{query ? <button className="site-clear-search" type="button" aria-label="Clear search" onClick={() => { setQuery(''); input.current?.focus(); }}><Icon name="close" size={14}/></button> : <kbd>Esc</kbd>}</div>
+    <div className="site-dialog-search"><span className="site-search-glass"/><input ref={input} type="search" value={query} maxLength={160} onChange={e => onQueryChange(e.target.value)} placeholder="Try seeds, wallet or saved days…" aria-label="Search the guide" onKeyDown={e => { if (e.key === 'ArrowDown') { e.preventDefault(); dialog.current?.querySelector<HTMLAnchorElement>('.site-search-result')?.focus(); } }}/>{query ? <button className="site-clear-search" type="button" aria-label="Clear search" onClick={() => { onQueryChange(''); input.current?.focus(); }}><Icon name="close" size={14}/></button> : <kbd>Esc</kbd>}</div>
     <div className="site-search-results" aria-live="polite">{query.trim() ? results.length ? <><div className="site-result-label">{results.length} {results.length === 1 ? 'answer' : 'answers'}</div>{results.map(a => <ArticleResult key={a.slug} article={a} onNavigate={onClose}/>)}</> : <div className="site-no-results"><Icon name="leaf" size={28}/><h2>No matching articles.</h2><p>Try a shorter word, or browse the guide.</p><SectionLink href="/docs">Browse the guide</SectionLink></div> : <><div className="site-result-label">Start here</div>{['first-day', 'worlds-wallets', 'care-supplies', 'troubleshooting'].map(slug => getArticle(slug)).filter((a): a is GuideArticle => !!a).map(a => <ArticleResult key={a.slug} article={a} onNavigate={onClose}/>)}</>}</div>
   </dialog>;
 }
 function GuideNavigation({ current }: { current?: string }) {
   return <nav className="site-guide-nav" aria-label="Guide chapters">{GUIDE_GROUPS.map(group => <div key={group.id}><h2><Icon name={GROUP_ICONS[group.id] || 'book'} size={15}/>{group.title}</h2>{ARTICLES.filter(a => a.group === group.id).map(article => <a href={`/docs/${article.slug}`} key={article.slug} className={current === article.slug ? 'is-current' : ''} aria-current={current === article.slug ? 'page' : undefined}>{article.title}</a>)}</div>)}<a className="site-guide-home" href="/">← Back to website</a></nav>;
 }
-function DocsIndex({ onSearch }: { onSearch: () => void }) {
-  const [filter, setFilter] = useState('');
+function DocsIndex({ query: filter, onQueryChange, onSearch }: { query: string; onQueryChange: (query: string) => void; onSearch: () => void }) {
   const results = searchArticles(filter);
   return <div className="site-docs-index"><div className="site-guide-welcome"><div><h1>Player handbook</h1><p>How to play, care for your rooster and manage what you own.</p></div><picture className="site-handbook-picture"><source type="image/avif" srcSet={SITE_IMAGES.handbook.avifSrcSet} sizes={SITE_IMAGES.handbook.sizes}/><source type="image/webp" srcSet={SITE_IMAGES.handbook.webpSrcSet} sizes={SITE_IMAGES.handbook.sizes}/><img className="site-book-illustration" src="/site/handbook-560.webp" width="768" height="512" alt="" loading="lazy" decoding="async"/></picture></div>
-    <label className="site-guide-search"><span className="site-search-glass"/><input type="search" value={filter} onChange={e => setFilter(e.target.value)} placeholder="What would you like to know?" aria-label="Find a guide article"/><button type="button" onClick={onSearch} aria-label="Open focused guide search"><Icon name="focus" size={19}/></button></label>
-    {filter.trim() ? <section className="site-index-results" aria-live="polite"><p className="site-result-label">{results.length ? `${results.length} ${results.length === 1 ? 'answer' : 'answers'}` : 'No matches for that one.'}</p>{results.map(article => <ArticleResult article={article} key={article.slug}/>)}{!results.length && <button className="site-button site-secondary" onClick={() => setFilter('')}>Browse all topics</button>}</section> : <>
+    <label className="site-guide-search"><span className="site-search-glass"/><input type="search" value={filter} maxLength={160} onChange={e => onQueryChange(e.target.value)} placeholder="What would you like to know?" aria-label="Find a guide article"/><button type="button" onClick={onSearch} aria-label="Open focused guide search"><Icon name="focus" size={19}/></button></label>
+    {filter.trim() ? <section className="site-index-results" aria-live="polite"><p className="site-result-label">{results.length ? `${results.length} ${results.length === 1 ? 'answer' : 'answers'}` : 'No matches for that one.'}</p>{results.map(article => <ArticleResult article={article} key={article.slug}/>)}{!results.length && <button className="site-button site-secondary" onClick={() => onQueryChange('')}>Browse all topics</button>}</section> : <>
       <a className="site-first-guide" href="/docs/first-day"><span className="site-first-egg"><PixelEgg/></span><span><small>Quick start</small><strong>Your first day</strong><span>Choose a world, hatch your rooster and prepare supplies.</span></span><span aria-hidden="true">→</span></a>
       <div className="site-guide-groups">{GUIDE_GROUPS.map(group => <section key={group.id}><div className="site-group-heading"><Icon name={GROUP_ICONS[group.id] || 'book'} size={20}/><h2>{group.title}</h2></div>{ARTICLES.filter(a => a.group === group.id && a.slug !== 'first-day').map(article => <a href={`/docs/${article.slug}`} key={article.slug}><span>{article.title}</span><span aria-hidden="true">→</span></a>)}</section>)}</div>
     </>}
@@ -155,7 +169,7 @@ function DocsArticle({ article, onSearch }: { article: GuideArticle; onSearch: (
   const related = article.related.map(slug => getArticle(slug)).filter((a): a is GuideArticle => !!a);
   return <div className="site-docs-shell"><aside className="site-docs-sidebar"><button type="button" className="site-sidebar-search" onClick={onSearch}><span className="site-search-glass"/>Search the guide…<kbd>⌕</kbd></button><GuideNavigation current={article.slug}/></aside>
     <div className="site-mobile-guide"><details><summary><Icon name="book" size={17}/>Guide contents<span aria-hidden="true">⌄</span></summary><GuideNavigation current={article.slug}/></details><button type="button" onClick={onSearch} aria-label="Search the guide"><span className="site-search-glass"/></button></div>
-    <article className="site-article"><nav className="site-breadcrumbs" aria-label="Breadcrumb"><a href="/docs">Guide</a><span>/</span><span>{group?.title}</span></nav><h1>{article.title}</h1><p className="site-article-summary">{article.summary}</p>
+    <article className="site-article" data-guide={article.slug}><nav className="site-breadcrumbs" aria-label="Breadcrumb"><a href="/docs">Guide</a><span>/</span><span>{group?.title}</span></nav><h1>{article.title}</h1><p className="site-article-summary">{article.summary}</p>
       {article.slug === 'contracts' && <Contracts/>}
       {article.slug === 'nft-purse' && <div className="site-ownership-diagram"><Rooster seed="SAGE"/><span>One life</span><i aria-hidden="true"/><Icon name="house" size={32}/><i aria-hidden="true"/><Icon name="book" size={30}/><i aria-hidden="true"/><Icon name="wallet" size={30}/></div>}
       {article.sections.map(section => <section key={section.id} id={section.id} className="site-article-section"><h2><a href={`#${section.id}`}>{section.title}<span aria-hidden="true">#</span></a></h2>{section.paragraphs?.map((text, i) => <p key={i}>{text}</p>)}{section.bullets && <ul>{section.bullets.map((text, i) => <li key={i}>{text}</li>)}</ul>}{section.table && <div className="site-table-wrap" tabIndex={0} aria-label={`${section.title} table`}><table><thead><tr>{section.table.headers.map((heading, i) => <th key={i} scope="col">{heading}</th>)}</tr></thead><tbody>{section.table.rows.map((row, i) => <tr key={i}>{row.map((cell, j) => j === 0 ? <th scope="row" key={j}>{cell}</th> : <td key={j}>{cell}</td>)}</tr>)}</tbody></table></div>}{section.links && <div className="site-article-links">{section.links.map(link => /^https?:/.test(link.href) ? <External href={link.href} key={link.href}>{link.label}</External> : <SectionLink href={link.href} key={link.href}>{link.label}</SectionLink>)}</div>}</section>)}
@@ -175,7 +189,7 @@ function NotFound({ article = false }: { article?: boolean }) {
   return <section className="site-not-found"><span className="site-eyebrow">404 / Page not found</span><div className="site-lost-mail" aria-hidden="true"><Icon name="mail" size={76}/><Icon name="leaf" size={32}/></div><h1>{article ? 'Guide page not found.' : 'Page not found.'}</h1><p>{article ? 'Browse the guide to find the article you need.' : 'This page isn’t here. Return home or open the app.'}</p><div className="site-hero-actions"><a className="site-button site-primary" href={article ? '/docs' : '/'}>{article ? 'Browse the guide' : 'Back home'}<span aria-hidden="true">→</span></a><SectionLink href={PROJECT.appHref}>Open App</SectionLink></div></section>;
 }
 function Footer() {
-  return <footer className="site-footer"><a href="/" className="site-footer-tag"><Icon name="leaf" size={17}/>NEARlyHuman · An AI-led life game</a><nav aria-label="Footer"><a href="/project">The project</a><a href="/docs/contracts">Contracts</a><External href={PROJECT.sourceUrl}>Source</External><a href="/docs/privacy-data">Data & privacy</a></nav></footer>;
+  return <footer className="site-footer"><a href="/" className="site-footer-tag"><Icon name="leaf" size={17}/>NEARlyHuman · An AI-led life game</a><nav aria-label="Footer"><a href="/project">The project</a><a href="/docs/contracts">Contracts & source</a><a href="/docs/privacy-data">Data & privacy</a></nav></footer>;
 }
 
 export default function Site() {
@@ -183,6 +197,7 @@ export default function Site() {
   const slug = path.startsWith('/docs/') ? path.slice(6) : undefined;
   const article = slug ? getArticle(slug) : undefined;
   const [search, setSearch] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
   const title = path === '/' ? 'A little life. A mind of its own.' : path === '/the-game' ? 'The game' : path === '/docs' ? 'The player handbook' : path === '/project' ? 'The project' : article?.title || 'Page not found';
   useEffect(() => {
     document.title = path === '/' ? `NEARlyHuman — ${title}` : `${title} · NEARlyHuman`;
@@ -192,5 +207,5 @@ export default function Site() {
     const key = (e: KeyboardEvent) => { if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); setSearch(v => !v); } };
     window.addEventListener('keydown', key); return () => window.removeEventListener('keydown', key);
   }, [title, path, article]);
-  return <div className="site"><a className="site-skip-link" href="#site-main">Skip to content</a><div className={`site-window ${path.startsWith('/docs/') && article ? 'site-reading-window' : ''}`}><Header path={path} onSearch={() => setSearch(true)}/><main id="site-main">{path === '/' ? <Home/> : path === '/the-game' ? <GamePage/> : path === '/docs' ? <DocsIndex onSearch={() => setSearch(true)}/> : article ? <DocsArticle article={article} onSearch={() => setSearch(true)}/> : path === '/project' ? <ProjectPage/> : <NotFound article={!!slug}/>}</main><Footer/></div>{search && <Search onClose={() => setSearch(false)}/>}</div>;
+  return <div className="site"><a className="site-skip-link" href="#site-main">Skip to content</a><div className={`site-window ${path.startsWith('/docs/') && article ? 'site-reading-window' : ''}`}><Header path={path} onSearch={() => setSearch(true)}/><main id="site-main">{path === '/' ? <Home/> : path === '/the-game' ? <GamePage/> : path === '/docs' ? <DocsIndex query={searchQuery} onQueryChange={setSearchQuery} onSearch={() => setSearch(true)}/> : article ? <DocsArticle article={article} onSearch={() => setSearch(true)}/> : path === '/project' ? <ProjectPage/> : <NotFound article={!!slug}/>}</main><Footer/></div>{search && <Search query={searchQuery} onQueryChange={setSearchQuery} onClose={() => setSearch(false)}/>}</div>;
 }

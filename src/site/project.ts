@@ -13,7 +13,7 @@ export const SITE_IMAGES = {
     avifSrcSet: imageSet('hero-home', [640, 960, 1448], 'avif'),
     webpSrcSet: imageSet('hero-home', [640, 960, 1448], 'webp'),
     fallback: '/site/hero-home-960.webp',
-    sizes: '(max-width: 360px) calc(100vw - 64px), (max-width: 640px) calc(100vw - 78px), (max-width: 999px) calc(53.1vw - 82px), (max-width: 1150px) calc(57.6vw - 87px), (max-width: 1499px) calc(57.6vw - 103px), 730px',
+    sizes: '(max-width: 360px) calc(100vw - 64px), (max-width: 640px) calc(100vw - 78px), (max-width: 999px) calc(53.1vw - 82px), (max-height: 650px) 418px, (max-width: 1150px) and (max-height: 850px) min(578px, calc(57.6vw - 87px)), (max-height: 850px) min(578px, calc(57.6vw - 103px)), (max-width: 1150px) calc(57.6vw - 87px), (max-width: 1499px) calc(57.6vw - 103px), 730px',
     smallSizes: '(max-width: 640px) calc(100vw - 72px), (max-width: 999px) 50vw, 700px',
   },
   handbook: {

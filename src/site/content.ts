@@ -35,8 +35,7 @@ export const ARTICLES: readonly GuideArticle[] = [
     summary: 'Hatch a rooster, choose supplies and prepare its first day.',
     sections: [
       { id: 'choose-a-world', title: 'Choose a world', paragraphs: [
-        'Open the app and choose NEAR Testnet or Robinhood Testnet. Connect the matching wallet when you are ready to hatch.',
-        'Meteor connects to native NEAR. Rabby or another EVM wallet connects to Robinhood. Each world keeps its own lives and balances.',
+        'Choose NEAR Testnet with Meteor, or Robinhood Testnet with Rabby or another EVM wallet. Connect when you are ready to hatch. Each world keeps its own lives and balances.',
       ], links: [guide('worlds-wallets', 'Wallets & testnet funds')] },
       { id: 'hatch-a-life', title: 'Hatch your rooster', paragraphs: [
         'Give your rooster a name and confirm its hatch in your wallet. Its original artwork is generated from its seed; this is your own NFT and saved home.',

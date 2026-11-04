@@ -2,18 +2,18 @@
 .option-row.title-screen-link{text-decoration:none}
 .cartridge-title{width:min(92%,760px);margin-top:-4%;display:flex;flex-direction:column;align-items:center;gap:clamp(28px,8vh,64px);visibility:hidden;pointer-events:none}
 .opening-title .cartridge-title,.opening-leaving.had-title .cartridge-title{visibility:visible}
-.cartridge-logo{display:flex;flex-direction:column;align-items:center;filter:drop-shadow(0 4px 0 #122632);transform-origin:50% 90%}
+.cartridge-logo{display:flex;flex-direction:column;align-items:center;filter:drop-shadow(0 4px 0 #102e28);transform-origin:50% 90%}
 .cartridge-house-mark{width:clamp(114px,28cqw,210px);height:auto;margin-bottom:-5px;overflow:visible;shape-rendering:crispEdges}
-.cartridge-logo h1{margin:0;color:#fff0b5;font-weight:400;font-size:clamp(19px,6.8cqw,48px);line-height:1.5;letter-spacing:-.07em;white-space:nowrap;text-shadow:-3px -3px 0 #122b3a,0 -3px 0 #122b3a,3px -3px 0 #122b3a,-3px 0 0 #122b3a,3px 0 0 #122b3a,-3px 3px 0 #122b3a,0 3px 0 #122b3a,3px 3px 0 #122b3a,0 6px 0 #a2773f}
-.cartridge-logo-ly{color:#5bbdd9}
-.cartridge-start{position:relative;pointer-events:auto;min-height:58px;min-width:min(210px,64cqw);padding:15px 25px;color:#fff4c8;background:#173242;border:3px solid #102331;box-shadow:0 0 0 2px #8fa9aa,inset 0 0 0 2px #3e6272,0 6px 0 #102331;display:flex;align-items:center;justify-content:space-between;gap:24px;font-size:clamp(15px,3.9cqw,22px);letter-spacing:2px;line-height:1.3}
-.cartridge-start>i{display:block;width:0;height:0;border-top:7px solid transparent;border-bottom:7px solid transparent;border-left:8px solid #6cc9df;filter:drop-shadow(0 2px #102331)}
+.cartridge-logo h1{margin:0;color:var(--nh-cream);font-weight:400;font-size:clamp(19px,6.8cqw,48px);line-height:1.5;letter-spacing:-.07em;white-space:nowrap;text-shadow:-3px -3px 0 #153f3f,0 -3px 0 #153f3f,3px -3px 0 #153f3f,-3px 0 0 #153f3f,3px 0 0 #153f3f,-3px 3px 0 #153f3f,0 3px 0 #153f3f,3px 3px 0 #153f3f,0 6px 0 #9f713f}
+.cartridge-logo-ly{color:var(--nh-apricot)}
+.cartridge-start{position:relative;pointer-events:auto;min-height:58px;min-width:min(210px,64cqw);padding:15px 25px;color:var(--nh-ink);background:var(--nh-apricot);border:3px solid var(--nh-ink);box-shadow:0 0 0 2px var(--nh-apricot-shade),inset 0 0 0 2px var(--nh-apricot-light),0 6px 0 var(--nh-ink);display:flex;align-items:center;justify-content:space-between;gap:24px;font-size:clamp(15px,3.9cqw,22px);letter-spacing:2px;line-height:1.3}
+.cartridge-start>i{display:block;width:0;height:0;border-top:7px solid transparent;border-bottom:7px solid transparent;border-left:8px solid var(--nh-ink);filter:drop-shadow(0 2px var(--nh-ink))}
 .cartridge-start>i:last-child{transform:rotate(180deg)}
-.cartridge-start:hover{background:#244757;color:#fff9dd}
-.cartridge-start:focus-visible{outline:3px solid #ffde55;outline-offset:6px}
-.cartridge-start:active:not(:disabled){transform:translateY(4px);box-shadow:0 0 0 2px #8fa9aa,inset 0 0 0 2px #3e6272,0 2px 0 #102331}
+.cartridge-start:hover{background:var(--nh-apricot-light);color:var(--nh-ink)}
+.cartridge-start:focus-visible{outline:3px solid var(--nh-apricot-light);outline-offset:6px}
+.cartridge-start:active:not(:disabled){transform:translateY(4px);box-shadow:0 0 0 2px var(--nh-apricot-shade),inset 0 0 0 2px var(--nh-apricot-light),0 2px 0 var(--nh-ink)}
 .cartridge-start:disabled{opacity:1}
-.cartridge-skip{position:absolute;right:max(18px,env(safe-area-inset-right));bottom:max(18px,env(safe-area-inset-bottom));min-height:44px;min-width:80px;padding:12px 10px;border:0;background:#142b3ce8;box-shadow:0 2px 0 #0c1b28;color:#d6e1d4;font-size:10px;line-height:1.5}
+.cartridge-skip{position:absolute;right:max(18px,env(safe-area-inset-right));bottom:max(18px,env(safe-area-inset-bottom));min-height:44px;min-width:80px;padding:12px 10px;border:0;background:#153f3fee;box-shadow:0 2px 0 #102e28;color:var(--nh-cream);font-size:10px;line-height:1.5}
 .cartridge-skip:disabled{opacity:0;pointer-events:none}
 .opening-title .cartridge-logo{animation:cartridge-title-land 260ms steps(6,end) both}
 .opening-title .cartridge-start{animation:cartridge-start-in 180ms 130ms steps(4,end) both}

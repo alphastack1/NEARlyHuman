@@ -1,0 +1,14 @@
+{
+  "pass": true,
+  "at": "2026-11-04T08:45:48.700Z",
+  "base": "http://127.0.0.1:5211",
+  "checks": [
+    "Production opening/start/welcome/hatch",
+    "Two served testnet networks",
+    "Hatch name/strengths survive world switch",
+    "Native NEAR hatch presentation"
+  ],
+  "errors": [],
+  "writes": [],
+  "scope": "Read-only production assets using per-page memory storage; no preview globals, wallets, signatures, funded AI or economic calls."
+}

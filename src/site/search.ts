@@ -11,6 +11,10 @@ const forms: Record<string, string> = {
   withdrawing: 'withdraw', withdrawal: 'withdraw', withdrawals: 'withdraw',
   failed: 'failure', failing: 'failure', failures: 'failure', errors: 'error', cancelled: 'cancel', canceled: 'cancel',
   personality: 'personality', personalities: 'personality', crafting: 'craft', crafts: 'craft', crafted: 'craft',
+  sign: 'signature', signs: 'signature', signing: 'signature', signed: 'signature', signatures: 'signature',
+  fees: 'fee', costs: 'cost', prices: 'price',
+  playing: 'play', plays: 'play', earning: 'earn', earnings: 'earn', earned: 'earn', earns: 'earn',
+  funding: 'fund', funded: 'fund', funds: 'fund', testnets: 'testnet',
 };
 const aliases: Record<string, string> = {
   'first-day': 'start beginner onboarding tutorial introduction how play hatch name',
@@ -21,16 +25,20 @@ const aliases: Record<string, string> = {
   workshop: 'craft wood recipe spoon toy boat birdhouse large chest build workbench',
   'weather-visitors': 'rain weather fire damage broken repair power outage visitor pests cat bird event sickness storm',
   'nft-purse': 'nft ownership purse balance withdraw token money transfer',
-  nhc: 'nhc token earning earnings ship shipping price reward emission economy supply burn hatch currency',
+  nhc: 'nhc token earn earning earnings money income make ship shipping price reward emission economy supply burn hatch currency',
   'sharing-transfers': 'share link transfer sell sale nft owner ownership',
   'remembered-lives': 'death dead died dying burn withdraw purse remembered health survival',
-  'jev-saving': 'ai jev model thoughts choice plan inference save saved saving blockchain transaction signature',
+  'jev-saving': 'ai jev model thoughts choice plan inference save saved saving blockchain transaction signature two twice',
   contracts: 'address source github contract explorer verify security audit trust code',
   troubleshooting: 'help error failure failed stuck retry recovery cancel wallet signature pending missing transaction interrupted',
   'privacy-data': 'privacy data public private record memory local browser storage wallet account session',
 };
 function words(value: string) {
-  return value.toLowerCase().normalize('NFKD').replace(/[^a-z0-9]+/g, ' ').trim().split(/\s+/).filter(Boolean).map(word => forms[word] || word);
+  return value.toLowerCase().normalize('NFKD')
+    .replace(/\b(?:can['’]t|cannot)\b/g, 'can not').replace(/\bwon['’]t\b/g, 'will not')
+    .replace(/n['’]t\b/g, ' not').replace(/['’](?:m|re|ve|ll|d|s)\b/g, ' ')
+    .replace(/\bmake(?:\s+more)?\s+money\b/g, 'earn money')
+    .replace(/[^a-z0-9]+/g, ' ').trim().split(/\s+/).filter(Boolean).map(word => forms[word] || word);
 }
 const index = ARTICLES.map(article => ({ article, title: words(article.title), summary: words(article.summary),
   aliases: words(aliases[article.slug] || ''), body: words(article.sections.map(s => [s.title, ...(s.paragraphs || []), ...(s.bullets || []), ...(s.table?.rows.flat() || [])].join(' ')).join(' ')) }));
@@ -38,7 +46,7 @@ const index = ARTICLES.map(article => ({ article, title: words(article.title), s
 /** A small token index understands the game's common terms without fuzzy
  * substring accidents such as “dead” matching “deadline”. */
 export function searchArticles(query: string) {
-  const stop = new Set(['a', 'an', 'the', 'and', 'or', 'my', 'your', 'our', 'their', 'i', 'me', 'it', 'its', 'is', 'are', 'was', 'be', 'been', 'do', 'does', 'did', 'can', 'could', 'would', 'should', 'how', 'what', 'when', 'where', 'why', 'if', 'of', 'for', 'to', 'in', 'on', 'at', 'from', 'with', 'after', 'before', 'happens', 'happen', 'please', 'long', 'take', 'takes']);
+  const stop = new Set(['a', 'an', 'the', 'and', 'or', 'my', 'your', 'our', 'their', 'i', 'me', 'you', 'we', 'they', 'he', 'she', 'it', 'its', 'is', 'are', 'was', 'were', 'be', 'been', 'do', 'does', 'did', 'can', 'could', 'would', 'should', 'will', 'have', 'has', 'had', 'not', 'how', 'what', 'when', 'where', 'why', 'if', 'of', 'for', 'to', 'in', 'on', 'at', 'from', 'with', 'after', 'before', 'happens', 'happen', 'please', 'long', 'take', 'takes', 'much', 'get', 'getting']);
   const terms = words(query).filter(word => !stop.has(word));
   if (!terms.length) return [];
   const match = (tokens: string[], term: string) => tokens.some(token => token === term || term.length >= 3 && token.startsWith(term));
