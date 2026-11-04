@@ -1,5 +1,7 @@
 # Publication review
 
+**Final release checkpoint:** [the exact staged publication scan](final-staged-publication-scan.md) and [machine proof](final-staged-publication-scan.json), completed at 13:19 Bangkok on 4 November, supersede the earlier working-tree fingerprints below. The staged scan includes the final cleanup, README, website and NFT artwork changes. Only sanitized audit evidence is added afterward; runtime source/assets remain unchanged.
+
 4 November 2026. This review prepares the authorized contracts-only download and the separate decision about public repository visibility. It does not change GitHub visibility, push a branch, deploy a site or access a wallet/service ledger.
 
 ## Authorization and scope

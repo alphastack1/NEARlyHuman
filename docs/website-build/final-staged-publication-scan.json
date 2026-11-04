@@ -1,0 +1,324 @@
+{
+  "at": "2026-11-04T06:19:40.407Z",
+  "head": "a4af0b667d9590c8102aff330a4f8cf1a44be00b",
+  "status": "pass",
+  "scope": "Exact staged index blobs only; no working-tree substitution and no history rescan",
+  "candidate": {
+    "snapshotAt": "2026-11-04T06:17:03.383Z",
+    "files": 694,
+    "textFiles": 533,
+    "textBytes": 10139230,
+    "binaryAssetsNotOCRed": 161,
+    "totalBytes": 37756445,
+    "uniqueBlobs": 689,
+    "indexFingerprintSha256": "74a378b059b39775e400db9ad3e11bf78f46047798da72931ceb94b953654b92",
+    "indexFingerprintAfterSha256": "74a378b059b39775e400db9ad3e11bf78f46047798da72931ceb94b953654b92",
+    "indexUnchanged": true,
+    "contentsFingerprintSha256": "4d20f3c98338696a683aacf6e0a717926db431ec794747c73c6f93b18d155de1",
+    "runtimeSourceAndAssetsFingerprintSha256": "0a4bf3225ca33f9f265ed5a82b7328087b05d21d1f541768f629c8fc38caddc6",
+    "runtimeFiles": 274
+  },
+  "scanner": {
+    "name": "gitleaks",
+    "version": "8.30.1",
+    "officialArchiveChecksumVerified": true,
+    "redact": "100%",
+    "defaultRules": true,
+    "maxDecodeDepth": 5
+  },
+  "results": {
+    "reported": 44,
+    "classified": {
+      "public deployed contract address": 5,
+      "deterministic gameplay action identifier": 38,
+      "gameplay recovery/cache code expression": 1
+    },
+    "unresolved": [],
+    "supplementalChecks": [
+      "NEAR base58 private-key shape",
+      "JWT shape",
+      "private PEM headers",
+      "checksum-valid English BIP39 word sequences"
+    ],
+    "supplementalFindings": []
+  },
+  "githubArtifacts": {
+    "source": "Parent-reported authenticated GitHub CLI checks; not independently repeated in this scan",
+    "actionsRuns": 0,
+    "actionsArtifacts": 0,
+    "releases": 0
+  },
+  "limitations": [
+    "Binary images/media were not OCRed/decompiled.",
+    "Previous separate review covers local reachable history and local unreachable objects; this pass intentionally scans only the staged candidate.",
+    "Ignored files, private credential stores, unknown remote-only refs/artifacts and ordinary personal information are outside this staged machine-text review.",
+    "Any index change invalidates this exact checkpoint; subsequent sanitized evidence documents can be reviewed/staged separately."
+  ],
+  "mutations": "Ignored tool/snapshot/report files only. No source, index, refs, commit, visibility, push, keys or service operation.",
+  "findings": [
+    {
+      "rule": "generic-api-key",
+      "file": "contracts/v2/deployments/robinhood-testnet.json",
+      "line": 15,
+      "category": "public deployed contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/overnight/wave5/authority-initial.json",
+      "line": 10,
+      "category": "public deployed contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/overnight/wave5/authority-initial.json",
+      "line": 11,
+      "category": "public deployed contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/overnight/wave6/hosted-mint-day-result.json",
+      "line": 9,
+      "category": "public deployed contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/overnight/wave6/release-deployment.json",
+      "line": 27,
+      "category": "public deployed contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "public/assets/preview/miso-day3-7835a1cdc3fe.json",
+      "line": 1,
+      "category": "deterministic gameplay action identifier"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "public/assets/preview/miso-day2-cba7a5e34202.json",
+      "line": 1,
+      "category": "deterministic gameplay action identifier"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "public/assets/preview/miso-day2-cba7a5e34202.json",
+      "line": 1,
+      "category": "deterministic gameplay action identifier"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "public/assets/preview/miso-day3-7835a1cdc3fe.json",
+      "line": 1,
+      "category": "deterministic gameplay action identifier"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "public/assets/preview/miso-day2-cba7a5e34202.json",
+      "line": 1,
+      "category": "deterministic gameplay action identifier"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "public/assets/preview/miso-day2-cba7a5e34202.json",
+      "line": 1,
+      "category": "deterministic gameplay action identifier"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "public/assets/preview/miso-day2-cba7a5e34202.json",
+      "line": 1,
+      "category": "deterministic gameplay action identifier"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "public/assets/preview/nori-day3-05de911accb2.json",
+      "line": 1,
+      "category": "deterministic gameplay action identifier"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "public/assets/preview/nori-day3-05de911accb2.json",
+      "line": 1,
+      "category": "deterministic gameplay action identifier"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "public/assets/preview/miso-day2-cba7a5e34202.json",
+      "line": 1,
+      "category": "deterministic gameplay action identifier"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "public/assets/preview/miso-day2-cba7a5e34202.json",
+      "line": 1,
+      "category": "deterministic gameplay action identifier"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "public/assets/preview/miso-day3-7835a1cdc3fe.json",
+      "line": 1,
+      "category": "deterministic gameplay action identifier"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "public/assets/preview/miso-day3-7835a1cdc3fe.json",
+      "line": 1,
+      "category": "deterministic gameplay action identifier"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "public/assets/preview/miso-day3-7835a1cdc3fe.json",
+      "line": 1,
+      "category": "deterministic gameplay action identifier"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "public/assets/preview/miso-day3-7835a1cdc3fe.json",
+      "line": 1,
+      "category": "deterministic gameplay action identifier"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "experiments/economy-v2/biology/admission-fixture.json",
+      "line": 141,
+      "category": "deterministic gameplay action identifier"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "public/assets/preview/peep-day3-40268cb03106.json",
+      "line": 1,
+      "category": "deterministic gameplay action identifier"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "public/assets/preview/peep-day3-40268cb03106.json",
+      "line": 1,
+      "category": "deterministic gameplay action identifier"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "public/assets/preview/peep-day3-40268cb03106.json",
+      "line": 1,
+      "category": "deterministic gameplay action identifier"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "public/assets/preview/peep-day3-40268cb03106.json",
+      "line": 1,
+      "category": "deterministic gameplay action identifier"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "public/assets/preview/peep-day2-7c809055dc27.json",
+      "line": 1,
+      "category": "deterministic gameplay action identifier"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "public/assets/preview/peep-day2-7c809055dc27.json",
+      "line": 1,
+      "category": "deterministic gameplay action identifier"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "public/assets/preview/peep-day2-7c809055dc27.json",
+      "line": 1,
+      "category": "deterministic gameplay action identifier"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "public/assets/preview/peep-day2-7c809055dc27.json",
+      "line": 1,
+      "category": "deterministic gameplay action identifier"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "public/assets/preview/peep-day2-7c809055dc27.json",
+      "line": 1,
+      "category": "deterministic gameplay action identifier"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "public/assets/preview/peep-day2-7c809055dc27.json",
+      "line": 1,
+      "category": "deterministic gameplay action identifier"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "public/assets/preview/peep-day2-7c809055dc27.json",
+      "line": 1,
+      "category": "deterministic gameplay action identifier"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "public/assets/preview/peep-day2-7c809055dc27.json",
+      "line": 1,
+      "category": "deterministic gameplay action identifier"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "public/assets/preview/peep-day2-7c809055dc27.json",
+      "line": 1,
+      "category": "deterministic gameplay action identifier"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "public/assets/preview/peep-day2-7c809055dc27.json",
+      "line": 1,
+      "category": "deterministic gameplay action identifier"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "public/assets/preview/peep-day2-7c809055dc27.json",
+      "line": 1,
+      "category": "deterministic gameplay action identifier"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "public/assets/preview/peep-day2-7c809055dc27.json",
+      "line": 1,
+      "category": "deterministic gameplay action identifier"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "public/assets/preview/peep-day2-7c809055dc27.json",
+      "line": 1,
+      "category": "deterministic gameplay action identifier"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "public/assets/preview/peep-day2-7c809055dc27.json",
+      "line": 1,
+      "category": "deterministic gameplay action identifier"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "public/assets/preview/peep-day2-7c809055dc27.json",
+      "line": 1,
+      "category": "deterministic gameplay action identifier"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "public/assets/preview/peep-day3-40268cb03106.json",
+      "line": 1,
+      "category": "deterministic gameplay action identifier"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "public/assets/preview/peep-day3-40268cb03106.json",
+      "line": 1,
+      "category": "deterministic gameplay action identifier"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "src/app/App.tsx",
+      "line": 491,
+      "category": "gameplay recovery/cache code expression"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "src/domain/choice-policy.test.ts",
+      "line": 75,
+      "category": "deterministic gameplay action identifier"
+    }
+  ]
+}
