@@ -1,0 +1,78 @@
+{
+  "checks": [
+    {
+      "name": "desktop",
+      "title": "NEARlyHuman — A little life. A mind of its own.",
+      "overflow": false,
+      "heading": {
+        "x": 42.5,
+        "y": 275.328125,
+        "width": 525.609375,
+        "height": 168.53125,
+        "bottom": 443.859375
+      },
+      "action": {
+        "x": 42.5,
+        "y": 563.859375,
+        "width": 203.140625,
+        "height": 56,
+        "bottom": 619.859375
+      },
+      "href": "/app?v2=1&entry=app",
+      "fonts": [
+        "\"Pixelify Sans Variable\", \"Press Start 2P\", monospace",
+        "\"Figtree Variable\", \"Trebuchet MS\", sans-serif"
+      ]
+    },
+    {
+      "name": "phone",
+      "title": "NEARlyHuman — A little life. A mind of its own.",
+      "overflow": false,
+      "heading": {
+        "x": 20,
+        "y": 129.453125,
+        "width": 335,
+        "height": 98,
+        "bottom": 227.453125
+      },
+      "action": {
+        "x": 20,
+        "y": 663.828125,
+        "width": 181.421875,
+        "height": 51,
+        "bottom": 714.828125
+      },
+      "href": "/app?v2=1&entry=app",
+      "fonts": [
+        "\"Pixelify Sans Variable\", \"Press Start 2P\", monospace",
+        "\"Figtree Variable\", \"Trebuchet MS\", sans-serif"
+      ]
+    },
+    {
+      "name": "short",
+      "title": "NEARlyHuman — A little life. A mind of its own.",
+      "overflow": false,
+      "heading": {
+        "x": 15,
+        "y": 103.59375,
+        "width": 275,
+        "height": 82.71875,
+        "bottom": 186.3125
+      },
+      "action": {
+        "x": 15,
+        "y": 492,
+        "width": 152.9375,
+        "height": 46,
+        "bottom": 538
+      },
+      "href": "/app?v2=1&entry=app",
+      "fonts": [
+        "\"Pixelify Sans Variable\", \"Press Start 2P\", monospace",
+        "\"Figtree Variable\", \"Trebuchet MS\", sans-serif"
+      ]
+    }
+  ],
+  "errors": [],
+  "blocked": []
+}

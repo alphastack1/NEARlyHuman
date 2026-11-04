@@ -1,0 +1,213 @@
+{
+  "scope": "Actual hosted UI callbacks; controlled EIP1193 Node binding and page-local storage. Private owner key stays in Node, raw journal outside checkout. No mainnet or arbitrary signing.",
+  "startedAt": "2026-11-04T12:51:39.109Z",
+  "url": "https://nearlyhuman.netlify.app",
+  "mode": "mint-day",
+  "config": {
+    "chainId": 46630,
+    "collection": "0x3E3c6d8d6dDCFaad61c21B4278e977c90ddDE3F7",
+    "token": "0x5D559CB58f899BA000E9f5Df200B1b52173DB26F",
+    "decisionConfig": "0xcc1fb25ff8a461f77768c721deb2f4ec3512355246020f2e6efb0161e1a3d1dc"
+  },
+  "errors": [],
+  "extensionErrors": [],
+  "api": [
+    {
+      "path": "/api/v2/config",
+      "status": 200
+    },
+    {
+      "path": "/api/v2/replay/1",
+      "status": 404,
+      "error": {
+        "code": "not_found",
+        "message": "That day could not be found."
+      }
+    },
+    {
+      "path": "/api/game/worlds",
+      "status": 200
+    },
+    {
+      "path": "/api/v2/rooster/1",
+      "status": 200,
+      "id": "1",
+      "day": 0,
+      "purseMicro": "0"
+    },
+    {
+      "path": "/api/v2/lives",
+      "status": 200
+    },
+    {
+      "path": "/api/v2/replay/1",
+      "status": 404,
+      "error": {
+        "code": "not_found",
+        "message": "That day could not be found."
+      }
+    },
+    {
+      "path": "/api/v2/rooster/1",
+      "status": 200,
+      "id": "1",
+      "day": 0,
+      "purseMicro": "0"
+    },
+    {
+      "path": "/api/auth/challenge",
+      "status": 200
+    },
+    {
+      "path": "/api/auth/verify",
+      "status": 200
+    },
+    {
+      "path": "/api/v2/session",
+      "status": 200
+    },
+    {
+      "path": "/api/v2/quote",
+      "status": 200
+    },
+    {
+      "path": "/api/v2/session",
+      "status": 200
+    },
+    {
+      "path": "/api/v2/accept",
+      "status": 200,
+      "phase": "queued",
+      "requestId": "0x13ed2747b55bd86c389106cea24aede2450b6af1aa6b8b6ea88953775c901b34"
+    },
+    {
+      "path": "/api/v2/replay/1",
+      "status": 404,
+      "error": {
+        "code": "not_found",
+        "message": "That day could not be found."
+      }
+    },
+    {
+      "path": "/api/v2/job/0x13ed2747b55bd86c389106cea24aede2450b6af1aa6b8b6ea88953775c901b34",
+      "status": 200,
+      "phase": "preparing",
+      "requestId": "0x13ed2747b55bd86c389106cea24aede2450b6af1aa6b8b6ea88953775c901b34"
+    },
+    {
+      "path": "/api/v2/rooster/1",
+      "status": 200,
+      "id": "1",
+      "day": 0,
+      "purseMicro": "0"
+    },
+    {
+      "path": "/api/v2/job/0x13ed2747b55bd86c389106cea24aede2450b6af1aa6b8b6ea88953775c901b34",
+      "status": 200,
+      "phase": "preparing",
+      "requestId": "0x13ed2747b55bd86c389106cea24aede2450b6af1aa6b8b6ea88953775c901b34"
+    },
+    {
+      "path": "/api/v2/job/0x13ed2747b55bd86c389106cea24aede2450b6af1aa6b8b6ea88953775c901b34",
+      "status": 200,
+      "phase": "preparing",
+      "requestId": "0x13ed2747b55bd86c389106cea24aede2450b6af1aa6b8b6ea88953775c901b34"
+    },
+    {
+      "path": "/api/v2/job/0x13ed2747b55bd86c389106cea24aede2450b6af1aa6b8b6ea88953775c901b34",
+      "status": 200,
+      "phase": "preparing",
+      "requestId": "0x13ed2747b55bd86c389106cea24aede2450b6af1aa6b8b6ea88953775c901b34"
+    },
+    {
+      "path": "/api/v2/job/0x13ed2747b55bd86c389106cea24aede2450b6af1aa6b8b6ea88953775c901b34",
+      "status": 200,
+      "phase": "prepared",
+      "requestId": "0x13ed2747b55bd86c389106cea24aede2450b6af1aa6b8b6ea88953775c901b34"
+    },
+    {
+      "path": "/api/v2/job/0x13ed2747b55bd86c389106cea24aede2450b6af1aa6b8b6ea88953775c901b34",
+      "status": 200,
+      "phase": "ready",
+      "requestId": "0x13ed2747b55bd86c389106cea24aede2450b6af1aa6b8b6ea88953775c901b34"
+    },
+    {
+      "path": "/api/v2/replay/1",
+      "status": 200,
+      "id": "1",
+      "day": 1,
+      "purseMicro": "0"
+    }
+  ],
+  "wallet": [
+    {
+      "method": "personal_sign",
+      "purpose": "exact site wallet login"
+    },
+    {
+      "method": "eth_sendTransaction",
+      "functionName": "acceptDay",
+      "nonce": 89,
+      "hash": "0x5184f3ad1f30497d708d9008a813158d20b1e2f601f19e01616fa4232c7b0311"
+    }
+  ],
+  "screens": [
+    {
+      "name": "hosted-pack-empty-390",
+      "url": "https://nearlyhuman.netlify.app/?chainId=46630&collection=0x3e3c6d8d6ddcfaad61c21b4278e977c90ddde3f7&rooster=1",
+      "text": "CLOVER\nLV00\nDAY 00\n\nCLOVER is home.\n\nPrepare day 1\nPack the first day\nPack\nWallet\nAI\nTap a supply.\n+\n+\n+\nCare\nGarden\nHouse\nWater\nAt home ×3\nBread\nAt home ×3\nMilk\n×1\nMedicine\n×1\nCoffee\n×1\nSteak\n×1\nBandage\n×1\nReview day 1\nUp to 3 supplies · included"
+    },
+    {
+      "name": "hosted-review-before-signin-390",
+      "url": "https://nearlyhuman.netlify.app/?chainId=46630&collection=0x3e3c6d8d6ddcfaad61c21b4278e977c90ddde3f7&rooster=1",
+      "text": "CLOVER\nLV00\nDAY 00\n\nCLOVER is home.\n\nPrepare day 1\nReady for day 1?\nPack\nWallet\nAI\nWater\nBread\nDaisy seed\nCLOVER chooses what happens.\nYour supplies arrive at the mailbox.\nRobinhood\nTestnet\n0x131C15…Dc0149c6\n0.00583 ETH\n1\nSign-in\nNo fee · once per visit\n2\nStart day\nOne transaction · then Jev plans\nVerify wallet\nNetwork + preparation fee when you start\nEdit supplies"
+    },
+    {
+      "name": "hosted-review-verified-390",
+      "url": "https://nearlyhuman.netlify.app/?chainId=46630&collection=0x3e3c6d8d6ddcfaad61c21b4278e977c90ddde3f7&rooster=1",
+      "text": "CLOVER\nLV00\nDAY 00\n\nCLOVER is home.\n\nPrepare day 1\nReady for day 1?\nPack\nWallet\nAI\nWater\nBread\nDaisy seed\nCLOVER chooses what happens.\nYour supplies arrive at the mailbox.\nRobinhood\nTestnet\n0x131C15…Dc0149c6\n0.00583 ETH\nSign-in\nNo fee · verified\n2\nStart day\nOne transaction · then Jev plans\nStart day 1\nNetwork + preparation fee when you start\nEdit supplies"
+    },
+    {
+      "name": "hosted-jev-390",
+      "url": "https://nearlyhuman.netlify.app/?chainId=46630&collection=0x3e3c6d8d6ddcfaad61c21b4278e977c90ddde3f7&rooster=1",
+      "text": "CLOVER\nLV00\nDAY 00\n\nCLOVER is home.\n\nPrepare day 1\nJev is choosing the day\nPack\nWallet\nAI\n\nGetting ready for Jev.\n\nBack home\nView transaction"
+    },
+    {
+      "name": "hosted-saved-day-390",
+      "url": "https://nearlyhuman.netlify.app/?chainId=46630&collection=0x3e3c6d8d6ddcfaad61c21b4278e977c90ddde3f7&rooster=1",
+      "text": "CLOVER\nLV00\nDAY 01\n\nA day with CLOVER.\n\nWatch day"
+    },
+    {
+      "name": "hosted-playing-390",
+      "url": "https://nearlyhuman.netlify.app/?chainId=46630&collection=0x3e3c6d8d6ddcfaad61c21b4278e977c90ddde3f7&rooster=1",
+      "text": "CLOVER\nLV00\nDAY 01\n\nThe morning post.\n\nFinish day"
+    }
+  ],
+  "result": {
+    "id": "1",
+    "day": 1,
+    "commitment": "0xb051908f565f42c16d3c70df4f7113aa06a8af93fd7e7790ecb4fb0ddae40271",
+    "purseMicro": "0",
+    "owner": "0x131C15fD2d9151F361213d8e8BC2a188Dc0149c6"
+  },
+  "transactions": [
+    {
+      "functionName": "mintNFT",
+      "hash": "0xdbf683c072f2bcaf82b4961a8dfadd4543d59614dfe8300f91f9afc534b0cbd3",
+      "nonce": 88,
+      "status": "confirmed",
+      "blockNumber": "148348088",
+      "gasUsed": "819111"
+    },
+    {
+      "functionName": "acceptDay",
+      "hash": "0x5184f3ad1f30497d708d9008a813158d20b1e2f601f19e01616fa4232c7b0311",
+      "nonce": 89,
+      "status": "confirmed",
+      "blockNumber": "148359755",
+      "gasUsed": "825993"
+    }
+  ],
+  "completedAt": "2026-11-04T12:52:40.234Z",
+  "pass": true
+}

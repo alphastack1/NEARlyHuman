@@ -47,3 +47,7 @@ MAPLE #8 was actually hatched on Robinhood testnet and completed day 1 using fiv
 At **18:05:53 Bangkok time**, deployment `6aeb1185c9b13b8dc8d87c39` published the public Explore/Longest lives and exact-life pages from local source `570060a`. It includes the bounded public directory, native/RH profile details, canonical metadata links and direct saved-film handoffs. [Research, critique fixes and hosted evidence](NFT_VIEWING.md).
 
 The owner confirmed GitHub's account soft-ban, so this release used direct Netlify upload with the updated API and all three existing Node24/API-v2 functions. Hosted assets, directory/metadata, both worlds and actual public-to-game journey checks passed. No intermediate production deployment or paid gameplay was used. The separately verified future0.5% burn module remains undeployed, pending rollout scope; current contracts, token balances and financial/service records were not replaced.
+
+## Clear website arrival and transfer-burn rollout
+
+At **19:49:59 Bangkok time**, deployment `6aeb29ead1d65b7175f8619f` published the persistent website introduction and contained saved-game showcase, together with the authorized testnet transfer-burn integration. Both current worlds expose enabled0.5% NHC transfer burn with an owner toggle. Original RH NFT identities and native NEAR state/history are preserved. A real CLOVER first day passed through the hosted Jev/chain flow. [Critique decisions, exact rollout and actual game evidence](ARRIVAL_REFINEMENT.md).

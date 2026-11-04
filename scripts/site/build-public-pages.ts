@@ -8,8 +8,8 @@ import { publicLifePath, validLifeId, validLifeWorld } from '../../src/site/life
 
 export interface PublicPageMetadata { pathname: string; title: string; description: string }
 export interface PublicImagePreload { href: string; srcSet?: string; sizes?: string; media?: string; type: 'image/avif' | 'image/webp' }
-export interface PublicPerformanceHints { siteModule: string; siteStylesheets: string[]; hero?: readonly PublicImagePreload[] }
-/** These media conditions match OpenHouse's picture; only one poster is fetched. */
+export interface PublicPerformanceHints { siteModule: string; siteStylesheets: string[]; hero?: readonly PublicImagePreload[]; fonts?: readonly string[] }
+/** These media conditions match HomePreview's picture; only one poster is fetched. */
 export const HOME_HERO_PRELOAD: readonly PublicImagePreload[] = [
   { href: '/site/open-house-phone.webp', type: 'image/webp', media: '(max-width: 720px)' },
   { href: '/site/open-house-desktop.webp', type: 'image/webp', media: '(min-width: 721px)' },
@@ -57,12 +57,12 @@ const PERFORMANCE_SCRIPT_ID = 'nh-public-performance';
 export function performanceHead(page: PublicPageMetadata, hints?: PublicPerformanceHints): string {
   if (!hints) return '';
   const root = page.pathname === '/';
-  const payload = JSON.stringify({ siteModule: hints.siteModule, siteStylesheets: hints.siteStylesheets, hero: root ? hints.hero : undefined })
+  const payload = JSON.stringify({ siteModule: hints.siteModule, siteStylesheets: hints.siteStylesheets, hero: root ? hints.hero : undefined, fonts: root ? hints.fonts : undefined })
     .replace(/</g, '\\u003c').replace(/\u2028/g, '\\u2028').replace(/\u2029/g, '\\u2029');
   const gate = root ? "if(location.pathname!=='/'||location.search||location.hash)return;" : '';
   // Preload CSS as a resource, not an already-applied stylesheet: Vite still
   // creates/awaits its stylesheet, preventing a dynamic-style first-paint race.
-  return `    <script id="${PERFORMANCE_SCRIPT_ID}">(function(p){${gate}function add(a){if(Array.from(document.head.querySelectorAll('link')).some(function(l){return l.rel===a.rel&&l.getAttribute('href')===a.href}))return;var l=document.createElement('link');Object.keys(a).forEach(function(k){l[k]=a[k]});document.head.appendChild(l)}if(p.hero)p.hero.forEach(function(h){var a={rel:'preload',as:'image',type:h.type,href:h.href,fetchPriority:'high'};if(h.srcSet)a.imageSrcset=h.srcSet;if(h.sizes)a.imageSizes=h.sizes;if(h.media)a.media=h.media;add(a)});p.siteStylesheets.forEach(function(h){add({rel:'preload',as:'style',href:h,crossOrigin:'anonymous'})});add({rel:'modulepreload',href:p.siteModule,crossOrigin:'anonymous'})})(${payload});</script>`;
+  return `    <script id="${PERFORMANCE_SCRIPT_ID}">(function(p){${gate}function add(a){if(Array.from(document.head.querySelectorAll('link')).some(function(l){return l.rel===a.rel&&l.getAttribute('href')===a.href}))return;var l=document.createElement('link');Object.keys(a).forEach(function(k){l[k]=a[k]});document.head.appendChild(l)}if(p.hero)p.hero.forEach(function(h){var a={rel:'preload',as:'image',type:h.type,href:h.href,fetchPriority:'high'};if(h.srcSet)a.imageSrcset=h.srcSet;if(h.sizes)a.imageSizes=h.sizes;if(h.media)a.media=h.media;add(a)});if(p.fonts)p.fonts.forEach(function(h){add({rel:'preload',as:'font',type:'font/woff2',href:h,crossOrigin:'anonymous'})});p.siteStylesheets.forEach(function(h){add({rel:'preload',as:'style',href:h,crossOrigin:'anonymous'})});add({rel:'modulepreload',href:p.siteModule,crossOrigin:'anonymous'})})(${payload});</script>`;
 }
 
 export async function discoverPublicHints(directory: string, hero?: readonly PublicImagePreload[]): Promise<PublicPerformanceHints | undefined> {
@@ -83,7 +83,8 @@ export async function discoverPublicHints(directory: string, hero?: readonly Pub
       if (!(await stat(path.join(directory, source.slice(1)))).isFile()) throw Error(`Missing public preload image: ${source}`);
     }
   }
-  return { siteModule: `/assets/${modules[0]}`, siteStylesheets: [`/assets/${styles[0]}`], ...(hero ? { hero } : {}) };
+  const fonts = files.filter(file => /^(?:pixelify-sans|figtree)-latin-wght-normal-[A-Za-z\d_-]+\.woff2$/.test(file)).map(file => `/assets/${file}`);
+  return { siteModule: `/assets/${modules[0]}`, siteStylesheets: [`/assets/${styles[0]}`], ...(hero ? { hero } : {}), ...(fonts.length ? { fonts } : {}) };
 }
 
 /** Update managed head metadata and resource hints. Vite's body, module

@@ -1,0 +1,53 @@
+{
+  "at": "2026-11-04T12:56:15.211Z",
+  "deployment": "6aeb29ead1d65b7175f8619f",
+  "origin": "https://nearlyhuman.netlify.app",
+  "result": "pass",
+  "scope": "Independent actual-browser website and entry QA in the shared Codex profile. No funded, wallet, auth, quote, AI or signing action. Only public GET/HEAD requests completed.",
+  "checks": {
+    "homeViewports": [
+      "390x844",
+      "320x568",
+      "1440x900"
+    ],
+    "websiteContext": "Persistent headline and Open App; contained Saved gameplay preview; canonical rooster visible above transport.",
+    "freshAppEntry": {
+      "url": "https://nearlyhuman.netlify.app/app?v2=1&entry=app",
+      "text": "Welcome home\nHatch a rooster\nYour roosters",
+      "result": "Welcome home, Hatch a rooster, Your roosters; no duplicate START gate.",
+      "isolation": "Per-tab in-memory nh:* storage view; shared profile storage and ledgers preserved."
+    },
+    "returningOwnerEntry": {
+      "url": "https://nearlyhuman.netlify.app/?networkId=near-testnet&collection=game.nearlyhuman-dev-20261102-26c8bd.testnet&rooster=1",
+      "text": "FERN\nLV03\nDAY 03\n\nFERN, at home.\n\nPrepare tomorrow\nWatch day 3",
+      "result": "Existing FERN Day 3 context preserved; no duplicate START gate.",
+      "testCaveat": "The initial assertion expected fresh Welcome and timed out because the profile was a returning owner. Four automatic read-only native JSON-RPC POSTs were blocked locally by the initial strict GET-only guard; none left the browser, and they were not financial writes."
+    },
+    "guide": {
+      "result": "Normal website handbook; home link returned to persistent landing headline.",
+      "javascript": [
+        "https://nearlyhuman.netlify.app/assets/index-BooaAtwh.js",
+        "https://nearlyhuman.netlify.app/assets/rolldown-runtime-XKyaHtl9.js",
+        "https://nearlyhuman.netlify.app/assets/preload-helper-BLdHbfdN.js",
+        "https://nearlyhuman.netlify.app/assets/Site-0Az1bV8-.js",
+        "https://nearlyhuman.netlify.app/assets/Icons-BeRIvqQR.js",
+        "https://nearlyhuman.netlify.app/assets/v2-items-BPkq8ets.js"
+      ],
+      "phaserOrWorldRequests": []
+    },
+    "explore": {
+      "result": "Normal website collection view with FERN; home link returned to persistent landing headline."
+    }
+  },
+  "screenshots": [
+    "home-phone.png",
+    "home-short.png",
+    "home-desktop.png",
+    "app-fresh-phone.png",
+    "guide-phone.png",
+    "explore-phone.png"
+  ],
+  "browserErrors": [],
+  "laterBlockedRequests": [],
+  "ownedTabsClosed": true
+}

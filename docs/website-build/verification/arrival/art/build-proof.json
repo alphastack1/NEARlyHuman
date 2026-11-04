@@ -1,0 +1,333 @@
+{
+  "reviewedAt": "2026-11-04T13:11:39.396Z",
+  "scope": "Actual local production build; static heads and module import graph. No browser, network, signing, inference, ledger or deployment operation.",
+  "sourceIndexSha256": "991155852c3f64f39f68846815c1884e72dbb46c4a4454306ec0692ad38ec7d4",
+  "builtIndexSha256": "c0d610e85a1ec435d80f5c10ea8aaf2d437dc3338e9a368022d3200b3ebef30e",
+  "entryScript": "index-B_0JnZLb.js",
+  "routeChecks": [
+    {
+      "pathname": "/",
+      "canonical": "https://nearlyhuman.netlify.app/",
+      "title": "NEARlyHuman — A little life. A mind of its own.",
+      "pass": true
+    },
+    {
+      "pathname": "/the-game",
+      "canonical": "https://nearlyhuman.netlify.app/the-game",
+      "title": "The game · NEARlyHuman",
+      "pass": true
+    },
+    {
+      "pathname": "/project",
+      "canonical": "https://nearlyhuman.netlify.app/project",
+      "title": "The project · NEARlyHuman",
+      "pass": true
+    },
+    {
+      "pathname": "/explore",
+      "canonical": "https://nearlyhuman.netlify.app/explore",
+      "title": "Explore lives · NEARlyHuman",
+      "pass": true
+    },
+    {
+      "pathname": "/docs",
+      "canonical": "https://nearlyhuman.netlify.app/docs",
+      "title": "The player handbook · NEARlyHuman",
+      "pass": true
+    },
+    {
+      "pathname": "/docs/first-day",
+      "canonical": "https://nearlyhuman.netlify.app/docs/first-day",
+      "title": "Your first day · NEARlyHuman",
+      "pass": true
+    },
+    {
+      "pathname": "/docs/worlds-wallets",
+      "canonical": "https://nearlyhuman.netlify.app/docs/worlds-wallets",
+      "title": "Worlds & wallets · NEARlyHuman",
+      "pass": true
+    },
+    {
+      "pathname": "/docs/care-supplies",
+      "canonical": "https://nearlyhuman.netlify.app/docs/care-supplies",
+      "title": "Care & supplies · NEARlyHuman",
+      "pass": true
+    },
+    {
+      "pathname": "/docs/strengths-personality",
+      "canonical": "https://nearlyhuman.netlify.app/docs/strengths-personality",
+      "title": "Strengths & personality · NEARlyHuman",
+      "pass": true
+    },
+    {
+      "pathname": "/docs/garden",
+      "canonical": "https://nearlyhuman.netlify.app/docs/garden",
+      "title": "The garden · NEARlyHuman",
+      "pass": true
+    },
+    {
+      "pathname": "/docs/workshop",
+      "canonical": "https://nearlyhuman.netlify.app/docs/workshop",
+      "title": "The workshop · NEARlyHuman",
+      "pass": true
+    },
+    {
+      "pathname": "/docs/weather-visitors",
+      "canonical": "https://nearlyhuman.netlify.app/docs/weather-visitors",
+      "title": "Weather & visitors · NEARlyHuman",
+      "pass": true
+    },
+    {
+      "pathname": "/docs/nft-purse",
+      "canonical": "https://nearlyhuman.netlify.app/docs/nft-purse",
+      "title": "Your NFT & its purse · NEARlyHuman",
+      "pass": true
+    },
+    {
+      "pathname": "/docs/nhc",
+      "canonical": "https://nearlyhuman.netlify.app/docs/nhc",
+      "title": "NHC · NEARlyHuman",
+      "pass": true
+    },
+    {
+      "pathname": "/docs/sharing-transfers",
+      "canonical": "https://nearlyhuman.netlify.app/docs/sharing-transfers",
+      "title": "Sharing & transfers · NEARlyHuman",
+      "pass": true
+    },
+    {
+      "pathname": "/docs/remembered-lives",
+      "canonical": "https://nearlyhuman.netlify.app/docs/remembered-lives",
+      "title": "Remembered lives · NEARlyHuman",
+      "pass": true
+    },
+    {
+      "pathname": "/docs/jev-saving",
+      "canonical": "https://nearlyhuman.netlify.app/docs/jev-saving",
+      "title": "Jev & saving · NEARlyHuman",
+      "pass": true
+    },
+    {
+      "pathname": "/docs/contracts",
+      "canonical": "https://nearlyhuman.netlify.app/docs/contracts",
+      "title": "Contracts & official links · NEARlyHuman",
+      "pass": true
+    },
+    {
+      "pathname": "/docs/troubleshooting",
+      "canonical": "https://nearlyhuman.netlify.app/docs/troubleshooting",
+      "title": "Help & recovery · NEARlyHuman",
+      "pass": true
+    },
+    {
+      "pathname": "/docs/privacy-data",
+      "canonical": "https://nearlyhuman.netlify.app/docs/privacy-data",
+      "title": "Public life & your data · NEARlyHuman",
+      "pass": true
+    },
+    {
+      "pathname": "/life/near-testnet/1",
+      "canonical": "https://nearlyhuman.netlify.app/life/near-testnet/1",
+      "title": "FERN #1 · NEARlyHuman",
+      "pass": true
+    },
+    {
+      "pathname": "/life/robinhood-testnet/1",
+      "canonical": "https://nearlyhuman.netlify.app/life/robinhood-testnet/1",
+      "title": "MISO #1 · NEARlyHuman",
+      "pass": true
+    },
+    {
+      "pathname": "/life/robinhood-testnet/2",
+      "canonical": "https://nearlyhuman.netlify.app/life/robinhood-testnet/2",
+      "title": "PEEP #2 · NEARlyHuman",
+      "pass": true
+    },
+    {
+      "pathname": "/life/robinhood-testnet/7",
+      "canonical": "https://nearlyhuman.netlify.app/life/robinhood-testnet/7",
+      "title": "SAGE #7 · NEARlyHuman",
+      "pass": true
+    },
+    {
+      "pathname": "/life/robinhood-testnet/3",
+      "canonical": "https://nearlyhuman.netlify.app/life/robinhood-testnet/3",
+      "title": "SUNNY #3 · NEARlyHuman",
+      "pass": true
+    },
+    {
+      "pathname": "/life/robinhood-testnet/4",
+      "canonical": "https://nearlyhuman.netlify.app/life/robinhood-testnet/4",
+      "title": "PIPOOPIP #4 · NEARlyHuman",
+      "pass": true
+    },
+    {
+      "pathname": "/life/robinhood-testnet/5",
+      "canonical": "https://nearlyhuman.netlify.app/life/robinhood-testnet/5",
+      "title": "SPROUT #5 · NEARlyHuman",
+      "pass": true
+    },
+    {
+      "pathname": "/life/robinhood-testnet/6",
+      "canonical": "https://nearlyhuman.netlify.app/life/robinhood-testnet/6",
+      "title": "BASIL #6 · NEARlyHuman",
+      "pass": true
+    },
+    {
+      "pathname": "/life/robinhood-testnet/8",
+      "canonical": "https://nearlyhuman.netlify.app/life/robinhood-testnet/8",
+      "title": "MAPLE #8 · NEARlyHuman",
+      "pass": true
+    },
+    {
+      "pathname": "/life/robinhood-testnet/0x3e3c6d8d6ddcfaad61c21b4278e977c90ddde3f7/1",
+      "canonical": "https://nearlyhuman.netlify.app/life/robinhood-testnet/0x3e3c6d8d6ddcfaad61c21b4278e977c90ddde3f7/1",
+      "title": "CLOVER #1 · NEARlyHuman",
+      "pass": true
+    }
+  ],
+  "sitemap": {
+    "routes": 30,
+    "matchesActualCatalog": true
+  },
+  "robots": {
+    "pass": true
+  },
+  "socialImage": {
+    "width": 1200,
+    "height": 630,
+    "bytes": 520288,
+    "sha256": "37bb3551576f6d71453f883ffe29e8adc685a8f3aeb68a0b38cf1f3fd7b6937d",
+    "matchesSource": true,
+    "validPng": true
+  },
+  "loading": {
+    "htmlPreloads": [
+      "/assets/rolldown-runtime-XKyaHtl9.js",
+      "/assets/preload-helper-BLdHbfdN.js"
+    ],
+    "initialStaticClosure": [
+      "index-B_0JnZLb.js",
+      "preload-helper-BLdHbfdN.js",
+      "rolldown-runtime-XKyaHtl9.js"
+    ],
+    "publicSiteStaticClosure": [
+      "Icons-Cl8HhN38.js",
+      "Site-CbGGvPhU.js",
+      "index-B_0JnZLb.js",
+      "preload-helper-BLdHbfdN.js",
+      "rolldown-runtime-XKyaHtl9.js",
+      "v2-items-BLmppLyJ.js"
+    ],
+    "publicLivesStaticClosure": [
+      "Icons-Cl8HhN38.js",
+      "Lives-D8ImWjVk.js",
+      "Site-CbGGvPhU.js",
+      "index-B_0JnZLb.js",
+      "preload-helper-BLdHbfdN.js",
+      "rolldown-runtime-XKyaHtl9.js",
+      "v2-items-BLmppLyJ.js"
+    ],
+    "publicLivesBranchBytes": 397788,
+    "publicBranchBytes": 370743,
+    "unexpectedGameWalletAuthChunks": [],
+    "entryDynamicImports": [
+      "GameEntry-Cp63EYlB.js",
+      "Site-CbGGvPhU.js"
+    ],
+    "gameDynamicImports": [
+      "App-DqwNpwPQ.js",
+      "V2App-BA8Yw9s3.js"
+    ],
+    "chunks": [
+      {
+        "name": "Icons-Cl8HhN38.js",
+        "bytes": 46362,
+        "sha256": "2d7f87f18954aad9b1a2c6e8a1a5da0c82bdf777ff70d7ed9b84f788cdce5a27",
+        "staticImports": [
+          "index-B_0JnZLb.js"
+        ]
+      },
+      {
+        "name": "Site-CbGGvPhU.js",
+        "bytes": 91896,
+        "sha256": "9030d15c1161557ed59e6d647432af0bf8e2a56609e6f52c7916a8b2dce6c4c5",
+        "staticImports": [
+          "rolldown-runtime-XKyaHtl9.js",
+          "index-B_0JnZLb.js",
+          "Icons-Cl8HhN38.js",
+          "v2-items-BLmppLyJ.js",
+          "preload-helper-BLdHbfdN.js"
+        ]
+      },
+      {
+        "name": "index-B_0JnZLb.js",
+        "bytes": 221626,
+        "sha256": "f64aa696403b5c52535e38f70b6e7fe7fdc8a5e7e9fac4704a6ee271c23e4fe9",
+        "staticImports": [
+          "rolldown-runtime-XKyaHtl9.js",
+          "preload-helper-BLdHbfdN.js"
+        ]
+      },
+      {
+        "name": "preload-helper-BLdHbfdN.js",
+        "bytes": 1519,
+        "sha256": "8aec9ff75ffa86a03d51268b63126abadb3754aa5a6b6c5bb16e4e2446a63dee",
+        "staticImports": []
+      },
+      {
+        "name": "rolldown-runtime-XKyaHtl9.js",
+        "bytes": 726,
+        "sha256": "548d1dbf321e7d2ae804fcc158b588706a7c52f8ca175de1490c6ccb4dbe55b7",
+        "staticImports": []
+      },
+      {
+        "name": "v2-items-BLmppLyJ.js",
+        "bytes": 8614,
+        "sha256": "cbf2dffc211316d35ccbab39e5d1b7365c3552bf3f9cd84a9fc553c9bec0a03b",
+        "staticImports": [
+          "Icons-Cl8HhN38.js"
+        ]
+      }
+    ]
+  },
+  "assets": [
+    {
+      "url": "/assets/index-B_0JnZLb.js",
+      "exists": true
+    },
+    {
+      "url": "/assets/rolldown-runtime-XKyaHtl9.js",
+      "exists": true
+    },
+    {
+      "url": "/assets/preload-helper-BLdHbfdN.js",
+      "exists": true
+    },
+    {
+      "url": "/assets/Icons-Cl8HhN38.js",
+      "exists": true
+    },
+    {
+      "url": "/assets/v2-items-BLmppLyJ.js",
+      "exists": true
+    }
+  ],
+  "hosting": {
+    "apiRewritePrecedesSpaFallback": true,
+    "netlifyConfigUnchangedFromHead": true
+  },
+  "canonicalArt": [
+    {
+      "file": "src/art/rooster.ts",
+      "sha256": "77394d48de4e07c9bbeb2734c7fd5bb2e6c16789032eec957cfd22eaea793f54",
+      "unchanged": true
+    },
+    {
+      "file": "src/art/rooster-data.ts",
+      "sha256": "bf21c7a5f5d58bb4718b6258a60710a01cc08b1573b6dce3899292d53fe38907",
+      "unchanged": true
+    }
+  ],
+  "pass": true
+}

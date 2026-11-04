@@ -1,0 +1,100 @@
+{
+  "pass": true,
+  "at": "2026-11-04T12:50:51.553Z",
+  "deploy": {
+    "id": "6aeb29ead1d65b7175f8619f",
+    "state": "ready",
+    "commit": null,
+    "published": "2026-11-04T12:49:59.280Z"
+  },
+  "checked": [
+    {
+      "path": "/assets/index-BooaAtwh.js",
+      "bytes": 221626,
+      "sha256": "32d08474306a4c1a22f85f94886ebe8f848c1cbafdbf9ef9bf8433942de3e02c"
+    },
+    {
+      "path": "/assets/CartridgeOpening-B876KVTq.css",
+      "bytes": 3576,
+      "sha256": "b70892e5a441db2790f72e10e35c78bd3b18b6e89e4920f322fc42a69a7b67bc"
+    },
+    {
+      "path": "/assets/CartridgeOpening-D7Rhc2aH.js",
+      "bytes": 4692,
+      "sha256": "370a2de0fe6e1732aac4f850fb123100a25d5259cc1c962793e98d51e361abe7"
+    },
+    {
+      "path": "/assets/index-CLz-1EHE.css",
+      "bytes": 692,
+      "sha256": "56a801854abd725d369bd682593d9ff13235709990fadcfb22f375cb9839c8db"
+    },
+    {
+      "path": "/assets/Lives-B0PQYZgs.js",
+      "bytes": 27045,
+      "sha256": "07ede4106bbd0dd903593d577d10a04d4671400be3b92ab03f48d152d21920cb"
+    },
+    {
+      "path": "/assets/Lives-Dn1vtmNP.css",
+      "bytes": 26047,
+      "sha256": "5d1bde39462d6fbd0d70a70dcfad110807c67275cd88004d19ffd8ab04be29ed"
+    },
+    {
+      "path": "/assets/Site-0Az1bV8-.js",
+      "bytes": 91735,
+      "sha256": "1d248f2bad9304d222185107402f831103a573d0e5776769db22df7c29cd3f13"
+    },
+    {
+      "path": "/assets/Site-C_E8VJhi.css",
+      "bytes": 71518,
+      "sha256": "f7998784d4fb3e95b4e372089f28d4473ae64d11a77fad5e2ed69b44aa86a372"
+    },
+    {
+      "path": "/assets/v2-items-BPkq8ets.js",
+      "bytes": 8614,
+      "sha256": "2c1c170718a527152fbc8cb8d1fd37ee2dbef4e783d09501f2f4176aae8b7ad4"
+    },
+    {
+      "path": "/assets/V2App-DmGDswsb.js",
+      "bytes": 131491,
+      "sha256": "25a62fa9dd7920d5c2a2ecb9a4a7081aa926f1bd52da5fbb436a93892fc19ffc"
+    },
+    {
+      "path": "/assets/V2App-DOVIF7BY.css",
+      "bytes": 51196,
+      "sha256": "35a7a9c815e890c851571fe81f703c92ae1c0cfb39c258123b43526940869e8e"
+    }
+  ],
+  "functions": [
+    {
+      "name": "api",
+      "runtime": "nodejs24.x",
+      "mode": "stream",
+      "buildData": {
+        "bootstrapVersion": "2.14.0",
+        "runtimeAPIVersion": 2
+      },
+      "schedule": null
+    },
+    {
+      "name": "prepare-background",
+      "runtime": "nodejs24.x",
+      "mode": "background",
+      "buildData": {
+        "bootstrapVersion": "2.14.0",
+        "runtimeAPIVersion": 2
+      },
+      "schedule": null
+    },
+    {
+      "name": "reconcile",
+      "runtime": "nodejs24.x",
+      "mode": "stream",
+      "buildData": {
+        "bootstrapVersion": "2.14.0",
+        "runtimeAPIVersion": 2
+      },
+      "schedule": "*/5 * * * *"
+    }
+  ],
+  "noFinancialWrites": true
+}
