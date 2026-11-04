@@ -1,0 +1,21 @@
+{
+  "scope": "Actual local Anvil controller/token integration. Original verifier/action-module bytecode deployed locally. Test harness credit is explicitly synthetic purse setup, not public rewards. No external RPC, private credentials, AI or financial-service records.",
+  "compiler": "0.8.38+commit.1835d247.Emscripten.clang",
+  "cases": [
+    "Release controller defaults ON at50bps and preserves current game/verifier interfaces",
+    "Owner forwarding toggles; token controller and game owner boundaries reject outsiders",
+    "Actual verifier initializes canonical minted life without free productive goods or token supply",
+    "V2 typed admission, pending transfer lock and actual canonical finalize work on V3",
+    "Settled ownership changes retain life and pending guard; old keeper loses withdrawal authority",
+    "Integrated taxed purse withdrawal debits gross, delivers net and keeps other NFT purse backed",
+    "Integrated wallet-funded birth burns exactly250 without consuming vault or another purse",
+    "Integrated purse birth burns250 directly without an extra fee; toggle-off withdrawal is exact",
+    "Protocol ownership transfer moves global toggle authority, not NFT ownership"
+  ],
+  "pass": true,
+  "releaseRuntimeBytes": 22239,
+  "currentSources": {
+    "game": "c2a2c84175fea23d1af2294860f0425b85526eb192a296a678dbdd2485c521d0",
+    "token": "83a10898a2148b32b8eaad8fa7b032825261f5a10093d2f1cd217dc101169b83"
+  }
+}

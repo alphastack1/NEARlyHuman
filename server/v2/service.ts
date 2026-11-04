@@ -9,6 +9,7 @@ import { issueV2DayQuote, reconcileV2QuoteFunding } from './quotes';
 import { acceptV2Job, prepareV2JevJob, settleV2JobFailure, submitPreparedV2Job, terminalV2Transaction, v2JobView, type V2Job, type V2RelayJournal } from './jobs';
 import { encodeFunctionData } from 'viem';
 import { finishV2JobBudget, updateV2Record } from './budget';
+import { v2RuntimeScopeForJob, v2RuntimeScopes, withV2RuntimeScope } from './runtime-scope';
 
 const abi = parseAbi([
   'function request(bytes32 id) view returns((uint256 tokenId,address player,uint32 baseRevision,uint32 day,uint64 kitMask,bool shipping,uint64 acceptedAt,uint64 deadline,bytes32 daySeed,bytes32 decisionConfig,bytes32 baseHash,uint256 pressure,uint256 reservedReward,uint8 status))',
@@ -32,6 +33,7 @@ function account(r: V2RuntimeIdentity) {
 }
 export async function quoteV2OwnerDay(player: Address, input: { tokenId: string; kitMask: string; shipping?: boolean }) {
   const c = connection();
+  if (!c.admissionsEnabled) throw new ServiceError('This collection is resting. Open a new home to start another day.', 'archived', 409);
   if (!/^[1-9]\d{0,77}$/.test(input.tokenId) || BigInt(input.tokenId) >= 1n << 256n || !/^(0|[1-9]\d{0,19})$/.test(input.kitMask) || BigInt(input.kitMask) >= 1n << 64n || input.shipping !== undefined && typeof input.shipping !== 'boolean') throw new ServiceError('Choose the supplies again.', 'format');
   const nativeAllowance = (name: string) => { const raw = process.env[name] || '0'; if (!/^(0|[1-9]\d{0,16})$/.test(raw) || BigInt(raw) > 10n ** 16n) throw new ServiceError('Preparation is resting. Try again shortly.', 'capacity', 503); return BigInt(raw); };
   return issueV2DayQuote(c.client, c.runtime, account(c.runtime), { player, tokenId: BigInt(input.tokenId), kitMask: BigInt(input.kitMask), shipping: input.shipping }, { campaignId: c.campaignId, allowLocal: c.allowLocal,
@@ -82,6 +84,9 @@ export async function wakeV2OwnerDay(id: Hex, player: Address) {
 }
 const localRunning = new Set<string>();
 export async function dispatchV2Job(id: string) {
+  return withV2RuntimeScope(v2RuntimeScopeForJob(id),()=>dispatchV2ScopedJob(id));
+}
+async function dispatchV2ScopedJob(id: string) {
   const c = connection();
   if (!id.startsWith(prefix(c.runtime)) || !/^0x[0-9a-f]{64}$/.test(id.slice(prefix(c.runtime).length))) throw new ServiceError('That day could not be found.', 'not_found', 404);
   if (isHosted()) return dispatchBackground({ version: 2, jobId: id });
@@ -91,6 +96,9 @@ export async function dispatchV2Job(id: string) {
 }
 /** One durable preparation then one canonical save. Re-entry never buys a duplicate answer. */
 export async function runV2QueueJob(id: string) {
+  return withV2RuntimeScope(v2RuntimeScopeForJob(id),()=>runV2ScopedQueueJob(id));
+}
+async function runV2ScopedQueueJob(id: string) {
   const c = connection(), store = storage();
   if (!id.startsWith(prefix(c.runtime)) || !/^0x[0-9a-f]{64}$/.test(id.slice(prefix(c.runtime).length))) throw new V2ContextError('context', 'Invalid queued day.');
   let job = (await store.get<V2Job>(id))?.value;
@@ -149,6 +157,15 @@ export async function findV2Acceptance(client: PublicClient, runtime: V2RuntimeI
 /** Recovers a closed tab after payment, including an attempt never acknowledged by the browser. */
 export async function reconcileV2Service() {
   if (!process.env.NEARLYHUMAN_V2_RUNTIME_JSON || !process.env.NEARLYHUMAN_V2_CAMPAIGN) return;
+  const errors: unknown[]=[];
+  for(const scope of v2RuntimeScopes()) {
+    try { await withV2RuntimeScope(scope,()=>reconcileV2ScopedService()); }
+    catch(error){ errors.push(error); }
+  }
+  // One scope having a connection problem must not starve the other's accepted work.
+  if(errors.length)throw new AggregateError(errors,'Some saved days still need checking.');
+}
+async function reconcileV2ScopedService() {
   const c = connection(), store = storage(), head = await verifyV2Runtime(c.client, c.runtime, c.allowLocal);
   let recovered = 0;
   for (const key of await store.list('v2/quotes/')) {

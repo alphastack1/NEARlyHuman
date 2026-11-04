@@ -2,6 +2,9 @@ import assert from 'node:assert/strict';
 import { deployments } from '../../src/chain/deployments';
 import { OPEN_APP_HREF, selectEntrySurface, selectV2Entry } from '../../src/site/routing';
 import { parsePublicLifePath, publicLifePath } from '../../src/site/life-routes';
+import { ACTIVE_ROBINHOOD, ORIGINAL_ROBINHOOD } from '../../src/chain/deployment-catalog';
+import { checkDirectory, exploreControls, exploreQuery, lifeImage, publicLifeHref, publicLifeWorld, visitHref, worldById } from '../../src/site/public-lives';
+import type { PublicLifeDirectory } from '../../src/chain/discovery-types';
 
 const origin = 'https://nearlyhuman.netlify.app';
 const surface = (path: string) => {
@@ -18,6 +21,7 @@ const expected: [string, 'site' | 'game'][] = [
   ['/explore?world=near-testnet&sort=longest', 'site'],
   ['/life/near-testnet/1', 'site'],
   ['/life/robinhood-testnet/8?from=%2Fexplore', 'site'],
+  [`/life/robinhood-testnet/${ACTIVE_ROBINHOOD.runtime.collection}/1`, 'site'],
   ['/docs/', 'site'],
   ['/docs/first-day?utm_source=app', 'site'],
   ['/docs/worlds-and-wallets?networkId=near-testnet', 'site'],
@@ -66,9 +70,37 @@ const returnUrl = new URL('/?networkId=near-testnet&collection=game.testnet&roos
 const originalUrl = returnUrl.href;
 assert.equal(publicLifePath('near-testnet', '1'), '/life/near-testnet/1');
 assert.deepEqual(parsePublicLifePath('/life/robinhood-testnet/8/'), { worldId: 'robinhood-testnet', id: '8' });
-for (const path of ['/life/near-mainnet/1', '/life/near-testnet/0', '/life/near-testnet/01', '/life/near-testnet/1/extra']) assert.equal(parsePublicLifePath(path), undefined);
+const originalRh = ORIGINAL_ROBINHOOD.runtime.collection.toLowerCase(), activeRh = ACTIVE_ROBINHOOD.runtime.collection.toLowerCase();
+assert.notEqual(activeRh, originalRh, 'This bridge is exercised against two distinct collection identities.');
+assert.equal(publicLifePath('robinhood-testnet', '8', originalRh), '/life/robinhood-testnet/8');
+const activePath = `/life/robinhood-testnet/${activeRh}/1`;
+assert.equal(publicLifePath('robinhood-testnet', '1', activeRh), activePath);
+assert.deepEqual(parsePublicLifePath(activePath + '/'), { worldId: 'robinhood-testnet', collection: activeRh, id: '1' });
+assert.equal(publicLifeWorld('robinhood-testnet')?.collection.toLowerCase(), originalRh);
+assert.equal(publicLifeWorld('robinhood-testnet', activeRh)?.collection.toLowerCase(), activeRh);
+assert.equal(worldById('robinhood-testnet')?.collection.toLowerCase(), activeRh);
+assert.equal(publicLifeWorld('robinhood-testnet', '0x' + '1'.repeat(40)), undefined);
+const legacyWorld = publicLifeWorld('robinhood-testnet')!, activeWorld = worldById('robinhood-testnet')!;
+assert.equal(publicLifeHref(legacyWorld, '8'), '/life/robinhood-testnet/8');
+assert.equal(publicLifeHref(activeWorld, '1'), activePath);
+for (const world of [legacyWorld, activeWorld]) {
+  for (const href of [lifeImage(world, '1'), visitHref(world, '1', 2)]) assert.equal(new URL(href, origin).searchParams.get('collection')?.toLowerCase(), world.collection.toLowerCase());
+}
+const defaultBoard = exploreControls('?world=robinhood-testnet'), legacyBoard = exploreControls(`?world=robinhood-testnet&collection=${originalRh}&q=maple`);
+assert.equal(defaultBoard.collection, undefined);
+assert.equal(legacyBoard.collection?.toLowerCase(), originalRh);
+assert.notEqual(exploreQuery(defaultBoard), exploreQuery(legacyBoard));
+assert.equal(exploreControls(`?world=near-testnet&collection=${originalRh}`).collection, undefined);
+assert.equal(exploreControls(`?world=robinhood-testnet&collection=${activeRh}`).collection, undefined);
+const legacyDirectory: PublicLifeDirectory = { world: { id: 'robinhood-testnet', label: 'Robinhood Testnet', collection: originalRh },
+  snapshot: { id: 'immutable-snapshot', at: new Date(0).toISOString(), height: '1', hash: 'hash', complete: true, stale: false },
+  sort: 'newest', status: 'all', query: 'MAPLE', total: 0, collectionTotal: 8, items: [] };
+assert.equal(checkDirectory(legacyDirectory, legacyBoard), legacyDirectory);
+assert.throws(() => checkDirectory(legacyDirectory, defaultBoard), /another check/);
+assert.throws(() => checkDirectory({ ...legacyDirectory, query: 'MISO' }, legacyBoard), /another check/);
+for (const path of ['/life/near-mainnet/1', '/life/near-testnet/0', '/life/near-testnet/01', '/life/near-testnet/1/extra', `/life/near-testnet/${activeRh}/1`, `/life/robinhood-testnet/${activeRh}/0`, '/life/robinhood-testnet/0x123/1']) assert.equal(parsePublicLifePath(path), undefined);
 selectEntrySurface(returnUrl.pathname, returnUrl.searchParams, returnUrl.hash);
 selectV2Entry(returnUrl.searchParams, true);
 assert.equal(returnUrl.href, originalUrl);
 
-console.log(JSON.stringify({ surfaceCases: expected.length, versionCases: 11, callbackUrlUnchanged: true, pass: true }));
+console.log(JSON.stringify({ surfaceCases: expected.length, versionCases: 11, callbackUrlUnchanged: true, collectionIdentity: { oldUrlsStable: true, qualifiedActiveUrls: true, exactApiScope: true, collectionBoundDirectory: true }, pass: true }));

@@ -1762,3 +1762,4 @@
   .v2-sheet-body:has(.v2-thought-activity) .v2-process-graphic { height: 112px; }
   .v2-thought-activity { gap: 12px; }
 }
+.v2-withdraw-burn{display:block;margin-top:5px;font-size:12px;color:var(--v2-muted,#587166)}

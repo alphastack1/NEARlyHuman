@@ -3,11 +3,11 @@ import { decodeState, encodeState, encodeTrace, expandV2History, v2HistoryTraceH
 import type { V2PublicLife } from '../../src/v2/public';
 export type { V2PublicLife } from '../../src/v2/public';
 import { roosterTraits } from '../../src/art/rooster';
-import { isHosted } from '../config';
 import { storage } from '../storage';
 import type { prepareV2 } from './preparation';
-import { validateV2Identity, verifyV2Runtime, v2PublicClient, V2ContextError, type V2RuntimeIdentity } from './context';
+import { verifyV2Runtime, v2PublicClient, V2ContextError } from './context';
 import { networkForEvmChain } from '../../src/chain/networks';
+import { currentV2RuntimeScope, v2CanonicalLifePath } from './runtime-scope';
 
 const publicAbi = parseAbi([
   'error ERC721NonexistentToken(uint256 tokenId)',
@@ -20,6 +20,8 @@ const publicAbi = parseAbi([
   'function token() view returns (address)',
   'function nativeMintPrice() view returns (uint256)',
   'function gasMultiplier() view returns (uint16)',
+  'function admissionsPaused() view returns(bool)',
+  'function nhcTransferBurn() view returns(bool enabled,uint16 bps,uint256 burned)',
   'function balanceOf(address holder) view returns(uint256)',
   'function ownedTokens(address holder,uint256 cursor,uint256 limit) view returns(uint256[] ids,uint256 next)',
   'function request(bytes32 id) view returns((uint256 tokenId,address player,uint32 baseRevision,uint32 day,uint64 kitMask,bool shipping,uint64 acceptedAt,uint64 deadline,bytes32 daySeed,bytes32 decisionConfig,bytes32 baseHash,uint256 pressure,uint256 reservedReward,uint8 status))',
@@ -30,14 +32,8 @@ export class V2PublicError extends Error { constructor(public code: string, mess
 
 /** Public identity only; no keys, paid provider, admission ledger or transaction signer. */
 export function v2ViewConnection() {
-  const encoded = process.env.NEARLYHUMAN_V2_RUNTIME_JSON;
-  if (!encoded) throw new V2PublicError('connection', 'This home is resting. Try again shortly.', 503);
-  let runtime: V2RuntimeIdentity;
-  try { runtime = JSON.parse(encoded); } catch { throw new V2PublicError('connection', 'This home is resting. Try again shortly.', 503); }
-  const allowLocal = !isHosted() && process.env.NEARLYHUMAN_V2_LOCAL === '1';
-  validateV2Identity(runtime, allowLocal);
-  const rpcUrl = process.env.NEARLYHUMAN_V2_RPC_URL || 'https://rpc.testnet.chain.robinhood.com';
-  return { runtime, allowLocal, rpcUrl, client: v2PublicClient(rpcUrl, runtime, allowLocal) };
+  const scope = currentV2RuntimeScope();
+  return { ...scope, client: v2PublicClient(scope.rpcUrl, scope.runtime, scope.allowLocal) };
 }
 
 export function v2TokenId(value: string): bigint {
@@ -62,18 +58,21 @@ export async function readV2PublicLife(value: string, expectedWorld?: { chainId:
 }
 
 export async function readV2PublicConfig() {
-  const { runtime, client, rpcUrl, allowLocal } = v2ViewConnection(), block = await verifyV2Runtime(client, runtime, allowLocal);
+  const { runtime, client, rpcUrl, allowLocal, admissionsEnabled, guest } = v2ViewConnection(), block = await verifyV2Runtime(client, runtime, allowLocal);
   const at = { address: runtime.collection, abi: publicAbi, blockNumber: block.number! };
-  const [token, mintPrice, multiplier] = await Promise.all([
+  const [token, mintPrice, multiplier, paused, burn] = await Promise.all([
     client.readContract({ ...at, functionName: 'token' }), client.readContract({ ...at, functionName: 'nativeMintPrice' }), client.readContract({ ...at, functionName: 'gasMultiplier' }),
+    client.readContract({ ...at, functionName: 'admissionsPaused' }),
+    admissionsEnabled ? client.readContract({ ...at, functionName: 'nhcTransferBurn' }) : Promise.resolve(undefined),
   ]);
   if((await client.getBlock({blockNumber:block.number!})).hash!==block.hash)throw new V2ContextError('connection','Checking the home connection again.');
   const network = networkForEvmChain(runtime.chainId);
   return { version: 2, chainId: runtime.chainId, collection: runtime.collection, rpcUrl, testnet: true, token, tokenDecimals: 6,
     ...(network ? { networkId: network.id, availableNetworks: [network.id] } : {}),
     nativeMintPrice: mintPrice.toString(), tokenMintPriceMicro: '250000000', multiplier, rulesHash: runtime.rulesHash, decisionConfig: runtime.decisionConfig,
+    admissionsEnabled: admissionsEnabled && !paused, ...(burn ? { transferBurn: { enabled: burn[0], bps: burn[1], totalBurned: burn[2].toString() } } : {}),
     verifier:runtime.verifier,actionModule:runtime.actionModule,controllerCodeHash:runtime.controllerCodeHash,verifierCodeHash:runtime.verifierCodeHash,actionModuleCodeHash:runtime.actionModuleCodeHash,relayer:runtime.relayer,quoteSigner:runtime.quoteSigner,
-    ...(process.env.NEARLYHUMAN_V2_GUEST_ID && /^[1-9]\d{0,77}$/.test(process.env.NEARLYHUMAN_V2_GUEST_ID) ? {guest:{id:process.env.NEARLYHUMAN_V2_GUEST_ID,...(process.env.NEARLYHUMAN_V2_GUEST_DAY&&/^[1-9]\d{0,9}$/.test(process.env.NEARLYHUMAN_V2_GUEST_DAY)?{day:Number(process.env.NEARLYHUMAN_V2_GUEST_DAY)}:{})}}:{}) };
+    ...(guest ? { guest } : {}) };
 }
 
 export async function readV2PublicLives(owner:string,cursor='0') {
@@ -110,11 +109,9 @@ export async function readV2PublicDays(value:string,before?:number,expectedWorld
   return {days,...(first>1?{nextBefore:first}:{})};
 }
 export async function readV2PublicGuest() {
-  const id=process.env.NEARLYHUMAN_V2_GUEST_ID;
-  if(!id||!/^[1-9]\d{0,77}$/.test(id))throw new V2PublicError('not_found','Choose a little life to visit.');
-  const day=process.env.NEARLYHUMAN_V2_GUEST_DAY;
-  if(day!==undefined&&!/^[1-9]\d{0,9}$/.test(day))throw new V2PublicError('connection','This home is resting. Try again shortly.',503);
-  return readV2PublicReplay(id,day?Number(day):undefined);
+  const guest = v2ViewConnection().guest;
+  if(!guest)throw new V2PublicError('not_found','Choose a life to visit.');
+  return readV2PublicReplay(guest.id,guest.day);
 }
 
 export async function readV2PublicDay(value: string, day: number, expectedWorld?: { chainId: number; collection: string }) {
@@ -147,7 +144,7 @@ export async function readV2PublicReplay(value: string, day?: number, expectedWo
 export function v2NftMetadata(life: V2PublicLife, origin: string) {
   const world = `chainId=${life.chainId}&collection=${life.collection}`, traits = roosterTraits(life.state.seed);
   return { name: `${life.name} #${life.id}`, description: 'An AI-led rooster NFT with a saved home, inventory and token purse. Its portrait reflects its recorded life.',
-    image: `${origin}/api/v2/nft/${life.id}/image.svg?${world}`, external_url: life.chainId === 46630 ? `${origin}/life/robinhood-testnet/${life.id}` : `${origin}/?rooster=${life.id}&${world}`,
+    image: `${origin}/api/v2/nft/${life.id}/image.svg?${world}`, external_url: `${origin}${v2CanonicalLifePath(life.chainId, life.collection, life.id)}`,
     attributes: [{ trait_type: 'Life', value: life.state.alive ? 'Alive' : 'Remembered' }, { trait_type: 'Level', value: life.state.level },
       { trait_type: 'Game day', value: life.state.day }, { trait_type: 'Purse', value: formatUnits(BigInt(life.purseMicro), 6) },
       ...['Body', 'Wits', 'Spirit'].map((name, i) => ({ trait_type: name, value: life.state.stats[i] })),

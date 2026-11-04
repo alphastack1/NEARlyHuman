@@ -6,7 +6,7 @@ import { PLANTS } from '../v2/catalog';
 import type { GamePublicLife } from '../chain/game-types';
 import type { PublicLifeDirectory, PublicLifeSummary } from '../chain/discovery-types';
 import { PROJECT } from './project';
-import { exploreControls, exploreHref, exploreMemoryFresh, exploreQuery, lifeExplorer, lifeImage, loadExploreMemory, nhcAmount, ownerExplorer, publicLifeHref, PublicReadError, readDays, readDirectory, readLife, refreshedDirectory, returnToExplore, saveExploreMemory, shortOwner, validLifeId, visitHref, worldById, type ExploreControls, type PublicWorld } from './public-lives';
+import { exploreControls, exploreHref, exploreMemoryFresh, exploreQuery, lifeExplorer, lifeImage, loadExploreMemory, nhcAmount, ownerExplorer, publicLifeHref, publicLifeWorld, PublicReadError, readDays, readDirectory, readLife, refreshedDirectory, returnToExplore, saveExploreMemory, shortOwner, validLifeId, visitHref, worldById, type ExploreControls, type PublicWorld } from './public-lives';
 import './lives.css';
 
 function Section({ title, icon, children, className = '' }: { title: string; icon: IconName; children: ReactNode; className?: string }) {
@@ -51,7 +51,7 @@ export function ExplorePage() {
   const [directory, setDirectory] = useState<PublicLifeDirectory | undefined>(initialMemory?.directory), [dataKey, setDataKey] = useState(initialMemory ? initialKey : '');
   const [loading, setLoading] = useState(!initialMemory), [more, setMore] = useState(false), [error, setError] = useState(''), [moreError, setMoreError] = useState(''), [attempt, setAttempt] = useState(0);
   const searchInput = useRef<HTMLInputElement>(null), filter = useRef<HTMLDetailsElement>(null), generation = useRef(0), moreAbort = useRef<AbortController | undefined>(undefined), restored = useRef(false), checkedAt = useRef(initialMemory?.checkedAt || 0);
-  const key = exploreQuery(controls), world = worldById(controls.world)!;
+  const key = exploreQuery(controls), world = worldById(controls.world, controls.collection)!;
   useEffect(() => { const timer = setTimeout(() => setControls(value => value.query === search ? value : { ...value, query: search }), 280); return () => clearTimeout(timer); }, [search]);
   useEffect(() => {
     const pop = () => { const value = exploreControls(); setControls(value); setSearch(value.query); };
@@ -98,13 +98,13 @@ export function ExplorePage() {
   const resetFilters = () => { setSearch(''); setControls(value => ({ ...value, query: '', status: 'all' })); };
   const remember = () => { if (matching) saveExploreMemory(controls, matching, checkedAt.current); };
   return <div className="lives-page">
-    <div className="lives-intro"><div><span className="site-eyebrow">Lives of their own</span><h1>Meet the roosters.</h1><p>Different homes. Different habits. A day worth watching.</p></div><label className="lives-world"><span>World</span><select aria-label="Choose world to explore" value={controls.world} onChange={event => { setControls(value => ({ ...value, world: event.target.value as ExploreControls['world'] })); setAttempt(0); }}>{PROJECT.worlds.map(value => <option key={value.id} value={value.id}>{value.name}</option>)}</select></label></div>
+    <div className="lives-intro"><div><span className="site-eyebrow">Lives of their own</span><h1>Meet the roosters.</h1><p>Different homes. Different habits. A day worth watching.</p></div><label className="lives-world"><span>World</span><select aria-label="Choose world to explore" value={controls.world} onChange={event => { setControls(value => ({ ...value, world: event.target.value as ExploreControls['world'], collection: undefined })); setAttempt(0); }}>{PROJECT.worlds.map(value => <option key={value.id} value={value.id}>{value.name}</option>)}</select></label></div>
     <div className="lives-browser">
       <div className="lives-browser-bar"><div className="lives-view-tabs" role="group" aria-label="Browse lives"><button type="button" aria-pressed={controls.sort === 'newest'} onClick={() => setControls(value => ({ ...value, sort: 'newest' }))}>Discover</button><button type="button" aria-pressed={controls.sort === 'longest'} onClick={() => setControls(value => ({ ...value, sort: 'longest' }))}>Longest lives</button></div><div className="lives-find"><label><span className="site-search-glass"/><input ref={searchInput} type="search" maxLength={40} value={search} onChange={event => setSearch(event.target.value)} placeholder="Name or #number" aria-label="Find a rooster"/></label>{search && <button type="button" className="lives-clear" aria-label="Clear rooster search" onClick={() => { setSearch(''); searchInput.current?.focus(); }}><Icon name="close" size={14}/></button>}<details ref={filter} className="lives-filter"><summary aria-label="Filter lives"><Icon name="gear" size={18}/><span>{controls.status === 'all' ? 'Filter' : controls.status === 'alive' ? 'Living' : 'Remembered'}</span></summary><div role="group" aria-label="Life status">{([['all', 'All lives'], ['alive', 'Living'], ['remembered', 'Remembered']] as const).map(([value, label]) => <button type="button" key={value} aria-pressed={controls.status === value} onClick={() => { setControls(c => ({ ...c, status: value })); if (filter.current) { filter.current.open = false; filter.current.querySelector('summary')?.focus(); } }}>{label}</button>)}</div></details></div></div>
       <div className="lives-results-heading"><span>{controls.sort === 'longest' ? 'Completed game days · equal days share a rank' : 'Newest lives first'}</span><span aria-live="polite">{loading ? 'Opening lives…' : matching ? `${matching.total.toLocaleString()} ${matching.total === 1 ? 'life' : 'lives'}` : ''}</span></div>
       {error && <div className="lives-read-error" role="status"><span>{error}</span><button type="button" onClick={() => setAttempt(value => value + 1)}>Try again</button></div>}
       {loading && !matching ? <div className="lives-grid lives-skeleton" aria-label="Loading roosters" role="status">{[0, 1, 2, 3].map(index => <div key={index}><span/><i/></div>)}</div>
-        : matching?.items.length ? <div className={`lives-grid${matching.collectionTotal === 1 && !controls.query.trim() && controls.status === 'all' ? ' lives-singleton' : ''}`} aria-busy={loading}>{matching.items.map((life, index) => <DirectoryCard key={`${world.id}:${life.id}`} life={life} world={world} index={index} ranked={controls.sort === 'longest'} from={exploreHref(controls)} onVisit={remember}/>)}</div>
+        : matching?.items.length ? <div className={`lives-grid${matching.collectionTotal === 1 && !controls.query.trim() && controls.status === 'all' ? ' lives-singleton' : ''}`} aria-busy={loading}>{matching.items.map((life, index) => <DirectoryCard key={`${world.collection}:${life.id}`} life={life} world={world} index={index} ranked={controls.sort === 'longest'} from={exploreHref(controls)} onVisit={remember}/>)}</div>
           : matching && <div className="lives-empty"><Icon name={matching.collectionTotal ? 'leaf' : 'house'} size={38}/><h2>{matching.collectionTotal ? 'No matching roosters.' : 'No lives here yet.'}</h2>{matching.collectionTotal ? <button type="button" className="site-button site-secondary" onClick={resetFilters}>Show all lives <span aria-hidden="true">→</span></button> : <a className="site-button site-primary" href={world.appHref}>Hatch a rooster <Arrow/></a>}</div>}
       {matching?.nextCursor && <div className="lives-more"><button type="button" className="site-button site-secondary" disabled={more || loading} onClick={() => void loadMore()}>{more ? 'Opening more…' : 'More roosters'}<span aria-hidden="true">↓</span></button></div>}
       {moreError && <div className="lives-read-error" role="status"><span>{moreError}</span><button type="button" onClick={() => setAttempt(value => value + 1)}>Refresh list</button></div>}
@@ -116,9 +116,9 @@ export function ExplorePage() {
 function MissingLife({ retry, missing, back }: { retry?: () => void; missing: boolean; back: string }) {
   return <div className="life-not-found"><Icon name="house" size={48}/><h1>{missing ? 'This life could not be found.' : 'This home could not be opened.'}</h1><p>{missing ? 'Choose another rooster to visit.' : 'Give it another try.'}</p><div>{retry && !missing && <button type="button" className="site-button site-primary" onClick={retry}>Try again</button>}<a className="site-text-link" href={back}>Explore lives <span aria-hidden="true">→</span></a></div></div>;
 }
-export function PublicLifePage({ worldId, id }: { worldId: string; id: string }) {
-  const world = worldById(worldId);
-  return world && validLifeId(id) ? <LifeDetail key={`${worldId}:${id}`} world={world} id={id}/> : <MissingLife missing back="/explore"/>;
+export function PublicLifePage({ worldId, id, collection }: { worldId: string; id: string; collection?: string }) {
+  const world = publicLifeWorld(worldId, collection);
+  return world && validLifeId(id) ? <LifeDetail key={`${world.collection}:${id}`} world={world} id={id}/> : <MissingLife missing back="/explore"/>;
 }
 function LifeDetail({ world, id }: { world: PublicWorld; id: string }) {
   const [life, setLife] = useState<GamePublicLife>(), [error, setError] = useState<PublicReadError>(), [attempt, setAttempt] = useState(0);

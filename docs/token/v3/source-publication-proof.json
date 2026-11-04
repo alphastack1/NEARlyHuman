@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "scope": "Offline contracts-only source archive verification; read-only source and public reference records. No deployment, signing, service ledger or private credentials.",
+  "archive": {
+    "download": "/source/v3/contracts.zip",
+    "bytes": 234562,
+    "sha256": "7f72160809256d287370762f9750be607b14ef3f632449e37d1616b80c5acbd3",
+    "entries": 16,
+    "sourceFiles": 12,
+    "independentZipCrcValid": true,
+    "exactAllowlist": true,
+    "repositoryAndReadableSourceBytesMatch": true,
+    "harnessesAndOperatorMaterialExcluded": true
+  },
+  "originalArchive": {
+    "download": "/source/contracts.zip",
+    "bytes": 190741,
+    "sha256": "96eb30080976baf50f386e131e338ad69d8575c410210fa55fe2cfeb85e83053",
+    "byteIdenticalBeforeAndAfterExport": true
+  },
+  "evm": {
+    "compiler": "0.8.38+commit.1835d247.Emscripten.clang",
+    "openZeppelin": "5.6.1",
+    "optimizerRuns": 1,
+    "viaIR": true,
+    "evmVersion": "cancun",
+    "standaloneHelperExtractedFromArchiveExecuted": true,
+    "allCreationBytecodeAndRuntimeTemplatesMatch": true,
+    "targets": ["NEARlyHumanV3", "NHCTransferBurn", "V2LifeVerifier", "V2ActionModule", "V2Types"],
+    "deploymentArtifactFingerprint": "5128ae8d9389c2b248a411ccefc3a1a685f5756068ff127629313f34a754d3f6",
+    "collection": "0x3e3c6d8d6ddcfaad61c21b4278e977c90ddde3f7",
+    "deploymentTransaction": "0x2c1283c582582b74238cafd3cde8e902bc99bbe4eafefa70a7faa751ee4d21ab"
+  },
+  "native": {
+    "sourceHashesMatchRecordedArtifact": true,
+    "artifactBytes": 508063,
+    "artifactSha256": "cd3d6e1b58739ea6a697c7a70c343b7e4d9e9f077a3eb7f55479ccddddd70070",
+    "codeHashMatchesArtifactAndDeploymentRecord": true,
+    "codeHash": "EpAuccLZgjZys3NdpqpHi87kaANgsMZyt17DHHix69GK",
+    "collection": "game.nearlyhuman-dev-20261102-26c8bd.testnet",
+    "upgradeTransaction": "9fFKmxFFQcv6dPRS98X26D7Z9dRtnD9yye7eyCFuBH87",
+    "confirmedRecordHasStoragePreservationProof": true,
+    "wasmRebuiltForWebsiteExport": false
+  },
+  "exportMakesLiveRpcCalls": false,
+  "productionDependsOnTemp": false,
+  "pass": true
+}

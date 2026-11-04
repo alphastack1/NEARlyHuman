@@ -1,20 +1,29 @@
-import { PROJECT } from './project';
+import { PROJECT, type ProjectWorld } from './project';
+import { ORIGINAL_ROBINHOOD } from '../chain/deployment-catalog';
+import { publicLifePath } from './life-routes';
 import type { DiscoverySort, DiscoveryStatus, DiscoveryWorldId, PublicLifeDirectory } from '../chain/discovery-types';
 import type { GameDaysPage, GamePublicLife } from '../chain/game-types';
 
-export type PublicWorld = typeof PROJECT.worlds[number];
-export interface ExploreControls { world: DiscoveryWorldId; sort: DiscoverySort; status: DiscoveryStatus; query: string }
+export type PublicWorld = ProjectWorld;
+export interface ExploreControls { world: DiscoveryWorldId; collection?: string; sort: DiscoverySort; status: DiscoveryStatus; query: string }
 export interface ExploreMemory { controls: ExploreControls; directory: PublicLifeDirectory; scroll: number; savedAt: number; checkedAt: number }
 const MEMORY_KEY = 'nh:site:explore';
-export const worldById = (id: string): PublicWorld | undefined => PROJECT.worlds.find(world => world.id === id);
+export const worldById = (id: string, collection?: string): PublicWorld | undefined => collection === undefined
+  ? PROJECT.worlds.find(world => world.id === id)
+  : [...PROJECT.worlds, ...PROJECT.archivedWorlds].find(world => world.id === id && world.collection.toLowerCase() === collection.toLowerCase());
+/** Published RH links predate collection-qualified paths and keep that identity. */
+export const publicLifeWorld = (id: string, collection?: string): PublicWorld | undefined => worldById(id,
+  collection ?? (id === 'robinhood-testnet' ? ORIGINAL_ROBINHOOD.runtime.collection : undefined));
 export const validLifeId = (id: string) => /^[1-9]\d{0,77}$/.test(id);
 export function exploreControls(search = location.search): ExploreControls {
   const params = new URLSearchParams(search);
-  return { world: worldById(params.get('world') || '')?.id || 'near-testnet', sort: params.get('sort') === 'longest' ? 'longest' : 'newest',
+  const world = worldById(params.get('world') || '') || PROJECT.worlds[0], selected = worldById(world.id, params.get('collection') || undefined);
+  return { world: world.id, ...(selected?.archived ? { collection: selected.collection } : {}), sort: params.get('sort') === 'longest' ? 'longest' : 'newest',
     status: params.get('status') === 'alive' ? 'alive' : params.get('status') === 'remembered' ? 'remembered' : 'all', query: (params.get('q') || '').slice(0, 40) };
 }
 export function exploreQuery(controls: ExploreControls): string {
   const query = new URLSearchParams({ world: controls.world, sort: controls.sort });
+  if (controls.collection) query.set('collection', controls.collection);
   if (controls.status !== 'all') query.set('status', controls.status);
   if (controls.query.trim()) query.set('q', controls.query.trim());
   return query.toString();
@@ -22,10 +31,10 @@ export function exploreQuery(controls: ExploreControls): string {
 export const exploreHref = (controls: ExploreControls) => '/explore?' + exploreQuery(controls);
 export function returnToExplore(world: PublicWorld): string {
   try { const from = new URLSearchParams(location.search).get('from'); if (from) { const url = new URL(from, location.origin); if (url.origin === location.origin && url.pathname === '/explore') return exploreHref(exploreControls(url.search)); } } catch { /* Use the exact life’s world below. */ }
-  return exploreHref({ world: world.id, sort: 'newest', status: 'all', query: '' });
+  return exploreHref({ world: world.id, ...(world.archived ? { collection: world.collection } : {}), sort: 'newest', status: 'all', query: '' });
 }
 export function publicLifeHref(world: PublicWorld, id: string, from?: string): string {
-  return `/life/${world.id}/${id}` + (from ? '?' + new URLSearchParams({ from }) : '');
+  return publicLifePath(world.id, id, world.collection) + (from ? '?' + new URLSearchParams({ from }) : '');
 }
 export function worldQuery(world: PublicWorld): URLSearchParams {
   const params = new URLSearchParams(new URL(world.appHref, 'https://nearlyhuman.netlify.app').search);
@@ -62,8 +71,9 @@ async function read<T>(url: string, signal?: AbortSignal): Promise<T> {
   finally { clearTimeout(timeout); signal?.removeEventListener('abort', abort); }
 }
 export function checkDirectory(value: PublicLifeDirectory, controls: ExploreControls): PublicLifeDirectory {
-  const world = worldById(controls.world);
+  const world = worldById(controls.world, controls.collection);
   if (!world || value?.world?.id !== world.id || typeof value.world.collection !== 'string' || value.world.collection.toLowerCase() !== world.collection.toLowerCase() || value.snapshot?.complete !== true || !Array.isArray(value.items)
+    || value.sort !== controls.sort || value.status !== controls.status || value.query !== controls.query.trim().toUpperCase()
     || !Number.isSafeInteger(value.total) || value.total < 0 || !Number.isSafeInteger(value.collectionTotal) || value.collectionTotal < value.total
     || value.items.some(life => !validLifeId(life.id) || !life.name || typeof life.owner !== 'string' || !Number.isSafeInteger(life.level) || life.level < 0 || !Number.isSafeInteger(life.day) || life.day < 0 || typeof life.alive !== 'boolean')) throw new PublicReadError('These lives need another check. Try again.');
   return value;

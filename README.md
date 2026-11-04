@@ -53,6 +53,8 @@ Each portrait reflects its recorded life: planted beds, growth, crafted objects 
 
 Owners can withdraw NHC—even after the rooster dies—or burn **250 NHC** to hatch another rooster. Remembered lives retain their NFT and purse. NHC is a game utility token with no promised cash redemption.
 
+Current testnet NHC burns **0.5% of address-to-address transfers**, including purse withdrawals. The app shows the amount received. The contract owner can switch this rule off; issuing earned rewards and the direct 250 NHC birth burn are not taxed again.
+
 [Explore ownership](https://nearlyhuman.netlify.app/docs/nft-purse) · [Garden rules](https://nearlyhuman.netlify.app/docs/garden) · [Workshop recipes](https://nearlyhuman.netlify.app/docs/workshop) · [NHC & reward rules](https://nearlyhuman.netlify.app/docs/nhc)
 
 ## AI decisions, checked outcomes
@@ -68,11 +70,11 @@ Built for the **2026 NEAR Hackathon · `nfts` · NFTs That Do Something**: owner
 | World | Wallet | Enter |
 | --- | --- | --- |
 | **NEAR Testnet** | Meteor through NEAR Connect | [Open NEAR](https://nearlyhuman.netlify.app/app?v2=1&networkId=near-testnet&collection=game.nearlyhuman-dev-20261102-26c8bd.testnet) |
-| **Robinhood Testnet** · chain 46630 | Rabby or another EVM wallet | [Open Robinhood](https://nearlyhuman.netlify.app/app?v2=1&chainId=46630&collection=0x30cb5213fa94020a95893ddb6b07470dbf7a9efc) |
+| **Robinhood Testnet** · chain 46630 | Rabby or another EVM wallet | [Open Robinhood](https://nearlyhuman.netlify.app/app?v2=1&chainId=46630&collection=0x3e3c6d8d6ddcfaad61c21b4278e977c90ddde3f7) |
 
 Lives, inventory and NHC remain separate between worlds; there is no bridge. Hatching and accepting a new day use the selected world's testnet funds. Wallet sign-in is a separate free message. The app shows payments before confirmation.
 
-[Wallets & testnet funds](https://nearlyhuman.netlify.app/docs/worlds-wallets) · [Deployed contracts](https://nearlyhuman.netlify.app/docs/contracts) · [Download contract sources](https://nearlyhuman.netlify.app/source/contracts.zip)
+[Wallets & testnet funds](https://nearlyhuman.netlify.app/docs/worlds-wallets) · [Deployed contracts](https://nearlyhuman.netlify.app/docs/contracts) · [Download current contract sources](https://nearlyhuman.netlify.app/source/v3/contracts.zip)
 
 ## Try the hosted demo
 
@@ -112,7 +114,7 @@ Configure [.env.example](.env.example), then use `npm run dev`. This requires yo
 | Player flow, world rendering and original art | [`src/app/v2/`](src/app/v2/) · [`src/game/v2/`](src/game/v2/) · [`src/art/`](src/art/) |
 | Shared life rules and catalog | [`src/v2/`](src/v2/) |
 | Jev, durable workers and API | [`server/v2/`](server/v2/) · [`server/near/`](server/near/) · [`netlify/functions/`](netlify/functions/) |
-| Chain contracts and reproducible source exports | [`contracts/v2/`](contracts/v2/) · [`contracts/near/`](contracts/near/) · [`scripts/site/`](scripts/site/) |
+| Current chain contracts and reproducible source exports | [`contracts/v3/`](contracts/v3/) · [`contracts/token/`](contracts/token/) · [`contracts/near-v3/`](contracts/near-v3/) · [`scripts/site/`](scripts/site/) |
 
 The [documentation index](docs/index.md) leads to architecture, wallet integration, contract reviews and verification evidence. The [NFT art guide](docs/website-build/NFT_ART.md) records canonical artwork invariants and the distinction between real saved lives and controlled visual fixtures.
 

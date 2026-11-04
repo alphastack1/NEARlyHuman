@@ -4,6 +4,7 @@ import path from 'node:path';
 import { runInNewContext } from 'node:vm';
 import { buildPublicPages, discoverPublicHints, escapeMarkup, HOME_HERO_PRELOAD, pageHtml, PUBLIC_PAGES, sitemap, templateAssets, type PublicPerformanceHints } from './build-public-pages';
 import { SITE_IMAGES } from '../../src/site/project';
+import { ACTIVE_ROBINHOOD, ORIGINAL_ROBINHOOD } from '../../src/chain/deployment-catalog';
 
 const template = '<!doctype html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width"><title>Old title</title><meta content="old" name="description"><meta property="og:title" content="Old"><meta content="missing.png" property="og:image"><link href="https://old.invalid/" rel="canonical"><script type="module" crossorigin src="/assets/app.js"></script><link rel="stylesheet" href="/assets/app.css"><link rel="icon" href="/favicon.svg"></head><body><div id="root"></div><script>window.keep="<unchanged>";</script></body></html>';
 const page = { pathname: '/docs/example', title: 'An "NFT" & <life>', description: "One's home > a picture & a story." };
@@ -34,10 +35,12 @@ const hintedArticle = pageHtml(template, page, 'https://nearlyhuman.netlify.app'
 assert.equal((pageHtml(hintedHome, home, 'https://nearlyhuman.netlify.app', undefined, hints).match(/id="nh-public-performance"/g) || []).length, 1);
 assert.equal(hintedHome.slice(hintedHome.indexOf('</head>')), template.slice(template.indexOf('</head>')));
 assert.deepEqual(templateAssets(hintedHome), templateAssets(template));
-assert.equal(HOME_HERO_PRELOAD.srcSet, SITE_IMAGES.hero.avifSrcSet);
-assert.equal(HOME_HERO_PRELOAD.sizes, SITE_IMAGES.hero.sizes);
+assert.deepEqual(HOME_HERO_PRELOAD.map(image => [image.href, image.media]), [
+  ['/site/open-house-phone.webp', '(max-width: 720px)'], ['/site/open-house-desktop.webp', '(min-width: 721px)'],
+]);
+assert.ok(!hintedHome.includes(SITE_IMAGES.hero.avifDefault), 'The homepage must not fetch the previous static hero.');
 
-interface HintLink { rel?: string; href?: string; as?: string; type?: string; crossOrigin?: string; imageSrcset?: string; imageSizes?: string; fetchPriority?: string; getAttribute(name: string): string | undefined }
+interface HintLink { rel?: string; href?: string; as?: string; type?: string; media?: string; crossOrigin?: string; imageSrcset?: string; imageSizes?: string; fetchPriority?: string; getAttribute(name: string): string | undefined }
 function executeHints(html: string, url: string) {
   const code = html.match(/<script id="nh-public-performance">([\s\S]*?)<\/script>/)?.[1];
   assert.ok(code, 'Expected a managed public-hints script.');
@@ -53,14 +56,15 @@ function executeHints(html: string, url: string) {
   return links;
 }
 const homeHints = executeHints(hintedHome, 'https://nearlyhuman.netlify.app/');
-assert.equal(homeHints.length, 3);
-assert.deepEqual(homeHints.map(link => [link.rel, link.as || '']), [['preload', 'image'], ['preload', 'style'], ['modulepreload', '']]);
-assert.equal(homeHints[0]!.imageSrcset, SITE_IMAGES.hero.avifSrcSet);
-assert.equal(homeHints[0]!.imageSizes, SITE_IMAGES.hero.sizes);
-assert.equal(homeHints[0]!.type, 'image/avif');
+assert.equal(homeHints.length, 4);
+assert.deepEqual(homeHints.map(link => [link.rel, link.as || '']), [['preload', 'image'], ['preload', 'image'], ['preload', 'style'], ['modulepreload', '']]);
+assert.deepEqual(homeHints.slice(0, 2).map(link => [link.href, link.media]), HOME_HERO_PRELOAD.map(image => [image.href, image.media]));
+assert.equal(homeHints[0]!.imageSrcset, undefined);
+assert.equal(homeHints[0]!.imageSizes, undefined);
+assert.equal(homeHints[0]!.type, 'image/webp');
 assert.equal(homeHints[0]!.fetchPriority, 'high');
-assert.equal(homeHints[1]!.crossOrigin, 'anonymous');
 assert.equal(homeHints[2]!.crossOrigin, 'anonymous');
+assert.equal(homeHints[3]!.crossOrigin, 'anonymous');
 const skipped = [
   '/?rooster=1', '/?id=1&day=3', '/?v2=1', '/?collection=0x123&chainId=46630',
   '/?networkId=near-testnet&collection=account.testnet', '/?account_id=owner.testnet',
@@ -86,6 +90,10 @@ const result = await buildPublicPages(dir);
 assert.equal(result.pages, PUBLIC_PAGES.length);
 assert.ok(PUBLIC_PAGES.some(page => page.pathname === '/explore'));
 assert.ok(PUBLIC_PAGES.some(page => page.pathname === '/life/robinhood-testnet/8' && page.title.includes('MAPLE')));
+assert.ok(PUBLIC_PAGES.some(page => page.pathname === '/life/robinhood-testnet/1' && page.title.includes('MISO')));
+assert.ok(PUBLIC_PAGES.some(page => page.pathname === `/life/robinhood-testnet/${ACTIVE_ROBINHOOD.runtime.collection.toLowerCase()}/1` && page.title.includes('CLOVER')));
+assert.notEqual(ACTIVE_ROBINHOOD.runtime.collection.toLowerCase(), ORIGINAL_ROBINHOOD.runtime.collection.toLowerCase());
+assert.ok(!PUBLIC_PAGES.some(page => page.pathname === `/life/robinhood-testnet/${ACTIVE_ROBINHOOD.runtime.collection.toLowerCase()}/8` && page.title.includes('MAPLE')), 'An old collection name must not be assigned to a new collection ID.');
 assert.ok(PUBLIC_PAGES.some(page => page.pathname === '/life/near-testnet/1' && page.title.includes('FERN')));
 assert.equal(result.socialImage, false);
 assert.equal(result.earlyPublicHints, false);
@@ -111,15 +119,15 @@ assert.ok(!/rel="canonical"|property="og:url"/.test(futureLife), 'Unknown future
 // and emits an image hint only in the homepage template.
 await writeFile(path.join(dir, 'assets/Site-fixture.js'), '/* current Site module */');
 await writeFile(path.join(dir, 'assets/Site-fixture.css'), '/* current Site CSS */');
-for (const source of HOME_HERO_PRELOAD.srcSet.split(',').map(item => item.trim().split(/\s+/)[0]!)) await writeFile(path.join(dir, source.slice(1)), 'fixture AVIF bytes');
+for (const image of HOME_HERO_PRELOAD) await writeFile(path.join(dir, image.href.slice(1)), 'fixture WebP bytes');
 const splitResult = await buildPublicPages(dir);
 assert.equal(splitResult.earlyPublicHints, true);
 assert.equal(splitResult.earlyHeroHint, true);
 const builtHome = await readFile(path.join(dir, 'index.html'), 'utf8');
 const builtArticle = await readFile(path.join(dir, 'docs/first-day/index.html'), 'utf8');
-assert.equal(executeHints(builtHome, 'https://nearlyhuman.netlify.app/')[2]!.href, '/assets/Site-fixture.js');
+assert.equal(executeHints(builtHome, 'https://nearlyhuman.netlify.app/')[3]!.href, '/assets/Site-fixture.js');
 assert.equal(executeHints(builtArticle, 'https://nearlyhuman.netlify.app/docs/first-day').length, 2);
-await assert.rejects(discoverPublicHints(dir, { ...HOME_HERO_PRELOAD, href: '/site/missing.avif' }), /ENOENT|Missing public preload image/);
+await assert.rejects(discoverPublicHints(dir, [{ href: '/site/missing.webp', type: 'image/webp' }]), /ENOENT|Missing public preload image/);
 await writeFile(path.join(dir, 'assets/Site-stale.js'), '/* must not guess among multiple hashes */');
 await assert.rejects(discoverPublicHints(dir, HOME_HERO_PRELOAD), /clean output directory/);
-console.log(JSON.stringify({ ...splitResult, escaping: true, noMissingImageAdvertised: true, optionalImageIncludedWhenPresent: imageResult.socialImage, allPageAssetsAndBodyPreserved: true, earlyHints: { bareHomepage: true, skippedRootVariants: skipped.length, noHeroOnArticles: true, cssPreloadKeepsViteStylesheetWait: true, pictureAndHintShareSources: true, idempotent: true, builtHashDiscovery: true, missingAndAmbiguousAssetsRejected: true }, pass: true }));
+console.log(JSON.stringify({ ...splitResult, escaping: true, noMissingImageAdvertised: true, optionalImageIncludedWhenPresent: imageResult.socialImage, allPageAssetsAndBodyPreserved: true, earlyHints: { bareHomepage: true, skippedRootVariants: skipped.length, noHeroOnArticles: true, cssPreloadKeepsViteStylesheetWait: true, complementaryWebpPosters: true, idempotent: true, builtHashDiscovery: true, missingAndAmbiguousAssetsRejected: true }, pass: true }));

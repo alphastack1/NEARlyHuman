@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-11-04T10:36:07.056Z",
+  "checkedAt": "2026-11-04T12:29:41.583Z",
   "purpose": "Immutable identity-only HTTP share metadata for observed lives. Dynamic state and all future NFTs still load from the public API.",
   "worlds": [
     {
@@ -47,6 +47,16 @@
         {
           "id": "8",
           "name": "MAPLE"
+        }
+      ]
+    },
+    {
+      "worldId": "robinhood-testnet",
+      "collection": "0x3e3c6d8d6ddcfaad61c21b4278e977c90ddde3f7",
+      "lives": [
+        {
+          "id": "1",
+          "name": "CLOVER"
         }
       ]
     }

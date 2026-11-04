@@ -7,6 +7,7 @@ import { v2ViewConnection } from '../v2/views';
 import { verifyV2Runtime } from '../v2/context';
 import { nearRuntime, nearView, verifyNearRuntime } from '../near/rpc';
 import { readNearPublicLife } from '../near/views';
+import { v2RuntimeScope, withV2RuntimeScope } from '../v2/runtime-scope';
 
 /** A hard bound keeps one public refresh from becoming an unbounded RPC job. */
 export const MAX_DISCOVERY_LIVES = 128;
@@ -27,14 +28,17 @@ export interface DiscoveryRead { world: DiscoveryWorld; height: string; hash: st
 const fingerprint = (value: unknown) => createHash('sha256').update(JSON.stringify(value)).digest('hex');
 
 /** Configuration and public identity only. This never loads signer credentials. */
-export function discoveryDescriptor(id: DiscoveryWorldId): DiscoveryDescriptor {
+export function discoveryDescriptor(id: DiscoveryWorldId, collection?: string): DiscoveryDescriptor {
   if (id === 'robinhood-testnet') {
-    const { runtime } = v2ViewConnection();
+    let runtime;
+    try { runtime=v2RuntimeScope(collection).runtime; }
+    catch { throw new DiscoveryError('not_found','Choose a collection to visit.',404); }
     if (runtime.chainId !== 46630) throw new DiscoveryError('not_found', 'Choose a collection to visit.', 404);
     return { world: { id, label: 'Robinhood Testnet', collection: runtime.collection, chainId: 46630 }, fingerprint: fingerprint(runtime) };
   }
   if (id === 'near-testnet' && process.env.NEARLYHUMAN_NEAR_ENABLED === '1') {
     const runtime = nearRuntime();
+    if(collection!==undefined&&collection!==runtime.collection)throw new DiscoveryError('not_found','Choose a collection to visit.',404);
     return { world: { id, label: 'NEAR Testnet', collection: runtime.collection }, fingerprint: fingerprint(runtime) };
   }
   throw new DiscoveryError('not_found', 'Choose a collection to visit.', 404);
@@ -63,6 +67,11 @@ async function limitedMap<T, R>(values: T[], read: (value: T) => Promise<R>): Pr
 
 export async function readDiscoveryWorld(descriptor: DiscoveryDescriptor): Promise<DiscoveryRead> {
   if (descriptor.world.id === 'robinhood-testnet') {
+    return withV2RuntimeScope(v2RuntimeScope(descriptor.world.collection),()=>readRobinhoodDiscoveryWorld(descriptor));
+  }
+  return readNearDiscoveryWorld(descriptor);
+}
+async function readRobinhoodDiscoveryWorld(descriptor: DiscoveryDescriptor): Promise<DiscoveryRead> {
     const { runtime, client, allowLocal } = v2ViewConnection();
     if (runtime.collection.toLowerCase() !== descriptor.world.collection.toLowerCase()) throw new DiscoveryError('connection', 'Checking these lives again.');
     const block = await verifyV2Runtime(client, runtime, allowLocal), at = { address: runtime.collection, abi: ABI, blockNumber: block.number! };
@@ -83,7 +92,8 @@ export async function readDiscoveryWorld(descriptor: DiscoveryDescriptor): Promi
     });
     if ((await client.getBlock({ blockNumber: block.number! })).hash !== block.hash) throw new DiscoveryError('connection', 'Checking these lives again.');
     return { world: descriptor.world, height: block.number!.toString(), hash: block.hash!, items };
-  }
+}
+async function readNearDiscoveryWorld(descriptor: DiscoveryDescriptor): Promise<DiscoveryRead> {
   const runtime = nearRuntime();
   if (runtime.collection !== descriptor.world.collection) throw new DiscoveryError('connection', 'Checking these lives again.');
   const { block } = await verifyNearRuntime(runtime), count = boundedCount(BigInt(await nearView<string>(runtime, 'nft_total_supply', {}, block)));

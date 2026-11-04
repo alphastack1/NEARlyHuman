@@ -3,6 +3,7 @@ import type { State, Trace } from './types';
 import type { GameNetworkId } from '../chain/networks';
 
 export interface V2World { chainId: number; collection: Address }
+export interface TransferBurnInfo { enabled: boolean; bps: number; totalBurned: string }
 export interface V2PublicLife extends V2World {
   version: 2; id: string; owner: Address; name: string; revision: number; state: State;
   purseMicro: string; purseNonce: string; pendingRequest?: Hex; observedBlock: string; observedBlockHash?: Hex;
@@ -13,6 +14,8 @@ export interface V2PublicConfig extends V2World {
   nativeMintPrice: string; tokenMintPriceMicro: string; multiplier: number; rulesHash: Hex; decisionConfig: Hex;
   verifier?: Address; actionModule?: Address; controllerCodeHash?: Hex; verifierCodeHash?: Hex; actionModuleCodeHash?: Hex; relayer?: Address; quoteSigner?: Address;
   guest?: { id: string; day?: number };
+  admissionsEnabled?: boolean;
+  transferBurn?: TransferBurnInfo;
 }
 export interface V2PublicRequest { requestId: Hex; tokenId: string; player: Address; day: number; deadline: string; acceptedAt: string; status: number; chainTimestamp: string }
 export interface V2LifePage { lives: V2PublicLife[]; nextCursor?: string }

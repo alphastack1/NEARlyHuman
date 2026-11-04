@@ -1,9 +1,23 @@
-import robinhood from '../../contracts/v2/deployments/robinhood-testnet.json';
-import near from '../../contracts/near/deployments/testnet.json';
+import { ACTIVE_ROBINHOOD as robinhood, ACTIVE_NEAR as near, ORIGINAL_ROBINHOOD as originalRobinhood } from '../chain/deployment-catalog';
+import type { DiscoveryWorldId } from '../chain/discovery-types';
 
 const rhParams = new URLSearchParams({ v2: '1', chainId: String(robinhood.runtime.chainId), collection: robinhood.runtime.collection });
 const nearParams = new URLSearchParams({ v2: '1', networkId: near.runtime.networkId, collection: near.runtime.collection });
 const sourceUrl = 'https://github.com/alphastack1/NEARlyHuman';
+const originalRhParams = new URLSearchParams({ v2: '1', chainId: String(originalRobinhood.runtime.chainId), collection: originalRobinhood.runtime.collection });
+
+export interface ProjectWorld {
+  id: DiscoveryWorldId; name: string; shortName: string; wallet: string; currency: string;
+  collection: string; token: string; explorer: string; tokenExplorer: string; sourceHref: string; appHref: string;
+  generation: number; archived: boolean;
+}
+const originalRhWorld: ProjectWorld = {
+  id: 'robinhood-testnet', name: 'Robinhood Testnet', shortName: 'Robinhood', wallet: 'Rabby / EVM wallet', currency: 'test ETH',
+  collection: originalRobinhood.runtime.collection, token: originalRobinhood.token,
+  explorer: `https://explorer.testnet.chain.robinhood.com/address/${originalRobinhood.runtime.collection}`,
+  tokenExplorer: `https://explorer.testnet.chain.robinhood.com/address/${originalRobinhood.token}`,
+  sourceHref: '/source/files/contracts/v2/NEARlyHumanV2.sol.txt', appHref: `/app?${originalRhParams}`, generation: 2, archived: true,
+};
 
 const imageSet = (name: string, widths: readonly number[], format: 'avif' | 'webp') => widths.map(width => `/site/${name}-${width}.${format} ${width}w`).join(', ');
 /** Shared by the rendered pictures and build-time early fetch hints. */
@@ -25,20 +39,21 @@ export const SITE_IMAGES = {
 } as const;
 export const PROJECT = {
   name: 'NEARlyHuman', siteUrl: 'https://nearlyhuman.netlify.app', sourceUrl,
-  sourceArchive: '/source/contracts.zip',
+  sourceArchive: '/source/v3/contracts.zip',
   appHref: '/app?v2=1',
-  exampleHref: `/?${rhParams}&rooster=1`,
-  exampleImage: `/api/v2/nft/1/image.svg?chainId=${robinhood.runtime.chainId}&collection=${robinhood.runtime.collection}`,
+  exampleHref: `/?${originalRhParams}&rooster=1`,
+  exampleImage: `/api/v2/nft/1/image.svg?chainId=${originalRobinhood.runtime.chainId}&collection=${originalRobinhood.runtime.collection}`,
   worlds: [
     { id: 'near-testnet', name: 'NEAR Testnet', shortName: 'NEAR', wallet: 'Meteor', currency: 'test NEAR',
       collection: near.runtime.collection, token: near.runtime.collection,
       explorer: `https://testnet.nearblocks.io/address/${near.runtime.collection}`,
       tokenExplorer: `https://testnet.nearblocks.io/address/${near.runtime.collection}`,
-      sourceHref: '/source/files/contracts/near/src/lib.rs.txt', appHref: `/app?${nearParams}` },
+      sourceHref: '/source/v3/files/contracts/near-v3/src/lib.rs.txt', appHref: `/app?${nearParams}`, generation: 3, archived: false },
     { id: 'robinhood-testnet', name: 'Robinhood Testnet', shortName: 'Robinhood', wallet: 'Rabby / EVM wallet', currency: 'test ETH',
       collection: robinhood.runtime.collection, token: robinhood.token,
       explorer: `https://explorer.testnet.chain.robinhood.com/address/${robinhood.runtime.collection}`,
       tokenExplorer: `https://explorer.testnet.chain.robinhood.com/address/${robinhood.token}`,
-      sourceHref: '/source/files/contracts/v2/NEARlyHumanV2.sol.txt', appHref: `/app?${rhParams}` },
-  ],
+      sourceHref: '/source/v3/files/contracts/v3/NEARlyHumanV3.sol.txt', appHref: `/app?${rhParams}`, generation: 3, archived: false },
+  ] satisfies ProjectWorld[],
+  archivedWorlds: [originalRhWorld] as readonly ProjectWorld[],
 } as const;

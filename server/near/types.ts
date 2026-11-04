@@ -11,6 +11,7 @@ export interface NearContractConfig {
   rules_hash: Hex; decision_config: Hex; native_mint_price: string; token_mint_price_micro: string;
   storage_deposit: string; multiplier: number; admissions_paused: boolean; issued: string; nft_mint_burns: string;
   total_allocated: string; available: string; reserved: string; min_processing_fee?: string;
+  transfer_burn_enabled?: boolean; transfer_burn_bps?: number; total_transfer_burned?: string;
 }
 export interface NearLife {
   token_id: string; owner_id: string; name: string; state: Hex; revision: number; purse_micro: string;

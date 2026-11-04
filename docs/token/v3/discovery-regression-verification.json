@@ -1,0 +1,27 @@
+{
+  "pass": true,
+  "checkedAt": "2026-11-04T12:04:36.514Z",
+  "scope": "Controlled public snapshots, scratch-only stores. No RPC, keys, wallet, model or financial/service ledger access.",
+  "checks": [
+    "Complete ranking with shared competition ties",
+    "Snapshot-bound deterministic pagination",
+    "Name and #ID search preserves world rank",
+    "Remembered status retains achieved rank",
+    "Filter/sort mismatch rejects old cursor",
+    "Fresh independent Node process resolves durable cursor without refresh",
+    "New snapshot cannot reorder an in-progress cursor",
+    "Provider failure returns explicit stale complete last-good snapshot",
+    "Capacity failure never publishes partial top",
+    "Expired and malformed cursors/filters rejected",
+    "Empty complete collection",
+    "Duplicate/partial collection cannot publish"
+  ],
+  "freshProcessCursor": {
+    "pass": true,
+    "freshProcessCursor": [
+      "1",
+      "5"
+    ],
+    "snapshot": "feb855dbf8c7f155c09e3b9b53200ef1ca82d814a5d25702a6d987dbe06cd43e"
+  }
+}

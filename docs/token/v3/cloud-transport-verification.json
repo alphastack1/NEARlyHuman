@@ -1,0 +1,17 @@
+{
+  "checkedAt": "2026-11-04T12:38:45.306Z",
+  "pass": true,
+  "cases": 9,
+  "tests": [
+    "GET recovers stale socket with Connection close",
+    "GET socket retry stops after three attempts",
+    "GET transient HTTP503/429 retries within the same bound",
+    "PATCH socket uncertainty is sent once and requires target readback",
+    "PATCH HTTP503 is never blindly retried or response-body dumped",
+    "Permanent GET HTTP401 rejects without retries",
+    "GET also recovers a transient response-body socket failure",
+    "PUT uncertainty is also sent once without automatic retry",
+    "HTTP422 projects validation field names without echoing message or private values"
+  ],
+  "scope": "In-memory fetch fixtures only; no credentials, network, financial store or environment writes."
+}

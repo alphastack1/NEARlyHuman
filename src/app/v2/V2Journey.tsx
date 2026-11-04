@@ -101,10 +101,9 @@ export default function V2Journey() {
   function switchWorld(target: V2PublicConfig, snapshot: JourneySnapshot) {
     saveJourneySnapshot(snapshot);
     const next = isNearWorld(target) ? { networkId: 'near-testnet' as const, collection: target.collection } : { chainId: target.chainId, collection: target.collection };
-    if (!readJourneySnapshot(next)) {
-      const creating = snapshot.screen === 'hatch' || snapshot.screen === 'wallet' && snapshot.walletIntent === 'hatch-connect';
-      saveJourneySnapshot({ world: next, name: creating ? snapshot.name : 'PIP', stats: creating ? [...snapshot.stats] : [2, 2, 1], payment: 'native', screen: 'hatch', backStack: ['welcome'], returnScreen: 'welcome', walletIntent: 'hatch-connect', kit: [undefined, undefined, undefined], category: 0, parcelSlot: 0, scroll: [] });
-    }
+    const previous = readJourneySnapshot(next), creating = snapshot.screen === 'hatch' || snapshot.screen === 'wallet' && snapshot.walletIntent === 'hatch-connect';
+    if (!previous) saveJourneySnapshot({ world: next, name: creating ? snapshot.name : 'PIP', stats: creating ? [...snapshot.stats] : [2, 2, 1], payment: 'native', screen: 'hatch', backStack: ['welcome'], returnScreen: 'welcome', walletIntent: 'hatch-connect', kit: [undefined, undefined, undefined], category: 0, parcelSlot: 0, scroll: [] });
+    else if (creating) saveJourneySnapshot({ ...previous, name: snapshot.name, stats: [...snapshot.stats], payment: 'native', screen: 'hatch', backStack: [previous.screen === 'hatch' ? 'welcome' : previous.screen], returnScreen: previous.screen === 'hatch' ? 'welcome' : previous.screen, walletIntent: 'hatch-connect' });
     // The token number belongs to its world. Never carry it across a switch.
     const url = new URL(location.href); url.search = worldParams(next).toString(); history.replaceState(null, '', url.pathname + url.search);
     storage.set('nh:v2:world', next); setSelectedWorld(next);
@@ -125,13 +124,14 @@ function JourneyWorld({ selectedWorld, availableWorlds, snapshot, onWorldSwitch,
   const preview = offeredPreview && (!selectedWorld || sameWorld(offeredPreview.config, selectedWorld)) ? offeredPreview : undefined;
   const [query] = useState(() => new URLSearchParams(location.search));
   const exactId = query.get('rooster') || query.get('id');
+  const hatchEntry = query.get('entry') === 'hatch' && !exactId;
   const initialWorld = parseGameWorld(query) || selectedWorld;
   const malformedWorld = (query.has('collection') || query.has('chainId') || query.has('networkId')) && !parseGameWorld(query);
   const [config, setConfig] = useState<V2PublicConfig | undefined>(preview?.config);
   const [life, setLife] = useState<V2PublicLife | undefined>(preview?.life);
   const [packet, setPacket] = useState<V2FilmPacket | undefined>(filmPacket(preview?.packet));
-  const [screen, setScreen] = useState<Screen>(preview?.screen || snapshot?.screen || (preview?.birth ? 'birth' : preview?.pending || preview?.job ? 'pending' : preview?.life ? exactId ? 'profile' : 'home' : 'welcome'));
-  const [opening, setOpening] = useState<CartridgePhase>(() => exactId || preview || snapshot ? 'closed' : openingSeen() ? 'closed' : 'assembling');
+  const [screen, setScreen] = useState<Screen>(preview?.screen || (hatchEntry ? 'hatch' : snapshot?.screen) || (preview?.birth ? 'birth' : preview?.pending || preview?.job ? 'pending' : preview?.life ? exactId ? 'profile' : 'home' : 'welcome'));
+  const [opening, setOpening] = useState<CartridgePhase>(() => exactId || hatchEntry || query.get('entry') === 'app' || preview || snapshot ? 'closed' : openingSeen() ? 'closed' : 'assembling');
   const [readBusy, setBusy] = useState(false), [walletBusy, setWalletBusy] = useState(false), [message, setMessage] = useState('');
   const busy = readBusy || walletBusy;
   const [errorCode, setErrorCode] = useState('');
@@ -324,7 +324,7 @@ function JourneyWorld({ selectedWorld, availableWorlds, snapshot, onWorldSwitch,
       const requestedPlay = options?.play ? fresh || filmRequestId : undefined;
       setLife(loaded); setPacket(film); setReadingDay(day); clearQuote(); setExample(false); setFreshDay(fresh || requestedPlay); setPlayRequest(requestedPlay);
       backStack.current = []; returnScreen.current = 'home'; setScreen(show);
-      setJob(current => current?.tokenId === loaded.id && sameWorld(config, loaded) && (show === 'pending' || loaded.pendingRequest === current.requestId) ? current : undefined);
+      setJob(current => current?.tokenId === loaded.id && sameWorld(targetWorld, loaded) && (show === 'pending' || loaded.pendingRequest === current.requestId || current.phase === 'ready' && current.requestId !== filmRequestId) ? current : undefined);
       if (account) storage.set(`nh:v2:selected:${worldKey(loaded)}:${account.toLowerCase()}`, loaded.id);
       const url = new URL(gameLifeUrl(loaded, loaded.id)); if (day) url.searchParams.set('day', String(day)); history.replaceState(null, '', url.pathname + url.search);
       return true;
@@ -354,14 +354,15 @@ function JourneyWorld({ selectedWorld, availableWorlds, snapshot, onWorldSwitch,
           view === 'watch' ? { play: true } : undefined);
       }
       if (snapshot?.lifeId && /^[1-9]\d{0,77}$/.test(snapshot.lifeId)) {
-        let show = snapshot.screen;
+        let show: Screen = hatchEntry ? 'hatch' : snapshot.screen;
+        let restoredFresh: Hex | undefined;
         if (snapshot.jobRequestId && snapshot.account && await restoreV2Session(snapshot.account, c).catch(() => false)) {
           const current = await apiFor(c).job(snapshot.jobRequestId).catch(() => undefined);
           if (!active) return;
-          if (current) { setJob(current); show = current.phase === 'ready' ? 'home' : 'pending'; }
+          if (current) { setJob(current); show = current.phase === 'ready' ? 'home' : 'pending'; if (current.phase === 'ready') restoredFresh = current.requestId; }
         }
         if (!active) return;
-        return loadLife(snapshot.lifeId, c, snapshot.day, show);
+        return loadLife(snapshot.lifeId, c, snapshot.day, show, restoredFresh);
       }
       // The optional example must not hold up a new hatch or replace a life
       // opened while its replay was still arriving.
@@ -391,6 +392,12 @@ function JourneyWorld({ selectedWorld, availableWorlds, snapshot, onWorldSwitch,
     const selected = storage.get<string>(`nh:v2:selected:${worldKey(config)}:${account.toLowerCase()}`);
     if (!exactId && generation.current === 0 && (screen === 'welcome' || screen === 'home') && selected && /^[1-9]\d*$/.test(selected)) void loadLife(selected, config);
   }, [config?.collection, account]);
+  useEffect(() => {
+    if (screen !== 'purse' || !config || preview) return;
+    let active = true;
+    void apiFor(config).config().then(current => { if (active && sameWorld(current, config)) setConfig(current); }).catch(() => {});
+    return () => { active = false; };
+  }, [screen]);
   useEffect(() => {
     if (!activeProvider.current) return;
     const provider = activeProvider.current, reset = () => { portfolioRead.current++; nativeBalanceRead.current++; nativeBalanceScope.current = ''; wallet.current = undefined; authenticated.current = ''; setVerifiedAccount(undefined); setV2Session(''); setJob(undefined); clearQuote(); setAccount(undefined); setOwned([]); setLivesLoading(false); setBusy(false); setWalletBalance('0'); setNativeBalance(undefined); if (pendingRef.current) setScreen('pending'); };
@@ -492,6 +499,7 @@ function JourneyWorld({ selectedWorld, availableWorlds, snapshot, onWorldSwitch,
   async function run(action: Action) {
     const token = claimWalletOperation(); if (!token) return;
     try {
+    if (config?.admissionsEnabled === false && ['mint', 'approve', 'day', 'verify', 'hatch-connect'].includes(action)) { throw Error('New lives and days are paused here. Your saved life and purse are still yours.'); }
     operation.current = action; setMessage('');
     writeScreen.current = screen === 'wallet' ? returnScreen.current : screen;
     if (pendingRef.current && action !== 'resume') {
@@ -707,6 +715,12 @@ function JourneyWorld({ selectedWorld, availableWorlds, snapshot, onWorldSwitch,
   }
   function hatch(source: 'native' | 'purse' | 'wallet' = 'native') {
     if (busy || walletOperation.current) return;
+    if (config?.admissionsEnabled === false) {
+      const current = availableWorlds.find(target => gameNetwork(target)?.id === gameNetwork(config)?.id && !sameWorld(target, config) && target.admissionsEnabled !== false);
+      const draft = captureSnapshot();
+      if (current && draft) { onWorldSwitch(current, { ...draft, screen: 'hatch', payment: 'native' }); return; }
+      setMessage('Hatching is paused. Your saved life is still here.'); return;
+    }
     setPayment(source);
     if (example) { setExample(false); backStack.current = ['welcome']; returnScreen.current = 'welcome'; go('hatch'); }
     else overlay('hatch');
@@ -744,13 +758,14 @@ function JourneyWorld({ selectedWorld, availableWorlds, snapshot, onWorldSwitch,
     manualParcelTarget.current = false;
     kitRef.current = next; setKit(next); const empty = next.findIndex(i => i === undefined); setParcelSlot(empty < 0 ? 0 : empty); clearQuote();
   }
-  async function prepare() { if (!life) return; if (readyJob) { await loadLife(readyJob.tokenId, config, undefined, 'home', readyJob.requestId, { play: true }); return; } if (life.pendingRequest) { await run('resume'); return; } setFreshDay(undefined); setPlayRequest(undefined); setReadingDay(undefined); restoreParcel(); overlay('care'); }
+  async function prepare() { if (!life) return; if (readyJob) { await loadLife(readyJob.tokenId, config, undefined, 'home', readyJob.requestId, { play: true }); return; } if (life.pendingRequest) { await run('resume'); return; } if (config?.admissionsEnabled === false) { setMessage('New days are paused here. Your saved days and purse are still yours.'); return; } setFreshDay(undefined); setPlayRequest(undefined); setReadingDay(undefined); restoreParcel(); overlay('care'); }
   function reviewDay() { if (busy || walletOperation.current) return; finishGuide(); clearQuote(); overlay('review'); }
   async function share() { if (!life) return; const url = new URL(gameLifeUrl(life, life.id)); try { await navigator.clipboard.writeText(url.href); setCopied(true); setTimeout(() => setCopied(false), 1800); } catch { setMessage('Copy this page address to share this life.'); } }
   const stageLife = life, stagePacket = packet;
   const entryScenery = !example && !owner && (screen === 'welcome' || backStack.current.includes('welcome'));
   const nameValid = /^[A-Z0-9](?:[A-Z0-9 ]{0,6}[A-Z0-9])?$/.test(name.trim().toUpperCase());
   const sum = stats.reduce((a, b) => a + b, 0), purse = BigInt(life?.purseMicro || '0');
+  const withdrawalBurn = config?.transferBurn?.enabled ? purse * BigInt(config.transferBurn.bps) / 10000n : 0n;
   const overlayOpen = screen !== 'home';
   const pendingDayJob = !pending || pending.kind === 'day' && pending.requestId === job?.requestId ? job : undefined;
   const pendingKind = pendingDayJob ? 'day' : pending?.kind || (walletBusy ? operation.current : undefined);
@@ -806,6 +821,7 @@ function JourneyWorld({ selectedWorld, availableWorlds, snapshot, onWorldSwitch,
   else if (screen === 'hatch') body = <>
     <div className="v2-egg small"><img src={itemImage(38)} alt=""/></div>
     {networkCard()}
+    {!config && message && <button className="v2-text-button" disabled={busy} onClick={() => { setMessage(''); setBoot(value => value + 1); }}>Try opening again</button>}
     <label className="v2-name-field"><span>Name your rooster</span><input value={name} disabled={busy} maxLength={8} placeholder="Name" autoComplete="off" autoCapitalize="characters" onChange={e => setName(e.target.value.toUpperCase().replace(/[^A-Z0-9 ]/g, ''))}/></label>
     <details className="v2-personality"><summary><span className="v2-personality-label">Strengths<small>Hardy, handy or upbeat?</small></span><span>{sum < 5 ? `${5 - sum} to place` : stats[0] === 2 && stats[1] === 2 && stats[2] === 1 ? 'Balanced' : 'Custom'}</span></summary>
       <p className="v2-points-left"><span>Move 5 points</span><small>− then + to move a point.</small></p>
@@ -818,7 +834,7 @@ function JourneyWorld({ selectedWorld, availableWorlds, snapshot, onWorldSwitch,
     </details>
     {payment !== 'native' && <p className="v2-small-note">{payment === 'purse' ? `From ${life?.name}’s purse` : 'From your wallet'}{owner && purse >= 250000000n && <button className="v2-inline-button" disabled={busy} onClick={() => selectPayment(payment === 'wallet' ? 'purse' : 'wallet')}>Change</button>}</p>}
     {payment !== 'native' && config && isNearWorld(config) && <p className="v2-native-deposit">{eth(config.storageDeposit)} NEAR storage deposit.<small>Unused NEAR returns.</small></p>}
-    <button className="v2-primary" disabled={!config || busy || !!wallet.current && (!nameValid || sum !== 5)} onClick={() => void run(wallet.current ? 'mint' : 'hatch-connect')}><Icon name={wallet.current ? 'leaf' : 'wallet'} size={16}/>{busy ? walletBusy ? wallet.current ? 'Hatching…' : 'Connecting…' : 'Opening…' : !wallet.current ? 'Connect wallet' : payment === 'wallet' && !isNearWorld(config) && BigInt(allowance) < 250000000n ? 'Allow 250 NHC' : 'Hatch ' + (name.trim() || 'rooster')}</button>
+    <button className="v2-primary" disabled={!config || config.admissionsEnabled === false || busy || !!wallet.current && (!nameValid || sum !== 5)} onClick={() => void run(wallet.current ? 'mint' : 'hatch-connect')}><Icon name={wallet.current ? 'leaf' : 'wallet'} size={16}/>{config?.admissionsEnabled === false ? 'Hatching paused' : busy ? walletBusy ? wallet.current ? 'Hatching…' : 'Connecting…' : 'Opening…' : !wallet.current ? 'Connect wallet' : payment === 'wallet' && !isNearWorld(config) && BigInt(allowance) < 250000000n ? 'Allow 250 NHC' : 'Hatch ' + (name.trim() || 'rooster')}</button>
     <span className="v2-fee-note">{wallet.current ? 'Network fee applies' : 'Connecting is free'}</span>
   </>;
   else if (screen === 'birth' && birth && config) body = <BirthReveal key={`${config.collection}:${birth.id}`} id={birth.id} name={life?.id === birth.id && currentWorld ? life.name : pending?.birthDraft?.name || name} egg={itemImage(38)} rooster={life?.id === birth.id && currentWorld ? roosterImage(life.state.seed) : undefined} explorer={gameExplorerToken(config, birth.id)} transaction={birth.hash ? gameExplorerTransaction(config, birth.hash) : undefined} busy={busy} onHome={() => { setBirth(undefined); go('home'); }} onRetry={() => { if (pendingRef.current) void checkPayment(); else void loadLife(birth.id, config, undefined, 'birth'); }}/>
@@ -866,7 +882,7 @@ function JourneyWorld({ selectedWorld, availableWorlds, snapshot, onWorldSwitch,
       {(pendingDayJob?.finalTx || pending?.hash || pendingDayJob?.ownerTx) && config && <a className="v2-text-button v2-transaction-link" href={gameExplorerTransaction(config, (pendingDayJob?.finalTx || pending?.hash || pendingDayJob?.ownerTx)!)} target="_blank" rel="noreferrer">{pendingDayJob?.finalTx ? 'View saved day onchain' : 'View transaction'}</a>}
     </>;
   }
-  else if (screen === 'purse' && life) body = <><div className="v2-purse-total"><Icon name="wallet" size={32}/><strong>{coins(life.purseMicro)}</strong><span>NHC</span></div>{!life.state.alive && <p className="v2-small-note">Still yours to take home.</p>}{owner && purse === 0n ? <><p className="v2-small-note">Flowers, fruit and crafts can fill this purse.</p><button className="v2-primary" disabled={busy} onClick={() => life.state.alive ? go('home') : hatch() }>{life.state.alive ? 'Back home' : 'Hatch another'}</button></> : owner ? <>{config && isNearWorld(config) && <p className="v2-native-deposit">{eth(config.storageDeposit)} NEAR storage deposit.<small>Unused NEAR returns.</small></p>}<button className="v2-primary" disabled={busy} onClick={() => void run('withdraw')}>{busy ? 'Sending…' : 'Withdraw to wallet'}</button>{purse >= 250000000n && <button className="v2-text-button" disabled={busy} onClick={() => hatch('purse')}>Hatch another · 250 NHC</button>}</> : <button className="v2-primary" onClick={() => go('home')}>Visit home</button>}</>;
+  else if (screen === 'purse' && life) body = <><div className="v2-purse-total"><Icon name="wallet" size={32}/><strong>{coins(life.purseMicro)}</strong><span>NHC</span></div>{!life.state.alive && <p className="v2-small-note">Still yours to take home.</p>}{owner && purse === 0n ? <><p className="v2-small-note">Flowers, fruit and crafts can fill this purse.</p><button className="v2-primary" disabled={busy} onClick={() => life.state.alive ? go('home') : hatch() }>{life.state.alive ? 'Back home' : 'Hatch another'}</button></> : owner ? <>{config && isNearWorld(config) && <p className="v2-native-deposit">{eth(config.storageDeposit)} NEAR storage deposit.<small>Unused NEAR returns.</small></p>}<p className="v2-small-note">Receive {coins((purse - withdrawalBurn).toString())} NHC{withdrawalBurn > 0n && <small className="v2-withdraw-burn">{coins(withdrawalBurn.toString())} NHC burned · 0.5%</small>}</p><button className="v2-primary" disabled={busy} onClick={() => void run('withdraw')}>{busy ? 'Sending…' : 'Withdraw to wallet'}</button>{purse >= 250000000n && <button className="v2-text-button" disabled={busy} onClick={() => hatch('purse')}>Hatch another · 250 NHC</button>}</> : <button className="v2-primary" onClick={() => go('home')}>Visit home</button>}</>;
   else if (screen === 'history') body = <>
     {historyLoading && <div className="v2-list-loading" role="status"><Icon name="book" size={16}/>Opening days…</div>}
     <div className="v2-history-list">{days.map(d => <button key={d.day} className={d.day === life?.state.day ? 'is-latest' : undefined} disabled={historyLoading} aria-label={`Watch day ${d.day}`} aria-current={historyCache.current.get(historyKey)?.selected === d.day ? 'true' : undefined} onClick={() => { const cached = historyCache.current.get(historyKey); if (cached) cached.selected = d.day; if (life) void loadLife(life.id, world, d.day); }}><span>DAY {String(d.day).padStart(2, '0')}</span>{d.day === life?.state.day && <small className="v2-day-meta">Latest</small>}{d.rewardMicro && BigInt(d.rewardMicro) > 0n && <small>+{coins(d.rewardMicro)} NHC</small>}<Icon name="play" size={16}/></button>)}</div>
@@ -926,7 +942,7 @@ function JourneyWorld({ selectedWorld, availableWorlds, snapshot, onWorldSwitch,
       suspended={overlayOpen || opening !== 'closed'} opening={opening}
       onMenu={example ? undefined : () => overlay('menu')} onProfile={example ? undefined : () => overlay('profile')}
       onExit={example ? endExample : historyControls ? () => void showHistory() : exactId ? () => overlay('profile') : undefined}
-      onPrepare={!example && owner && !historical ? prepare : undefined}
+      onPrepare={!example && owner && !historical && (config?.admissionsEnabled !== false || !!readyJob || !!life?.pendingRequest) ? prepare : undefined}
       prepareLabel={readyJob ? 'Watch new day' : life?.pendingRequest ? 'Open day ' + (life.state.day + 1) : life?.state.day === 0 ? 'Prepare day 1' : undefined}
       onHatch={example || !owner ? () => hatch() : !life?.state.alive ? () => hatch(purse >= 250000000n ? 'purse' : 'native') : undefined}
       hatchLabel={owner ? 'Hatch another' : undefined}

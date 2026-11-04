@@ -3,3 +3,11 @@
 
 # Preserve exact bytes of content-addressed recorded preview snapshots.
 public/assets/preview/*.json -text
+
+# Source fingerprints and canonical artwork must survive Windows checkouts.
+contracts/**/*.sol text eol=lf
+contracts/**/src/*.rs text eol=lf
+contracts/**/Cargo.toml text eol=lf
+contracts/**/Cargo.lock text eol=lf
+src/art/rooster.ts text eol=lf
+src/art/rooster-data.ts text eol=lf

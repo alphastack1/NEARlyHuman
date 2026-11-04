@@ -11,11 +11,11 @@ interface Snapshot extends DiscoveryRead { version: 1; fingerprint: string; id: 
 interface Head { id: string; retained: { id: string; at: number }[] }
 interface Lease { token: string; until: number }
 interface Cursor { v: 1; snapshot: string; offset: number; query: string }
-export interface DirectoryQuery { world: DiscoveryWorldId; sort: DiscoverySort; status: DiscoveryStatus; query: string; limit: number; cursor?: string }
+export interface DirectoryQuery { world: DiscoveryWorldId; collection?: string; sort: DiscoverySort; status: DiscoveryStatus; query: string; limit: number; cursor?: string }
 export interface DirectoryDependencies {
   store?: DurableStore;
   now?: () => number;
-  descriptor?: (world: DiscoveryWorldId) => DiscoveryDescriptor;
+  descriptor?: (world: DiscoveryWorldId, collection?: string) => DiscoveryDescriptor;
   read?: (descriptor: DiscoveryDescriptor) => Promise<DiscoveryRead>;
 }
 const warmSnapshots = new Map<string, Snapshot>();
@@ -119,14 +119,17 @@ async function currentSnapshot(query: DirectoryQuery, descriptor: DiscoveryDescr
 export function parseDirectoryQuery(params: URLSearchParams): DirectoryQuery {
   const world = params.get('world') || 'near-testnet', sort = params.get('sort') || 'newest', status = params.get('status') || 'all';
   const query = (params.get('q') || '').trim().toUpperCase(), limitText = params.get('limit') || '12', cursor = params.get('cursor') || undefined;
+  const collection=params.get('collection')??undefined;
   if (!['near-testnet', 'robinhood-testnet'].includes(world) || !['newest', 'longest'].includes(sort) || !['all', 'alive', 'remembered'].includes(status)
+    || collection!==undefined&&(world==='robinhood-testnet'?!/^0x[\da-f]{40}$/i.test(collection):collection.length<2||collection.length>64||!/^[a-z\d]+(?:[-_.][a-z\d]+)*$/.test(collection))
     || query.length > 40 || !/^[A-Z0-9 #]*$/.test(query) || !/^\d{1,2}$/.test(limitText) || +limitText < 1 || +limitText > 24 || cursor && (cursor.length > 420 || !/^[A-Za-z0-9_-]+$/.test(cursor))) throw new DiscoveryError('format', 'Choose a collection or search by name and number.', 400);
-  return { world: world as DiscoveryWorldId, sort: sort as DiscoverySort, status: status as DiscoveryStatus, query, limit: +limitText, ...(cursor ? { cursor } : {}) };
+  return { world: world as DiscoveryWorldId, ...(collection ? { collection } : {}), sort: sort as DiscoverySort, status: status as DiscoveryStatus, query, limit: +limitText, ...(cursor ? { cursor } : {}) };
 }
 /** Complete immutable snapshots are durable so cursors work across function instances. */
 export async function readPublicLifeDirectory(query: DirectoryQuery, dependencies: DirectoryDependencies = {}): Promise<PublicLifeDirectory> {
-  const store = dependencies.store || storage(), now = dependencies.now || Date.now, descriptor = (dependencies.descriptor || discoveryDescriptor)(query.world);
-  const base = `${ROOT}${query.world}/${descriptor.fingerprint}/`, queryHash = sha([query.world, query.sort, query.status, query.query]);
+  const store = dependencies.store || storage(), now = dependencies.now || Date.now, descriptor = (dependencies.descriptor || discoveryDescriptor)(query.world,query.collection);
+  if(query.collection!==undefined&&(query.world==='robinhood-testnet'?query.collection.toLowerCase()!==descriptor.world.collection.toLowerCase():query.collection!==descriptor.world.collection))throw new DiscoveryError('not_found','Choose a collection to visit.',404);
+  const base = `${ROOT}${query.world}/${descriptor.fingerprint}/`, queryHash = sha([query.world, descriptor.world.collection.toLowerCase(), query.sort, query.status, query.query]);
   let snapshot: Snapshot, offset = 0;
   if (query.cursor) {
     let cursor: Cursor;

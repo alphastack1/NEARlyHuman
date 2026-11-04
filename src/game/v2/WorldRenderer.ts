@@ -25,6 +25,7 @@ export interface V2WorldController {
   setViewportInsets(top: number, bottom: number, left?: number, right?: number): void;
   focus(target: InspectTarget): void;
   followActor(): void;
+  panBy(screenX: number, screenY: number): void;
   resize(): void;
   destroy(): void;
 }
@@ -391,6 +392,13 @@ class LifeScene extends Phaser.Scene {
     this.focusPoint = target.kind === 'bed' ? { ...BEDS[target.index || 0]!, y: BEDS[target.index || 0]!.y - 20 } : target.kind === 'well' ? { x: 280, y: 510 } : target.kind === 'workshop' ? { x: 432, y: 330 } : target.kind === 'mailbox' ? { x: 424, y: 710 } : undefined;
   }
   follow(): void { this.focusPoint = undefined; this.eventGlance = undefined; }
+  panBy(screenX: number, screenY: number): void {
+    const factor = this.cssScale * this.cameras.main.zoom;
+    const point = this.focusPoint || { x: this.point.x + this.facing * 12, y: this.point.y - 20 };
+    this.eventGlance = undefined;
+    this.focusPoint = { x: point.x - screenX / factor, y: point.y - screenY / factor };
+    this.centerCamera(1);
+  }
   private clampCamera(p: Point): Point {
     const c = this.cameras.main, halfX = c.width / c.zoom / 2, halfY = c.height / c.zoom / 2, factor = this.cssScale * c.zoom;
     // World-edge overscan lives behind the measured HUD/dock, leaving the whole subject in the visible playfield.
@@ -402,6 +410,21 @@ class LifeScene extends Phaser.Scene {
     const c = this.cameras.main, point = this.focusPoint || this.eventGlance?.point || { x: this.point.x + this.facing * 12, y: this.point.y - 20 }, z = c.zoom;
     const target = this.clampCamera({ x: point.x - (this.insets.left - this.insets.right) / this.cssScale / (2 * z), y: point.y - (this.insets.top - this.insets.bottom) / this.cssScale / (2 * z) });
     this.cameraPoint.x += (target.x - this.cameraPoint.x) * blend; this.cameraPoint.y += (target.y - this.cameraPoint.y) * blend;
+    if (!this.focusPoint && !this.eventGlance) {
+      // Smooth travel may lag behind a fast actor in a short embedded window.
+      // Keep its original full frame clear of the measured controls; explicit
+      // inspection/panning keeps its own camera rather than being pulled back.
+      const factor = this.cssScale * z, halfX = c.width / z / 2, halfY = c.height / z / 2;
+      const left = this.insets.left / factor + 2, right = this.insets.right / factor + 2;
+      const top = this.insets.top / factor + 2, bottom = this.insets.bottom / factor + 2;
+      const actorX = Math.round(this.point.x + this.perchOffset.x), actorY = Math.round(this.point.y + this.perchOffset.y);
+      const minX = actorX + ROOSTER_FRAME.width - ROOSTER_FRAME.footX - halfX + right;
+      const maxX = actorX - ROOSTER_FRAME.footX + halfX - left;
+      const minY = actorY + ROOSTER_FRAME.height - ROOSTER_FRAME.footY - halfY + bottom;
+      const maxY = actorY - ROOSTER_FRAME.footY + halfY - top;
+      if (minX <= maxX) this.cameraPoint.x = Math.max(minX, Math.min(maxX, this.cameraPoint.x));
+      if (minY <= maxY) this.cameraPoint.y = Math.max(minY, Math.min(maxY, this.cameraPoint.y));
+    }
     // Round the scroll origin itself. Rounding the center leaves a half-pixel
     // scroll whenever the logical viewport has an odd width or height.
     c.setScroll(Math.round(this.cameraPoint.x - c.width / z / 2), Math.round(this.cameraPoint.y - c.height / z / 2));
@@ -709,5 +732,5 @@ export function createV2WorldRenderer(host: HTMLElement, options: V2WorldOptions
     previous = next; game.scale.setZoom(next.scale); game.scale.resize(next.width, next.height); scene.resizeWorld(next.width, next.height, next.scale);
   };
   const observer = new ResizeObserver(() => { cancelAnimationFrame(frame); frame = requestAnimationFrame(resize); }); observer.observe(host); void ready.then(resize);
-  return { ready, setState: (state, options) => scene.setState(state, options), playReceipt: (r, o) => scene.play(r, o), setPaused: value => scene.setPaused(value), setPlaybackRate: rate => scene.setPlaybackRate(rate), setInputEnabled: enabled => scene.setInputEnabled(enabled), setOpening: phase => scene.setOpening(phase), setDawn: phase => scene.setDawn(phase), setViewportInsets: (t, b, l, r) => scene.setInsets(t, b, l, r), focus: target => scene.focus(target), followActor: () => scene.follow(), resize, destroy: () => { disposed = true; observer.disconnect(); cancelAnimationFrame(frame); scene.dispose(); game.destroy(true); } };
+  return { ready, setState: (state, options) => scene.setState(state, options), playReceipt: (r, o) => scene.play(r, o), setPaused: value => scene.setPaused(value), setPlaybackRate: rate => scene.setPlaybackRate(rate), setInputEnabled: enabled => scene.setInputEnabled(enabled), setOpening: phase => scene.setOpening(phase), setDawn: phase => scene.setDawn(phase), setViewportInsets: (t, b, l, r) => scene.setInsets(t, b, l, r), focus: target => scene.focus(target), followActor: () => scene.follow(), panBy: (x, y) => scene.panBy(x, y), resize, destroy: () => { disposed = true; observer.disconnect(); cancelAnimationFrame(frame); scene.dispose(); game.destroy(true); } };
 }

@@ -9,6 +9,7 @@ import { checkedRequest, ServiceError } from '../chain';
 import { StoreConflict } from '../storage';
 import { V2BudgetError } from './budget';
 import { acceptV2OwnerDay, getV2OwnerJob, quoteV2OwnerDay, wakeV2OwnerDay } from './service';
+import { v2RuntimeScope, withV2RuntimeScope } from './runtime-scope';
 
 const json = (value: unknown, status = 200, cache = 'no-store') => new Response(JSON.stringify(value, (_, v) => typeof v === 'bigint' ? v.toString() : v), { status, headers: { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': cache } });
 function world(url: URL, required = false) {
@@ -27,8 +28,13 @@ export async function handleV2Api(request: Request): Promise<Response> {
     // to an exact served world. Existing RH clients without a scope retain the
     // current-world API; an explicit foreign scope must never be reinterpreted.
     const requestedWorld=world(url);
-    if(requestedWorld){const {runtime}=v2ViewConnection();if(requestedWorld.chainId!==runtime.chainId||requestedWorld.collection.toLowerCase()!==runtime.collection.toLowerCase())throw new V2PublicError('not_found','Choose the exact life to visit.');}
+    let scope;
+    try { scope=v2RuntimeScope(requestedWorld?.collection); }
+    catch(error){if(requestedWorld)throw new V2PublicError('not_found','Choose the exact life to visit.');throw error;}
+    if(requestedWorld&&requestedWorld.chainId!==scope.runtime.chainId)throw new V2PublicError('not_found','Choose the exact life to visit.');
+    return await withV2RuntimeScope(scope, async()=>{
     if (request.method === 'POST') {
+      if(path==='/api/v2/quote'&&!scope.admissionsEnabled)throw new V2PublicError('archived','This collection is resting. Open a new home to start another day.',409);
       const origin = request.headers.get('origin');
       if (origin && !serverConfig().allowedOrigins.includes(origin)) throw new ServiceError('Open NEARlyHuman to continue.', 'origin', 403);
       if (!request.headers.get('content-type')?.includes('application/json')) throw new ServiceError('Please try again.', 'format', 415);
@@ -74,6 +80,7 @@ export async function handleV2Api(request: Request): Promise<Response> {
       return json(v2NftMetadata(life, 'https://nearlyhuman.netlify.app'), 200, 'public,max-age=30');
     }
     throw new V2PublicError('not_found', 'This page has wandered off.');
+    });
   } catch (error) {
     if (error instanceof ServiceError) return json({ error: { code: error.code, message: error.message } }, error.status);
     if (error instanceof StoreConflict) return json({ error: { code: 'busy', message: 'This day is being checked. Try again shortly.' } }, 409);

@@ -2,24 +2,25 @@ import { mkdir, readFile, readdir, stat, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { ARTICLES } from '../../src/site/content';
-import { PROJECT, SITE_IMAGES } from '../../src/site/project';
+import { PROJECT } from '../../src/site/project';
 import knownLifeHeads from '../../src/site/known-life-heads.json';
 import { publicLifePath, validLifeId, validLifeWorld } from '../../src/site/life-routes';
 
 export interface PublicPageMetadata { pathname: string; title: string; description: string }
-export interface PublicImagePreload { href: string; srcSet: string; sizes: string; type: 'image/avif' }
-export interface PublicPerformanceHints { siteModule: string; siteStylesheets: string[]; hero?: PublicImagePreload }
-export const HOME_HERO_PRELOAD: PublicImagePreload = {
-  href: SITE_IMAGES.hero.avifDefault, srcSet: SITE_IMAGES.hero.avifSrcSet,
-  sizes: SITE_IMAGES.hero.sizes, type: 'image/avif',
-};
+export interface PublicImagePreload { href: string; srcSet?: string; sizes?: string; media?: string; type: 'image/avif' | 'image/webp' }
+export interface PublicPerformanceHints { siteModule: string; siteStylesheets: string[]; hero?: readonly PublicImagePreload[] }
+/** These media conditions match OpenHouse's picture; only one poster is fetched. */
+export const HOME_HERO_PRELOAD: readonly PublicImagePreload[] = [
+  { href: '/site/open-house-phone.webp', type: 'image/webp', media: '(max-width: 720px)' },
+  { href: '/site/open-house-desktop.webp', type: 'image/webp', media: '(min-width: 721px)' },
+];
 
 const lifePages: PublicPageMetadata[] = knownLifeHeads.worlds.flatMap(group => {
-  const world = PROJECT.worlds.find(world => world.id === group.worldId);
-  if (!world || !validLifeWorld(group.worldId) || world.collection.toLowerCase() !== group.collection.toLowerCase()) throw Error('Known life metadata belongs to a different collection. Verify the catalog before changing deployments.');
+  const world = [...PROJECT.worlds, ...PROJECT.archivedWorlds].find(world => world.id === group.worldId && world.collection.toLowerCase() === group.collection.toLowerCase());
+  if (!world || !validLifeWorld(group.worldId)) throw Error('Known life metadata belongs to a different collection. Verify the catalog before changing deployments.');
   return group.lives.map(life => {
     if (!validLifeId(life.id) || !/^[A-Z0-9 ]{1,8}$/.test(life.name)) throw Error('Invalid known life identity.');
-    return { pathname: publicLifePath(world.id, life.id), title: `${life.name} #${life.id} · NEARlyHuman`,
+    return { pathname: publicLifePath(world.id, life.id, world.collection), title: `${life.name} #${life.id} · NEARlyHuman`,
       description: `Visit ${life.name}’s saved home, garden, belongings and recorded days on ${world.name}. An AI-led rooster NFT with a life of its own.` };
   });
 });
@@ -61,10 +62,10 @@ export function performanceHead(page: PublicPageMetadata, hints?: PublicPerforma
   const gate = root ? "if(location.pathname!=='/'||location.search||location.hash)return;" : '';
   // Preload CSS as a resource, not an already-applied stylesheet: Vite still
   // creates/awaits its stylesheet, preventing a dynamic-style first-paint race.
-  return `    <script id="${PERFORMANCE_SCRIPT_ID}">(function(p){${gate}function add(a){if(Array.from(document.head.querySelectorAll('link')).some(function(l){return l.rel===a.rel&&l.getAttribute('href')===a.href}))return;var l=document.createElement('link');Object.keys(a).forEach(function(k){l[k]=a[k]});document.head.appendChild(l)}if(p.hero)add({rel:'preload',as:'image',type:p.hero.type,href:p.hero.href,imageSrcset:p.hero.srcSet,imageSizes:p.hero.sizes,fetchPriority:'high'});p.siteStylesheets.forEach(function(h){add({rel:'preload',as:'style',href:h,crossOrigin:'anonymous'})});add({rel:'modulepreload',href:p.siteModule,crossOrigin:'anonymous'})})(${payload});</script>`;
+  return `    <script id="${PERFORMANCE_SCRIPT_ID}">(function(p){${gate}function add(a){if(Array.from(document.head.querySelectorAll('link')).some(function(l){return l.rel===a.rel&&l.getAttribute('href')===a.href}))return;var l=document.createElement('link');Object.keys(a).forEach(function(k){l[k]=a[k]});document.head.appendChild(l)}if(p.hero)p.hero.forEach(function(h){var a={rel:'preload',as:'image',type:h.type,href:h.href,fetchPriority:'high'};if(h.srcSet)a.imageSrcset=h.srcSet;if(h.sizes)a.imageSizes=h.sizes;if(h.media)a.media=h.media;add(a)});p.siteStylesheets.forEach(function(h){add({rel:'preload',as:'style',href:h,crossOrigin:'anonymous'})});add({rel:'modulepreload',href:p.siteModule,crossOrigin:'anonymous'})})(${payload});</script>`;
 }
 
-export async function discoverPublicHints(directory: string, hero?: PublicImagePreload): Promise<PublicPerformanceHints | undefined> {
+export async function discoverPublicHints(directory: string, hero?: readonly PublicImagePreload[]): Promise<PublicPerformanceHints | undefined> {
   const files = await readdir(path.join(directory, 'assets'));
   const modules = files.filter(file => /^Site-[A-Za-z\d_-]+\.js$/.test(file));
   const styles = files.filter(file => /^Site-[A-Za-z\d_-]+\.css$/.test(file));
@@ -73,11 +74,12 @@ export async function discoverPublicHints(directory: string, hero?: PublicImageP
   if (!modules.length && !styles.length) return;
   if (modules.length !== 1 || styles.length !== 1) throw Error('Expected one public Site module and stylesheet. Build into a clean output directory.');
   for (const file of [...modules, ...styles]) if (!(await stat(path.join(directory, 'assets', file))).isFile()) throw Error(`Public hint is not a built file: ${file}`);
-  if (hero) {
-    const sources = [hero.href, ...hero.srcSet.split(',').map(item => item.trim().split(/\s+/)[0]!)];
-    if (!hero.sizes.trim()) throw Error('The hero preload needs the same sizes as its picture.');
+  for (const image of hero || []) {
+    const sources = [image.href, ...(image.srcSet?.split(',').map(item => item.trim().split(/\s+/)[0]!) || [])];
+    if (image.srcSet && !image.sizes?.trim()) throw Error('The hero preload needs the same sizes as its picture.');
+    const imagePath = image.type === 'image/webp' ? /^\/site\/[A-Za-z\d_-]+\.webp$/ : /^\/site\/[A-Za-z\d_-]+\.avif$/;
     for (const source of new Set(sources)) {
-      if (!/^\/site\/[A-Za-z\d_-]+\.avif$/.test(source)) throw Error(`Unexpected public image hint: ${source}`);
+      if (!imagePath.test(source)) throw Error(`Unexpected public image hint: ${source}`);
       if (!(await stat(path.join(directory, source.slice(1)))).isFile()) throw Error(`Missing public preload image: ${source}`);
     }
   }
@@ -137,7 +139,7 @@ export async function buildPublicPages(outDir = path.resolve('dist'), heroPreloa
   if (!origin.startsWith('https://')) throw Error('The public website origin must use HTTPS.');
   const unique = new Set<string>();
   for (const page of PUBLIC_PAGES) {
-    if (!/^\/(?:the-game|project|explore|life\/(?:near-testnet|robinhood-testnet)\/[1-9]\d{0,77}|docs(?:\/[a-z0-9]+(?:-[a-z0-9]+)*)?)?$/.test(page.pathname) || unique.has(page.pathname)) throw Error(`Invalid or duplicate public page: ${page.pathname}`);
+    if (!/^\/(?:the-game|project|explore|life\/(?:near-testnet\/[1-9]\d{0,77}|robinhood-testnet\/(?:0x[\da-f]{40}\/)?[1-9]\d{0,77})|docs(?:\/[a-z0-9]+(?:-[a-z0-9]+)*)?)?$/.test(page.pathname) || unique.has(page.pathname)) throw Error(`Invalid or duplicate public page: ${page.pathname}`);
     unique.add(page.pathname);
   }
   const template = await readFile(path.join(directory, 'index.html'), 'utf8');

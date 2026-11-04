@@ -1,7 +1,7 @@
 import type { Hex } from 'viem';
 import type {
   V2PublicConfig, V2PublicLife, V2World, V2OwnerQuote, V2OwnerJob,
-  V2PublicRequest, V2PublicDay, V2DaySummary,
+  V2PublicRequest, V2PublicDay, V2DaySummary, TransferBurnInfo,
 } from '../v2/public';
 import type { GameNetworkId } from './networks';
 import type { State } from '../v2';
@@ -35,6 +35,8 @@ export interface NearPublicConfig extends NearWorld {
   multiplier: number;
   availableNetworks?: GameNetworkId[];
   guest?: { id: string; day?: number };
+  admissionsEnabled?: boolean;
+  transferBurn?: TransferBurnInfo;
 }
 export interface NearPublicLife extends NearWorld {
   version: 2;

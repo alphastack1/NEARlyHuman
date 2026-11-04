@@ -7,6 +7,8 @@ import { PROJECT, SITE_IMAGES } from './project';
 import { searchArticles } from './search';
 import { parsePublicLifePath } from './life-routes';
 import './site.css';
+import HomePreview from './HomePreview';
+import './arrival.css';
 
 const ExplorePage = lazy(() => import('./Lives').then(module => ({ default: module.ExplorePage })));
 const PublicLifePage = lazy(() => import('./Lives').then(module => ({ default: module.PublicLifePage })));
@@ -91,23 +93,26 @@ function WorkshopArt() { return <svg className="site-workshop" viewBox="0 0 140 
 function QuietNote({ children }: { children: ReactNode }) { return <div className="site-quiet-note"><Icon name="leaf" size={17}/>{children}</div>; }
 function SectionLink({ href, children }: { href: string; children: ReactNode }) { return <a className="site-text-link" href={href}><span className="site-link-label">{children}</span><span aria-hidden="true">→</span></a>; }
 
-function Home() {
-  return <>
-    <section className="site-home-hero" aria-labelledby="home-title">
-      <div className="site-home-copy"><span className="site-eyebrow">An AI-led NFT game</span><h1 id="home-title">A little life.<br/>A mind of<br className="site-desktop-break"/> its own.</h1><p>Hatch a rooster. Leave a few supplies.<br className="site-wide-break"/> See what it makes of the day.</p><div className="site-hero-actions"><AppLink/><SectionLink href="/the-game">Meet the game</SectionLink></div></div>
-      <div className="site-home-world"><div className="site-world-window"><WindowBar title="Home & garden"/><HeroScene/></div></div>
-    </section>
-    <section className="site-loop-strip" aria-label="How it plays">
-      <a href="/the-game#hatch"><PixelEgg/><span><small>01</small><strong>Hatch a life</strong></span></a>
-      <a href="/the-game#pack"><ParcelArt/><span><small>02</small><strong>Prepare supplies</strong></span></a>
-      <a href="/the-game#watch"><FilmArt/><span><small>03</small><strong>Watch the day</strong></span></a>
-    </section>
-    <div className="site-home-reassurance"><QuietNote>Nothing ages while you’re away.</QuietNote><SectionLink href="/docs/first-day">Your first day</SectionLink></div>
-    <section className="site-ownership-teaser"><div className="site-owned-portraits" aria-hidden="true"><Rooster seed="BOK"/><Rooster seed="SAGE"/><Rooster seed="MISO"/></div><div><span className="site-eyebrow">An NFT with a saved life</span><h2>Every life has a story.</h2><p>Visit a home. Explore its garden. Watch a saved day.</p></div><SectionLink href="/explore">Explore lives</SectionLink></section>
-  </>;
+function Home({ onSearch }: { onSearch(): void }) {
+  const [menu, setMenu] = useState(false);
+  const menuTrigger = useRef<HTMLButtonElement>(null), menuPanel = useRef<HTMLElement>(null);
+  useEffect(() => {
+    if (!menu) return;
+    const outside = (event: PointerEvent) => { if (event.target instanceof Node && !menuTrigger.current?.contains(event.target) && !menuPanel.current?.contains(event.target)) setMenu(false); };
+    const escape = (event: KeyboardEvent) => { if (event.key === 'Escape') { setMenu(false); menuTrigger.current?.focus(); } };
+    document.addEventListener('pointerdown', outside); document.addEventListener('keydown', escape);
+    return () => { document.removeEventListener('pointerdown', outside); document.removeEventListener('keydown', escape); };
+  }, [menu]);
+  const appHref = '/app?v2=1&entry=app';
+  return <div className="site arrival-site"><a className="site-skip-link" href="#home-title">Skip to content</a><div className="arrival-shell">
+    <header className="arrival-header"><a href="/" className="arrival-brand" aria-label="NEARlyHuman home"><BrandMark/><span>NEARlyHuman</span></a><nav aria-label="Website"><a href="/explore">Explore</a><a href="/docs">Guide</a><button ref={menuTrigger} type="button" aria-label="More pages" aria-expanded={menu} aria-controls="arrival-menu" onClick={() => setMenu(value => !value)}><Icon name={menu ? 'close' : 'menu'} size={20}/></button></nav>{menu && <nav ref={menuPanel} id="arrival-menu" className="arrival-menu" aria-label="More pages"><a href="/the-game">The game <Arrow/></a><a href="/project">The project <Arrow/></a><a href="/docs/contracts">Contracts & source <Arrow/></a><button type="button" onClick={() => { setMenu(false); onSearch(); }}>Search the guide <Icon name="book" size={17}/></button></nav>}</header>
+    <main><section className="arrival-hero" aria-labelledby="home-title"><div className="arrival-intro"><span className="site-eyebrow">An AI-led NFT life game</span><h1 id="home-title">You prepare.<br/> <span>They decide.</span></h1><p>Hatch a rooster. Bring the supplies.<br/> Watch a life of its own unfold.</p></div><div className="arrival-preview"><HomePreview/></div><div className="arrival-actions"><AppLink href={appHref}>Open App</AppLink><SectionLink href="/the-game">Meet the game</SectionLink><p><Icon name="leaf" size={15}/>Nothing ages while you’re away.</p></div></section>
+    <section className="arrival-loop" aria-label="How it plays"><a href="/the-game#hatch"><PixelEgg/><span><small>01</small><strong>Hatch a life</strong></span></a><a href="/the-game#pack"><ParcelArt/><span><small>02</small><strong>Bring supplies</strong></span></a><a href="/the-game#watch"><FilmArt/><span><small>03</small><strong>See what happens</strong></span></a><a className="arrival-explore" href="/explore"><span>Every life has a story.</span><strong>Explore the roosters <Arrow/></strong></a></section></main>
+    <footer className="arrival-footer"><span>NEARlyHuman</span><nav aria-label="Footer"><a href="/project">The project</a><a href="/docs/contracts">Contracts</a><a href="/docs/privacy-data">Privacy</a><a href="/docs/worlds-wallets">NEAR + Robinhood testnets</a></nav></footer>
+  </div></div>;
 }
 function GamePage() {
-  return <div className="site-game-page"><div className="site-page-intro"><span className="site-eyebrow">How it plays</span><h1>You prepare.<br/><span>They decide.</span></h1><p>Choose supplies and watch your rooster decide how to spend the day.</p></div>
+  return <div className="site-game-page"><div className="site-page-intro"><span className="site-eyebrow">How it plays</span><h1>You prepare.<br/> <span>They decide.</span></h1><p>Choose supplies and watch your rooster decide how to spend the day.</p></div>
     <div className="site-game-steps">
       <section id="hatch" className="site-game-step"><div className="site-step-art site-egg-art"><PixelEgg/><Rooster seed="FERN"/><i aria-hidden="true"/></div><div><span className="site-step-number">01 / A new beginning</span><h2>Hatch a life.</h2><p>A name, a home and a rooster with its own personality. Your NFT carries the life that follows.</p><SectionLink href="/docs/first-day">Start your first day</SectionLink></div></section>
       <section id="pack" className="site-game-step"><div className="site-step-art site-pack-art"><ParcelArt/><span className="site-supply-dot"/><span className="site-supply-dot"/><span className="site-supply-dot"/></div><div><span className="site-step-number">02 / The morning post</span><h2>Prepare its supplies.</h2><p>Choose up to three different supplies. A bite to eat, drinking water, perhaps a seed. Your rooster collects the post and decides how to use it.</p><SectionLink href="/docs/care-supplies">Care & supplies</SectionLink></div></section>
@@ -214,5 +219,6 @@ export default function Site() {
     const key = (e: KeyboardEvent) => { if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); setSearch(v => !v); } };
     window.addEventListener('keydown', key); return () => window.removeEventListener('keydown', key);
   }, [title, path, article]);
-  return <div className="site"><a className="site-skip-link" href="#site-main">Skip to content</a><div className={`site-window ${path.startsWith('/docs/') && article ? 'site-reading-window' : ''}`}><Header path={path} onSearch={() => setSearch(true)}/><main id="site-main">{path === '/' ? <Home/> : path === '/the-game' ? <GamePage/> : path === '/explore' ? <Suspense fallback={<OpeningLives/>}><ExplorePage/></Suspense> : publicLife ? <Suspense fallback={<OpeningLives/>}><PublicLifePage worldId={publicLife.worldId} id={publicLife.id}/></Suspense> : path === '/docs' ? <DocsIndex query={searchQuery} onQueryChange={setSearchQuery} onSearch={() => setSearch(true)}/> : article ? <DocsArticle article={article} onSearch={() => setSearch(true)}/> : path === '/project' ? <ProjectPage/> : <NotFound article={!!slug}/>}</main><Footer/></div>{search && <Search query={searchQuery} onQueryChange={setSearchQuery} onClose={() => setSearch(false)}/>}</div>;
+  if (path === '/') return <><Home onSearch={() => setSearch(true)}/>{search && <Search query={searchQuery} onQueryChange={setSearchQuery} onClose={() => setSearch(false)}/>}</>;
+  return <div className="site"><a className="site-skip-link" href="#site-main">Skip to content</a><div className={`site-window ${path.startsWith('/docs/') && article ? 'site-reading-window' : ''}`}><Header path={path} onSearch={() => setSearch(true)}/><main id="site-main">{path === '/the-game' ? <GamePage/> : path === '/explore' ? <Suspense fallback={<OpeningLives/>}><ExplorePage/></Suspense> : publicLife ? <Suspense fallback={<OpeningLives/>}><PublicLifePage worldId={publicLife.worldId} id={publicLife.id} collection={publicLife.collection}/></Suspense> : path === '/docs' ? <DocsIndex query={searchQuery} onQueryChange={setSearchQuery} onSearch={() => setSearch(true)}/> : article ? <DocsArticle article={article} onSearch={() => setSearch(true)}/> : path === '/project' ? <ProjectPage/> : <NotFound article={!!slug}/>}</main><Footer/></div>{search && <Search query={searchQuery} onQueryChange={setSearchQuery} onClose={() => setSearch(false)}/>}</div>;
 }

@@ -1,0 +1,11 @@
+{
+  "checkedAt": "2026-11-04T12:27:50.364Z",
+  "pass": true,
+  "cases": 3,
+  "tests": [
+    "scripts/v3/cutover-testnet.ts rejects missing or wrong mutation gate before wallet/cloud operations",
+    "scripts/v3/configure-runtime.ts rejects missing or wrong mutation gate before wallet/cloud operations",
+    "scripts/v3/resume-native-testnet.ts rejects missing or wrong mutation gate before wallet/cloud operations"
+  ],
+  "privateMutations": 0
+}
