@@ -1,0 +1,65 @@
+{
+  "pass": true,
+  "at": "2026-11-04T09:01:40.552Z",
+  "scope": "Controlled source UI preview only. Real public saved life cloned with day/revision set to zero for first-day presentation; not an actual newborn or simulated mint. Selection logic is day-independent. Per-page memory storage, no wallet/auth/paid operations.",
+  "checks": [
+    {
+      "check": "Revisiting Garden then Care uses an empty slot; packed seed survives.",
+      "labels": [
+        "Parcel slot 1: Daisy seed",
+        "Parcel slot 2: Water",
+        "Parcel slot 3: empty"
+      ]
+    },
+    {
+      "check": "Garden nonseed supply also uses empty space rather than overwriting its inferred seed target.",
+      "labels": [
+        "Parcel slot 1: Daisy seed",
+        "Parcel slot 2: Water",
+        "Parcel slot 3: Compost"
+      ]
+    },
+    {
+      "check": "Explicit occupied replacement target survives tab browsing.",
+      "labels": [
+        "Parcel slot 1: Bread",
+        "Parcel slot 2: Water",
+        "Parcel slot 3: empty"
+      ]
+    },
+    {
+      "check": "Packing resets manual target; next supply fills remaining empty slot.",
+      "labels": [
+        "Parcel slot 1: Bread",
+        "Parcel slot 2: Water",
+        "Parcel slot 3: Daisy seed"
+      ]
+    },
+    {
+      "check": "Full parcel still supports deliberate occupied-slot replacement.",
+      "labels": [
+        "Parcel slot 1: Bread",
+        "Parcel slot 2: Milk",
+        "Parcel slot 3: Daisy seed"
+      ]
+    },
+    {
+      "check": "One-seed replacement rule remains authoritative even with a manual nonseed target.",
+      "labels": [
+        "Parcel slot 1: Bread",
+        "Parcel slot 2: Milk",
+        "Parcel slot 3: Marigold seed"
+      ]
+    },
+    {
+      "check": "Removing an item clears manual intent and makes its empty slot available.",
+      "labels": [
+        "Parcel slot 1: Bread",
+        "Parcel slot 2: Milk",
+        "Parcel slot 3: Water"
+      ]
+    }
+  ],
+  "errors": [],
+  "writes": []
+}

@@ -1394,6 +1394,7 @@
 .v2-network-option[aria-pressed=true] { border-color: var(--v2-edge); background: var(--v2-selected); box-shadow: inset 3px 0 var(--v2-edge),0 2px 0 var(--v2-shadow); }
 .v2-network-option[aria-pressed=true] .v2-network-mark>i { background: var(--v2-emphasis); }
 .v2-network-explanation { padding: 6px 12px 2px; }
+.v2-journey .v2-network-funds { grid-column: 1 / -1; margin: 0; border-top: 1px solid var(--v2-soft-line); font: 13px/1.5 'Trebuchet MS',Verdana,Arial,sans-serif; font-size: 13px !important; }
 .v2-personality>summary>.v2-personality-label {
   flex: 1;
   color: var(--v2-text);

@@ -146,6 +146,8 @@ function JourneyWorld({ selectedWorld, availableWorlds, snapshot, onWorldSwitch,
   const [payment, setPayment] = useState<'native' | 'purse' | 'wallet'>(snapshot?.payment || 'native');
   const [kit, setKit] = useState<Parcel>(() => [preview?.kit?.[0] ?? snapshot?.kit?.[0], preview?.kit?.[1] ?? snapshot?.kit?.[1], preview?.kit?.[2] ?? snapshot?.kit?.[2]]), [category, setCategory] = useState(snapshot?.category || 0), [parcelSlot, setParcelSlot] = useState(snapshot?.parcelSlot || 0);
   const kitRef = useRef(kit); kitRef.current = kit;
+  // Tab suggestions may move the target; a slot the player tapped stays theirs.
+  const manualParcelTarget = useRef(false);
   const [guide, setGuide] = useState<number | undefined>(() => preview?.guideDone || storage.get<boolean>('nh:v2:packing-help') ? undefined : 0);
   const [birth, setBirth] = useState<{ id: string; hash?: string } | undefined>(preview?.birth);
   const [quote, setQuote] = useState<V2OwnerQuote>(), [job, setJob] = useState<V2OwnerJob | undefined>(preview?.job);
@@ -196,7 +198,15 @@ function JourneyWorld({ selectedWorld, availableWorlds, snapshot, onWorldSwitch,
   function clearQuote() { quoteRef.current = undefined; setQuote(undefined); }
   function keepQuote(q: V2OwnerQuote) { quoteRef.current = q; setQuote(q); }
   function finishGuide() { setGuide(undefined); storage.set('nh:v2:packing-help', true); }
-  function networkCard() { return config || selectedWorld ? <div className="v2-network-card"><button type="button" className="v2-network-trigger" aria-label={`Choose network: ${network?.label || 'Game network'}`} aria-haspopup="dialog" disabled={busy || !!walletOperation.current || !!pendingRef.current?.intent || !availableNetworks.length} onClick={() => overlay('networks')}><NetworkMark/><strong className="v2-network-brand">{network?.ecosystem === 'near' ? 'NEAR' : 'Robinhood'}</strong><span className="v2-network-environment" data-network={network?.environment}>{network?.environment === 'mainnet' ? 'Mainnet' : 'Testnet'}</span><i className="v2-network-chevron" aria-hidden="true"/></button>{account && wallet.current && <><span className="v2-wallet-address" title={account}>{account.length <= 20 ? account : `${account.slice(0, 8)}…${account.slice(-8)}`}</span><strong className="v2-wallet-balance">{nativeBalance === undefined ? 'Checking balance…' : nativeBalance === null ? 'Balance unavailable' : formatNativeBalance(BigInt(nativeBalance), network)}</strong></>}</div> : null; }
+  function networkCard() {
+    return config || selectedWorld ? <div className="v2-network-card">
+      <button type="button" className="v2-network-trigger" aria-label={`Choose network: ${network?.label || 'Game network'}`} aria-haspopup="dialog" disabled={busy || !!walletOperation.current || !!pendingRef.current?.intent || !availableNetworks.length} onClick={() => overlay('networks')}><NetworkMark/><strong className="v2-network-brand">{network?.ecosystem === 'near' ? 'NEAR' : 'Robinhood'}</strong><span className="v2-network-environment" data-network={network?.environment}>{network?.environment === 'mainnet' ? 'Mainnet' : 'Testnet'}</span><i className="v2-network-chevron" aria-hidden="true"/></button>
+      {account && wallet.current && <>
+        <span className="v2-wallet-address" title={account}>{account.length <= 20 ? account : `${account.slice(0, 8)}…${account.slice(-8)}`}</span><strong className="v2-wallet-balance">{nativeBalance === undefined ? 'Checking balance…' : nativeBalance === null ? 'Balance unavailable' : formatNativeBalance(BigInt(nativeBalance), network)}</strong>
+        {nativeBalance === '0' && network?.environment === 'testnet' && errorCode !== 'funds' && <a className="v2-text-button v2-network-funds" href={network.ecosystem === 'near' ? 'https://near-faucet.io/' : 'https://faucet.testnet.chain.robinhood.com/'} target="_blank" rel="noreferrer">Get test {network.nativeSymbol} ↗</a>}
+      </>}
+    </div> : null;
+  }
   function refreshNativeBalance(who: string | undefined, target = config) {
     if (!who || !target) return;
     const scope = `${worldKey(target)}:${who}`;
@@ -326,6 +336,7 @@ function JourneyWorld({ selectedWorld, availableWorlds, snapshot, onWorldSwitch,
     if (preview) return;
     let active = true;
     if (malformedWorld) { setMessage('Choose the original link for this life.'); return; }
+    const startupGeneration = generation.current;
     setBusy(true);
     void apiFor(selectedWorld).config().then(async c => {
       if (!active) return; if (selectedWorld && isNearWorld(selectedWorld) && !sameWorld(selectedWorld, c)) throw Error('Choose the original NEAR home.'); setConfig(c); storage.set('nh:v2:world', isNearWorld(c) ? { networkId: 'near-testnet', collection: c.collection } : { chainId: c.chainId, collection: c.collection });
@@ -345,8 +356,15 @@ function JourneyWorld({ selectedWorld, availableWorlds, snapshot, onWorldSwitch,
         if (!active) return;
         return loadLife(snapshot.lifeId, c, snapshot.day, show);
       }
-      try { const guest = await apiFor(c).guest(); if (active && generation.current === 0) { setLife(guest.life); setPacket(filmPacket(guest.packet)); } } catch { /* A real new life can be hatched without a demonstration film. */ }
-    }).catch(e => { if (active) setMessage(errorText(e)); }).finally(() => { if (active) setBusy(false); });
+      // The optional example must not hold up a new hatch or replace a life
+      // opened while its replay was still arriving.
+      void apiFor(c).guest().then(guest => {
+        if (!active || !mounted.current || startupGeneration !== 0 || generation.current !== startupGeneration || walletOperation.current || wallet.current || pendingRef.current) return;
+        setLife(guest.life); setPacket(filmPacket(guest.packet));
+      }).catch(() => { /* A real new life can be hatched without a demonstration film. */ });
+    }).catch(e => { if (active) setMessage(errorText(e)); }).finally(() => {
+      if (active && generation.current === startupGeneration && !walletOperation.current) setBusy(false);
+    });
     return () => { active = false; };
   }, [boot]);
   useEffect(() => {
@@ -394,7 +412,14 @@ function JourneyWorld({ selectedWorld, availableWorlds, snapshot, onWorldSwitch,
     setNativeBalance(undefined);
     if (!config || !account) return;
     refreshNativeBalance(account, config);
-    return () => { nativeBalanceRead.current++; };
+    let lastRefresh = 0;
+    const refreshOnReturn = () => {
+      if (document.visibilityState === 'hidden' || walletOperation.current || Date.now() - lastRefresh < 1500) return;
+      lastRefresh = Date.now(); refreshNativeBalance(account, config);
+    };
+    window.addEventListener('focus', refreshOnReturn);
+    document.addEventListener('visibilitychange', refreshOnReturn);
+    return () => { nativeBalanceRead.current++; window.removeEventListener('focus', refreshOnReturn); document.removeEventListener('visibilitychange', refreshOnReturn); };
   }, [account, config?.chainId, config?.collection]);
   async function signIn(w: Wallet, allowSignature = true) {
     if (!config) return false;
@@ -686,25 +711,30 @@ function JourneyWorld({ selectedWorld, availableWorlds, snapshot, onWorldSwitch,
     const current = kitRef.current, next = [...current] as Parcel, selected = current.indexOf(index);
     if (selected >= 0) { next[selected] = undefined; setParcelSlot(selected); }
     else {
-      const seedSlot = current.findIndex(i => i !== undefined && i >= 13);
-      const target = index >= 13 && seedSlot >= 0 ? seedSlot : parcelSlot;
+      const seedSlot = current.findIndex(i => i !== undefined && i >= 13), emptySlot = current.findIndex(i => i === undefined);
+      const target = index >= 13 && seedSlot >= 0 ? seedSlot
+        : !manualParcelTarget.current && parcelSlot === seedSlot && emptySlot >= 0 ? emptySlot : parcelSlot;
       const wasEmpty = current[target] === undefined; next[target] = index;
       const nextEmpty = next.findIndex(i => i === undefined);
       setParcelSlot(wasEmpty && nextEmpty >= 0 ? nextEmpty : target);
       if (guide !== undefined) setGuide(Math.min(2, next.filter(i => i !== undefined).length));
     }
+    manualParcelTarget.current = false;
     kitRef.current = next; setKit(next);
     if (parcelKey) storage.set(parcelKey, next);
   }
   function selectCategory(index: number) {
     setCategory(index);
-    const seedSlot = kit.findIndex(i => i !== undefined && i >= 13);
-    if (!busy && !walletOperation.current && index === 1 && seedSlot >= 0) setParcelSlot(seedSlot);
+    if (busy || walletOperation.current || manualParcelTarget.current) return;
+    const seedSlot = kit.findIndex(i => i !== undefined && i >= 13), emptySlot = kit.findIndex(i => i === undefined);
+    if (index === 1 && seedSlot >= 0) setParcelSlot(seedSlot);
+    else if (emptySlot >= 0) setParcelSlot(emptySlot);
   }
   function restoreParcel() {
     const saved = parcelKey ? storage.get<(number | null)[]>(parcelKey) : undefined;
     const next: Parcel = [undefined, undefined, undefined];
     if (Array.isArray(saved) && saved.length === 3) for (let i = 0; i < 3; i++) { const value = saved[i]; if (typeof value === 'number' && Number.isInteger(value) && value >= 0 && value <= 21 && !next.includes(value) && (value < 13 || !next.some(n => n !== undefined && n >= 13))) next[i] = value; }
+    manualParcelTarget.current = false;
     kitRef.current = next; setKit(next); const empty = next.findIndex(i => i === undefined); setParcelSlot(empty < 0 ? 0 : empty); clearQuote();
   }
   async function prepare() { if (!life) return; if (readyJob) { await loadLife(readyJob.tokenId, config, undefined, 'home', readyJob.requestId, { play: true }); return; } if (life.pendingRequest) { await run('resume'); return; } setFreshDay(undefined); setPlayRequest(undefined); setReadingDay(undefined); restoreParcel(); overlay('care'); }
@@ -737,7 +767,7 @@ function JourneyWorld({ selectedWorld, availableWorlds, snapshot, onWorldSwitch,
     } catch (e) { if (currentScreen.current === 'pending') setMessage(errorText(e)); }
     finally { pendingCheck.current = false; if (!walletOperation.current) setBusy(false); }
   }
-  const title: Record<Exclude<Screen, 'home'>, string> = { welcome: exactId ? 'Opening this home' : 'A little life of its own.', profile: life?.state.alive === false ? `${life.name} · remembered` : life?.name || 'A little life', hatch: 'A new rooster', birth: birth ? `Rooster #${birth.id}` : 'Your rooster NFT', care: life?.state.day === 0 ? 'Pack the first day' : 'Pack tomorrow', review: `Ready for day ${(life?.state.day || 0) + 1}?`, pending: dayClosing ? 'Closing this attempt' : pendingTitle, purse: `${life?.name || 'A little life'}’s purse`, history: 'Days', lives: 'Your roosters', menu: 'Menu', wallet: 'Choose your wallet', stock: historical && packet ? `Day ${packet.result.state.day} belongings` : 'Belongings', networks: 'Choose network' };
+  const title: Record<Exclude<Screen, 'home'>, string> = { welcome: exactId ? 'Opening this home' : 'Welcome home', profile: life?.state.alive === false ? `${life.name} · remembered` : life?.name || 'A little life', hatch: 'A new rooster', birth: birth ? `Rooster #${birth.id}` : 'Your rooster NFT', care: life?.state.day === 0 ? 'Pack the first day' : 'Pack tomorrow', review: `Ready for day ${(life?.state.day || 0) + 1}?`, pending: dayClosing ? 'Closing this attempt' : pendingTitle, purse: `${life?.name || 'A little life'}’s purse`, history: 'Days', lives: 'Your roosters', menu: 'Menu', wallet: 'Choose your wallet', stock: historical && packet ? `Day ${packet.result.state.day} belongings` : 'Belongings', networks: 'Choose network' };
   const closeDestination = backStack.current.at(-1) || returnScreen.current;
   const nestedSheet = closeDestination !== 'home' && closeDestination !== screen;
   const backLabel = closeDestination === 'welcome' ? 'Back to start' : closeDestination === 'hatch' ? 'Back to hatching' : closeDestination === 'care' ? 'Back to supplies' : closeDestination === 'review' ? 'Back to review' : closeDestination === 'profile' ? 'Back to rooster' : closeDestination === 'menu' ? 'Back to menu' : closeDestination === 'wallet' ? 'Back to wallets' : 'Back';
@@ -749,9 +779,8 @@ function JourneyWorld({ selectedWorld, availableWorlds, snapshot, onWorldSwitch,
   if (screen === 'welcome') body = <>
     <div className="v2-egg"><img src={itemImage(38)} alt=""/></div>
     {message && selectedWorld && networkCard()}
-    {!exactId && <p>Raise a rooster with a mind of its own.</p>}
     <button className="v2-primary" disabled={busy || (!config && !message)} onClick={() => malformedWorld ? location.assign(location.pathname + '?v2=1') : exactId && config ? void loadLife(exactId, initialWorld || config, Number(query.get('day')) || undefined, 'profile') : message && !config ? (setMessage(''), setBoot(v => v + 1)) : entryRecovery ? void run('resume') : hatch()}>
-      {malformedWorld ? 'Back to start' : exactId ? busy || !config && !message ? 'Opening home…' : 'Try again' : message && !config ? 'Try again' : entryRecovery ? entryRecoveryLabel : 'Hatch a rooster'}
+      {malformedWorld ? 'Back to start' : exactId ? busy || !config && !message ? 'Opening home…' : 'Try again' : message && !config ? 'Try again' : entryRecovery ? entryRecoveryLabel : busy || !config ? 'Opening…' : 'Hatch a rooster'}
     </button>
     {exactId ? <button className="v2-text-button" onClick={() => location.assign(location.pathname + '?v2=1')}>Back to start</button> : <div className="v2-entry-options">
       {life && packet && <button className="v2-text-button" disabled={busy} onClick={watchExample}><Icon name="play" size={16}/>Watch example</button>}
@@ -791,7 +820,7 @@ function JourneyWorld({ selectedWorld, availableWorlds, snapshot, onWorldSwitch,
     body = <>
       <DayFlow stage={0}/>
       {guide !== undefined && <aside className="v2-pack-guide" data-step={guide}><span className="v2-guide-dots" aria-label={`Tip ${guide + 1} of 3`}>{[0, 1, 2].map(i => <i key={i} data-active={i === guide}/>)}</span><strong>{['Tap a supply.', 'Pick up to three.', 'Review, then start.'][guide]}</strong><button className="v2-icon-button" aria-label="Dismiss packing tips" onClick={finishGuide}><Icon name="close" size={16}/></button></aside>}
-      <div className="v2-post-tray">{[0, 1, 2].map(i => <button key={i} className={'v2-post-slot' + (parcelSlot === i ? ' is-target' : '')} aria-pressed={parcelSlot === i} aria-label={`Parcel slot ${i + 1}: ${kit[i] === undefined ? 'empty' : itemName(kit[i]!)}`} disabled={busy} onClick={() => { if (!walletOperation.current) setParcelSlot(i); }}>{kit[i] === undefined ? <span className="v2-empty-slot" aria-hidden="true">+</span> : <><img src={itemImage(kit[i]!)} alt=""/><i>×1</i></>}</button>)}</div>
+      <div className="v2-post-tray">{[0, 1, 2].map(i => <button key={i} className={'v2-post-slot' + (parcelSlot === i ? ' is-target' : '')} aria-pressed={parcelSlot === i} aria-label={`Parcel slot ${i + 1}: ${kit[i] === undefined ? 'empty' : itemName(kit[i]!)}`} disabled={busy} onClick={() => { if (!walletOperation.current) { manualParcelTarget.current = true; setParcelSlot(i); } }}>{kit[i] === undefined ? <span className="v2-empty-slot" aria-hidden="true">+</span> : <><img src={itemImage(kit[i]!)} alt=""/><i>×1</i></>}</button>)}</div>
       <div className="v2-supply-tabs">{(['Care', 'Garden', 'House'] as const).map((label, i) => <button key={label} aria-pressed={category === i} onClick={() => selectCategory(i)}>{label}</button>)}</div>
       {category === 1 && <span className="v2-supply-hint">1 seed or sapling per day</span>}
       <div className={'v2-supplies' + (category === 2 ? ' is-house' : '')}>{choices.map(i => <button key={i} className={`${kit.includes(i) ? 'selected' : ''}${i === 11 || i === 12 ? ' v2-supply-wide' : ''}`} aria-pressed={kit.includes(i)} aria-label={`${kit.includes(i) ? 'Remove' : 'Pack'} ${i >= 13 ? PLANTS[i - 12]?.name : itemName(i)}`} disabled={busy} onClick={() => choose(i)}><img src={itemImage(i)} alt=""/><span>{i >= 13 ? PLANTS[i - 12]?.name : itemName(i)}</span><small>{i >= 13 ? `${PLANTS[i - 12]?.ticks} days` : life.state.inventory[i] ? `At home ×${life.state.inventory[i]}` : '×1'}</small></button>)}</div>
@@ -822,7 +851,7 @@ function JourneyWorld({ selectedWorld, availableWorlds, snapshot, onWorldSwitch,
         : dayReady ? <button className="v2-primary" disabled={busy} onClick={() => void checkPending()}>{busy ? 'Opening…' : 'Watch day'}</button>
         : canCloseDay ? <button className="v2-primary" disabled={busy} onClick={() => void run('expire')}>{busy ? 'Closing…' : 'Close expired day'}</button>
         : originalRetry ? <button className="v2-primary" disabled={busy} onClick={() => void retryOriginal()}>{busy ? 'Checking…' : 'Retry original transaction'}</button>
-        : pendingDayJob ? <button className="v2-primary" disabled={walletBusy} onClick={() => go(owner ? 'home' : 'welcome')}>{owner ? 'Back home' : 'Back to start'}</button>
+        : pendingDayJob ? <button className="v2-text-button" disabled={walletBusy} onClick={() => go(owner ? 'home' : 'welcome')}>{owner ? 'Back home' : 'Back to start'}</button>
         : <button className="v2-primary" disabled={busy} onClick={() => void checkPending()}>{busy ? 'Checking…' : pendingLabel}</button>}
       {originalRetry && <button className="v2-text-button" disabled={busy} onClick={() => void checkPending()}>Check again</button>}
       {pendingDayJob && !dayReady && !dayRetry && (message || dayPaused || Date.now() - pendingDayJob.updatedAt > 20_000) && <button className="v2-text-button" disabled={busy} onClick={() => void checkPending()}>{busy ? 'Checking…' : 'Check again'}</button>}

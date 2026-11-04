@@ -27,8 +27,9 @@ export function NetworkPicker({ networks, currentId, disabled = false, loading =
       </button>)}
     </div>
     {loading && <div className="v2-network-loading" role="status"><Icon name="wallet" size={16}/><span>Opening networks…</span></div>}
-    {!loading && onRetry && <button className="v2-text-button" disabled={disabled} onClick={onRetry}>{discoveryFailed ? 'Try networks again' : 'Refresh networks'}</button>}
+    {!loading && onRetry && (discoveryFailed || networks.length === 0) && <button className="v2-text-button" disabled={disabled} onClick={onRetry}>Try networks again</button>}
     <p className="v2-small-note v2-network-explanation">Each network has its own roosters.</p>
+    <a className="v2-text-button" href="/docs/worlds-wallets" target="_blank" rel="noopener noreferrer">Wallets &amp; test funds <span aria-hidden="true">↗</span></a>
     {onClose && <button className="v2-text-button" disabled={disabled} onClick={onClose}>Back</button>}
   </>;
 }

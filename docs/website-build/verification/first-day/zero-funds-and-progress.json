@@ -1,0 +1,62 @@
+{
+  "pass": true,
+  "time": "2026-11-04T09:10:03.618Z",
+  "checks": [
+    {
+      "check": "Known connected zero testnet balance has visible working faucet link",
+      "width": 390,
+      "height": 844,
+      "balance": "0 ETH",
+      "link": "https://faucet.testnet.chain.robinhood.com/"
+    },
+    {
+      "check": "Controlled balance changes on return focus and faucet link disappears",
+      "width": 390,
+      "balance": "0.001 ETH"
+    },
+    {
+      "check": "Preparing day presents animation/sealed thought count and quiet Back home; no plan answers",
+      "width": 390,
+      "height": 844,
+      "text": "Jev is choosing the day\nPack\nWallet\nAI\nA little mind at work.\nBack home",
+      "backClass": "v2-text-button"
+    },
+    {
+      "check": "Known connected zero testnet balance has visible working faucet link",
+      "width": 320,
+      "height": 568,
+      "balance": "0 ETH",
+      "link": "https://faucet.testnet.chain.robinhood.com/"
+    },
+    {
+      "check": "Controlled balance changes on return focus and faucet link disappears",
+      "width": 320,
+      "balance": "0.001 ETH"
+    },
+    {
+      "check": "Preparing day presents animation/sealed thought count and quiet Back home; no plan answers",
+      "width": 320,
+      "height": 568,
+      "text": "Jev is choosing the day\nPack\nWallet\nAI\nA little mind at work.\nBack home",
+      "backClass": "v2-text-button"
+    }
+  ],
+  "methods": [
+    "eth_requestAccounts",
+    "eth_chainId",
+    "eth_accounts",
+    "eth_chainId",
+    "eth_requestAccounts",
+    "eth_chainId",
+    "eth_accounts",
+    "eth_chainId"
+  ],
+  "errors": [],
+  "writes": [],
+  "balanceProbe": {
+    "zeroReads": 4,
+    "fundedReads": 4,
+    "scope": "Controlled eth_getBalance only; values are UI fixtures, not actual wallet funding."
+  },
+  "scope": "Source-preview UI, keyless read-only EVM provider and explicit dev preparing fixture. Real public contract reads only. No secrets, signatures, broadcasts, AI calls or funded transactions. Per-target memory storage, profile untouched."
+}

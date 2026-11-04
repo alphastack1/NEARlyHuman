@@ -1,0 +1,20 @@
+{
+  "pass": true,
+  "time": "2026-11-04T09:03:37.808Z",
+  "checks": [
+    "While config is held, welcome says Opening… and stays safely disabled.",
+    "Hatch form opens while the optional guest response remains held.",
+    "A delayed example does not replace a separately loaded owned life after generation advances."
+  ],
+  "methods": [
+    "eth_requestAccounts",
+    "eth_chainId",
+    "eth_accounts",
+    "eth_chainId"
+  ],
+  "errors": [],
+  "writes": [],
+  "sourceLifeId": "7",
+  "lateGuestId": "1",
+  "scope": "Controlled HTTP delays and keyless read-only account provider; real public chain reads only, no wallet secrets/signatures/transactions or funded calls. Storage scoped to owned target memory."
+}
