@@ -1,0 +1,37 @@
+{
+  "time": "2026-11-04T06:30:48.433Z",
+  "publicPages": [
+    {
+      "path": "/",
+      "width": 390,
+      "height": 844,
+      "heading": "A little life.A mind of its own.",
+      "overflow": false,
+      "missing": []
+    },
+    {
+      "path": "/docs",
+      "width": 1440,
+      "height": 1000,
+      "heading": "Player handbook",
+      "overflow": false,
+      "missing": []
+    },
+    {
+      "path": "/project",
+      "width": 390,
+      "height": 844,
+      "heading": "A small game.A life you own.",
+      "overflow": false,
+      "missing": []
+    }
+  ],
+  "github": [],
+  "errors": [],
+  "blocked": [],
+  "openApp": {
+    "url": "https://nearlyhuman.netlify.app/app?v2=1",
+    "surface": "game"
+  },
+  "failure": "TimeoutError: locator.waitFor: Timeout 25000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.markdown-body').first() to be visible\u001b[22m\n"
+}
