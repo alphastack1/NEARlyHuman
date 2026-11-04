@@ -1,0 +1,26 @@
+[
+  {
+    "site": "Sunflower",
+    "action": "Inspect actual Play destination",
+    "count": 1,
+    "href": "https://sunflower-land.com/play"
+  },
+  {
+    "after": "Play",
+    "url": "https://sunflower-land.com/"
+  },
+  {
+    "site": "Neko Atsume",
+    "action": "How to Play navigation",
+    "href": "./about.html"
+  },
+  {
+    "after": "How to Play",
+    "url": "https://www.nekoatsume.com/en/about.html"
+  },
+  {
+    "site": "Fren Pet docs",
+    "action": "Overview to Gameplay",
+    "url": "https://fren-pet-docs.vercel.app/gameplay"
+  }
+]

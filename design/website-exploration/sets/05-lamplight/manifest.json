@@ -1,0 +1,128 @@
+{
+  "schema_version": 1,
+  "set": 5,
+  "slug": "lamplight",
+  "name": "Lamplight",
+  "date": "2026-11-04",
+  "status": "Exploratory website design images only; not implemented or published",
+  "generator": {
+    "tool": "built-in image_gen__imagegen",
+    "mode": "ui-mockup",
+    "calls": 4,
+    "final_images": 3,
+    "cli_or_api_fallback": false
+  },
+  "concept": "A welcoming evening entrance into a little home: centered promise above a long lamplit domestic cutaway, a vertically stacked phone explanation, and a warm ivory guide within indigo navigation.",
+  "palette": {
+    "night": "#20243f",
+    "jewel_blue": "#30375d",
+    "reading_cream": "#fff3d8",
+    "ivory": "#fff1cf",
+    "amber": "#f1c36b",
+    "supporting": "emerald foliage and muted lilac"
+  },
+  "files": [
+    {
+      "file": "01-home.png",
+      "role": "Desktop homepage",
+      "width": 1536,
+      "height": 1024,
+      "sha256": "DCBB1BDD5B578F310F6C1A19A2162DD8692E7ECCE340ACE4834151EC2667530A",
+      "source": "C:/Users/Admin/.codex/generated_images/01a1a49e-0ca8-7bd0-b4c6-01245262f830/exec-a692006f-5d68-4432-b645-52d69cbf2ae4.png",
+      "references": [
+        "docs/refinements/environment-color/workshop-after.png"
+      ],
+      "prompt_key": "home",
+      "review": "Inspected with view_image. Prominent app actions; no birds; four garden beds; correct core copy."
+    },
+    {
+      "file": "02-the-game.png",
+      "role": "Mobile The game page / long responsive screenshot",
+      "width": 793,
+      "height": 1983,
+      "sha256": "A0A7F375D0F121F7CF5D877381EAE26D24F8D4ADBDDF500B06119FE5BD9FAC61",
+      "source": "C:/Users/Admin/.codex/generated_images/01a1a49e-0ca8-7bd0-b4c6-01245262f830/exec-9222fc21-c9db-48bc-8b09-9f3edffa1702.png",
+      "references": [
+        "C:/Users/Admin/.codex/generated_images/01a1a49e-0ca8-7bd0-b4c6-01245262f830/exec-518a6c7f-ab32-4a38-bbe7-b5f4a68869d0.png"
+      ],
+      "prompt_key": "game_selected_correction",
+      "review": "Inspected with view_image. Every beat stacks vertically; larger body copy; bottle, bread and seed packet; no birds. Long page is intended to scroll; not all content is one phone screen."
+    },
+    {
+      "file": "03-guide.png",
+      "role": "Desktop practical first-day article",
+      "width": 1536,
+      "height": 1024,
+      "sha256": "56EF53B3B7BF28C961DB4E12B6D4C299CCD480479B2DB1BF31DD51DA55C3C10A",
+      "source": "C:/Users/Admin/.codex/generated_images/01a1a49e-0ca8-7bd0-b4c6-01245262f830/exec-a70c8f80-584c-4dcd-ab88-9327cc05d323.png",
+      "references": [
+        "01-home.png"
+      ],
+      "prompt_key": "guide",
+      "review": "Inspected with view_image. Warm readable article; grouped guide rail, search, current route, contents and app exit; correct wallet-world pairing and three-supply rule."
+    }
+  ],
+  "rejected_attempts": [
+    {
+      "role": "Initial mobile composition",
+      "source": "C:/Users/Admin/.codex/generated_images/01a1a49e-0ca8-7bd0-b4c6-01245262f830/exec-518a6c7f-ab32-4a38-bbe7-b5f4a68869d0.png",
+      "scratch_copy": "TEMP/website-exploration/05-the-game-rejected.png",
+      "prompt_key": "game_initial_rejected",
+      "reason": "It compressed text and art into side-by-side rows. One targeted correction stacked all mobile beats and enlarged copy. This rejected output is only a style/provenance reference; permanent files do not depend on TEMP."
+    }
+  ],
+  "inputs_read": [
+    "AGENTS.md",
+    "README.md",
+    "design/website-exploration/SHARED_BRIEF.md",
+    "design/website-exploration/RESEARCH.md",
+    "design/website-exploration/research/research-pet-games.md",
+    "design/website-exploration/research/research-crypto-docs.md",
+    "design/website-exploration/research/research-content-architecture.md",
+    "C:/Users/Admin/.codex/skills/.system/imagegen/SKILL.md"
+  ],
+  "visual_inputs_inspected": [
+    "docs/refinements/environment-color/garden-after.png",
+    "docs/refinements/environment-color/kitchen-after.png",
+    "docs/refinements/environment-color/living-after.png",
+    "docs/refinements/environment-color/workshop-after.png",
+    "design/website-exploration/reference-captures/parallel-desktop.png",
+    "design/website-exploration/reference-captures/neko-how-desktop.png",
+    "design/website-exploration/reference-captures/near-docs-desktop.png"
+  ],
+  "art_invariant": "No generated rooster, bird or other character. Canonical src/art/rooster.ts and rooster-data.ts remain unchanged. Production character inserts must use the existing exact generator. Generated environmental and item art is illustrative and is not a claim of an exact game capture or a new environment implementation.",
+  "motion": [
+    "Immediate static content, navigation and Open App; no intro gate.",
+    "Two or three 6-10 second window-light/firefly/environment loops, low amplitude and paused offscreen.",
+    "No motion on guide reading plane; respect prefers-reduced-motion."
+  ],
+  "mobile": [
+    "Single column game page as shown; long page scrolls naturally.",
+    "Sticky compact wordmark/menu/Open App header; no forced intro; retain visible app action.",
+    "Homepage stacks promise, CTA and a deliberately cropped environment; do not shrink all desktop art into unreadability.",
+    "Guide replaces sidebars with Guide contents and On this page controls; use 18-20 CSS px body copy and comfortable line height."
+  ],
+  "tradeoffs": [
+    "Night imagery gives a distinct cozy identity but needs contrast validation and discipline to avoid excessive glow.",
+    "Environmental generated art is somewhat more detailed than game tiles and must be rebuilt or adapted around the original game palette and canonical sprites if selected.",
+    "Centered mobile editorial rhythm is welcoming but uses substantial vertical space.",
+    "An ivory reading plane loses some immersive atmosphere deliberately to gain usable reference reading.",
+    "Search and route structures are proposed UI concepts only; not existing features or working routes."
+  ],
+  "verification": {
+    "image_files": 3,
+    "all_opened_with_view_image": true,
+    "metadata_checked": true,
+    "source_changes": false,
+    "app_changes": false,
+    "chain_changes": false,
+    "deployment": false,
+    "production_push": false
+  },
+  "prompts": {
+    "home": "Use case: ui-mockup\nAsset type: finished website design concept, desktop homepage, one screen.\nPrimary request: Create a beautiful high-fidelity public website homepage for NEARlyHuman, an intimate phone-first AI-led virtual pet game. Direction name LAMPLIGHT: warm lit windows in an expansive indigo evening. Produce ONE flat website screenshot, approximately 1536 x 1024 landscape. No laptop, browser chrome, outer presentation board, annotations or multiple screens.\nReference image role: the supplied workshop screenshot is only a reference for crisp orthogonal 2D pixel environment materials and the actual domestic game's scale. Do not reproduce its UI. Do not invent, redraw, depict or substitute any bird or rooster. Artwork in this mockup is environments and objects only.\nComposition: a clean header on deep dusk indigo; left NEARlyHuman wordmark in restrained friendly geometric sans with a tiny abstract four-square lit-window mark, center-right quiet text links The game and Guide, far right a filled pale golden Open App button. Generous horizontal padding. Under the header a spacious centered typographic hero, NOT a left-copy/right-art split and NOT a card grid. The hero floats in quiet night sky. Set the huge headline in a sophisticated friendly editorial serif, normal high-quality typography (not pixel body type), ivory with a subtly warm accent on the second phrase. Headline exactly: \"A little life.\" line break \"A mind of its own.\" The second line can be slightly smaller. Below it set this readable two-line description: \"Hatch a rooster. Leave a few supplies.\" then \"See what it makes of the day.\" Under the description place filled amber \"Open App\" button and a modest unfilled text link \"How it plays →\". Small quiet factual caption underneath: \"NEAR + Robinhood · Testnet\".\nThe lower 45 percent is one long authored pixel-art domestic environment spanning almost the entire page: a strictly orthogonal 2D top-down cutaway house with a kitchen, sitting room and workbench, adjacent to a nighttime garden with exactly four productive beds, low fences, a mailbox and warm square windows. A small bread loaf and blue water bottle sit on a kitchen counter. Trees and dark hedges softly contain the scene. Crisp pixel clusters, straight perspective, clearly readable wood plank floors, rugs, lamps, tiny crop seedlings. House interior is honey-lit, outdoor foliage emerald/plum, paths muted lavender. Environment is connected and inhabited but contains NO characters, NO animals and NO birds. Avoid fake game HUD or a redesigned app. It feels like peeking into a little home after dusk, not a cinematic haunted house. Pixel art is crisp, not blurry gradients, vector, 3D or handpainted.\nSmall quiet stars in the upper sky; extremely restrained scattered firefly light dots at garden edges. Keep all text against quiet solid areas. Lower page edge has one thin rule and two short calm text blocks: \"You prepare. They decide.\" and \"Nothing ages while you're away.\" There can be a tiny down-arrow to indicate a longer page, but do not cram additional sections.\nPalette: deep readable indigo #20243f, jewel blue #30375d, warm ivory #fff1cf, amber #f1c36b, emerald foliage, muted lilac. Night is welcoming and gentle, never gloomy. Rounded rectangular buttons with a tiny pixel-cut corner, thin quiet lines, generous space. Typography impeccably legible; real navigation, clear hierarchy, balanced margins. No gradients behind text, no neon, no crypto charts, no wallet modal, no metrics, no fake partners, no earning promises, no economic dashboard, no extra claims. Primary Open App is immediate and unmistakable.",
+    "game_initial_rejected": "Use case: ui-mockup\nAsset type: high-fidelity mobile website design, The game page, one continuous phone viewport design.\nPrimary request: Create the SECOND image of the LAMPLIGHT website concept for NEARlyHuman. The provided first image is a style reference: match its deep dusk-indigo background, warm ivory and amber type, small four-square window mark, quiet stars, crisp cozy domestic pixel art, gently pixel-cut amber buttons, editorial serif display voice. This is a different page and a MOBILE layout, not a crop or palette variant of the homepage.\nOutput: ONE tall flat mobile website screenshot, about 900 x 1600 pixels, a 390 CSS pixel page scaled for inspection. No physical phone, device frame, browser chrome, outer board, annotations, desktop panels or second screen. Main text should be generously sized and readable. Design a coherent phone page that fits the whole screenshot without a huge empty sky or crammed tiny text.\nHeader: compact four-square window icon and \"NEARlyHuman\" at upper left, modest menu icon and an amber \"Open App\" button at upper right. Add a quiet \"← Home\" link just below, then a small uppercase eyebrow \"THE GAME\".\nLarge ivory serif title on two lines: \"You prepare.\" and \"They decide.\" Body beneath in a plain legible sans: \"Hatch a rooster. Leave a few supplies. See what it makes of the day.\"\nMain layout: A flowing VERTICAL editorial explanation, no generic feature-card grid, separated by thin understated rules. Three numbered beats with short text plus restrained environment/object illustrations. The number is in a tiny amber square at the left margin, with strong heading and body to its right. \nBeat 01 heading exactly \"Hatch a little life\". Body exactly \"Choose a testnet world and hatch a rooster NFT.\" Illustration is a small uncracked cream egg beside a warmly lit empty doorway. NO rooster, NO chicken, NO animal, NO character of any kind. The illustration is symbolic public-site art, not a game screen.\nBeat 02 heading exactly \"Pack a few possibilities\". Body exactly \"Choose up to three different supplies. At most one seed or sapling.\" Beneath the sentence, three horizontally arranged little pixel objects with clear labels: an actual small blue water BOTTLE labelled \"Water\"; a bread loaf labelled \"Bread\"; a closed seed packet with a daisy symbol labelled \"Seeds\". No watering can in the supply row. Show these as explanatory objects on a wooden shelf with subtle violet shadow, not interactive app controls, no totals, prices or invented balances.\nBeat 03 heading exactly \"Watch its day unfold\". Body exactly \"Jev chooses the projects and little routines. The day is saved before its film plays.\" Under this text show one wide, crisp orthogonal pixel-art cutaway domestic vignette of an empty warm-lit kitchen connected to a night garden path and mailbox. Include no birds or other characters, no fake HUD, no countdown, no unrevealed intentions, no named day's outcome. A small caption reads \"A home, a garden, a workbench.\"\nBottom: warm ivory reassurance strip with dark indigo text \"Nothing ages while you're away.\" Then a large full-width amber \"Open App\" button and a quiet text link \"Read the first-day guide →\". Footnote \"NEAR + Robinhood · Testnet\". Keep all UI within safe margins and visible. The final page should feel cozy, balanced, grounded and delightful to read, with atmosphere at the edges and solid dark surfaces behind text.\nConstraints: preserve factual copy and hierarchy. Canonical procedural rooster is intentionally omitted from these exploratory environmental visuals; NEVER generate a new rooster or animal. No profit or earning promises, no mainnet, no social login, no direct chat, no offline aging, no traders, no stats or partnerships. No extra mechanic, no actual app redesign. Pixel art crisp 2D at consistent scale, not 3D, not vector. Use serif only for headline/short headings; readable normal sans body and button text.",
+    "game_selected_correction": "Use case: ui-mockup\nAsset type: responsive mobile website screenshot for NEARlyHuman, The game page, readable narrow single-column correction.\nPrimary request: Recreate this supplied LAMPLIGHT style-reference mobile page as a TRUE narrow-phone responsive layout. Preserve the design identity and factual story but correct the current mobile layout problem: ALL content must stack vertically in ONE COLUMN. No text beside art, no two-column rows, no desktop layout compressed down. The output is ONE tall flat screenshot of a mobile web page, approximately 1024 x 2560 pixels, corresponding to 390 CSS px wide with readable 16-18 CSS px body type. At this render scale make BODY text around 42-46 pixels, headings 60 pixels, primary title 90 pixels. Navigation 36 pixels. Readability outranks decorative art. No phone frame, no outside presentation board, no annotations.\nIdentity: warm ivory and amber on deep dusk indigo, subtle stars, four-square lit-window logo, large confident editorial serif headlines, plain legible sans body, cozy crisp pixel environment/object art, amber Open App buttons with small cut pixel corners. Match supplied style reference, do not copy exact arrangement.\nTop bar in one compact horizontal line: small window mark, \"NEARlyHuman\", right \"Open App\". Keep full brand and action readable; secondary nav can be a menu icon. Below: small \"THE GAME\" eyebrow, title exactly \"You prepare.\" line break \"They decide.\" Intro body exactly \"Hatch a rooster. Leave a few supplies. See what it makes of the day.\" This body MUST WRAP into three short readable lines instead of one long line.\nThen three sections in a SINGLE VERTICAL FLOW with thin amber dividing lines. Each section's number, heading and all explanatory text are at full mobile width ABOVE its small illustration. Never put text and illustration side by side.\n01 \"Hatch a little life\". Body: \"Choose a testnet world and hatch a rooster NFT.\" Body wraps in 2 or 3 lines. Small centered illustration below: a cream uncracked egg by a warm lit doorway. No bird or animal.\n02 \"Pack a few possibilities\". Body: \"Up to three different supplies. At most one seed or sapling.\" Body wraps in 2 or 3 lines. Below: three small crisp pixel objects on a simple wood shelf: a blue water BOTTLE, bread loaf, daisy seed packet. Large normal labels below exactly \"Water\", \"Bread\", \"Seeds\". These are explanatory objects, not interactive app controls. No watering can.\n03 \"Watch its day unfold\". Body: \"Jev chooses the projects and little routines. The day is saved before its film plays.\" Body wraps in 3 or 4 readable lines. Below: a shallow SMALL environmental pixel vignette of an empty warm kitchen and dark garden/mailbox, not a dominant huge scene. No fake HUD, no named day, no spoilers, no rooster or other character.\nBottom: a simple warm ivory strip with 2-line text exactly \"Nothing ages while you're away.\" A filled large amber \"Open App\" button below. Then quiet \"Read the first-day guide →\" link. Small footnote \"NEAR + Robinhood · Testnet\".\nConstraints: this is an actual readable phone web layout, not a poster. Keep comfortable 28 CSS px side margins, consistent vertical spacing and large type. Make page taller if needed. Art supports the explanation and never crowds text. Omit all animals, birds and new rooster designs. No invented mechanics, economic claims, mainnet, direct chat, offline aging or fake metrics. Original rooster remains canonical and is not depicted in generated art.",
+    "guide": "Use case: ui-mockup\nAsset type: high-fidelity public game documentation webpage screenshot, practical guide article, ONE desktop viewport about 1536 x 1024.\nPrimary request: Create the THIRD image for NEARlyHuman's LAMPLIGHT website direction. Supplied homepage is a style reference for identity only: indigo evening, warm lamplight, ivory serif headings, four-square window mark and amber pixel-cut Open App button. Now show how this expressive game brand becomes a QUIET, USABLE, HIGHLY READABLE DOCUMENTATION SITE. This is a real guide article layout, not another homepage or poster. ONE flat website screenshot, no browser chrome, no laptop, no outer board or callout annotations.\nStructure:\nGlobal header, deep indigo, around 88px tall: window mark plus \"NEARlyHuman\" left, quiet links \"The game\" and \"Guide\" right with Guide active, filled amber \"Open App\" far right. Main canvas beneath has a deep indigo left guide-navigation rail about 260px wide, a generous warm ivory article surface across most of the remaining page, and a narrow muted ivory right page-contents column. Indigo peeks around the reading canvas but never behind body copy. Tiny quiet stars may appear only on outer indigo edges. Art is just a small lamp-lit window motif at upper right, no large environment interrupting reading.\nLeft rail: readable high-contrast ivory normal sans. At top \"Guide\" title, then a visibly usable search field labelled \"Search the guide\" with magnifier. Grouped small uppercase amber labels with topic links below:\n\"START HERE\": \"Your first day\" (active, filled warm ivory with dark text), \"Worlds & wallets\".\n\"LIFE AT HOME\": \"Care\", \"Garden\", \"Workshop\", \"Weather & visitors\".\n\"WHAT YOU OWN\": \"NFT & purse\", \"NHC\", \"Sharing & transfers\".\n\"UNDER THE HOOD\": \"Jev & saving\", \"Contracts\", \"Help\".\nAt rail bottom a quiet \"← Back to website\".\nArticle content: broad comfortable margins, article text max about 690px, ordinary crisp sans body around 20px, dark indigo ink. Editorial serif only for large title; docs body must not be pixel font. Short breadcrumb at top: \"Guide / Start here\". Large title exactly \"Your first day\". Intro in slightly larger sans exactly \"A small start, and a little room for surprise.\" Then a fine rule and THREE practical article sections, each with a visible small amber number and a clear normal heading:\n1. \"Choose your world\"\nBody: \"Open App, choose a testnet world, then connect its matching wallet.\"\nA compact simple two-row ruled table, no economic styling:\n\"NEAR Testnet\" | \"Meteor\"\n\"Robinhood Testnet\" | \"Rabby / EVM\"\nSmall caption \"These are separate worlds, with separate lives and inventories.\"\n2. \"Hatch, then pack\"\nBody: \"Hatch your rooster NFT. Choose up to three different supplies, with at most one seed packet or sapling.\"\nA small inline row of crisp pixel objects can sit at right of the paragraph or below it: a BLUE WATER BOTTLE, bread loaf, daisy seed packet. No watering can. Keep it secondary to text, no giant illustration, no UI redesign.\n3. \"Save, then watch\"\nBody: \"Review the day quote and confirm when ready. Jev makes the choices. The day is saved before its film plays.\"\nSmall note below: \"New choices stay hidden until they happen.\"\nA soft pale-amber reassurance callout reads exactly \"Nothing ages while you're away.\"\nAt article bottom a thin divider and a clear next-article link \"Next: Care & supplies →\". Do not include a large footer that makes text tiny.\nRight contents column: title \"ON THIS PAGE\", then \"Choose your world\", \"Hatch, then pack\", \"Save, then watch\", in short readable dark text. A small simple pixel desk-lamp beside an amber square window can anchor the corner. No characters or animals. A quiet small text link \"Open App ↗\" here is optional; the header's main action remains clear.\nStyle and finish: polished, warm, professional docs with dependable reading rhythm, generous line heights, legible column proportions, no tiny copy. Warm ivory #fff3d8 reading plane, dark indigo ink, golden amber accents, muted violet rules. Main article looks like a useful modern handbook in a lit room. Dusk atmosphere belongs to navigation and edges. No card-grid homepage. No metrics, charts, profit promises, mainnet claims, direct chat, traders, fabricated audit/partner badges or instructions to pay twice. Canonical rooster art is intentionally absent: do not draw a bird or any character. Only environments and objects in generated art."
+  }
+}

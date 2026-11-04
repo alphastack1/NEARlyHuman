@@ -1,0 +1,63 @@
+{
+  "schema_version": 1,
+  "set_id": "04",
+  "name": "Little Life Utility",
+  "slug": "little-life-utility",
+  "created_date": "2026-11-04",
+  "status": "research mockups; not implemented or deployed",
+  "tool": "image_gen__imagegen",
+  "mode": "built-in",
+  "transparent_background": false,
+  "prompt_source": "NOTES.md",
+  "canonical_rooster": "Preserved; no rooster or bird was generated. Production portrait must use existing generator.",
+  "files": [
+    {
+      "file": "01-home.png",
+      "role": "homepage",
+      "width": 1568,
+      "height": 1003,
+      "bytes": 1589977,
+      "sha256": "692778938577e23abe52884fb6e0095a70fd945994c0e04bffde8c46268aa10e",
+      "source": "C:/Users/Admin/.codex/generated_images/01a1a49d-e13f-7360-a5e6-b56f6b3bba28/exec-9585c35f-9e8e-49e2-8f03-f5c92e33c86c.png",
+      "references": [
+        "docs/refinements/environment-color/workshop-after.png"
+      ],
+      "prompt_heading": "Full prompt — image 01",
+      "inspection": "Selected first generation; complete homepage, four garden beds, no bird, Open App visible."
+    },
+    {
+      "file": "02-the-game.png",
+      "role": "the-game desktop and readable phone",
+      "width": 1568,
+      "height": 1003,
+      "bytes": 1640220,
+      "sha256": "f91935dac3e16bc729cc1eaf5be50e4a5876f5d1e0c13daeaa3c226d3c4877a6",
+      "source": "C:/Users/Admin/.codex/generated_images/01a1a49d-e13f-7360-a5e6-b56f6b3bba28/exec-941841b4-33fb-40ab-98ee-681b3bc4a382.png",
+      "references": [
+        "01-home.png"
+      ],
+      "prompt_heading": "Full prompt — image 02",
+      "inspection": "Selected first generation; hatch/pack/watch explained, capped water bottle, readable phone, no birds."
+    },
+    {
+      "file": "03-guide.png",
+      "role": "first-day guide article",
+      "width": 1568,
+      "height": 1003,
+      "bytes": 1734495,
+      "sha256": "abe649aed57f901445547326d6b0b2c0032374c86505c1278f463a73553085d5",
+      "source": "C:/Users/Admin/.codex/generated_images/01a1a49d-e13f-7360-a5e6-b56f6b3bba28/exec-35c0cfd2-ae4f-4987-a2bc-30b762baa960.png",
+      "references": [
+        "01-home.png"
+      ],
+      "prompt_heading": "Full prompt — image 03",
+      "inspection": "Selected first generation; ordinary readable body, search/navigation/contents, Open App, accurate first-day facts."
+    }
+  ],
+  "postprocessing": "None; copied unchanged into owned set folder.",
+  "limitations": [
+    "Illustrative environment/item art is not a replacement for canonical game assets.",
+    "Slight generative shading and text rendering are concept-only; use live HTML and flat CSS in implementation."
+  ],
+  "deployment": "No source edits, commits, push or deployment."
+}

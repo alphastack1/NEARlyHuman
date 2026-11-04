@@ -1,0 +1,187 @@
+{
+  "created": "2026-11-04",
+  "status": "mockups only; owner selection pending",
+  "generation": "built-in image_gen__imagegen; full prompts in each set NOTES.md",
+  "independentDesigners": 6,
+  "imageCount": 18,
+  "canonicalRoosterHashes": {
+    "src/art/rooster.ts": "77394d48de4e07c9bbeb2734c7fd5bb2e6c16789032eec957cfd22eaea793f54",
+    "src/art/rooster-data.ts": "bf21c7a5f5d58bb4718b6258a60710a01cc08b1573b6dce3899292d53fe38907"
+  },
+  "sets": [
+    {
+      "id": 1,
+      "name": "Morning Gate",
+      "description": "A sunny front door into the pixel world. Cream sky, rich garden colour and a cottage scene carry the introduction.",
+      "notes": "sets/01-morning-gate/NOTES.md",
+      "images": [
+        {
+          "file": "sets/01-morning-gate/01-home.png",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 2026474,
+          "sha256": "eececb7b583a5ebaedacb28ab5304cef52a65f0563ca59f5d5b94980856feb37"
+        },
+        {
+          "file": "sets/01-morning-gate/02-the-game.png",
+          "width": 1024,
+          "height": 1536,
+          "bytes": 1827931,
+          "sha256": "a8a0112b365854b47b36688d732b9c25af67d59c3721886c8d00b4ed5109ffef"
+        },
+        {
+          "file": "sets/01-morning-gate/03-guide.png",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 1700806,
+          "sha256": "792dcad6bc9a49dfa9552786792e3f643d1652819c8697abec97209b77ca9988"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "The Little Almanac",
+      "description": "A warm printed game manual. Oxblood serif headlines, ivory paper, fine rules and small pixel plates.",
+      "notes": "sets/02-little-almanac/NOTES.md",
+      "images": [
+        {
+          "file": "sets/02-little-almanac/01-home.png",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 2437499,
+          "sha256": "471f9b2a7a01f9edc29eef2d5c35ef31c3316e883892f2453463bfb8b810d70f"
+        },
+        {
+          "file": "sets/02-little-almanac/02-the-game.png",
+          "width": 1024,
+          "height": 1536,
+          "bytes": 2417799,
+          "sha256": "75a8e6f81858c1e4fbb08c3417554144b814995ad8b6a1bd53a1faee32551c04"
+        },
+        {
+          "file": "sets/02-little-almanac/03-guide.png",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 2222197,
+          "sha256": "6c771acb1524d04e623b6bd467786731c81d5828c4eaaef1df7ac4ef74a3a841"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Small Life, Big Type",
+      "description": "Bold modern typography meets pixel objects. Apricot and cobalt make a bright, confident editorial identity.",
+      "notes": "sets/03-small-life-big-type/NOTES.md",
+      "images": [
+        {
+          "file": "sets/03-small-life-big-type/01-home.png",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 1606453,
+          "sha256": "abbabb801fdf315e5e266a539e72a1605e2027f65396f2ff7d608e7905c6965b"
+        },
+        {
+          "file": "sets/03-small-life-big-type/02-the-game.png",
+          "width": 948,
+          "height": 1659,
+          "bytes": 1739367,
+          "sha256": "f9cf55bd4c44e44105588306731d7939c37cb83e92e31d8af97e4dfc934e4d96"
+        },
+        {
+          "file": "sets/03-small-life-big-type/03-guide.png",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 1432405,
+          "sha256": "bd56214addb848bb5b9de698639a45f9077cae57f8c1d031743247f7c40de097"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "name": "Little Life Utility",
+      "description": "A playful retro software window. Cobalt title bars, lavender desktop, pixel tabs and a bright lime entrance.",
+      "notes": "sets/04-little-life-utility/NOTES.md",
+      "images": [
+        {
+          "file": "sets/04-little-life-utility/01-home.png",
+          "width": 1568,
+          "height": 1003,
+          "bytes": 1589977,
+          "sha256": "692778938577e23abe52884fb6e0095a70fd945994c0e04bffde8c46268aa10e"
+        },
+        {
+          "file": "sets/04-little-life-utility/02-the-game.png",
+          "width": 1568,
+          "height": 1003,
+          "bytes": 1640220,
+          "sha256": "f91935dac3e16bc729cc1eaf5be50e4a5876f5d1e0c13daeaa3c226d3c4877a6"
+        },
+        {
+          "file": "sets/04-little-life-utility/03-guide.png",
+          "width": 1568,
+          "height": 1003,
+          "bytes": 1734495,
+          "sha256": "abe649aed57f901445547326d6b0b2c0032374c86505c1278f463a73553085d5"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "name": "Lamplight",
+      "description": "An evening at a little home. Indigo sky, amber windows and a connected domestic scene with a quiet sense of life.",
+      "notes": "sets/05-lamplight/NOTES.md",
+      "images": [
+        {
+          "file": "sets/05-lamplight/01-home.png",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 1772148,
+          "sha256": "dcbb1bdd5b578f310f6c1a19a2162dd8692e7ecce340ace4834151ec2667530a"
+        },
+        {
+          "file": "sets/05-lamplight/02-the-game.png",
+          "width": 793,
+          "height": 1983,
+          "bytes": 1791734,
+          "sha256": "a0a7f375d0f121f7cf5d877381eae26d24f8d4adbddf500b06119fe5bd9fac61"
+        },
+        {
+          "file": "sets/05-lamplight/03-guide.png",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 1696306,
+          "sha256": "56ef53b3b7bf28c961db4e12b6d4c299ccd480479b2db1bf31dd51da55c3c10a"
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "name": "Little Life Archive",
+      "description": "One NFT as a collected little world. A framed home, possessions and saved days make ownership concrete.",
+      "notes": "sets/06-little-life-archive/NOTES.md",
+      "images": [
+        {
+          "file": "sets/06-little-life-archive/01-home.png",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 1621962,
+          "sha256": "05ee4068e0470684ee030ea5b5ca67b7043d33837191dc7661879dd5b8793bf7"
+        },
+        {
+          "file": "sets/06-little-life-archive/02-the-game.png",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 1798768,
+          "sha256": "afb52416852b38e10183292e60e744594ad8ed0892adf58889ee3787dceaa802"
+        },
+        {
+          "file": "sets/06-little-life-archive/03-guide.png",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 1728649,
+          "sha256": "609429b75a7f7c15d0a7fd2a2033d670fad3b6cdb851b41b8f9497d53ef83acb"
+        }
+      ]
+    }
+  ]
+}

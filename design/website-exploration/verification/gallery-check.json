@@ -1,0 +1,226 @@
+{
+  "url": "local permanent gallery",
+  "checks": [
+    {
+      "width": 1440,
+      "height": 1000,
+      "concepts": 6,
+      "horizontalOverflow": false,
+      "imageProof": [
+        {
+          "src": "sets/01-morning-gate/01-home.png",
+          "loaded": true
+        },
+        {
+          "src": "sets/01-morning-gate/01-home.png",
+          "loaded": true
+        },
+        {
+          "src": "sets/01-morning-gate/02-the-game.png",
+          "loaded": true
+        },
+        {
+          "src": "sets/01-morning-gate/03-guide.png",
+          "loaded": true
+        },
+        {
+          "src": "sets/02-little-almanac/01-home.png",
+          "loaded": true
+        },
+        {
+          "src": "sets/02-little-almanac/01-home.png",
+          "loaded": true
+        },
+        {
+          "src": "sets/02-little-almanac/02-the-game.png",
+          "loaded": true
+        },
+        {
+          "src": "sets/02-little-almanac/03-guide.png",
+          "loaded": true
+        },
+        {
+          "src": "sets/03-small-life-big-type/01-home.png",
+          "loaded": true
+        },
+        {
+          "src": "sets/03-small-life-big-type/01-home.png",
+          "loaded": true
+        },
+        {
+          "src": "sets/03-small-life-big-type/02-the-game.png",
+          "loaded": true
+        },
+        {
+          "src": "sets/03-small-life-big-type/03-guide.png",
+          "loaded": true
+        },
+        {
+          "src": "sets/04-little-life-utility/01-home.png",
+          "loaded": true
+        },
+        {
+          "src": "sets/04-little-life-utility/01-home.png",
+          "loaded": true
+        },
+        {
+          "src": "sets/04-little-life-utility/02-the-game.png",
+          "loaded": true
+        },
+        {
+          "src": "sets/04-little-life-utility/03-guide.png",
+          "loaded": true
+        },
+        {
+          "src": "sets/05-lamplight/01-home.png",
+          "loaded": true
+        },
+        {
+          "src": "sets/05-lamplight/01-home.png",
+          "loaded": true
+        },
+        {
+          "src": "sets/05-lamplight/02-the-game.png",
+          "loaded": true
+        },
+        {
+          "src": "sets/05-lamplight/03-guide.png",
+          "loaded": true
+        },
+        {
+          "src": "sets/06-little-life-archive/01-home.png",
+          "loaded": true
+        },
+        {
+          "src": "sets/06-little-life-archive/01-home.png",
+          "loaded": true
+        },
+        {
+          "src": "sets/06-little-life-archive/02-the-game.png",
+          "loaded": true
+        },
+        {
+          "src": "sets/06-little-life-archive/03-guide.png",
+          "loaded": true
+        }
+      ]
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "concepts": 6,
+      "horizontalOverflow": false,
+      "imageProof": [
+        {
+          "src": "sets/01-morning-gate/01-home.png",
+          "loaded": true
+        },
+        {
+          "src": "sets/01-morning-gate/01-home.png",
+          "loaded": true
+        },
+        {
+          "src": "sets/01-morning-gate/02-the-game.png",
+          "loaded": true
+        },
+        {
+          "src": "sets/01-morning-gate/03-guide.png",
+          "loaded": true
+        },
+        {
+          "src": "sets/02-little-almanac/01-home.png",
+          "loaded": true
+        },
+        {
+          "src": "sets/02-little-almanac/01-home.png",
+          "loaded": true
+        },
+        {
+          "src": "sets/02-little-almanac/02-the-game.png",
+          "loaded": true
+        },
+        {
+          "src": "sets/02-little-almanac/03-guide.png",
+          "loaded": true
+        },
+        {
+          "src": "sets/03-small-life-big-type/01-home.png",
+          "loaded": true
+        },
+        {
+          "src": "sets/03-small-life-big-type/01-home.png",
+          "loaded": true
+        },
+        {
+          "src": "sets/03-small-life-big-type/02-the-game.png",
+          "loaded": true
+        },
+        {
+          "src": "sets/03-small-life-big-type/03-guide.png",
+          "loaded": true
+        },
+        {
+          "src": "sets/04-little-life-utility/01-home.png",
+          "loaded": true
+        },
+        {
+          "src": "sets/04-little-life-utility/01-home.png",
+          "loaded": true
+        },
+        {
+          "src": "sets/04-little-life-utility/02-the-game.png",
+          "loaded": true
+        },
+        {
+          "src": "sets/04-little-life-utility/03-guide.png",
+          "loaded": true
+        },
+        {
+          "src": "sets/05-lamplight/01-home.png",
+          "loaded": true
+        },
+        {
+          "src": "sets/05-lamplight/01-home.png",
+          "loaded": true
+        },
+        {
+          "src": "sets/05-lamplight/02-the-game.png",
+          "loaded": true
+        },
+        {
+          "src": "sets/05-lamplight/03-guide.png",
+          "loaded": true
+        },
+        {
+          "src": "sets/06-little-life-archive/01-home.png",
+          "loaded": true
+        },
+        {
+          "src": "sets/06-little-life-archive/01-home.png",
+          "loaded": true
+        },
+        {
+          "src": "sets/06-little-life-archive/02-the-game.png",
+          "loaded": true
+        },
+        {
+          "src": "sets/06-little-life-archive/03-guide.png",
+          "loaded": true
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "guideSwitch": [
+    "Guide",
+    "Guide",
+    "Guide",
+    "Guide",
+    "Guide",
+    "Guide"
+  ],
+  "dialogGuide": "01 · Morning Gate / Guide",
+  "nextWrapsToHome": "01 · Morning Gate / Homepage",
+  "escapeCloses": true,
+  "pass": true
+}

@@ -1,0 +1,42 @@
+[
+  {
+    "id": "neko",
+    "url": "https://www.nekoatsume.com/en/",
+    "observedAt": "2026-11-04T03:23:33.857Z",
+    "status": 200,
+    "title": "Neko Atsume : Kitty Collector Official Website",
+    "finalUrl": "https://www.nekoatsume.com/en/"
+  },
+  {
+    "id": "neko-how",
+    "url": "https://www.nekoatsume.com/en/about.html",
+    "observedAt": "2026-11-04T03:23:37.980Z",
+    "status": 200,
+    "title": "How To Play | Neko Atsume",
+    "finalUrl": "https://www.nekoatsume.com/en/about.html"
+  },
+  {
+    "id": "colony",
+    "url": "https://parallel.life/colony",
+    "observedAt": "2026-11-04T03:23:42.986Z",
+    "status": 200,
+    "title": "Colony: Survival – AI Colony-Building Game | Parallel",
+    "finalUrl": "https://parallel.life/colony"
+  },
+  {
+    "id": "sunflower-start",
+    "url": "https://docs.sunflower-land.com/start-here/how-to-start",
+    "observedAt": "2026-11-04T03:23:46.696Z",
+    "status": 200,
+    "title": "How to Start | Sunflower Land",
+    "finalUrl": "https://docs.sunflower-land.com/start-here/how-to-start"
+  },
+  {
+    "id": "aavegotchi-current-docs",
+    "url": "https://docs.aavegotchi.com/",
+    "observedAt": "2026-11-04T03:23:48.779Z",
+    "status": 200,
+    "title": "Introduction | Aavegotchi Docs",
+    "finalUrl": "https://docs.aavegotchi.com/"
+  }
+]
