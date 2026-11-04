@@ -1,0 +1,18 @@
+{
+  "pass": true,
+  "checks": [
+    "Two-page controlled snapshot merges16distinctcards.",
+    {
+      "test": "Four-minute-old snapshot is rechecked after detail visit while loaded pages stay intact",
+      "directoryRequestsBefore": 2,
+      "directoryRequestsAfter": 3,
+      "cardCount": 16,
+      "note": "Saved onchain · 05:37 PM",
+      "snapshotAt": "2026-11-04T10:37:29.752Z",
+      "savedAt": 1793788896701,
+      "checkedAt": 1793788896701
+    }
+  ],
+  "errors": [],
+  "scope": "Controlled16cardpagination fixture; owned-tab clock advanced4min afterfirstresponse; no live directory/store/signing/financial writes."
+}

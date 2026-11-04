@@ -147,7 +147,7 @@ export async function readV2PublicReplay(value: string, day?: number, expectedWo
 export function v2NftMetadata(life: V2PublicLife, origin: string) {
   const world = `chainId=${life.chainId}&collection=${life.collection}`, traits = roosterTraits(life.state.seed);
   return { name: `${life.name} #${life.id}`, description: 'An AI-led rooster NFT with a saved home, inventory and token purse. Its portrait reflects its recorded life.',
-    image: `${origin}/api/v2/nft/${life.id}/image.svg?${world}`, external_url: `${origin}/?rooster=${life.id}&${world}`,
+    image: `${origin}/api/v2/nft/${life.id}/image.svg?${world}`, external_url: life.chainId === 46630 ? `${origin}/life/robinhood-testnet/${life.id}` : `${origin}/?rooster=${life.id}&${world}`,
     attributes: [{ trait_type: 'Life', value: life.state.alive ? 'Alive' : 'Remembered' }, { trait_type: 'Level', value: life.state.level },
       { trait_type: 'Game day', value: life.state.day }, { trait_type: 'Purse', value: formatUnits(BigInt(life.purseMicro), 6) },
       ...['Body', 'Wits', 'Spirit'].map((name, i) => ({ trait_type: name, value: life.state.stats[i] })),

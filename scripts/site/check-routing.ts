@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import { deployments } from '../../src/chain/deployments';
 import { OPEN_APP_HREF, selectEntrySurface, selectV2Entry } from '../../src/site/routing';
+import { parsePublicLifePath, publicLifePath } from '../../src/site/life-routes';
 
 const origin = 'https://nearlyhuman.netlify.app';
 const surface = (path: string) => {
@@ -14,6 +15,9 @@ const expected: [string, 'site' | 'game'][] = [
   ['/#garden', 'site'],
   ['/the-game', 'site'],
   ['/project', 'site'],
+  ['/explore?world=near-testnet&sort=longest', 'site'],
+  ['/life/near-testnet/1', 'site'],
+  ['/life/robinhood-testnet/8?from=%2Fexplore', 'site'],
   ['/docs/', 'site'],
   ['/docs/first-day?utm_source=app', 'site'],
   ['/docs/worlds-and-wallets?networkId=near-testnet', 'site'],
@@ -22,6 +26,7 @@ const expected: [string, 'site' | 'game'][] = [
   ['/app/', 'game'],
   [OPEN_APP_HREF, 'game'],
   ['/app?utm_source=guide', 'game'],
+  ['/app?v2=1&rooster=8&view=watch&day=1', 'game'],
   ['/?v2=1', 'game'],
   ['/?v2=0', 'game'],
   ['/?legacy=1', 'game'],
@@ -59,6 +64,9 @@ assert.equal(choose(new URL(OPEN_APP_HREF, origin).search, false), true);
 // Classification must never consume callback data or normalize the business URL.
 const returnUrl = new URL('/?networkId=near-testnet&collection=game.testnet&rooster=1&transactionHashes=original#signature=unchanged', origin);
 const originalUrl = returnUrl.href;
+assert.equal(publicLifePath('near-testnet', '1'), '/life/near-testnet/1');
+assert.deepEqual(parsePublicLifePath('/life/robinhood-testnet/8/'), { worldId: 'robinhood-testnet', id: '8' });
+for (const path of ['/life/near-mainnet/1', '/life/near-testnet/0', '/life/near-testnet/01', '/life/near-testnet/1/extra']) assert.equal(parsePublicLifePath(path), undefined);
 selectEntrySurface(returnUrl.pathname, returnUrl.searchParams, returnUrl.hash);
 selectV2Entry(returnUrl.searchParams, true);
 assert.equal(returnUrl.href, originalUrl);

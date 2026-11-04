@@ -13,6 +13,8 @@
   &nbsp; · &nbsp;
   <a href="https://nearlyhuman.netlify.app">Website</a>
   &nbsp; · &nbsp;
+  <a href="https://nearlyhuman.netlify.app/explore">Explore lives</a>
+  &nbsp; · &nbsp;
   <a href="https://nearlyhuman.netlify.app/docs">Player handbook</a>
   &nbsp; · &nbsp;
   <a href="https://nearlyhuman.netlify.app/docs/contracts">Contracts & source</a>
@@ -74,9 +76,10 @@ Lives, inventory and NHC remain separate between worlds; there is no bridge. Hat
 
 ## Try the hosted demo
 
-1. **Open [MISO's saved life](https://nearlyhuman.netlify.app/?rooster=1&chainId=46630&collection=0x30cb5213fa94020a95893ddb6b07470dbf7a9efc).** See that exact Robinhood NFT and home. Inspect public details or watch a saved day without a wallet or new inference.
-2. **Search [the handbook](https://nearlyhuman.netlify.app/docs).** Try `seeds`, `minting` or `dead` to find the corresponding rules.
-3. **Hatch through [Open App](https://nearlyhuman.netlify.app/app?v2=1).** Choose a world, connect its wallet and confirm. Pack supplies, review the fee and accept the day. Jev prepares it, the chain saves it, and the film becomes ready.
+1. **Browse [Explore lives](https://nearlyhuman.netlify.app/explore).** Switch public worlds, search a name or NFT number, or select Longest lives to see equal completed lifetimes share a rank. Browsing requires no wallet.
+2. **Open [MAPLE #8](https://nearlyhuman.netlify.app/life/robinhood-testnet/8) or [FERN #1](https://nearlyhuman.netlify.app/life/near-testnet/1).** Inspect the exact NFT's portrait, garden, belongings, purse and recorded days. Visit home or watch a saved film without a new transaction or inference.
+3. **Search [the handbook](https://nearlyhuman.netlify.app/docs).** Try `seeds`, `minting` or `dead` to find the corresponding rules.
+4. **Hatch through [Open App](https://nearlyhuman.netlify.app/app?v2=1).** Choose a world, connect its wallet and confirm. Pack supplies, review the fee and accept the day. Jev prepares it, the chain saves it, and the film becomes ready.
 
 ## Run it locally
 
@@ -92,7 +95,7 @@ npm run preview
 
 Open **http://127.0.0.1:4173**. You should see the website and public guide pages. The build also generates page metadata, a sitemap and the contracts-only source archive.
 
-The static preview does not run the game API. Use the hosted app to play.
+The static preview does not run the game or public NFT-data API. Use the hosted website to browse actual lives and play, or configure the API-backed setup below.
 
 <details>
 <summary><strong>API-backed development</strong></summary>

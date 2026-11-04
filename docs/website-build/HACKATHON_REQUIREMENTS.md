@@ -15,3 +15,5 @@ Primary sources: [official hackathon website](https://nearhackathon.com/), [live
 The owner subsequently approved full repository publication after cleanup and a visual README; those preparations were completed. Signed-in GitHub showed Public, but anonymous repository and raw README requests still return404. Public/current clone access remains unresolved, and there is no root LICENSE yet. Neither an application nor an X post has been sent. This file records requirements and observed state, not an instruction to perform either action.
 
 [Final feature and submission scope review](FINAL_SUBMISSION_SCOPE.md) separates the recommended discovery/ownership showcase from optional marketplace work.
+
+The owner has since confirmed that GitHub soft-banned the account and is working with GitHub to resolve it. Direct Netlify publication remains available independently; keep current commits locally and do not treat a successful hosted release as restored public repository access.

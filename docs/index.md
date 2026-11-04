@@ -21,6 +21,7 @@ Start with the **[player handbook](https://nearlyhuman.netlify.app/docs)** for t
 | [Visual refinement](website-build/VISUAL_REVIEW.md) | Actual rendered comparisons and the changes they drove. |
 | [NFT artwork](website-build/NFT_ART.md) | Original rooster invariants, saved-state art and real NFT comparisons. |
 | [Routing](website-build/ROUTING.md) | Public pages, the app and historical exact-NFT URLs. |
+| [NFT viewing and discovery](website-build/NFT_VIEWING.md) | Public collection/life pages, research, rankings and verified saved-film handoffs. |
 | [Bundle review](website-build/BUNDLE_REVIEW.md) | The separate public-site and game/wallet loading paths. |
 | [Publication review](website-build/PUBLICATION_REVIEW.md) | Contracts-only export and the bounded repository/history review. |
 

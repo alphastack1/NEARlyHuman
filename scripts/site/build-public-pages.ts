@@ -3,6 +3,8 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { ARTICLES } from '../../src/site/content';
 import { PROJECT, SITE_IMAGES } from '../../src/site/project';
+import knownLifeHeads from '../../src/site/known-life-heads.json';
+import { publicLifePath, validLifeId, validLifeWorld } from '../../src/site/life-routes';
 
 export interface PublicPageMetadata { pathname: string; title: string; description: string }
 export interface PublicImagePreload { href: string; srcSet: string; sizes: string; type: 'image/avif' }
@@ -12,12 +14,24 @@ export const HOME_HERO_PRELOAD: PublicImagePreload = {
   sizes: SITE_IMAGES.hero.sizes, type: 'image/avif',
 };
 
+const lifePages: PublicPageMetadata[] = knownLifeHeads.worlds.flatMap(group => {
+  const world = PROJECT.worlds.find(world => world.id === group.worldId);
+  if (!world || !validLifeWorld(group.worldId) || world.collection.toLowerCase() !== group.collection.toLowerCase()) throw Error('Known life metadata belongs to a different collection. Verify the catalog before changing deployments.');
+  return group.lives.map(life => {
+    if (!validLifeId(life.id) || !/^[A-Z0-9 ]{1,8}$/.test(life.name)) throw Error('Invalid known life identity.');
+    return { pathname: publicLifePath(world.id, life.id), title: `${life.name} #${life.id} · NEARlyHuman`,
+      description: `Visit ${life.name}’s saved home, garden, belongings and recorded days on ${world.name}. An AI-led rooster NFT with a life of its own.` };
+  });
+});
+
 export const PUBLIC_PAGES: readonly PublicPageMetadata[] = [
   { pathname: '/', title: 'NEARlyHuman — A little life. A mind of its own.', description: 'Hatch a rooster NFT, leave a few supplies and watch an AI-led day unfold. A retro life game, with a home, belongings and history of its own.' },
   { pathname: '/the-game', title: 'The game · NEARlyHuman', description: 'Hatch a rooster NFT. Choose up to three supplies. Watch Jev decide what to grow, make and do during a day at home.' },
   { pathname: '/project', title: 'The project · NEARlyHuman', description: 'Explore NEARlyHuman, its NEAR AI-powered days, testnet worlds, source and onchain ownership. Inspect the actual contracts and trust boundaries.' },
+  { pathname: '/explore', title: 'Explore lives · NEARlyHuman', description: 'Meet the roosters, explore their saved homes and watch a day. Discover the longest lives on NEAR and Robinhood testnets.' },
   { pathname: '/docs', title: 'The player handbook · NEARlyHuman', description: 'Guides to the first day, care, garden, workshop, NFT ownership, wallets, NHC and how Jev and saving work.' },
   ...ARTICLES.map(article => ({ pathname: `/docs/${article.slug}`, title: `${article.title} · NEARlyHuman`, description: article.summary })),
+  ...lifePages,
 ];
 
 export function escapeMarkup(value: string): string {
@@ -123,7 +137,7 @@ export async function buildPublicPages(outDir = path.resolve('dist'), heroPreloa
   if (!origin.startsWith('https://')) throw Error('The public website origin must use HTTPS.');
   const unique = new Set<string>();
   for (const page of PUBLIC_PAGES) {
-    if (!/^\/(?:the-game|project|docs(?:\/[a-z0-9]+(?:-[a-z0-9]+)*)?)?$/.test(page.pathname) || unique.has(page.pathname)) throw Error(`Invalid or duplicate public page: ${page.pathname}`);
+    if (!/^\/(?:the-game|project|explore|life\/(?:near-testnet|robinhood-testnet)\/[1-9]\d{0,77}|docs(?:\/[a-z0-9]+(?:-[a-z0-9]+)*)?)?$/.test(page.pathname) || unique.has(page.pathname)) throw Error(`Invalid or duplicate public page: ${page.pathname}`);
     unique.add(page.pathname);
   }
   const template = await readFile(path.join(directory, 'index.html'), 'utf8');
@@ -142,6 +156,13 @@ export async function buildPublicPages(outDir = path.resolve('dist'), heroPreloa
     await mkdir(path.dirname(target), { recursive: true });
     await writeFile(target, pageHtml(template, page, origin, socialImage, performanceHints));
   }
+  // Future lives remain browseable without a deployment per mint. Their HTTP
+  // fallback has accurate generic sharing text, never the homepage canonical.
+  const lifeFallback = pageHtml(template, { pathname: '/life', title: 'A saved life · NEARlyHuman', description: 'Explore this rooster NFT’s home, garden, belongings and saved days. Visit its life without connecting a wallet.' }, origin, socialImage, performanceHints)
+    .replace(/<link\b[^>]*rel="canonical"[^>]*>\s*/gi, '')
+    .replace(/<meta\b[^>]*property="og:url"[^>]*>\s*/gi, '');
+  await mkdir(path.join(directory, 'life'), { recursive: true });
+  await writeFile(path.join(directory, 'life', 'index.html'), lifeFallback);
   await writeFile(path.join(directory, 'sitemap.xml'), sitemap(PUBLIC_PAGES, origin));
   await writeFile(path.join(directory, 'robots.txt'), `User-agent: *\nAllow: /\nDisallow: /api/\nDisallow: /.netlify/\nDisallow: /app\n\nSitemap: ${origin}/sitemap.xml\n`);
   return { pages: PUBLIC_PAGES.length, articles: ARTICLES.length, assetReferencesPreserved: assets.length, socialImage: !!socialImage, earlyPublicHints: !!performanceHints, earlyHeroHint: !!performanceHints?.hero };

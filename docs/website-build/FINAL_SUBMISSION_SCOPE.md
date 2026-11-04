@@ -2,6 +2,8 @@
 
 4 November 2026. Planning/research only: no marketplace, token liquidity, new contract, deployment or submission was performed during this review.
 
+**Later owner decision:** build the public NFT viewing/discovery pages and ranking. Internal NFT sales and a forced ownership-handoff showcase are out of scope; ordinary token earning and withdrawal are valid uses. External marketplace links require actual chain/asset support. The requested NHC policy is now a toggled 0.5% burn on address-to-address transfers, with separate future-deployment work; see [the isolated module and integration boundaries](../../contracts/token/README.md). The earlier alternatives below remain a dated strategy review, not authorization for marketplace deployment.
+
 Three independent perspectives challenged the proposal: hackathon judge/product strategy; marketplace settlement/security; and virtual-pet/social discovery design. Their common recommendation is to make the existing living-NFT behavior visible and provable before expanding into an exchange.
 
 ## Recommended final sprint

@@ -1,0 +1,10 @@
+{
+  "pass": true,
+  "checks": [
+    "Controlled503showsretryratherthanemptycollection; Retryloads8realcards.",
+    "Rememberedfilter0resultsandShowallresetworkwithoutchangingworld.",
+    "FilterdismissesbyEscapeandoutsidepointer."
+  ],
+  "errors": [],
+  "scope": "Controlled503only; actualpublicreadretryandstatusfilter; perownedpageephemeralstorage; nofinancialcalls."
+}

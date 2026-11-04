@@ -1,0 +1,61 @@
+{
+  "pass": true,
+  "at": "2026-11-04T10:38:35.247Z",
+  "checks": [
+    {
+      "test": "Real full-world ranks share ties",
+      "ranks": [
+        "#1",
+        "#2",
+        "#3",
+        "#4",
+        "#4",
+        "#4",
+        "#4",
+        "#4"
+      ]
+    },
+    "Public collection does not load game/wallet runtime.",
+    "World/query and exact MAPLE identity survive detail/back path.",
+    "No results gives working Show all recovery.",
+    "Long search is bounded to40characters and returns a normal no-results state.",
+    {
+      "test": "Scroll restores after detail/back",
+      "before": 1102,
+      "after": 1102,
+      "href": "/life/robinhood-testnet/8?from=%2Fexplore%3Fworld%3Drobinhood-testnet%26sort%3Dlongest"
+    },
+    "Missing NFT gets a collection recovery link.",
+    {
+      "test": "Exact identity in play links",
+      "links": [
+        {
+          "text": "Visit home ↗",
+          "href": "/app?v2=1&chainId=46630&collection=0x30cb5213fa94020a95893ddb6b07470dbf7a9efc&rooster=8&view=home"
+        },
+        {
+          "text": "Watch day 1→",
+          "href": "/app?v2=1&chainId=46630&collection=0x30cb5213fa94020a95893ddb6b07470dbf7a9efc&rooster=8&view=watch&day=1"
+        },
+        {
+          "text": "Day 1Watch →",
+          "href": "/app?v2=1&chainId=46630&collection=0x30cb5213fa94020a95893ddb6b07470dbf7a9efc&rooster=8&view=watch&day=1"
+        }
+      ]
+    },
+    {
+      "test": "Visit home enters actual game without duplicate profile",
+      "url": "http://127.0.0.1:5201/?chainId=46630&collection=0x30cb5213fa94020a95893ddb6b07470dbf7a9efc&rooster=8",
+      "profile": 0,
+      "transport": 0
+    },
+    {
+      "test": "Watch saved day enters playing film",
+      "url": "http://127.0.0.1:5201/?chainId=46630&collection=0x30cb5213fa94020a95893ddb6b07470dbf7a9efc&rooster=8&day=1",
+      "transport": 1
+    }
+  ],
+  "errors": [],
+  "writes": [],
+  "scope": "Public GET-only browser critique; owned-page memory storage, no profile reset or financial activity."
+}

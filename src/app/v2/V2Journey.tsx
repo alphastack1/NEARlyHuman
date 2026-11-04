@@ -320,7 +320,9 @@ function JourneyWorld({ selectedWorld, availableWorlds, snapshot, onWorldSwitch,
       if (!mounted.current || g !== generation.current || options?.whilePending && currentScreen.current !== 'pending') return false;
       const cached = historyCache.current.get(`${worldKey(loaded)}:${loaded.id}`);
       setDays(cached?.days || []); setBefore(cached?.before); setHistoryLoading(false);
-      setLife(loaded); setPacket(film); setReadingDay(day); clearQuote(); setExample(false); setFreshDay(fresh); setPlayRequest(options?.play ? fresh : undefined);
+      const filmRequestId = typeof film?.requestId === 'string' && /^0x[\da-f]{64}$/i.test(film.requestId) ? film.requestId as Hex : undefined;
+      const requestedPlay = options?.play ? fresh || filmRequestId : undefined;
+      setLife(loaded); setPacket(film); setReadingDay(day); clearQuote(); setExample(false); setFreshDay(fresh || requestedPlay); setPlayRequest(requestedPlay);
       backStack.current = []; returnScreen.current = 'home'; setScreen(show);
       setJob(current => current?.tokenId === loaded.id && sameWorld(config, loaded) && (show === 'pending' || loaded.pendingRequest === current.requestId) ? current : undefined);
       if (account) storage.set(`nh:v2:selected:${worldKey(loaded)}:${account.toLowerCase()}`, loaded.id);
@@ -345,7 +347,12 @@ function JourneyWorld({ selectedWorld, availableWorlds, snapshot, onWorldSwitch,
         if (!active) return; wallet.current = cached; activeProvider.current = snapshot?.provider;
       }
       if (!active) return;
-      if (exactId) return loadLife(exactId, initialWorld || c, Number(query.get('day')) || undefined, 'profile');
+      if (exactId) {
+        const view = query.get('view');
+        return loadLife(exactId, initialWorld || c, Number(query.get('day')) || undefined,
+          view === 'home' || view === 'watch' ? 'home' : 'profile', undefined,
+          view === 'watch' ? { play: true } : undefined);
+      }
       if (snapshot?.lifeId && /^[1-9]\d{0,77}$/.test(snapshot.lifeId)) {
         let show = snapshot.screen;
         if (snapshot.jobRequestId && snapshot.account && await restoreV2Session(snapshot.account, c).catch(() => false)) {

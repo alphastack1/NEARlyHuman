@@ -1,0 +1,14 @@
+{
+  "pass": true,
+  "checkedAt": "2026-11-04T10:20:00.951Z",
+  "scope": "Actual handleApi/HTTP response routing with public RPC and public cache writes isolated to TEMP; no keys, auth, model or economic actions.",
+  "checks": [
+    "Normal public route returns complete real snapshot with no auth.",
+    "Netlify-normalized route accepts durable next cursor without repeating items.",
+    "Unsupported method/world rejected before business service paths."
+  ],
+  "snapshot": {
+    "id": "f45742a03d6c6693338e248600823f41f1d390f184db9aebe383719f41ad8774",
+    "collectionTotal": 8
+  }
+}

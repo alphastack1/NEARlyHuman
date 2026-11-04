@@ -83,6 +83,10 @@ html[data-surface="site"] #root{height:auto;min-height:100dvh;width:100%}
 .site-guide-groups>section{break-inside:avoid;margin-bottom:30px}
 @media(max-width:640px){.site-guide-groups{column-count:1}.site-guide-groups>section{margin-bottom:28px}}
 .site-environment-picture{display:contents}
+.site-lives-opening{min-height:55vh;display:flex;align-items:center;justify-content:center;gap:14px;color:var(--soft);font-size:16px}
+.site-explore-tab{display:flex}
+@media(max-width:850px){.site-home-tab{display:none}}
+@media(max-width:640px){.site:has(.life-page) .site-footer{padding-bottom:calc(96px + env(safe-area-inset-bottom))}}
 .site-handbook-picture{display:block;flex-shrink:0}
 @media(max-width:640px){.site-handbook-picture{display:none}}
 

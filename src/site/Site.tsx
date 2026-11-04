@@ -1,11 +1,16 @@
-import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { lazy, Suspense, useEffect, useRef, useState, type ReactNode } from 'react';
 import '@fontsource/press-start-2p/latin-400.css';
 import { roosterSvg } from '../art/rooster';
 import { Icon, type IconName } from '../app/Icons';
 import { ARTICLES, GUIDE_GROUPS, getArticle, type GuideArticle } from './content';
 import { PROJECT, SITE_IMAGES } from './project';
 import { searchArticles } from './search';
+import { parsePublicLifePath } from './life-routes';
 import './site.css';
+
+const ExplorePage = lazy(() => import('./Lives').then(module => ({ default: module.ExplorePage })));
+const PublicLifePage = lazy(() => import('./Lives').then(module => ({ default: module.PublicLifePage })));
+const OpeningLives = () => <div className="site-lives-opening" role="status"><Icon name="leaf" size={24}/><span>Opening lives…</span></div>;
 
 const bird = (seed: string, pose: 'idle' | 'breathe' | 'peek' = 'idle') => `data:image/svg+xml;charset=utf-8,${encodeURIComponent(roosterSvg(seed, 96, pose))}`;
 const BIRDS = ['BOK', 'FERN', 'SAGE', 'MISO'];
@@ -45,12 +50,13 @@ function Header({ path, onSearch }: { path: string; onSearch: () => void }) {
       <span className="site-brand-squares" aria-hidden="true"><i/><i/></span>
     </div>
     <div className="site-navrow"><nav aria-label="Main navigation">
-      <a href="/" className={`site-tab ${path === '/' ? 'is-current' : ''}`} aria-current={path === '/' ? 'page' : undefined}>Home</a>
+      <a href="/" className={`site-tab site-home-tab ${path === '/' ? 'is-current' : ''}`} aria-current={path === '/' ? 'page' : undefined}>Home</a>
       <a href="/the-game" className={`site-tab ${path === '/the-game' ? 'is-current' : ''}`} aria-current={path === '/the-game' ? 'page' : undefined}>The game</a>
+      <a href="/explore" className={`site-tab site-explore-tab ${path === '/explore' || path.startsWith('/life/') ? 'is-current' : ''}`} aria-current={path === '/explore' || path.startsWith('/life/') ? 'page' : undefined}>Explore</a>
       <a href="/docs" className={`site-tab ${path.startsWith('/docs') ? 'is-current' : ''}`} aria-current={path.startsWith('/docs') ? 'page' : undefined}>Guide</a>
       <a href="/project" className={`site-tab site-project-tab ${path === '/project' ? 'is-current' : ''}`} aria-current={path === '/project' ? 'page' : undefined}>Project</a>
     </nav><div className="site-nav-actions"><button type="button" className="site-search-toggle" onClick={openSearch} aria-label="Search the guide"><span className="site-search-glass"/><span className="site-search-label">Search</span><kbd>Ctrl K</kbd></button><AppLink/></div></div>
-    {menu && <nav ref={menuPanel} id="site-more-pages" className="site-more-menu" aria-label="More pages"><a href="/project" aria-current={path === '/project' ? 'page' : undefined}>About the project<Arrow/></a><a href="/docs/contracts" aria-current={path === '/docs/contracts' ? 'page' : undefined}>Contracts & source<Arrow/></a><button type="button" onClick={openSearch}>Search the guide<span className="site-search-glass"/></button></nav>}
+    {menu && <nav ref={menuPanel} id="site-more-pages" className="site-more-menu" aria-label="More pages"><a href="/explore" aria-current={path === '/explore' || path.startsWith('/life/') ? 'page' : undefined}>Explore lives<Arrow/></a><a href="/project" aria-current={path === '/project' ? 'page' : undefined}>About the project<Arrow/></a><a href="/docs/contracts" aria-current={path === '/docs/contracts' ? 'page' : undefined}>Contracts & source<Arrow/></a><button type="button" onClick={openSearch}>Search the guide<span className="site-search-glass"/></button></nav>}
   </header>;
 }
 
@@ -97,7 +103,7 @@ function Home() {
       <a href="/the-game#watch"><FilmArt/><span><small>03</small><strong>Watch the day</strong></span></a>
     </section>
     <div className="site-home-reassurance"><QuietNote>Nothing ages while you’re away.</QuietNote><SectionLink href="/docs/first-day">Your first day</SectionLink></div>
-    <section className="site-ownership-teaser"><div className="site-owned-portraits" aria-hidden="true"><Rooster seed="BOK"/><Rooster seed="SAGE"/><Rooster seed="MISO"/></div><div><span className="site-eyebrow">An NFT with a saved life</span><h2>More than a portrait.</h2><p>Its home, belongings, saved history and purse go with it.</p></div><SectionLink href="/docs/nft-purse">What you own</SectionLink></section>
+    <section className="site-ownership-teaser"><div className="site-owned-portraits" aria-hidden="true"><Rooster seed="BOK"/><Rooster seed="SAGE"/><Rooster seed="MISO"/></div><div><span className="site-eyebrow">An NFT with a saved life</span><h2>Every life has a story.</h2><p>Visit a home. Explore its garden. Watch a saved day.</p></div><SectionLink href="/explore">Explore lives</SectionLink></section>
   </>;
 }
 function GamePage() {
@@ -189,16 +195,17 @@ function NotFound({ article = false }: { article?: boolean }) {
   return <section className="site-not-found"><span className="site-eyebrow">404 / Page not found</span><div className="site-lost-mail" aria-hidden="true"><Icon name="mail" size={76}/><Icon name="leaf" size={32}/></div><h1>{article ? 'Guide page not found.' : 'Page not found.'}</h1><p>{article ? 'Browse the guide to find the article you need.' : 'This page isn’t here. Return home or open the app.'}</p><div className="site-hero-actions"><a className="site-button site-primary" href={article ? '/docs' : '/'}>{article ? 'Browse the guide' : 'Back home'}<span aria-hidden="true">→</span></a><SectionLink href={PROJECT.appHref}>Open App</SectionLink></div></section>;
 }
 function Footer() {
-  return <footer className="site-footer"><a href="/" className="site-footer-tag"><Icon name="leaf" size={17}/>NEARlyHuman · An AI-led life game</a><nav aria-label="Footer"><a href="/project">The project</a><a href="/docs/contracts">Contracts & source</a><a href="/docs/privacy-data">Data & privacy</a></nav></footer>;
+  return <footer className="site-footer"><a href="/" className="site-footer-tag"><Icon name="leaf" size={17}/>NEARlyHuman · An AI-led life game</a><nav aria-label="Footer"><a href="/explore">Explore lives</a><a href="/project">The project</a><a href="/docs/contracts">Contracts & source</a><a href="/docs/privacy-data">Data & privacy</a></nav></footer>;
 }
 
 export default function Site() {
   const path = location.pathname.replace(/\/+$/, '') || '/';
   const slug = path.startsWith('/docs/') ? path.slice(6) : undefined;
   const article = slug ? getArticle(slug) : undefined;
+  const publicLife = parsePublicLifePath(path);
   const [search, setSearch] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const title = path === '/' ? 'A little life. A mind of its own.' : path === '/the-game' ? 'The game' : path === '/docs' ? 'The player handbook' : path === '/project' ? 'The project' : article?.title || 'Page not found';
+  const title = path === '/' ? 'A little life. A mind of its own.' : path === '/the-game' ? 'The game' : path === '/explore' ? 'Explore lives' : publicLife ? `Rooster #${publicLife.id}` : path === '/docs' ? 'The player handbook' : path === '/project' ? 'The project' : article?.title || 'Page not found';
   useEffect(() => {
     document.title = path === '/' ? `NEARlyHuman — ${title}` : `${title} · NEARlyHuman`;
     const description = article?.summary || 'Hatch a rooster. Leave a few supplies. See what it makes of the day. A retro AI-led life game, saved onchain.';
@@ -207,5 +214,5 @@ export default function Site() {
     const key = (e: KeyboardEvent) => { if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); setSearch(v => !v); } };
     window.addEventListener('keydown', key); return () => window.removeEventListener('keydown', key);
   }, [title, path, article]);
-  return <div className="site"><a className="site-skip-link" href="#site-main">Skip to content</a><div className={`site-window ${path.startsWith('/docs/') && article ? 'site-reading-window' : ''}`}><Header path={path} onSearch={() => setSearch(true)}/><main id="site-main">{path === '/' ? <Home/> : path === '/the-game' ? <GamePage/> : path === '/docs' ? <DocsIndex query={searchQuery} onQueryChange={setSearchQuery} onSearch={() => setSearch(true)}/> : article ? <DocsArticle article={article} onSearch={() => setSearch(true)}/> : path === '/project' ? <ProjectPage/> : <NotFound article={!!slug}/>}</main><Footer/></div>{search && <Search query={searchQuery} onQueryChange={setSearchQuery} onClose={() => setSearch(false)}/>}</div>;
+  return <div className="site"><a className="site-skip-link" href="#site-main">Skip to content</a><div className={`site-window ${path.startsWith('/docs/') && article ? 'site-reading-window' : ''}`}><Header path={path} onSearch={() => setSearch(true)}/><main id="site-main">{path === '/' ? <Home/> : path === '/the-game' ? <GamePage/> : path === '/explore' ? <Suspense fallback={<OpeningLives/>}><ExplorePage/></Suspense> : publicLife ? <Suspense fallback={<OpeningLives/>}><PublicLifePage worldId={publicLife.worldId} id={publicLife.id}/></Suspense> : path === '/docs' ? <DocsIndex query={searchQuery} onQueryChange={setSearchQuery} onSearch={() => setSearch(true)}/> : article ? <DocsArticle article={article} onSearch={() => setSearch(true)}/> : path === '/project' ? <ProjectPage/> : <NotFound article={!!slug}/>}</main><Footer/></div>{search && <Search query={searchQuery} onQueryChange={setSearchQuery} onClose={() => setSearch(false)}/>}</div>;
 }

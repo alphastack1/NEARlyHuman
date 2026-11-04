@@ -17,6 +17,7 @@ export async function handleApi(request: Request): Promise<Response> {
   try {
     const url = new URL(request.url);
     const path = url.pathname.replace(/^\/\.netlify\/functions\/api(?:\/|$)/, '/api/');
+    if (path === '/api/explore/lives') return (await import('./discovery/http')).handleDiscoveryApi(request);
     if (path.startsWith('/api/near/v2/')) return (await import('./near/http')).handleNearApi(request);
     if (path === '/api/game/worlds') {
       if (request.method !== 'GET') return json({ error: { code: 'method', message: 'Open this page again.' } }, 405);

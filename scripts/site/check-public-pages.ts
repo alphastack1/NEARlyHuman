@@ -83,7 +83,10 @@ await writeFile(path.join(dir, 'assets/app.js'), '/* fixture bundle */');
 await writeFile(path.join(dir, 'assets/app.css'), '/* fixture stylesheet */');
 await writeFile(path.join(dir, 'index.html'), template);
 const result = await buildPublicPages(dir);
-assert.equal(result.pages, 4 + result.articles);
+assert.equal(result.pages, PUBLIC_PAGES.length);
+assert.ok(PUBLIC_PAGES.some(page => page.pathname === '/explore'));
+assert.ok(PUBLIC_PAGES.some(page => page.pathname === '/life/robinhood-testnet/8' && page.title.includes('MAPLE')));
+assert.ok(PUBLIC_PAGES.some(page => page.pathname === '/life/near-testnet/1' && page.title.includes('FERN')));
 assert.equal(result.socialImage, false);
 assert.equal(result.earlyPublicHints, false);
 for (const item of PUBLIC_PAGES) {
@@ -101,6 +104,9 @@ await writeFile(path.join(dir, 'site/social-card.png'), 'present-fixture');
 const imageResult = await buildPublicPages(dir);
 assert.equal(imageResult.socialImage, true);
 assert.ok((await readFile(path.join(dir, 'docs/index.html'), 'utf8')).includes('property="og:image"'));
+const futureLife = await readFile(path.join(dir, 'life/index.html'), 'utf8');
+assert.ok(futureLife.includes('A saved life'));
+assert.ok(!/rel="canonical"|property="og:url"/.test(futureLife), 'Unknown future lives must not advertise the homepage as their canonical identity.');
 // A split public build discovers current hashes, checks selected image files
 // and emits an image hint only in the homepage template.
 await writeFile(path.join(dir, 'assets/Site-fixture.js'), '/* current Site module */');
