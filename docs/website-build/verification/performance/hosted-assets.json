@@ -1,0 +1,154 @@
+{
+  "pass": true,
+  "checkedAt": "2026-11-04T07:36:59.799Z",
+  "deploy": {
+    "id": "6aeae02e3af56a46fb3f2476",
+    "state": "ready",
+    "created": "2026-11-04T07:35:10.567Z",
+    "published": "2026-11-04T07:35:21.615Z",
+    "commit": null
+  },
+  "images": [
+    {
+      "path": "/site/handbook-320.avif",
+      "status": 200,
+      "type": "image/avif",
+      "cache": "public,max-age=3600,stale-while-revalidate=86400",
+      "bytes": 23342,
+      "sha256": "7e761cb3056e8b7c0228199b9281694f4402fab88e0f0690b0c2c0d09e38a6af",
+      "matchesLocal": true
+    },
+    {
+      "path": "/site/handbook-320.webp",
+      "status": 200,
+      "type": "image/webp",
+      "cache": "public,max-age=3600,stale-while-revalidate=86400",
+      "bytes": 24642,
+      "sha256": "949e45c82cea2069abddfd3267b9986a2b7d8728b38af3c2a8be26b03131758d",
+      "matchesLocal": true
+    },
+    {
+      "path": "/site/handbook-560.avif",
+      "status": 200,
+      "type": "image/avif",
+      "cache": "public,max-age=3600,stale-while-revalidate=86400",
+      "bytes": 49782,
+      "sha256": "4a86e1a69ce76bf89699dc2922525f5ca9be5ee7f8cb066d733761b62f2250ce",
+      "matchesLocal": true
+    },
+    {
+      "path": "/site/handbook-560.webp",
+      "status": 200,
+      "type": "image/webp",
+      "cache": "public,max-age=3600,stale-while-revalidate=86400",
+      "bytes": 54728,
+      "sha256": "b2eb029e9598b6c7573c2228135012e50e79dbc6e3b1d58a167373931e379d8e",
+      "matchesLocal": true
+    },
+    {
+      "path": "/site/handbook-768.avif",
+      "status": 200,
+      "type": "image/avif",
+      "cache": "public,max-age=3600,stale-while-revalidate=86400",
+      "bytes": 77848,
+      "sha256": "29db5ad0982192502b29aab1ec87aef35c4cdb5f05f5e3ad7de063aba0f8dfc2",
+      "matchesLocal": true
+    },
+    {
+      "path": "/site/handbook-768.webp",
+      "status": 200,
+      "type": "image/webp",
+      "cache": "public,max-age=3600,stale-while-revalidate=86400",
+      "bytes": 85150,
+      "sha256": "b41f03d90000cf4ab15c887886b7f1cce526c2d3cdb91efee4e3361afce9de37",
+      "matchesLocal": true
+    },
+    {
+      "path": "/site/hero-home-1448.avif",
+      "status": 200,
+      "type": "image/avif",
+      "cache": "public,max-age=3600,stale-while-revalidate=86400",
+      "bytes": 345545,
+      "sha256": "6772cc6e506fb1a76c1d19635239aef21c620cc7124d09a0fac04ab5be6b0d84",
+      "matchesLocal": true
+    },
+    {
+      "path": "/site/hero-home-1448.webp",
+      "status": 200,
+      "type": "image/webp",
+      "cache": "public,max-age=3600,stale-while-revalidate=86400",
+      "bytes": 384396,
+      "sha256": "746363036fdf56ca15cee662c905014c16fcdba771c19d7c9810781b0adbdd71",
+      "matchesLocal": true
+    },
+    {
+      "path": "/site/hero-home-640.avif",
+      "status": 200,
+      "type": "image/avif",
+      "cache": "public,max-age=3600,stale-while-revalidate=86400",
+      "bytes": 107624,
+      "sha256": "e91286e076c2041a8217c06e6080141316b9dd70bd6a28f59a6a87831da0dec4",
+      "matchesLocal": true
+    },
+    {
+      "path": "/site/hero-home-640.webp",
+      "status": 200,
+      "type": "image/webp",
+      "cache": "public,max-age=3600,stale-while-revalidate=86400",
+      "bytes": 114446,
+      "sha256": "61650d07fc396996a4d37593851ffd30403535c93389286e194bf2911dc59861",
+      "matchesLocal": true
+    },
+    {
+      "path": "/site/hero-home-960.avif",
+      "status": 200,
+      "type": "image/avif",
+      "cache": "public,max-age=3600,stale-while-revalidate=86400",
+      "bytes": 198426,
+      "sha256": "bd548c9e3eda5a56ed9fef53062df5efa2059b59002372b09c32453f3ae841e8",
+      "matchesLocal": true
+    },
+    {
+      "path": "/site/hero-home-960.webp",
+      "status": 200,
+      "type": "image/webp",
+      "cache": "public,max-age=3600,stale-while-revalidate=86400",
+      "bytes": 217268,
+      "sha256": "45952568ef39ee0b81f9c59b73c285239b879da726ec20631b944edb8388ac12",
+      "matchesLocal": true
+    }
+  ],
+  "functions": [
+    {
+      "name": "api",
+      "runtime": "nodejs24.x",
+      "invocationMode": "stream",
+      "buildData": {
+        "bootstrapVersion": "2.14.0",
+        "runtimeAPIVersion": 2
+      },
+      "schedule": null
+    },
+    {
+      "name": "prepare-background",
+      "runtime": "nodejs24.x",
+      "invocationMode": "background",
+      "buildData": {
+        "bootstrapVersion": "2.14.0",
+        "runtimeAPIVersion": 2
+      },
+      "schedule": null
+    },
+    {
+      "name": "reconcile",
+      "runtime": "nodejs24.x",
+      "invocationMode": "stream",
+      "buildData": {
+        "bootstrapVersion": "2.14.0",
+        "runtimeAPIVersion": 2
+      },
+      "schedule": "*/5 * * * *"
+    }
+  ],
+  "noWritesOrAiCalls": true
+}

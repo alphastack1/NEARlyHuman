@@ -23,3 +23,9 @@ After the owner-approved cleanup and README, the repository visibility change re
 The user has been asked to check the account's sign-in/verification warnings. The GitHub README could not yet receive a final hosted-render check. Its local GitHub-style phone/desktop rendering, media loading, links and formatting had passed; those checks are not represented as actual GitHub publication verification.
 
 The deployed site, source archive and NFT endpoints are available independently of that account-access issue. No credentials, repository visibility rollback, ledger reset, mainnet deployment, X post or hackathon submission was performed in response to the issue.
+
+## Loading follow-up
+
+At 14:35:21 Bangkok time, the image/first-load optimization was published once through Netlify as deployment `6aeae02e3af56a46fb3f2476`. It preserves the website design, canonical rooster and both testnet services. [Changes, measurements and hosted verification](PERFORMANCE.md).
+
+After the owner's subsequent sign-in, the Codex Browser can open the repository, public visibility indicator and visual README. No account warning was visible. Anonymous requests still return 404, while CLI/app authentication remains invalid. This distinction is unresolved; signed-in rendering is verified, public accessibility and repository synchronization are pending.

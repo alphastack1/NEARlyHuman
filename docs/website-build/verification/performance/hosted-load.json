@@ -1,0 +1,55 @@
+{
+  "at": "2026-11-04T07:39:37.813Z",
+  "origin": "https://nearlyhuman.netlify.app",
+  "condition": {
+    "width": 390,
+    "height": 844,
+    "dpr": 2,
+    "latencyMs": 150,
+    "downMbps": 1.6,
+    "cpuRate": 4,
+    "cacheDisabledPerOwnedPage": true
+  },
+  "runs": [
+    {
+      "fcpMs": 1924,
+      "lcpMs": 1924,
+      "hero": [
+        {
+          "path": "/site/hero-home-640.avif",
+          "startMs": 683.7000000476837,
+          "endMs": 1589.2000000476837,
+          "encodedBytes": 107624,
+          "initiator": "link"
+        }
+      ]
+    },
+    {
+      "fcpMs": 1996,
+      "lcpMs": 1996,
+      "hero": [
+        {
+          "path": "/site/hero-home-640.avif",
+          "startMs": 773.7999999523163,
+          "endMs": 1946.7999999523163,
+          "encodedBytes": 107624,
+          "initiator": "link"
+        }
+      ]
+    },
+    {
+      "fcpMs": 1496,
+      "lcpMs": 1548,
+      "hero": [
+        {
+          "path": "/site/hero-home-640.avif",
+          "startMs": 295,
+          "endMs": 1503.1000000238419,
+          "encodedBytes": 107624,
+          "initiator": "link"
+        }
+      ]
+    }
+  ],
+  "scope": "Three hosted post-release cold-target-cache checks; no global browser cache or profile cleared. No wallet or paid AI operations."
+}
