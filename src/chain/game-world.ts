@@ -36,8 +36,8 @@ export function gameExplorerTransaction(world: GameWorld, hash: string): string 
   return isNearWorld(world) ? `https://testnet.nearblocks.io/txns/${encodeURIComponent(hash)}` : explorerTransaction(world.chainId, hash);
 }
 export function gameLifeUrl(world: GameWorld, id: string, origin = location.origin): string {
-  const url = new URL('/', origin), params = worldParams(world); params.set('rooster', id); url.search = params.toString(); return url.href;
+  const url = new URL('/app', origin), params = worldParams(world); params.set('entry', 'app'); params.set('rooster', id); url.search = params.toString(); return url.href;
 }
 export function gameImageUrl(world: GameWorld, id: string): string {
-  return `${isNearWorld(world) ? '/api/near/v2' : '/api/v2'}/nft/${encodeURIComponent(id)}/image.svg?${worldParams(world)}`;
+  return `${isNearWorld(world) ? '/api/near' : '/api/evm'}/nft/${encodeURIComponent(id)}/image.svg?${worldParams(world)}`;
 }

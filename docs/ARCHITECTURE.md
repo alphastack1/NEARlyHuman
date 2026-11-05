@@ -1,47 +1,47 @@
 # Architecture
 
-NEARlyHuman has a lightweight public website, a browser game and two chain-specific authorities. Native NEAR and Robinhood share the life rules and original procedural character artwork; their NFTs, stock, purses and token supplies remain separate.
+NEARlyHuman combines a public website, a browser game and two chain-specific authorities. NEAR Testnet and Robinhood Testnet share the life rules and procedural rooster artwork. Their NFTs, inventory, NHC supplies and purse allocations remain separate.
 
 ```mermaid
 flowchart LR
-  Site[Website and handbook] --> App[Game and wallet]
-  App --> Quote[Bounded day quote]
-  Quote --> Accept[Player accepts onchain]
+  Supplies[Owner prepares supplies] --> Quote[Service quotes one day]
+  Quote --> Accept[Owner accepts onchain]
   Accept --> Worker[Durable worker]
-  Worker --> Jev[NEAR AI Cloud · Jev]
-  Jev --> Trace[Legal action trace]
-  Trace --> Contract[Chain verifies rules and derives outcomes]
+  Worker --> Jev[NEAR AI Cloud: Jev]
+  Jev --> Trace[Bounded legal action trace]
+  Trace --> Contract[Contract derives state and rewards]
   Contract --> Save[Saved life and replay commitment]
-  Save --> Film[Browser plays the completed day]
+  Save --> Film[Browser plays the recorded day]
 ```
 
-## Public site and game
+## Source map
 
-[`src/site/`](../src/site/) supplies Home, The game, the handbook, project resources and search. It does not start a wallet or game engine. The build creates per-page metadata, sitemap, share assets and a portable contracts source archive.
-
-[`src/app/Entry.tsx`](../src/app/Entry.tsx) selects the public site or lazy game entry. `/app?v2=1` enters the current game. Existing root NFT/world/version links retain their original meaning, including earlier NFT collections. Public-to-game links use normal navigation so the game's global presentation does not leak into article layouts.
+| Area | Responsibility |
+| --- | --- |
+| [`src/site/`](../src/site/) | Website, searchable handbook and public NFT pages. |
+| [`src/app/game/`](../src/app/game/) | Player flow, wallet handoffs and payment recovery. |
+| [`src/game/`](../src/game/) | Phaser rendering, animation and saved-day playback. |
+| [`src/domain/`](../src/domain/) | Shared state, catalog, legal choices and deterministic rules. |
+| [`src/art/`](../src/art/) | Original seeded rooster artwork. |
+| [`server/evm/`](../server/evm/), [`server/near/`](../server/near/) | Chain views, day admission, preparation and settlement. |
+| [`server/discovery/`](../server/discovery/) | Public collection browsing and ranking. |
+| [`contracts/`](../contracts/) | EVM, native NEAR and NHC authorities, deployment identities and source releases. |
+| [`netlify/functions/`](../netlify/functions/) | Hosted API and background dispatch. |
 
 ## One accepted day
 
-The owner chooses up to three distinct supplies, with at most one seed packet or sapling. The service prepares a signed quote bound to the exact world, owner, life revision, intended day, kit, policy and limits. A free ownership message is separate from accepting a paid day onchain.
+The owner packs up to three distinct supplies, including at most one seed packet or sapling. A quote binds the exact world, owner, life revision, next day and supplies. Wallet sign-in proves ownership through a free message; accepting the paid day is a separate onchain action.
 
-After acceptance, the durable worker freezes the canonical input and asks Jev to choose from legal actions. A day contains one substantial undertaking and smaller routines. Current observed incidents can affect the choices; upcoming decisions stay sealed while preparing.
+After acceptance, the worker freezes the input. Jev chooses a substantial undertaking and smaller routines from the available legal actions. Current incidents can influence those choices; upcoming actions remain hidden while the day is preparing.
 
-The relay is trusted to call Jev and choose delegated actions. The contract independently checks material consumption, growth, crafting, mortality and shipment points, deriving the resulting state and reward. It does not accept an arbitrary inventory or token balance from the model. The replay packet is committed before the browser offers its film.
+The contract checks materials, growth, crafting, survival and shipment points, then derives the next state and reward. The service stores the replay and its commitment before presenting the completed film. An interrupted payment is checked against its original world and request before another attempt is offered.
 
-## Authority by world
+## Authority and presentation
 
-| World | Authority | Client |
-| --- | --- | --- |
-| Robinhood Testnet | [`contracts/v2/`](../contracts/v2/) controller, verifier, action module and ERC-20 | EVM wallet transport |
-| Native NEAR Testnet | [`contracts/near/`](../contracts/near/) combined NFT/FT contract and deterministic interpreter | Meteor through NEAR Connect |
+Jev inference and relay execution are trusted offchain services. The contracts constrain the submitted action trace; they do not prove which model chose it or provide cryptographic AI attestation.
 
-[`src/v2/`](../src/v2/) owns the shared catalog, state and rule model. [`server/v2/`](../server/v2/) and [`server/near/`](../server/near/) handle their respective verified public views, admission and durable work. [`netlify/functions/`](../netlify/functions/) exposes the hosted API and background dispatch.
+Walking, lighting, camera movement and playback controls are presentation. Pausing, seeking or replaying a film does not advance biological time or award another shipment. Nothing ages while the player is away.
 
-## Saved facts and presentation
+NFT portraits use saved garden, inventory and household state around the owner's canonical rooster generator. Cosmetic architecture does not grant an item or alter a life. Public links preserve the world, collection and NFT number so a shared life cannot silently become a different asset.
 
-Movement, contact animation, lighting and need feedback are local presentation. They do not create materials or advance another day. Pausing, seeking and finishing a film change playback only. Nothing ages while the player is away.
-
-Both NFT image routes use the shared [`portrait.ts`](../server/v2/portrait.ts) renderer. It keeps the original [`rooster.ts`](../src/art/rooster.ts) artwork exact and draws the setting from saved plants, inventory and house state. Seeded architecture is cosmetic; it does not grant an item or improvement.
-
-The [contract review](near-integration/CONTRACT.md), [wallet integration](near-integration/WALLET_AND_SWITCHING.md), [NFT art review](website-build/NFT_ART.md) and [source files](../src/) provide the deeper boundaries and measured evidence.
+See [Contracts](CONTRACTS.md), [API](API.md) and [Economy](ECONOMY.md) for the corresponding interfaces and rules.

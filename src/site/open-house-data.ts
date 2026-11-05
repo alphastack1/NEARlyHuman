@@ -1,4 +1,4 @@
-import type { Receipt, State } from '../v2/types';
+import type { Receipt, State } from '../domain/types';
 
 /** An immutable, previously settled public film. This is not a new AI day. */
 export const OPEN_HOUSE_SAMPLE = {
@@ -6,7 +6,7 @@ export const OPEN_HOUSE_SAMPLE = {
   chainId: 46630, collection: '0x30cb5213fa94020a95893ddb6b07470dbf7a9efc',
   commitment: '0x3b83641cc62cfd4f1ac8f4f9c013262885beaf2e66c9a975f1e29942b4287dae',
   asset: '/assets/preview/maple-open-house-day1-3b83641cc62c.json',
-  href: '/?v2=1&chainId=46630&collection=0x30cb5213fa94020a95893ddb6b07470dbf7a9efc&rooster=8',
+  href: '/app?entry=app&chainId=46630&collection=0x30cb5213fa94020a95893ddb6b07470dbf7a9efc&rooster=8',
 } as const;
 
 export interface OpenHouseReplay {

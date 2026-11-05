@@ -1,10 +1,10 @@
 import type { Hex } from 'viem';
 import type {
-  V2PublicConfig, V2PublicLife, V2World, V2OwnerQuote, V2OwnerJob,
-  V2PublicRequest, V2PublicDay, V2DaySummary, TransferBurnInfo,
-} from '../v2/public';
+  EvmPublicConfig, EvmPublicLife, EvmWorld, EvmOwnerQuote, EvmOwnerJob,
+  EvmPublicRequest, EvmPublicDay, EvmDaySummary, TransferBurnInfo,
+} from './evm-types';
 import type { GameNetworkId } from './networks';
-import type { State } from '../v2';
+import type { State } from '../domain/index';
 
 /** Native NEAR account IDs and transaction hashes are never encoded as EVM
  * addresses, numeric chain IDs or Ethereum transaction hashes. Legacy RH URLs
@@ -14,7 +14,7 @@ export interface NearWorld {
   collection: string;
   chainId?: never;
 }
-export type GameWorld = V2World | NearWorld;
+export type GameWorld = EvmWorld | NearWorld;
 
 export interface NearPublicConfig extends NearWorld {
   version: 2;
@@ -51,28 +51,28 @@ export interface NearPublicLife extends NearWorld {
   observedBlock: string;
   observedBlockHash?: string;
 }
-export interface NearOwnerQuote extends Omit<V2OwnerQuote, 'admission' | 'signature'>, NearWorld {
-  admission: Omit<V2OwnerQuote['admission'], 'player'> & { player: string };
+export interface NearOwnerQuote extends Omit<EvmOwnerQuote, 'admission' | 'signature'>, NearWorld {
+  admission: Omit<EvmOwnerQuote['admission'], 'player'> & { player: string };
   signature: string;
 }
-export interface NearOwnerJob extends Omit<V2OwnerJob, 'ownerTx' | 'finalTx'> {
+export interface NearOwnerJob extends Omit<EvmOwnerJob, 'ownerTx' | 'finalTx'> {
   networkId: 'near-testnet';
   ownerTx?: string;
   finalTx?: string;
 }
-export interface NearPublicRequest extends Omit<V2PublicRequest, 'player'> {
+export interface NearPublicRequest extends Omit<EvmPublicRequest, 'player'> {
   player: string;
 }
-export interface NearPublicDay extends Omit<V2PublicDay, 'life'> { life: NearPublicLife }
+export interface NearPublicDay extends Omit<EvmPublicDay, 'life'> { life: NearPublicLife }
 
-export type GamePublicConfig = V2PublicConfig | NearPublicConfig;
-export type GamePublicLife = V2PublicLife | NearPublicLife;
-export type GameOwnerQuote = V2OwnerQuote | NearOwnerQuote;
-export type GameOwnerJob = V2OwnerJob | NearOwnerJob;
-export type GamePublicRequest = V2PublicRequest | NearPublicRequest;
-export type GamePublicDay = V2PublicDay | NearPublicDay;
+export type GamePublicConfig = EvmPublicConfig | NearPublicConfig;
+export type GamePublicLife = EvmPublicLife | NearPublicLife;
+export type GameOwnerQuote = EvmOwnerQuote | NearOwnerQuote;
+export type GameOwnerJob = EvmOwnerJob | NearOwnerJob;
+export type GamePublicRequest = EvmPublicRequest | NearPublicRequest;
+export type GamePublicDay = EvmPublicDay | NearPublicDay;
 export interface GameLifePage { lives: GamePublicLife[]; nextCursor?: string }
-export interface GameDaysPage { days: V2DaySummary[]; nextBefore?: number }
+export interface GameDaysPage { days: EvmDaySummary[]; nextBefore?: number }
 
 export interface NearSignChallenge {
   id: string;

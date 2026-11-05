@@ -1,8 +1,8 @@
 import type {Hex} from 'viem';
 import {storage,type DurableStore} from '../storage';
 import {isHosted} from '../config';
-import {dispatchBackground} from '../jobs';
-import {updateV2Record} from '../v2/budget';
+import {dispatchBackground} from '../worker';
+import {updateStoredRecord} from '../evm/budget';
 import {nearRuntime,nearConfigured,verifyNearRuntime,nearView,checkNearAccount} from './rpc';
 import {nearRequestId} from './views';
 import {issueNearQuote,nearJobId,nearJobPrefix,reconcileNearQuotes} from './quotes';
@@ -22,7 +22,7 @@ export async function maybeRedispatchNearQueued(id:string,dispatch:(id:string)=>
   const initial=(await store.get<NearJob>(id))?.value;
   if(!initial||initial.phase!=='queued'||initial.lease&&initial.lease.until>at||at<(initial.nextWakeAt??initial.createdAt+5000))return false;
   let claimed=false;
-  await updateV2Record<NearJob>(store,id,()=>{throw new NearError('not_found','That day could not be found.',404);},job=>{
+  await updateStoredRecord<NearJob>(store,id,()=>{throw new NearError('not_found','That day could not be found.',404);},job=>{
     claimed=false;if(job.phase!=='queued'||job.lease&&job.lease.until>at||at<(job.nextWakeAt??job.createdAt+5000))return job;
     job.nextWakeAt=at+15000;claimed=true;return job;
   });
@@ -69,7 +69,7 @@ export async function runNearQueueJob(id:string){
   if(!job||job.campaignId!==campaignId||job.input.runtime.collection!==runtime.collection)throw new NearError('context','The queued NEAR day belongs to another world.');
   if(await recordNearTerminal(runtime,job,store))return nearJobView((await store.get<NearJob>(id))!.value);
   const {block}=await verifyNearRuntime(runtime);
-  if(BigInt(block.timestamp)>BigInt(job.input.deadline)&&!terminal(job.phase))job=await updateV2Record<NearJob>(store,id,()=>{throw Error('Missing NEAR day');},j=>{if(j.lease&&j.lease.until>Date.now())return j;j.phase='expiry_due';delete j.lease;j.updatedAt=Date.now();return j;});
+  if(BigInt(block.timestamp)>BigInt(job.input.deadline)&&!terminal(job.phase))job=await updateStoredRecord<NearJob>(store,id,()=>{throw Error('Missing NEAR day');},j=>{if(j.lease&&j.lease.until>Date.now())return j;j.phase='expiry_due';delete j.lease;j.updatedAt=Date.now();return j;});
   if(['queued','preparing'].includes(job.phase)){
     if(job.lease&&job.lease.until>Date.now())return nearJobView(job);
     try{await prepareNearJob(id,store);}catch{/* Inspect the durable phase below. */}

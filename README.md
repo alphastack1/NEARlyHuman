@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://nearlyhuman.netlify.app/app?v2=1">
+  <a href="https://nearlyhuman.netlify.app/app?entry=app">
     <img src="docs/media/readme-cover.webp" alt="NEARlyHuman — an AI-led life game in a sunlit pixel home" width="1200" />
   </a>
 </p>
@@ -9,7 +9,7 @@
 </p>
 
 <p align="center">
-  <a href="https://nearlyhuman.netlify.app/app?v2=1"><strong>Open App ↗</strong></a>
+  <a href="https://nearlyhuman.netlify.app/app?entry=app"><strong>Open App ↗</strong></a>
   &nbsp; · &nbsp;
   <a href="https://nearlyhuman.netlify.app">Website</a>
   &nbsp; · &nbsp;
@@ -69,19 +69,19 @@ Built for the **2026 NEAR Hackathon · `nfts` · NFTs That Do Something**: owner
 
 | World | Wallet | Enter |
 | --- | --- | --- |
-| **NEAR Testnet** | Meteor through NEAR Connect | [Open NEAR](https://nearlyhuman.netlify.app/app?v2=1&networkId=near-testnet&collection=game.nearlyhuman-dev-20261102-26c8bd.testnet) |
-| **Robinhood Testnet** · chain 46630 | Rabby or another EVM wallet | [Open Robinhood](https://nearlyhuman.netlify.app/app?v2=1&chainId=46630&collection=0x3e3c6d8d6ddcfaad61c21b4278e977c90ddde3f7) |
+| **NEAR Testnet** | Meteor through NEAR Connect | [Open NEAR](https://nearlyhuman.netlify.app/app?entry=app&networkId=near-testnet&collection=game.nearlyhuman-dev-20261102-26c8bd.testnet) |
+| **Robinhood Testnet** · chain 46630 | Rabby or another EVM wallet | [Open Robinhood](https://nearlyhuman.netlify.app/app?entry=app&chainId=46630&collection=0x3e3c6d8d6ddcfaad61c21b4278e977c90ddde3f7) |
 
 Lives, inventory and NHC remain separate between worlds; there is no bridge. Hatching and accepting a new day use the selected world's testnet funds. Wallet sign-in is a separate free message. The app shows payments before confirmation.
 
-[Wallets & testnet funds](https://nearlyhuman.netlify.app/docs/worlds-wallets) · [Deployed contracts](https://nearlyhuman.netlify.app/docs/contracts) · [Download current contract sources](https://nearlyhuman.netlify.app/source/v3/contracts.zip)
+[Wallets & testnet funds](https://nearlyhuman.netlify.app/docs/worlds-wallets) · [Deployed contracts](https://nearlyhuman.netlify.app/docs/contracts) · [Download current contract sources](https://nearlyhuman.netlify.app/source/nearlyhuman-contracts.zip)
 
 ## Try the hosted demo
 
 1. **Browse [Explore lives](https://nearlyhuman.netlify.app/explore).** Switch public worlds, search a name or NFT number, or select Longest lives to see equal completed lifetimes share a rank. Browsing requires no wallet.
 2. **Open [MAPLE #8](https://nearlyhuman.netlify.app/life/robinhood-testnet/8) or [FERN #1](https://nearlyhuman.netlify.app/life/near-testnet/1).** Inspect the exact NFT's portrait, garden, belongings, purse and recorded days. Visit home or watch a saved film without a new transaction or inference.
 3. **Search [the handbook](https://nearlyhuman.netlify.app/docs).** Try `seeds`, `minting` or `dead` to find the corresponding rules.
-4. **Hatch through [Open App](https://nearlyhuman.netlify.app/app?v2=1).** Choose a world, connect its wallet and confirm. Pack supplies, review the fee and accept the day. Jev prepares it, the chain saves it, and the film becomes ready.
+4. **Hatch through [Open App](https://nearlyhuman.netlify.app/app?entry=app).** Choose a world, connect its wallet and confirm. Pack supplies, review the fee and accept the day. Jev prepares it, the chain saves it, and the film becomes ready.
 
 ## Run it locally
 
@@ -102,7 +102,7 @@ The static preview does not run the game or public NFT-data API. Use the hosted 
 <details>
 <summary><strong>API-backed development</strong></summary>
 
-Configure [.env.example](.env.example), then use `npm run dev`. This requires your own service credentials, testnet relay funds and an explicitly funded durable AI campaign. Credentials stay outside the repository and browser bundle. Follow the [development guide](docs/DEVELOPMENT.md) for setup and operating boundaries.
+Configure [.env.example](.env.example), then use `npm run dev`. This requires your own service credentials, testnet relay funds and an explicitly funded durable AI campaign. Credentials stay outside the repository and browser bundle. Follow the [development guide](docs/DEVELOPMENT.md) for setup.
 
 </details>
 
@@ -111,13 +111,14 @@ Configure [.env.example](.env.example), then use `npm run dev`. This requires yo
 | Area | Location |
 | --- | --- |
 | Website, handbook and public navigation | [`src/site/`](src/site/) |
-| Player flow, world rendering and original art | [`src/app/v2/`](src/app/v2/) · [`src/game/v2/`](src/game/v2/) · [`src/art/`](src/art/) |
-| Shared life rules and catalog | [`src/v2/`](src/v2/) |
-| Jev, durable workers and API | [`server/v2/`](server/v2/) · [`server/near/`](server/near/) · [`netlify/functions/`](netlify/functions/) |
-| Current chain contracts and reproducible source exports | [`contracts/v3/`](contracts/v3/) · [`contracts/token/`](contracts/token/) · [`contracts/near-v3/`](contracts/near-v3/) · [`scripts/site/`](scripts/site/) |
+| Player flow, world rendering and original art | [`src/app/game/`](src/app/game/) · [`src/game/`](src/game/) · [`src/art/`](src/art/) |
+| Shared life rules and catalog | [`src/domain/`](src/domain/) |
+| Jev, durable workers and API | [`server/evm/`](server/evm/) · [`server/near/`](server/near/) · [`server/discovery/`](server/discovery/) · [`netlify/functions/`](netlify/functions/) |
+| Chain authorities and NHC | [`contracts/evm/`](contracts/evm/) · [`contracts/near/`](contracts/near/) · [`contracts/token/`](contracts/token/) |
+| Deployment identities and reproducible sources | [`contracts/deployments/`](contracts/deployments/) · [`contracts/releases/`](contracts/releases/) |
 
-The [documentation index](docs/index.md) leads to architecture, wallet integration, contract reviews and verification evidence. The [NFT art guide](docs/website-build/NFT_ART.md) records canonical artwork invariants and the distinction between real saved lives and controlled visual fixtures.
+The [documentation index](docs/index.md) leads to architecture, development, economy, contract and API references. [Artwork and media credits](docs/media/PROVENANCE.md) describe the original character artwork and saved-life imagery.
 
 ---
 
-Built with React, Phaser, NEAR AI Cloud, NEAR SDK and OpenZeppelin. Rooster identity uses the project's original procedural artwork. Environmental illustrations and asset provenance are recorded in the [design guide](design/website-build/mockups/NOTES.md).
+Built with React, Phaser, NEAR AI Cloud, NEAR SDK and OpenZeppelin. Rooster identity uses the project owner's original procedural artwork. Website illustration sources are preserved in [`assets/source/website/`](assets/source/website/).

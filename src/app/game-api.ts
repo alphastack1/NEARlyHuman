@@ -1,7 +1,7 @@
 import type { Hex } from 'viem';
-import { api } from './api';
-import { v2Api, V2ApiError, cacheV2Session, restoreV2Session, setV2Session } from './v2-api';
-import type { V2World } from '../v2/public';
+import { authApi } from './auth-api';
+import { evmApi, GameApiError, cacheEvmSession, restoreEvmSession, setEvmSession } from './evm-api';
+import type { EvmWorld } from '../chain/evm-types';
 import { isNearWorld, type GameWorld, type GamePublicConfig, type GamePublicLife, type GamePublicDay,
   type GamePublicRequest, type GameOwnerQuote, type GameOwnerJob, type GameLifePage, type GameDaysPage,
   type GameWorldDirectory, type GameSession, type NearSignChallenge, type NearSignedMessage } from '../chain/game-types';
@@ -15,19 +15,19 @@ const storageKey = (account: string, world: GameWorld) => `nh:v2:session:${world
 const epoch = (key: string) => epochs.get(key) || 0;
 
 export function setGameSession(token: string, world: GameWorld) {
-  if (!isNearWorld(world)) { setV2Session(token); return; }
+  if (!isNearWorld(world)) { setEvmSession(token); return; }
   const key = worldKey(world); epochs.set(key, epoch(key) + 1);
   if (!token) tokenKeys.delete(key); else tokenKeys.set(key, token);
 }
 export function cacheGameSession(account: string, world: GameWorld, session: GameSession) {
-  if (!isNearWorld(world)) { cacheV2Session(account, world, session); return; }
+  if (!isNearWorld(world)) { cacheEvmSession(account, world, session); return; }
   const key = storageKey(account, world), value = { ...session, account, key: worldKey(world) };
   nativeSessions.set(key, value);
   try { sessionStorage.setItem(key, JSON.stringify(value)); } catch { /* Exact-world visit cache remains usable. */ }
   setGameSession(session.token, world);
 }
 export async function restoreGameSession(account: string, world: GameWorld): Promise<boolean> {
-  if (!isNearWorld(world)) return restoreV2Session(account, world);
+  if (!isNearWorld(world)) return restoreEvmSession(account, world);
   const key = storageKey(account, world), scope = worldKey(world), initialEpoch = epoch(scope);
   const discard = () => { nativeSessions.delete(key); try { sessionStorage.removeItem(key); } catch { /* No service data is touched. */ } };
   let cached: CachedSession | undefined;
@@ -39,10 +39,10 @@ export async function restoreGameSession(account: string, world: GameWorld): Pro
       || !Number.isSafeInteger(cached.expiresAt) || cached.expiresAt <= Math.floor(Date.now() / 1000) + 30) { discard(); return false; }
   } catch { discard(); return false; }
   let response: Response;
-  try { response = await fetch('/api/near/v2/session?' + worldParams(world), { headers: { Authorization: 'Bearer ' + cached.token }, signal: AbortSignal.timeout(10000) }); }
-  catch { throw new V2ApiError('Checking your wallet connection. Try again.', 'connection', 503); }
+  try { response = await fetch('/api/near/session?' + worldParams(world), { headers: { Authorization: 'Bearer ' + cached.token }, signal: AbortSignal.timeout(10000) }); }
+  catch { throw new GameApiError('Checking your wallet connection. Try again.', 'connection', 503); }
   if (response.status === 401) { discard(); return false; }
-  if (!response.ok) throw new V2ApiError('Checking your wallet connection. Try again.', 'connection', response.status);
+  if (!response.ok) throw new GameApiError('Checking your wallet connection. Try again.', 'connection', response.status);
   const verified = await response.json() as { address: string; networkId: string; collection: string; expiresAt: number };
   if (!sameAccount(verified.address, account) || verified.networkId !== 'near-testnet' || verified.collection !== world.collection
     || verified.expiresAt !== cached.expiresAt || verified.expiresAt <= Math.floor(Date.now() / 1000) + 30) { discard(); return false; }
@@ -53,15 +53,15 @@ export async function restoreGameSession(account: string, world: GameWorld): Pro
 }
 
 async function nativeRead<T>(world: GameWorld, path: string, body?: unknown): Promise<T> {
-  const url = new URL('/api/near/v2' + path, location.origin);
+  const url = new URL('/api/near' + path, location.origin);
   for (const [key, value] of worldParams(world)) url.searchParams.set(key, value);
   const token = tokenKeys.get(worldKey(world));
   const response = await fetch(url, { method: body === undefined ? 'GET' : 'POST', headers: {
     ...(body === undefined ? {} : { 'Content-Type': 'application/json' }), ...(token ? { Authorization: 'Bearer ' + token } : {}),
   }, body: body === undefined ? undefined : JSON.stringify(body) });
   let result: unknown;
-  try { result = await response.json(); } catch { throw new V2ApiError('Checking this home. Try again.', 'connection', response.status); }
-  if (!response.ok) { const error = result as { error?: { code?: string; message?: string } }; throw new V2ApiError(error.error?.message || 'Checking this home. Try again.', error.error?.code || 'connection', response.status); }
+  try { result = await response.json(); } catch { throw new GameApiError('Checking this home. Try again.', 'connection', response.status); }
+  if (!response.ok) { const error = result as { error?: { code?: string; message?: string } }; throw new GameApiError(error.error?.message || 'Checking this home. Try again.', error.error?.code || 'connection', response.status); }
   return result as T;
 }
 
@@ -86,18 +86,18 @@ export interface GameApi {
  * redirect an in-flight signature, request, session or payment to another API. */
 export function apiFor(world?: GameWorld): GameApi {
   if (!isNearWorld(world)) return {
-    ...v2Api,
-    config: () => v2Api.config(world), guest: () => v2Api.guest(world),
-    lives: (owner,cursor) => v2Api.lives(owner,cursor,world), owned: (owner,cursor) => v2Api.owned(owner,cursor,world),
-    days: (id, before, target=world) => target && isNearWorld(target) ? apiFor(target).days(id, before) : v2Api.days(id, before, target as V2World | undefined),
-    life: (id, target=world) => target && isNearWorld(target) ? apiFor(target).life(id) : v2Api.life(id, target as V2World | undefined),
-    day: (id, day, target=world) => target && isNearWorld(target) ? apiFor(target).day(id, day) : v2Api.day(id, day, target as V2World | undefined),
-    replay: (id, day, target=world) => target && isNearWorld(target) ? apiFor(target).replay(id, day) : v2Api.replay(id, day, target as V2World | undefined),
-    quote: (id,kit,shipping=true) => v2Api.quote(id,kit,shipping,world),
-    request: id => v2Api.request(id,world), job:id=>v2Api.job(id,world), wake:id=>v2Api.wake(id,world),
-    accept: (hash, id) => { if (!hash || !/^0x[\da-f]{64}$/i.test(hash)) throw new V2ApiError('Check the original payment first.', 'context', 409); return v2Api.accept(hash as Hex, id,world); },
-    challenge: api.challenge,
-    authenticate: (account, id, signature) => { if (typeof signature !== 'string') throw new V2ApiError('Connect this world’s wallet.', 'session', 401); return api.authenticate(account, id, signature); },
+    ...evmApi,
+    config: () => evmApi.config(world), guest: () => evmApi.guest(world),
+    lives: (owner,cursor) => evmApi.lives(owner,cursor,world), owned: (owner,cursor) => evmApi.owned(owner,cursor,world),
+    days: (id, before, target=world) => target && isNearWorld(target) ? apiFor(target).days(id, before) : evmApi.days(id, before, target as EvmWorld | undefined),
+    life: (id, target=world) => target && isNearWorld(target) ? apiFor(target).life(id) : evmApi.life(id, target as EvmWorld | undefined),
+    day: (id, day, target=world) => target && isNearWorld(target) ? apiFor(target).day(id, day) : evmApi.day(id, day, target as EvmWorld | undefined),
+    replay: (id, day, target=world) => target && isNearWorld(target) ? apiFor(target).replay(id, day) : evmApi.replay(id, day, target as EvmWorld | undefined),
+    quote: (id,kit,shipping=true) => evmApi.quote(id,kit,shipping,world),
+    request: id => evmApi.request(id,world), job:id=>evmApi.job(id,world), wake:id=>evmApi.wake(id,world),
+    accept: (hash, id) => { if (!hash || !/^0x[\da-f]{64}$/i.test(hash)) throw new GameApiError('Check the original payment first.', 'context', 409); return evmApi.accept(hash as Hex, id,world); },
+    challenge: authApi.challenge,
+    authenticate: (account, id, signature) => { if (typeof signature !== 'string') throw new GameApiError('Connect this world’s wallet.', 'session', 401); return authApi.authenticate(account, id, signature); },
   };
   const read = <T>(path: string, body?: unknown) => nativeRead<T>(world, path, body);
   const life = (id: string, target?: GameWorld) => target && worldKey(target) !== worldKey(world) ? apiFor(target).life(id) : read<{ life: GamePublicLife }>('/rooster/' + encodeURIComponent(id));
@@ -114,11 +114,11 @@ export function apiFor(world?: GameWorld): GameApi {
     day: (id, day, target) => target && worldKey(target) !== worldKey(world) ? apiFor(target).day(id, day) : read('/day/' + encodeURIComponent(id) + '/' + day),
     replay: (id, day, target) => target && worldKey(target) !== worldKey(world) ? apiFor(target).replay(id, day) : read('/replay/' + encodeURIComponent(id) + (day === undefined ? '' : '?day=' + day)),
     challenge: accountId => read<NearSignChallenge>('/auth/challenge', { accountId }),
-    authenticate: (accountId, id, signed) => { if (typeof signed === 'string' || signed.accountId !== accountId) throw new V2ApiError('Verify this NEAR account.', 'session', 401); return read('/auth/verify', { id, accountId, publicKey: signed.publicKey, signature: signed.signature }); },
+    authenticate: (accountId, id, signed) => { if (typeof signed === 'string' || signed.accountId !== accountId) throw new GameApiError('Verify this NEAR account.', 'session', 401); return read('/auth/verify', { id, accountId, publicKey: signed.publicKey, signature: signed.signature }); },
   };
 }
 export async function gameWorlds(): Promise<GameWorldDirectory> {
-  const response = await fetch('/api/game/worlds');
-  if (!response.ok) throw new V2ApiError('Opening the game networks. Try again.', 'connection', response.status);
+  const response = await fetch('/api/worlds');
+  if (!response.ok) throw new GameApiError('Opening the game networks. Try again.', 'connection', response.status);
   return response.json() as Promise<GameWorldDirectory>;
 }

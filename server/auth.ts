@@ -1,6 +1,6 @@
 import { createHmac, randomBytes, timingSafeEqual } from 'node:crypto';
 import { verifyMessage, type Address, type Hex } from 'viem';
-import { checkedAddress, ServiceError } from './chain';
+import { checkedAddress, ServiceError } from './support';
 import { serverConfig } from './config';
 import { storage, update } from './storage';
 

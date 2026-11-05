@@ -1,13 +1,13 @@
 import { createHash } from 'node:crypto';
 import { parseAbi, type Address } from 'viem';
-import { decodeState } from '../../src/v2';
+import { decodeState } from '../../src/domain';
 import type { GamePublicLife } from '../../src/chain/game-types';
 import type { DiscoveryWorld, DiscoveryWorldId, PublicLifeSummary } from '../../src/chain/discovery-types';
-import { v2ViewConnection } from '../v2/views';
-import { verifyV2Runtime } from '../v2/context';
+import { evmViewConnection } from '../evm/views';
+import { verifyEvmRuntime } from '../evm/context';
 import { nearRuntime, nearView, verifyNearRuntime } from '../near/rpc';
 import { readNearPublicLife } from '../near/views';
-import { v2RuntimeScope, withV2RuntimeScope } from '../v2/runtime-scope';
+import { evmRuntimeScope, withEvmRuntimeScope } from '../evm/runtime-scope';
 
 /** A hard bound keeps one public refresh from becoming an unbounded RPC job. */
 export const MAX_DISCOVERY_LIVES = 128;
@@ -31,7 +31,7 @@ const fingerprint = (value: unknown) => createHash('sha256').update(JSON.stringi
 export function discoveryDescriptor(id: DiscoveryWorldId, collection?: string): DiscoveryDescriptor {
   if (id === 'robinhood-testnet') {
     let runtime;
-    try { runtime=v2RuntimeScope(collection).runtime; }
+    try { runtime=evmRuntimeScope(collection).runtime; }
     catch { throw new DiscoveryError('not_found','Choose a collection to visit.',404); }
     if (runtime.chainId !== 46630) throw new DiscoveryError('not_found', 'Choose a collection to visit.', 404);
     return { world: { id, label: 'Robinhood Testnet', collection: runtime.collection, chainId: 46630 }, fingerprint: fingerprint(runtime) };
@@ -67,14 +67,14 @@ async function limitedMap<T, R>(values: T[], read: (value: T) => Promise<R>): Pr
 
 export async function readDiscoveryWorld(descriptor: DiscoveryDescriptor): Promise<DiscoveryRead> {
   if (descriptor.world.id === 'robinhood-testnet') {
-    return withV2RuntimeScope(v2RuntimeScope(descriptor.world.collection),()=>readRobinhoodDiscoveryWorld(descriptor));
+    return withEvmRuntimeScope(evmRuntimeScope(descriptor.world.collection),()=>readRobinhoodDiscoveryWorld(descriptor));
   }
   return readNearDiscoveryWorld(descriptor);
 }
 async function readRobinhoodDiscoveryWorld(descriptor: DiscoveryDescriptor): Promise<DiscoveryRead> {
-    const { runtime, client, allowLocal } = v2ViewConnection();
+    const { runtime, client, allowLocal } = evmViewConnection();
     if (runtime.collection.toLowerCase() !== descriptor.world.collection.toLowerCase()) throw new DiscoveryError('connection', 'Checking these lives again.');
-    const block = await verifyV2Runtime(client, runtime, allowLocal), at = { address: runtime.collection, abi: ABI, blockNumber: block.number! };
+    const block = await verifyEvmRuntime(client, runtime, allowLocal), at = { address: runtime.collection, abi: ABI, blockNumber: block.number! };
     const count = boundedCount(await client.readContract({ ...at, functionName: 'nextTokenId' }));
     // This deployed collection never burns remembered lives: minted IDs remain
     // contiguous. A missing ID fails the complete snapshot, never gets skipped.

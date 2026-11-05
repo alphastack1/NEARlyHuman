@@ -1576,7 +1576,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "nearlyhuman-near"
+name = "nearlyhuman-near-v3"
 version = "0.1.0"
 dependencies = [
  "ed25519-dalek",

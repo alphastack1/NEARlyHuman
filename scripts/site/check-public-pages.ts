@@ -5,6 +5,7 @@ import { runInNewContext } from 'node:vm';
 import { buildPublicPages, discoverPublicHints, escapeMarkup, HOME_HERO_PRELOAD, pageHtml, PUBLIC_PAGES, sitemap, templateAssets, type PublicPerformanceHints } from './build-public-pages';
 import { SITE_IMAGES } from '../../src/site/project';
 import { ACTIVE_ROBINHOOD, ORIGINAL_ROBINHOOD } from '../../src/chain/deployment-catalog';
+import { searchArticles } from '../../src/site/search';
 
 const template = '<!doctype html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width"><title>Old title</title><meta content="old" name="description"><meta property="og:title" content="Old"><meta content="missing.png" property="og:image"><link href="https://old.invalid/" rel="canonical"><script type="module" crossorigin src="/assets/app.js"></script><link rel="stylesheet" href="/assets/app.css"><link rel="icon" href="/favicon.svg"></head><body><div id="root"></div><script>window.keep="<unchanged>";</script></body></html>';
 const page = { pathname: '/docs/example', title: 'An "NFT" & <life>', description: "One's home > a picture & a story." };
@@ -65,6 +66,13 @@ assert.equal(homeHints[0]!.type, 'image/webp');
 assert.equal(homeHints[0]!.fetchPriority, 'high');
 assert.equal(homeHints[2]!.crossOrigin, 'anonymous');
 assert.equal(homeHints[3]!.crossOrigin, 'anonymous');
+const fonts = ['/assets/figtree-latin-wght-normal-hash.woff2', '/assets/pixelify-sans-latin-wght-normal-hash.woff2'];
+const fontHome = executeHints(pageHtml(template, home, 'https://nearlyhuman.netlify.app', undefined, { ...hints, fonts }), 'https://nearlyhuman.netlify.app/');
+const fontArticle = executeHints(pageHtml(template, page, 'https://nearlyhuman.netlify.app', undefined, { ...hints, fonts }), 'https://nearlyhuman.netlify.app/docs/example');
+assert.deepEqual(fontHome.filter(link => link.as === 'font').map(link => link.href), fonts);
+assert.deepEqual(fontArticle.filter(link => link.as === 'font').map(link => link.href), [fonts[0]]);
+for (const [query, slug] of [['two signatures','jev-saving'],['how much does it cost','worlds-wallets'],['my rooster died','remembered-lives'],['can I sell my rooster','sharing-transfers'],['water plants','garden'],['connect Meteor','worlds-wallets'],['toy boat','workshop'],['how do I earn money','nhc']]) assert.equal(searchArticles(query!)[0]?.slug,slug,query);
+for (const query of ['', 'zxqv blorptastic', 'wallet zxqv']) assert.equal(searchArticles(query).length,0);
 const skipped = [
   '/?rooster=1', '/?id=1&day=3', '/?v2=1', '/?collection=0x123&chainId=46630',
   '/?networkId=near-testnet&collection=account.testnet', '/?account_id=owner.testnet',

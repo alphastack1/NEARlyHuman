@@ -1,13 +1,13 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { Icon, type IconName } from '../app/Icons';
-import { v2ItemImage } from '../art/v2-items';
-import { bedArt } from '../game/v2/art';
-import { ITEMS, type Plot } from '../v2/types';
-import { PLANTS } from '../v2/catalog';
+import { itemImage } from '../art/items';
+import { bedArt } from '../game/art';
+import { ITEMS, type Plot } from '../domain/types';
+import { PLANTS } from '../domain/catalog';
 import type { GamePublicLife } from '../chain/game-types';
 import type { PublicLifeDirectory, PublicLifeSummary } from '../chain/discovery-types';
 import { PROJECT } from './project';
-import { exploreControls, exploreHref, exploreMemoryFresh, exploreQuery, lifeExplorer, lifeImage, loadExploreMemory, nhcAmount, ownerExplorer, publicLifeHref, publicLifeWorld, PublicReadError, readDays, readDirectory, readLife, refreshedDirectory, returnToExplore, saveExploreMemory, shortOwner, validLifeId, visitHref, worldById, type ExploreControls, type PublicWorld } from './public-lives';
+import { exploreControls, exploreHref, exploreMemoryFresh, exploreQuery, hatchHref, lifeExplorer, lifeImage, loadExploreMemory, nhcAmount, ownerExplorer, publicLifeHref, publicLifeWorld, PublicReadError, readDays, readDirectory, readLife, refreshedDirectory, returnToExplore, saveExploreMemory, shortOwner, validLifeId, visitHref, worldById, type ExploreControls, type PublicWorld } from './public-lives';
 import './lives.css';
 
 function Section({ title, icon, children, className = '' }: { title: string; icon: IconName; children: ReactNode; className?: string }) {
@@ -17,7 +17,7 @@ function LifeStatus({ alive }: { alive: boolean }) { return <span className={`li
 function Arrow() { return <span aria-hidden="true">↗</span>; }
 function CopyIcon() { return <svg width="17" height="17" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M2 1h12v3H5v11H2zM7 6h11v13H7zm2 2v9h7V8z"/></svg>; }
 function FilterIcon() { return <svg width="17" height="17" viewBox="0 0 16 16" fill="currentColor" shapeRendering="crispEdges" aria-hidden="true"><path d="M0 3h16v2H0zM0 11h16v2H0zM4 1h2v6H4zM10 9h2v6h-2z"/></svg>; }
-function Item({ index, className = '' }: { index: number; className?: string }) { return <img className={`life-item-art ${className}`} src={v2ItemImage(index)} alt="" width="40" height="40"/>; }
+function Item({ index, className = '' }: { index: number; className?: string }) { return <img className={`life-item-art ${className}`} src={itemImage(index)} alt="" width="40" height="40"/>; }
 const plotImages = new Map<string, string>();
 function plotImage(plot: Plot): string {
   const key = [plot.kind, plot.ticks, plot.moisture, plot.dry, Number(plot.soilBlocked)].join(':');
@@ -116,7 +116,7 @@ export function ExplorePage() {
       {error && <div className="lives-read-error" role="status"><span>{error}</span><button type="button" onClick={() => setAttempt(value => value + 1)}>Try again</button></div>}
       {loading && !matching ? <div className="lives-grid lives-skeleton" aria-label="Loading roosters" role="status">{[0, 1, 2, 3].map(index => <div key={index}><span/><i/></div>)}</div>
         : matching?.items.length ? <div className={`lives-grid${matching.collectionTotal === 1 && !controls.query.trim() && controls.status === 'all' ? ' lives-singleton' : ''}`} aria-busy={loading}>{matching.items.map((life, index) => <DirectoryCard key={`${world.collection}:${life.id}`} life={life} world={world} index={index} ranked={controls.sort === 'longest'} from={exploreHref(controls)} onVisit={remember}/>)}</div>
-          : matching && <div className="lives-empty"><Icon name={matching.collectionTotal ? 'leaf' : 'house'} size={38}/><h2>{matching.collectionTotal ? 'No matching roosters.' : 'No lives here yet.'}</h2>{matching.collectionTotal ? <button type="button" className="site-button site-secondary" onClick={resetFilters}>Show all lives <span aria-hidden="true">→</span></button> : <a className="site-button site-primary" href={`${world.appHref}&entry=hatch`}>Hatch a rooster <Arrow/></a>}</div>}
+          : matching && <div className="lives-empty"><Icon name={matching.collectionTotal ? 'leaf' : 'house'} size={38}/><h2>{matching.collectionTotal ? 'No matching roosters.' : 'No lives here yet.'}</h2>{matching.collectionTotal ? <button type="button" className="site-button site-secondary" onClick={resetFilters}>Show all lives <span aria-hidden="true">→</span></button> : <a className="site-button site-primary" href={hatchHref(world)}>Hatch a rooster <Arrow/></a>}</div>}
       {matching?.nextCursor && <div className="lives-more"><button type="button" className="site-button site-secondary" disabled={more || loading} onClick={() => void loadMore()}>{more ? 'Opening more…' : 'More roosters'}<span aria-hidden="true">↓</span></button></div>}
       {moreError && <div className="lives-read-error" role="status"><span>{moreError}</span><button type="button" onClick={() => setAttempt(value => value + 1)}>Refresh list</button></div>}
       {matching && <div className="lives-snapshot-note">{matching.snapshot.stale ? 'Last saved view' : 'Saved onchain'}<span aria-hidden="true"> · </span>{new Date(matching.snapshot.at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>}

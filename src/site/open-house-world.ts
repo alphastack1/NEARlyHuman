@@ -1,6 +1,6 @@
-import { createV2WorldRenderer } from '../game/v2/WorldRenderer';
-import { receiptTitle, receiptTravelTitle } from '../v2/presentation';
-import { Op } from '../v2/types';
+import { createWorldRenderer } from '../game/WorldRenderer';
+import { receiptTitle, receiptTravelTitle } from '../domain/presentation';
+import { Op } from '../domain/types';
 import type { HouseFocus, HousePhase, OpenHouseEvents, OpenHouseReplay } from './open-house-data';
 
 export interface OpenHouseWorld {
@@ -21,7 +21,7 @@ export function createOpenHouseWorld(host: HTMLElement, replay: OpenHouseReplay,
   const receipts = replay.packet.result.receipts;
   let state = replay.packet.result.state, phase: HousePhase = 'idle', disposed = false, run = 0, currentIndex = -1, caption = 'A home with a mind of its own.', previewAutoStop = false;
   let boundaryWake: (() => void) | undefined;
-  const scene = createV2WorldRenderer(host, {
+  const scene = createWorldRenderer(host, {
     state,
     onInspect(target) { stopIntro(); if (phase === 'playing') { phase = 'paused'; scene.setPaused(true); events.onPhase(phase); } events.onInspect(target, state); },
     onMotion(motion) { if (phase === 'playing' && motion.traveling && currentIndex >= 0) events.onCaption(receiptTravelTitle(receipts[currentIndex]!, motion.purpose === 'storing'), (currentIndex + 1) / receipts.length); },

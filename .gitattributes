@@ -1,5 +1,5 @@
-# Auto detect text files and perform LF normalization
-* text=auto
+# Keep maintained text deterministic across Windows and Unix checkouts.
+* text=auto eol=lf
 
 # Preserve exact bytes of content-addressed recorded preview snapshots.
 public/assets/preview/*.json -text

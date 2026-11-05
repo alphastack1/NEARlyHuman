@@ -1,7 +1,7 @@
 import {createHash} from 'node:crypto';
 import type { GamePublicConfig, GameWorldDirectory, NearPublicConfig } from '../src/chain/game-types';
-import { readV2PublicConfig } from './v2/views';
-import {serverConfig} from './config';
+import { readEvmPublicConfig } from './evm/views';
+import {evmConfig,serverConfig} from './config';
 
 let cached: { key: string; until: number; value: GameWorldDirectory } | undefined;
 /** A funded-credit pause does not remove an existing world. Only the static
@@ -20,9 +20,9 @@ export async function readAdvertisedNearWorld():Promise<NearPublicConfig|undefin
 export async function readGameWorlds(): Promise<GameWorldDirectory> {
   // An opaque fingerprint invalidates discovery after credential/configuration
   // changes without retaining secret strings in the cache key or public DTO.
-  const key = createHash('sha256').update(JSON.stringify([process.env.NEARLYHUMAN_V2_RUNTIME_JSON || '',process.env.NEARLYHUMAN_NEAR_RUNTIME_JSON || '',process.env.NEARLYHUMAN_NEAR_ENABLED || '',process.env.NEARLYHUMAN_NEAR_CAMPAIGN || '',process.env.NEARLYHUMAN_NEAR_RELAY_KEY || '',serverConfig().signingSecret])).digest('hex');
+  const key = createHash('sha256').update(JSON.stringify([evmConfig().runtimeJson || '',process.env.NEARLYHUMAN_NEAR_RUNTIME_JSON || '',process.env.NEARLYHUMAN_NEAR_ENABLED || '',process.env.NEARLYHUMAN_NEAR_CAMPAIGN || '',process.env.NEARLYHUMAN_NEAR_RELAY_KEY || '',serverConfig().signingSecret])).digest('hex');
   if (cached?.key === key && cached.until > Date.now()) return cached.value;
-  const readers: Promise<GamePublicConfig|undefined>[] = [readV2PublicConfig().then(config => ({ ...config, version: 2 as const }))];
+  const readers: Promise<GamePublicConfig|undefined>[] = [readEvmPublicConfig().then(config => ({ ...config, version: 2 as const }))];
   if (process.env.NEARLYHUMAN_NEAR_ENABLED === '1' && process.env.NEARLYHUMAN_NEAR_RUNTIME_JSON) {
     readers.push(readAdvertisedNearWorld());
   }

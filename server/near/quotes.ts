@@ -1,9 +1,9 @@
 import {keccak256,toHex,type Hex} from 'viem';
-import {decodeState,kitItems} from '../../src/v2';
+import {decodeState,kitItems} from '../../src/domain';
 import type {NearOwnerQuote} from '../../src/chain/game-types';
 import {nearAdmissionMessage as sharedNearAdmissionMessage} from '../../src/chain/near-admission';
 import {storage,type DurableStore} from '../storage';
-import {reserveV2JobBudget,finishV2JobBudget,updateV2Record} from '../v2/budget';
+import {reserveJobBudget,finishJobBudget,updateStoredRecord} from '../evm/budget';
 import {nearView,nearRpc,verifyNearRuntime,checkNearAccount} from './rpc';
 import {nearMaxProcessingFee,nearTokenId} from './views';
 import {nativeRelaySigner} from './relay';
@@ -57,13 +57,13 @@ export async function issueNearQuote(runtime:NearRuntime,campaignId:string,playe
     if(q&&q.status>=2||!q&&BigInt(block.timestamp)>BigInt(prior.expiresAt))await retireNearQuote(runtime,key,campaignId,store);
     else if(q)throw new NearError('context','This life already has a day being prepared.');
   }
-  const record=await updateV2Record<NearQuoteRecord>(store,key,()=>({scope,campaignId,generation:0,id:keccak256(toHex('NEARLYHUMAN_QUOTE_V2\n'+scope+'\n0')),expiresAt:'0',status:'held',player,tokenId,baseRevision:life.revision}),q=>{
+  const record=await updateStoredRecord<NearQuoteRecord>(store,key,()=>({scope,campaignId,generation:0,id:keccak256(toHex('NEARLYHUMAN_QUOTE_V2\n'+scope+'\n0')),expiresAt:'0',status:'held',player,tokenId,baseRevision:life.revision}),q=>{
     if(q.scope!==scope||q.player!==player||q.tokenId!==tokenId||q.baseRevision!==life.revision||q.status==='retiring'||q.status!=='retired'&&q.campaignId!==campaignId)throw new NearError('context','Checking the earlier NEAR quote.');
     if(q.status==='retired'){q.generation++;q.id=keccak256(toHex('NEARLYHUMAN_QUOTE_V2\n'+scope+'\n'+q.generation));q.status='held';q.campaignId=campaignId;}
     const next=BigInt(block.timestamp)+120n;if(next>BigInt(q.expiresAt))q.expiresAt=next.toString();return q;
   });
-  const id=nearJobId(runtime,record.id);await reserveV2JobBudget(campaignId,id,store);
-  await updateV2Record<GasLedger>(store,gasKey(runtime),()=>({unit:'yoctoNEAR',holds:{}}),ledger=>{
+  const id=nearJobId(runtime,record.id);await reserveJobBudget(campaignId,id,store);
+  await updateStoredRecord<GasLedger>(store,gasKey(runtime),()=>({unit:'yoctoNEAR',holds:{}}),ledger=>{
     if(ledger.unit!=='yoctoNEAR'||Object.values(ledger.holds).some(v=>!uint(v)))throw new NearError('context','The NEAR relay accounting changed.');
     const amount=BigInt(ledger.holds[id]||'0')>fees.relayReserve?BigInt(ledger.holds[id]!):fees.relayReserve;
     const capacity=limited?.allowance!==null&&limited?.allowance!==undefined&&BigInt(limited.allowance)<availableBalance(relay)?BigInt(limited.allowance):availableBalance(relay);
@@ -88,10 +88,10 @@ export async function retireNearQuote(runtime:NearRuntime,key:string,campaignId:
   if(record.campaignId!==campaignId)throw new NearError('context','The NEAR quote allocation changed.');
   const {block}=await verifyNearRuntime(runtime),q=await nearView<NearRequest|null>(runtime,'request',{request_id:record.id},block);
   if(q&&q.status<2||!q&&BigInt(block.timestamp)<=BigInt(record.expiresAt))throw new NearError('pending','This NEAR admission is still being checked.');
-  await updateV2Record<NearQuoteRecord>(store,key,()=>{throw new NearError('context','The NEAR quote is missing.');},q=>{if(q.id!==record.id||q.expiresAt!==record.expiresAt)throw new NearError('context','The NEAR quote changed.');q.status='retiring';return q;});
-  const id=nearJobId(runtime,record.id);await finishV2JobBudget(campaignId,id,store,true);
-  await updateV2Record<GasLedger>(store,gasKey(runtime),()=>({unit:'yoctoNEAR',holds:{}}),ledger=>{if(ledger.unit!=='yoctoNEAR')throw new NearError('context','The NEAR relay accounting changed.');delete ledger.holds[id];return ledger;});
-  await updateV2Record<NearQuoteRecord>(store,key,()=>{throw new NearError('context','The NEAR quote is missing.');},q=>{if(q.id!==record.id||q.status!=='retiring')throw new NearError('context','The NEAR quote changed.');q.status='retired';return q;});
+  await updateStoredRecord<NearQuoteRecord>(store,key,()=>{throw new NearError('context','The NEAR quote is missing.');},q=>{if(q.id!==record.id||q.expiresAt!==record.expiresAt)throw new NearError('context','The NEAR quote changed.');q.status='retiring';return q;});
+  const id=nearJobId(runtime,record.id);await finishJobBudget(campaignId,id,store,true);
+  await updateStoredRecord<GasLedger>(store,gasKey(runtime),()=>({unit:'yoctoNEAR',holds:{}}),ledger=>{if(ledger.unit!=='yoctoNEAR')throw new NearError('context','The NEAR relay accounting changed.');delete ledger.holds[id];return ledger;});
+  await updateStoredRecord<NearQuoteRecord>(store,key,()=>{throw new NearError('context','The NEAR quote is missing.');},q=>{if(q.id!==record.id||q.status!=='retiring')throw new NearError('context','The NEAR quote changed.');q.status='retired';return q;});
 }
 export async function reconcileNearQuotes(runtime:NearRuntime,campaignId:string,store:DurableStore=storage()){
   let checked=0,retired=0,waiting=0;

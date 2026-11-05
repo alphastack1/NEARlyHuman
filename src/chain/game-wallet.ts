@@ -2,12 +2,12 @@ import type { Address, EIP1193Provider, Hex } from 'viem';
 import type { GameOwnerQuote, GamePublicConfig, GameWorld, NearSignChallenge, NearSignedMessage } from './game-types';
 import { isNearWorld } from './game-types';
 import { sameWorld } from './game-world';
-import { connectV2Wallet, createV2ChainReader, mintedId, resolveV2Submission, type V2OwnerReceipt, type V2SubmissionIntent } from './v2-client';
+import { connectEvmWallet, createEvmChainReader, mintedId, resolveEvmSubmission, type EvmOwnerReceipt, type EvmSubmissionIntent } from './evm-client';
 import { connectNearWallet, createNearChainReader, isNearIntent, resolveNearSubmission, type NearOwnerReceipt, type NearSubmissionIntent } from './near-client';
 import { NearWalletError } from './near-rpc';
 
-export type GameSubmissionIntent = V2SubmissionIntent | NearSubmissionIntent;
-export type GameReceipt = { kind: 'evm'; transactionHash: string; receipt: V2OwnerReceipt } | NearOwnerReceipt;
+export type GameSubmissionIntent = EvmSubmissionIntent | NearSubmissionIntent;
+export type GameReceipt = { kind: 'evm'; transactionHash: string; receipt: EvmOwnerReceipt } | NearOwnerReceipt;
 export interface GameWallet {
   kind: 'evm' | 'near'; account: string; world: GameWorld; requiresBirthApproval: boolean; walletName?: string;
   connectionValid(): Promise<boolean>;
@@ -32,7 +32,7 @@ export function createGameReader(config: GamePublicConfig) {
       return reader.wait(hash, intent);
     } };
   }
-  const reader = createV2ChainReader(config);
+  const reader = createEvmChainReader(config);
   return { balance: (account: string) => reader.balance(account as Address), wait: async (hash: string): Promise<GameReceipt> => {
     const receipt = await reader.wait(hash as Hex); return { kind: 'evm', transactionHash: receipt.transactionHash, receipt };
   } };
@@ -51,7 +51,7 @@ export async function connectGameWallet(choice: { kind: 'evm'; provider: EIP1193
     };
   }
   if (choice.kind !== 'evm') throw new NearWalletError('network', 'Choose a Robinhood Testnet wallet.');
-  const wallet = await connectV2Wallet(choice.provider, config, onIntent);
+  const wallet = await connectEvmWallet(choice.provider, config, onIntent);
   return { ...wallet, kind: 'evm', world: config, requiresBirthApproval: true,
     connectionValid: async () => { try { const [accounts, chain] = await Promise.all([choice.provider.request({ method: 'eth_accounts' }), choice.provider.request({ method: 'eth_chainId' })]); return Array.isArray(accounts) && typeof accounts[0] === 'string' && accounts[0].toLowerCase() === wallet.account.toLowerCase() && Number(chain) === config.chainId; } catch { return false; } },
     signLogin: challenge => { if ('nonce' in challenge) throw new NearWalletError('session', 'Verify your wallet again.'); return wallet.signMessage(challenge.message); },
@@ -72,7 +72,7 @@ export async function resolveGameSubmission(config: GamePublicConfig, intent: Ga
     return resolveNearSubmission(config, intent);
   }
   if (isNearIntent(intent)) throw new NearWalletError('context', 'Choose the original Robinhood transaction.');
-  return resolveV2Submission(config, intent, cursor);
+  return resolveEvmSubmission(config, intent, cursor);
 }
 
 export function intentWorld(intent: GameSubmissionIntent): GameWorld { return isNearIntent(intent) ? { networkId: 'near-testnet', collection: intent.collection } : { chainId: intent.chainId, collection: intent.collection }; }

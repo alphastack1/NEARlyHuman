@@ -1,0 +1,13 @@
+/* The current game owns the viewport; website styles load independently. */
+html[data-surface="game"] { height: 100%; background: var(--nh-teal); font-synthesis: none; text-rendering: optimizeLegibility; -webkit-text-size-adjust: 100%; }
+html[data-surface="game"] body { margin: 0; min-width: 280px; height: 100%; overflow: hidden; }
+html[data-surface="game"] #root { width: 100%; height: 100%; }
+html[data-surface="game"] * { box-sizing: border-box; }
+html[data-surface="game"] :is(button,input,a) { -webkit-tap-highlight-color: transparent; }
+html[data-surface="game"] :is(button,input) { font: inherit; min-width: 0; }
+html[data-surface="game"] :is(button,a) { touch-action: manipulation; }
+:where(html[data-surface="game"]) button { color: inherit; cursor: pointer; border-radius: 0; }
+:where(html[data-surface="game"]) a { color: inherit; }
+html[data-surface="game"] img { image-rendering: pixelated; }
+html[data-surface="game"] svg { shape-rendering: crispEdges; }
+html[data-surface="game"] button svg { flex: none; }

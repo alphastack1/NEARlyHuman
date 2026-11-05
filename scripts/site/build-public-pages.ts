@@ -57,7 +57,7 @@ const PERFORMANCE_SCRIPT_ID = 'nh-public-performance';
 export function performanceHead(page: PublicPageMetadata, hints?: PublicPerformanceHints): string {
   if (!hints) return '';
   const root = page.pathname === '/';
-  const payload = JSON.stringify({ siteModule: hints.siteModule, siteStylesheets: hints.siteStylesheets, hero: root ? hints.hero : undefined, fonts: root ? hints.fonts : undefined })
+  const payload = JSON.stringify({ siteModule: hints.siteModule, siteStylesheets: hints.siteStylesheets, hero: root ? hints.hero : undefined, fonts: root ? hints.fonts : hints.fonts?.filter(font => /\/figtree-latin-wght-normal-/.test(font)) })
     .replace(/</g, '\\u003c').replace(/\u2028/g, '\\u2028').replace(/\u2029/g, '\\u2029');
   const gate = root ? "if(location.pathname!=='/'||location.search||location.hash)return;" : '';
   // Preload CSS as a resource, not an already-applied stylesheet: Vite still

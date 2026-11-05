@@ -2,7 +2,7 @@ import {randomUUID} from 'node:crypto';
 import {KeyPair,Signature,SignedTransaction,actions,createTransaction,encodeTransaction,decodeSignedTransaction} from 'near-api-js';
 import {keccak256,toHex} from 'viem';
 import {storage,type DurableStore} from '../storage';
-import {updateV2Record} from '../v2/budget';
+import {updateStoredRecord} from '../evm/budget';
 import {base58Decode,base58Encode,sha256} from './encoding';
 import {nearRpc,nearFinalBlock,verifyNearRuntime,nearView} from './rpc';
 import {NearError,type NearRuntime,type NearRequest} from './types';
@@ -24,7 +24,7 @@ export async function retireNearRelayIntent(runtime:NearRuntime,jobId:string,pro
     const {block}=await verifyNearRuntime(runtime),q=await nearView<NearRequest|null>(runtime,'request',{request_id:proof.requestId},block);
     if(!q||q.status!==1||q.deadline!==proof.deadline||BigInt(block.timestamp)<=BigInt(proof.deadline))throw new NearError('context','The original NEAR relay intent is still live.');
   }
-  await updateV2Record<RelayControl>(store,key,()=>({}),control=>{
+  await updateStoredRecord<RelayControl>(store,key,()=>({}),control=>{
     const p=control.pending;if(!p||p.jobId!==jobId)return control;
     if(!('terminal'in proof)){let args:{request_id?:string};try{args=JSON.parse(p.args);}catch{throw new NearError('context','The native relay journal changed.');}if(p.method!=='finalize'||args.request_id!==proof.requestId)return control;}
     control.nonceFloor=(BigInt(control.nonceFloor||'0')>BigInt(p.nonce)?BigInt(control.nonceFloor!):BigInt(p.nonce)).toString();delete control.pending;return control;
@@ -51,14 +51,14 @@ export function validateNearRelayJournal(runtime:NearRuntime,journal:NearRelayJo
 }
 export async function nearRelayTransaction(runtime:NearRuntime,intent:{jobId:string;method:NearRelayJournal['method'];args:Record<string,unknown>;resultDigest:string},onJournal:(journal:NearRelayJournal)=>Promise<void>,options:{store?:DurableStore;recoverJournal?:NearRelayJournal}={}){
   const store=options.store||storage(),signer=nativeRelaySigner(runtime),key=`near/v2/control/relay/${runtime.networkId}/${runtime.relayer}`,leaseId=randomUUID();
-  const c=await updateV2Record<RelayControl>(store,key,()=>({}),control=>{if(control.lease&&control.lease.until>Date.now())throw new NearError('busy','An earlier NEAR save is still being checked.',409,true);control.lease={id:leaseId,until:Date.now()+120000};return control;});
+  const c=await updateStoredRecord<RelayControl>(store,key,()=>({}),control=>{if(control.lease&&control.lease.until>Date.now())throw new NearError('busy','An earlier NEAR save is still being checked.',409,true);control.lease={id:leaseId,until:Date.now()+120000};return control;});
   let pending=c.pending;const expectedArgs=JSON.stringify(intent.args);
   try{
     await verifyNearRuntime(runtime);
     if(pending)validateNearRelayJournal(runtime,pending,signer);
     if(!pending&&options.recoverJournal){const saved=options.recoverJournal;validateNearRelayJournal(runtime,saved,signer);
       if(saved.jobId!==intent.jobId||saved.resultDigest!==intent.resultDigest||saved.method!==intent.method||saved.args!==expectedArgs)throw new NearError('context','The saved NEAR relay intent changed.');
-      await updateV2Record<RelayControl>(store,key,()=>({}),control=>{if(control.lease?.id!==leaseId||control.pending)throw new NearError('busy','An earlier NEAR save is still being checked.',409,true);control.pending=saved;return control;});pending=saved;
+      await updateStoredRecord<RelayControl>(store,key,()=>({}),control=>{if(control.lease?.id!==leaseId||control.pending)throw new NearError('busy','An earlier NEAR save is still being checked.',409,true);control.pending=saved;return control;});pending=saved;
     }
     if(!pending){
       const block=await nearFinalBlock(runtime),access=await nearRpc<{nonce:number;permission:unknown}>(runtime,'query',{request_type:'view_access_key',account_id:runtime.relayer,public_key:signer.getPublicKey().toString(),block_id:block.hash});
@@ -67,7 +67,7 @@ export async function nearRelayTransaction(runtime:NearRuntime,intent:{jobId:str
       const tx=createTransaction(runtime.relayer,signer.getPublicKey(),runtime.collection,nonce,[actions.functionCall(intent.method,intent.args,300000000000000n,0n)],base58Decode(block.hash,32));
       const hashBytes=sha256(encodeTransaction(tx)),signed=new SignedTransaction({transaction:tx,signature:new Signature({keyType:0,data:signer.sign(hashBytes).signature})});
       pending={...intent,args:expectedArgs,hash:base58Encode(hashBytes),raw:Buffer.from(encodeTransaction(signed)).toString('base64'),nonce:tx.nonce.toString(),createdAt:Date.now()};const prepared=pending;
-      await updateV2Record<RelayControl>(store,key,()=>({}),control=>{if(control.lease?.id!==leaseId||control.pending)throw new NearError('busy','An earlier NEAR save is still being checked.',409,true);control.pending=prepared;return control;});
+      await updateStoredRecord<RelayControl>(store,key,()=>({}),control=>{if(control.lease?.id!==leaseId||control.pending)throw new NearError('busy','An earlier NEAR save is still being checked.',409,true);control.pending=prepared;return control;});
     }
     const same=pending.jobId===intent.jobId&&pending.method===intent.method&&pending.resultDigest===intent.resultDigest&&pending.args===expectedArgs;
     if(same)await onJournal(pending);
@@ -80,8 +80,8 @@ export async function nearRelayTransaction(runtime:NearRuntime,intent:{jobId:str
     }
     if(!outcome||!nativeTxComplete(outcome))throw new NearError('uncertain','Checking the original NEAR save.',503,true);
     if(outcome.transaction?.hash!==pending.hash||outcome.transaction.signer_id!==runtime.relayer||outcome.transaction.receiver_id!==runtime.collection)throw new NearError('context','The NEAR relay receipt changed.');
-    await updateV2Record<RelayControl>(store,key,()=>({}),control=>{if(control.lease?.id!==leaseId||control.pending?.hash!==pending!.hash)throw new NearError('busy','The NEAR save is being checked.',409,true);control.nonceFloor=(BigInt(control.nonceFloor||'0')>BigInt(pending!.nonce)?BigInt(control.nonceFloor!):BigInt(pending!.nonce)).toString();delete control.pending;delete control.lease;return control;});
+    await updateStoredRecord<RelayControl>(store,key,()=>({}),control=>{if(control.lease?.id!==leaseId||control.pending?.hash!==pending!.hash)throw new NearError('busy','The NEAR save is being checked.',409,true);control.nonceFloor=(BigInt(control.nonceFloor||'0')>BigInt(pending!.nonce)?BigInt(control.nonceFloor!):BigInt(pending!.nonce)).toString();delete control.pending;delete control.lease;return control;});
     if(!same)throw new NearError('busy','An earlier NEAR save finished. Check this day again.',409,true);
     return {hash:pending.hash,outcome};
-  }finally{await updateV2Record<RelayControl>(store,key,()=>({}),control=>{if(control.lease?.id===leaseId)delete control.lease;return control;}).catch(()=>{});}
+  }finally{await updateStoredRecord<RelayControl>(store,key,()=>({}),control=>{if(control.lease?.id===leaseId)delete control.lease;return control;}).catch(()=>{});}
 }

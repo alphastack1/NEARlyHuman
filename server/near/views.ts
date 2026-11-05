@@ -1,5 +1,5 @@
 import {keccak256,toHex,formatUnits,type Hex} from 'viem';
-import {decodeState,encodeState,encodeTrace,expandV2History} from '../../src/v2';
+import {decodeState,encodeState,encodeTrace,expandHistory} from '../../src/domain';
 import {roosterTraits} from '../../src/art/rooster';
 import type {NearPublicConfig,NearPublicLife,NearPublicDay,NearPublicRequest,NearOwnerQuote,GameDaysPage} from '../../src/chain/game-types';
 import {storage,type DurableStore} from '../storage';
@@ -45,7 +45,7 @@ export async function readNearPublicDays(idValue:string,before?:number,runtime=n
 export async function readNearPublicDay(idValue:string,dayValue:number|undefined,runtime=nearRuntime()):Promise<NearPublicDay>{
   const life=await readNearPublicLife(idValue,runtime),day=dayValue??life.state.day;if(!Number.isInteger(day)||day<1||day>life.state.day)throw new NearError('not_found','That day could not be found.',404);
   const record=await nearView<NearDayRecord|null>(runtime,'day_record',{token_id:life.id,day},{height:life.observedBlock,hash:life.observedBlockHash!,timestamp:'0'});
-  if(!record)throw new NearError('not_found','That day could not be found.',404);const trace=expandV2History(record.history);
+  if(!record)throw new NearError('not_found','That day could not be found.',404);const trace=expandHistory(record.history);
   if(keccak256(encodeTrace(trace))!==record.trace_hash)throw new NearError('context','The saved action history changed.');
   return {life,day,requestId:record.request_id,seed:record.seed,stateHash:record.state_hash,traceHash:record.trace_hash,certificateHash:record.certificate_hash,commitment:record.replay_commitment,rewardMicro:record.reward,trace};
 }
@@ -65,5 +65,5 @@ export async function readNearPublicReplay(id:string,day?:number,runtime=nearRun
 export async function readNearPublicGuest(){const config=await readNearPublicConfig();if(!config.guest)throw new NearError('not_found','No saved example is here yet.',404);return readNearPublicReplay(config.guest.id,config.guest.day);}
 export function nearNftMetadata(life:NearPublicLife,origin:string){
   const world=new URLSearchParams({networkId:'near-testnet',collection:life.collection}).toString(),traits=roosterTraits(life.state.seed);
-  return {name:`${life.name} #${life.id}`,description:'An AI-led rooster NFT with a saved home, inventory and token purse. Its portrait reflects its recorded life.',image:`${origin}/api/near/v2/nft/${life.id}/image.svg?${world}`,external_url:`${origin}/life/near-testnet/${life.id}`,attributes:[{trait_type:'Life',value:life.state.alive?'Alive':'Remembered'},{trait_type:'Level',value:life.state.level},{trait_type:'Game day',value:life.state.day},{trait_type:'Purse',value:formatUnits(BigInt(life.purseMicro),6)},...['Body','Wits','Spirit'].map((name,i)=>({trait_type:name,value:life.state.stats[i]})),{trait_type:'Ready beds',value:life.state.plots.filter(p=>p.kind&&p.ticks===0).length},{trait_type:'Headgear',value:traits.headgear}]};
+  return {name:`${life.name} #${life.id}`,description:'An AI-led rooster NFT with a saved home, inventory and token purse. Its portrait reflects its recorded life.',image:`${origin}/api/near/nft/${life.id}/image.svg?${world}`,external_url:`${origin}/life/near-testnet/${life.id}`,attributes:[{trait_type:'Life',value:life.state.alive?'Alive':'Remembered'},{trait_type:'Level',value:life.state.level},{trait_type:'Game day',value:life.state.day},{trait_type:'Purse',value:formatUnits(BigInt(life.purseMicro),6)},...['Body','Wits','Spirit'].map((name,i)=>({trait_type:name,value:life.state.stats[i]})),{trait_type:'Ready beds',value:life.state.plots.filter(p=>p.kind&&p.ticks===0).length},{trait_type:'Headgear',value:traits.headgear}]};
 }

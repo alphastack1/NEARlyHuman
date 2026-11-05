@@ -1,25 +1,29 @@
 # Production and the NFT purse
 
-The player supplies possibilities; Jev chooses the day's work. The economy follows actual materials, growth and finished shipments rather than issuing tokens for opening the app or replaying a film.
+The player supplies possibilities; Jev chooses the day's work. NHC follows completed shipments of actual finished goods. Opening the app, harvesting, crafting or replaying a film does not by itself credit tokens.
 
-## Four beds and one main undertaking
+## Garden and workshop
 
-The garden has four beds. Each holds one flower, fruit planting or wood tree. Growth counts wet bedtimes of advanced game days; offline time does not count. A watering round uses the well and can water all occupied beds, separately from drinking bottles.
+The garden has four beds. Each holds a flower, fruit planting or wood tree. Growth counts wet bedtimes of completed game days; offline time does not count. Watering from the well is separate from drinking bottled water.
 
-The [catalog](../src/v2/catalog.ts) defines four flowers, four fruits and one wood tree. Initial growth takes three, six or eight wet bedtimes. Single-use plants clear after harvest; grape/apple have six total fruit pickups and the wood tree has ten total wood pickups, with two wet bedtimes between repeated yields.
+The [catalog](../src/domain/catalog.ts) defines four flowers, four fruits and one wood tree. First growth takes three, six or eight wet bedtimes. Single-use plants clear after harvest. Grape and apple support six total fruit pickups; a wood tree supports ten wood pickups. Repeated yields need two further wet bedtimes.
 
-One substantial undertaking covers planting, a harvest round, a craft or domestic work. Care, watering and other ordinary routines share a bounded daily allowance. Four crafts use stored wood: spoon (3), toy boat (6), birdhouse (8) and large chest (10).
+One substantial undertaking covers planting, a harvest round, crafting or domestic work. Care, watering and other ordinary routines share a bounded daily allowance. Workshop recipes use stored wood: spoon **3**, toy boat **6**, birdhouse **8**, large chest **10**.
 
-## Finished goods and NHC
+## Shipping and NHC
 
-There is at most one shipping round per day, carrying up to four eligible finished goods. Harvesting or crafting alone does not credit NHC. Care supplies and raw wood cannot be shipped. Jev may keep, consume or enjoy something instead.
+At most one shipping round can send up to four eligible finished goods per day. Flowers, fruit and finished crafts qualify; care supplies and raw wood do not. Jev may keep, consume or enjoy an item instead.
 
-NHC uses six decimals. The NFT's purse is a contract allocation backed by real token units in its world's vault, not an additional unbacked balance. Its current owner can withdraw, including after death. Transferring the NFT carries the remaining purse rights, while an accepted pending day temporarily locks transfer.
+NHC uses six decimal places. A credited purse is an allocation backed by real token units in that world's contract vault. Its current NFT owner can withdraw, including while a day is preparing or after the rooster dies. The remaining purse rights travel with an NFT transfer. A pending day temporarily locks that transfer.
 
-An owner can burn **250 NHC** to hatch another NFT. Birth burns do not reset cumulative issuance pressure. Later shipment rewards respond to lifetime issuance and the world's bounded reward capacity. Network/preparation fees are separate from NHC, and no cash redemption or earning rate is promised.
+A token-funded birth burns **250 NHC** from one selected purse or the owner's wallet. Robinhood wallet-token births need an ERC-20 allowance; native NEAR burns wallet units directly. Burning for a birth does not reset cumulative issuance pressure.
 
-## Separate worlds and reproducible rules
+Each world has cumulative issuance pressure and bounded reward capacity. Later shipments can credit less NHC for the same goods. Survival, growing time, materials, choices and available capacity all affect production. NHC is a game utility token with no promised income or cash redemption. Network gas and day-preparation fees are separate.
 
-Robinhood's ERC-20 and native NEAR's NEP-141 units belong to separate economies. NFTs, inventories, purse allocations and supplies do not bridge. Both authorities derive results through their deterministic rules rather than accepting an arbitrary model-proposed token amount.
+## Transfer burn and separate worlds
 
-See the [live player handbook](https://nearlyhuman.netlify.app/docs/nhc), [shared catalog and reducer](../src/v2/), [Robinhood contracts](../contracts/v2/) and [native authority](../contracts/near/src/). The dated [model research](economy-v2/RESEARCH.md), [feasibility receipts](v2-feasibility/REVIEW.md) and [world-event balance review](research/WORLD_EVENT_BALANCE.md) distinguish controlled models, actual chain execution and real Jev behavior.
+Current testnet tokens burn **0.5%** of ordinary address-to-address transfers while their owner-controlled switch is enabled. Purse withdrawals debit the gross amount and send the net amount shown in the app. Shipment issuance and direct birth burns have no additional transfer charge. The original Robinhood collection retains its original token rules.
+
+NEAR and Robinhood have separate NFTs, inventories, token supplies and purse backing. There is no bridge or combined cross-chain balance.
+
+The [player handbook](https://nearlyhuman.netlify.app/docs/nhc) explains these rules in the app. See [Contracts](CONTRACTS.md) for deployment identities and authority.

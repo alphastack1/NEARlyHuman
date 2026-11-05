@@ -1,7 +1,7 @@
 import {createHmac,randomBytes,timingSafeEqual} from 'node:crypto';
 import {storage,type DurableStore} from '../storage';
 import {serverConfig} from '../config';
-import {updateV2Record} from '../v2/budget';
+import {updateStoredRecord} from '../evm/budget';
 import {checkNearAccount,nearFinalBlock,nearRpc,nearRuntime} from './rpc';
 import {base64Bytes,ed25519PublicBytes,verifyNearMessage} from './encoding';
 import {NearError,type NearRuntime} from './types';
@@ -18,7 +18,7 @@ export async function nearChallenge(input:{accountId:unknown;callbackUrl?:unknow
   let callbackUrl:string|undefined;
   if(input.callbackUrl!==undefined){try{const url=new URL(String(input.callbackUrl));if(url.origin!==origin||url.username||url.password||url.hash||url.href.length>512)throw Error();callbackUrl=url.href;}catch{throw new NearError('format','Open NEARlyHuman to connect.',400);}}
   const bucket=Math.floor(now()/600),rateKey=prefix+'rate/'+createHmac('sha256',secret()).update(client+':'+bucket).digest('hex');
-  await updateV2Record(store,rateKey,()=>({count:0,expiresAt:(bucket+2)*600}),value=>{if(value.count>=20)throw new NearError('rate','Give your wallet a moment, then try again.',429);value.count++;return value;});
+  await updateStoredRecord(store,rateKey,()=>({count:0,expiresAt:(bucket+2)*600}),value=>{if(value.count>=20)throw new NearError('rate','Give your wallet a moment, then try again.',429);value.count++;return value;});
   const id=randomBytes(24).toString('hex'),nonce=randomBytes(32).toString('base64'),expiresAt=now()+300,recipient=new URL(origin).host;
   const message=`Care for your NEARlyHuman rooster. This sign-in does not spend funds.\n\nAccount: ${accountId}\nNetwork: NEAR Testnet\nContract: ${runtime.collection}\nURI: ${origin}\nNonce: ${id}\nExpires: ${new Date(expiresAt*1000).toISOString()}`;
   const challenge:Challenge={version:2,id,accountId,networkId:'near-testnet',collection:runtime.collection,origin,message,nonce,recipient,...(callbackUrl?{callbackUrl}:{}),expiresAt,used:false};

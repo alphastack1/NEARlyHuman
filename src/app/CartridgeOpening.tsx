@@ -27,7 +27,7 @@ export function CartridgeOpening({phase,onStart,children}:{phase:Exclude<Cartrid
  useEffect(()=>{
   const key=(event:KeyboardEvent)=>{
    if(event.key!=='Enter'&&event.key!==' '&&event.key!=='Escape')return;
-   if(event.target instanceof Element&&event.target.closest('.v2-sound-icon'))return;
+   if(event.target instanceof Element&&event.target.closest('.life-sound-icon'))return;
    event.preventDefault();event.stopPropagation();
    if(!event.repeat)action.current();
   };

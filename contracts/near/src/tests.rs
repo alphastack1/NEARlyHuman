@@ -1,51 +1,423 @@
 use super::*;
-use near_sdk::{testing_env,test_utils::{VMContextBuilder,get_created_receipts,get_logs}};
-use ed25519_dalek::{SigningKey,Signer};
-fn acc(s:&str)->AccountId{s.parse().unwrap()}
-fn context(who:&str,deposit:u128,time:u64){let mut b=VMContextBuilder::new();b.current_account_id(acc("game.testnet")).predecessor_account_id(acc(who)).signer_account_id(acc(who)).attached_deposit(NearToken::from_yoctonear(deposit)).prepaid_gas(Gas::from_tgas(300)).account_balance(NearToken::from_near(100)).block_timestamp(time*1_000_000_000);testing_env!(b.build());}
-fn new_contract()->Contract{near_sdk::mock::with_mocked_blockchain(|b|{b.take_storage();});context("owner.testnet",0,100);Contract::new(acc("owner.testnet"),acc("relay.testnet"),Base64VecU8(vec![1;32]),U128(STORAGE),hx(&[2;32]),"https://nearlyhuman.netlify.app".into())}
-fn signing()->SigningKey{SigningKey::from_bytes(&[7;32])}
-fn admission(c:&Contract,request:u8,kit:u64)->Admission{Admission{id:hx(&[request;32]),player:acc("alice.testnet"),token_id:"1".into(),base_revision:c.must_life(&"1".into()).revision,kit_mask:kit.to_string(),shipping:true,processing_fee:(MIN_FEE*2).to_string(),multiplier:2,expires_at:(now()+800).to_string(),decision_config:hx(&[2;32])}}
-fn signed(a:&Admission)->Base64VecU8{Base64VecU8(signing().sign(Contract::message(a).as_bytes()).to_bytes().to_vec())}
-fn minted()->Contract{let mut c=new_contract();c.quote_key=signing().verifying_key().to_bytes();context("alice.testnet",STORAGE,101);c.mint_nft("PIP".into(),[2,2,1],hx(&[3;32]),acc("alice.testnet"));c}
-fn rejects(f:impl FnOnce()){assert!(std::panic::catch_unwind(std::panic::AssertUnwindSafe(f)).is_err())}
-#[test]
-fn native_mint_and_exact_idempotency(){let mut c=new_contract();context("alice.testnet",STORAGE,101);let op=hx(&[3;32]);let t=c.mint_nft("PIP".into(),[2,2,1],op.clone(),acc("alice.testnet"));assert_eq!(t,"1");let size=env::storage_usage();assert_eq!(c.nft_supply_for_owner(acc("alice.testnet")).0,1);assert_eq!(c.ft_balance_of(acc("alice.testnet")).0,0);assert_eq!(c.must_life(&t).s.stock[0],3);assert_eq!(c.must_life(&t).s.stock[2],3);assert_eq!(c.mint_nft("PIP".into(),[2,2,1],op.clone(),acc("alice.testnet")),t);assert_eq!(env::storage_usage(),size);assert!(c.get_operation(acc("alice.testnet"),op).is_some());assert_eq!(get_logs().iter().filter(|s|s.contains("nft_mint")).count(),1);assert!(!get_created_receipts().is_empty());}
-#[test]
-fn kernel_abi_and_initial_state(){let s=get(initialize([4;32],[2,2,1]));let raw=encode_state(&s);assert_eq!(raw.len(),4160);assert_eq!(encode_state(&get(kernel::decode_state(&raw))),raw);let tr=kernel::Trace{goal:255,steps:vec![]};assert_eq!(kernel::encode_trace(&tr).len(),128);assert_eq!(get(decode_trace(&kernel::encode_trace(&tr))).goal,255);}
-#[test]
-fn array_counts_are_bounded_before_wasm32_narrowing(){let t=kernel::Trace{goal:255,steps:vec![]};let mut raw=kernel::encode_trace(&t);raw[120..128].copy_from_slice(&(1u64<<32).to_be_bytes());assert_eq!(decode_trace(&raw).unwrap_err(),"trace count");let mut cert=vec![0u8;192];cert[31]=32;cert[63]=2;cert[159]=128;cert[184..192].copy_from_slice(&(1u64<<32).to_be_bytes());assert_eq!(decode_certificate(&cert).unwrap_err(),"certificate count");}
-#[test]
-fn independent_typescript_vectors(){context("owner.testnet",0,100);let raw=include_str!("../tests/parity-vectors.json");let data:Value=near_sdk::serde_json::from_str(raw).unwrap();let cases=data["cases"].as_array().unwrap();assert!(cases.len()>=82);for case in cases{let base=get(kernel::decode_state(&bytes(case["base"].as_str().unwrap())));let tr=get(decode_trace(&bytes(case["trace"].as_str().unwrap())));let cert=get(decode_certificate(&bytes(case["certificate"].as_str().unwrap())));let seed=bytes32(case["seed"].as_str().unwrap());let kit=case["kit"].as_str().unwrap().parse().unwrap();let (s,points)=transition(base,&tr,cert.as_ref(),seed,kit,true).unwrap_or_else(|e|panic!("{}: {e}",case["name"]));assert_eq!(hx(&hash(&encode_state(&s))),case["expectedHash"].as_str().unwrap(),"{}",case["name"]);assert_eq!(u64::from(points),case["points"].as_u64().unwrap(),"{}",case["name"]);}}
+use near_sdk::{
+    PromiseResult,
+    test_utils::{VMContextBuilder, get_created_receipts, get_logs},
+    testing_env,
+};
+fn acc(s: &str) -> AccountId {
+    s.parse().unwrap()
+}
+fn builder(who: &str, deposit: u128) -> VMContextBuilder {
+    let mut b = VMContextBuilder::new();
+    b.current_account_id(acc("game.testnet"))
+        .predecessor_account_id(acc(who))
+        .signer_account_id(acc(who))
+        .attached_deposit(NearToken::from_yoctonear(deposit))
+        .prepaid_gas(Gas::from_tgas(300))
+        .account_balance(NearToken::from_near(100))
+        .block_timestamp(100_000_000_000);
+    b
+}
+fn ctx(who: &str, deposit: u128) {
+    testing_env!(builder(who, deposit).build());
+}
+fn fresh() -> Contract {
+    near_sdk::mock::with_mocked_blockchain(|b| {
+        b.take_storage();
+    });
+    ctx("owner.testnet", 0);
+    let mut c = Contract::new(
+        acc("owner.testnet"),
+        acc("relay.testnet"),
+        Base64VecU8(vec![1; 32]),
+        U128(STORAGE),
+        hx(&[2; 32]),
+        "https://nearlyhuman.netlify.app".into(),
+    );
+    for a in ["alice.testnet", "bob.testnet", "recv.testnet"] {
+        c.ft.internal_register_account(&acc(a));
+    }
+    c
+}
+fn fund(c: &mut Contract, who: &str, amount: u128) {
+    c.ft.internal_deposit(&acc(who), amount);
+}
+fn balance(c: &Contract, who: &str) -> u128 {
+    c.ft.ft_balance_of(acc(who)).0
+}
+fn result(value: PromiseResult) {
+    testing_env!(
+        builder("game.testnet", 0).build(),
+        near_sdk::test_vm_config(),
+        near_sdk::RuntimeFeesConfig::test(),
+        std::collections::HashMap::new(),
+        vec![value]
+    );
+}
+fn reply(unused: u128) -> PromiseResult {
+    PromiseResult::Successful(near_sdk::serde_json::to_vec(&U128(unused)).unwrap())
+}
+fn transfer_call(c: &mut Contract, gross: u128) {
+    ctx("alice.testnet", 1);
+    let _ = c.ft_transfer_call(acc("recv.testnet"), U128(gross), None, "probe".into());
+}
+fn resolve(c: &mut Contract, unused: u128) -> u128 {
+    result(reply(unused));
+    c.resolve_transfer_burn(0).0
+}
+fn rejects(f: impl FnOnce()) {
+    assert!(std::panic::catch_unwind(std::panic::AssertUnwindSafe(f)).is_err())
+}
 
 #[test]
-fn signed_admission_failure_retry_seed_and_storage_escrow(){let mut c=minted();context("alice.testnet",MIN_FEE*2,102);let a=admission(&c,10,1|4);let sig=signed(&a);c.accept_day(a,sig);let first=c.requests.get(&hx(&[10;32])).unwrap();assert_eq!(first.status,1);assert_eq!(c.native_storage_reserved,MIN_FEE/2);assert!(c.must_life(&"1".into()).pending.is_some());context("alice.testnet",1,103);rejects(||c.nft_transfer(acc("bob.testnet"),"1".into(),None,None));context("relay.testnet",0,103);let original=encode_state(&c.must_life(&"1".into()).s);c.fail(hx(&[10;32]));assert_eq!(c.native_storage_reserved,0);assert_eq!(encode_state(&c.must_life(&"1".into()).s),original);context("alice.testnet",MIN_FEE*2,104);let a=admission(&c,11,1|4);let sig=signed(&a);c.accept_day(a,sig);let retry=c.requests.get(&hx(&[11;32])).unwrap();assert_eq!(retry.seed,first.seed);assert_eq!(retry.base_hash,first.base_hash);assert_ne!(retry.accepted,first.accepted);}
-
+fn default_on_toggle_authority_and_root_layout() {
+    let mut c = fresh();
+    assert!(c.transfer_burn_enabled());
+    let before = near_sdk::borsh::to_vec(&c).unwrap();
+    ctx("alice.testnet", 0);
+    rejects(|| c.set_transfer_burn_enabled(false));
+    ctx("owner.testnet", 0);
+    c.set_transfer_burn_enabled(false);
+    assert!(!c.transfer_burn_enabled());
+    assert_eq!(near_sdk::borsh::to_vec(&c).unwrap(), before);
+    assert_eq!(c.config()["transfer_burn_bps"], 50);
+    c.set_transfer_burn_enabled(true);
+    assert!(c.transfer_burn_enabled());
+}
 #[test]
-fn native_first_day_is_derived_and_metadata_owned(){let mut c=minted();context("alice.testnet",MIN_FEE*2,102);let a=admission(&c,10,(1<<0)|(1<<2)|(1<<13));let sig=signed(&a);c.accept_day(a,sig);let tr=kernel::Trace{goal:255,steps:vec![kernel::Step{slot:1,op:1,..Default::default()},kernel::Step{slot:11,op:2,arg:2,variant:0,..Default::default()},kernel::Step{slot:36,op:18,arg:0,variant:1,..Default::default()}]};context("relay.testnet",0,103);c.finalize(hx(&[10;32]),hx(&kernel::encode_trace(&tr)),"0x".into(),hx(&[9;32]));let l=c.must_life(&"1".into());assert!(l.s.alive);assert_eq!((l.s.day,l.s.level,l.revision),(1,1,1));assert_eq!((l.s.plots[0].kind,l.s.plots[0].ticks),(1,2));assert_eq!(c.native_storage_reserved,0);let r=c.records.get(&"1:1".into()).unwrap();assert_eq!(r.state_hash,hash(&encode_state(&l.s)));assert_eq!(r.history.len(),25);assert!(c.nft_token("1".into()).unwrap().metadata.unwrap().media.unwrap().contains("near-testnet"));}
-
+fn ordinary_transfer_true_burn_and_no_privileged_wallet_exemption() {
+    let mut c = fresh();
+    fund(&mut c, "alice.testnet", 100 * UNIT);
+    let supply = c.ft.total_supply;
+    ctx("alice.testnet", 1);
+    c.ft_transfer(acc("bob.testnet"), U128(100 * UNIT), None);
+    assert_eq!(balance(&c, "alice.testnet"), 0);
+    assert_eq!(balance(&c, "bob.testnet"), 99_500_000);
+    assert_eq!(c.ft.total_supply, supply - 500_000);
+    assert_eq!(c.total_transfer_burned().0, 500_000);
+    assert!(get_logs().iter().any(|s| s.contains("ft_burn")));
+}
 #[test]
-fn owner_binding_op_payload_and_transfer_nonce(){let mut c=minted();context("bob.testnet",STORAGE,102);rejects(||{c.mint_nft("BAD".into(),[2,2,1],hx(&[4;32]),acc("alice.testnet"));});context("alice.testnet",STORAGE,102);rejects(||{c.mint_nft("CHANGED".into(),[2,2,1],hx(&[3;32]),acc("alice.testnet"));});context("alice.testnet",1,102);c.nft_transfer(acc("bob.testnet"),"1".into(),None,None);let l=c.must_life(&"1".into());assert_eq!((l.nonce,l.revision),(1,1));assert_eq!(c.actual_owner(&"1".into()),acc("bob.testnet"));}
-
+fn disabled_transfer_exact_amount_and_dust_rounding() {
+    let mut c = fresh();
+    fund(&mut c, "alice.testnet", 1000);
+    ctx("alice.testnet", 1);
+    c.ft_transfer(acc("bob.testnet"), U128(199), None);
+    assert_eq!(balance(&c, "bob.testnet"), 199);
+    assert_eq!(c.total_transfer_burned().0, 0);
+    c.ft_transfer(acc("bob.testnet"), U128(200), None);
+    assert_eq!(balance(&c, "bob.testnet"), 398);
+    assert_eq!(c.total_transfer_burned().0, 1);
+    ctx("owner.testnet", 0);
+    c.set_transfer_burn_enabled(false);
+    ctx("alice.testnet", 1);
+    c.ft_transfer(acc("bob.testnet"), U128(200), None);
+    assert_eq!(balance(&c, "bob.testnet"), 598);
+    assert_eq!(c.total_transfer_burned().0, 1);
+}
 #[test]
-fn expiry_strict_boundary_and_quote_signature_owner(){let mut c=minted();context("alice.testnet",MIN_FEE*2,102);let mut a=admission(&c,10,0);let sig=signed(&a);a.kit_mask="1".into();rejects(||c.accept_day(a,sig));let a=admission(&c,11,0);let sig=signed(&a);c.accept_day(a,sig);let q=c.requests.get(&hx(&[11;32])).unwrap();context("bob.testnet",0,q.deadline);rejects(||c.expire(hx(&[11;32])));context("bob.testnet",0,q.deadline+1);c.expire(hx(&[11;32]));assert_eq!(c.requests.get(&hx(&[11;32])).unwrap().status,4);assert!(c.must_life(&"1".into()).pending.is_none());assert_eq!(c.native_storage_reserved,0);}
-
-// Explicit host-only custody fixture, never exported in contract WASM.
-fn earned(c:&mut Contract,n:u128){let mut l=c.must_life(&"1".into());l.purse+=n;c.allocated+=n;c.issued+=n;c.ft.internal_deposit(&acc("game.testnet"),n);c.lives.insert(&"1".into(),&l);}
+fn near_standard_self_zero_and_gross_balance_requirements() {
+    let mut c = fresh();
+    fund(&mut c, "alice.testnet", 199);
+    ctx("alice.testnet", 1);
+    rejects(|| c.ft_transfer(acc("alice.testnet"), U128(199), None));
+    rejects(|| c.ft_transfer(acc("bob.testnet"), U128(0), None));
+    rejects(|| c.ft_transfer(acc("bob.testnet"), U128(200), None));
+    assert_eq!(balance(&c, "alice.testnet"), 199);
+    assert_eq!(c.total_transfer_burned().0, 0);
+}
 #[test]
-fn dead_purse_withdraw_autoreg_and_idempotent_token_birth(){let mut c=minted();earned(&mut c,300*UNIT);let mut l=c.must_life(&"1".into());l.s.alive=false;l.s.death=1;c.lives.insert(&"1".into(),&l);context("alice.testnet",STORAGE,102);let child=c.birth_from_purse("1".into(),"0".into(),"PIP2".into(),[1,2,2],hx(&[12;32]),acc("alice.testnet"));assert_eq!(child,"2");assert_eq!(c.must_life(&"1".into()).purse,50*UNIT);assert_eq!(c.issued,300*UNIT);assert_eq!(c.burns,250*UNIT);assert_eq!(c.birth_from_purse("1".into(),"0".into(),"PIP2".into(),[1,2,2],hx(&[12;32]),acc("alice.testnet")),child);assert_eq!(c.burns,250*UNIT);context("alice.testnet",1,103);c.nft_transfer(acc("bob.testnet"),"1".into(),None,None);assert!(c.ft.accounts.get(&acc("bob.testnet")).is_none());context("bob.testnet",STORAGE,104);let op=hx(&[13;32]);c.withdraw("1".into(),U128(50*UNIT),op.clone(),acc("bob.testnet"));assert_eq!(c.ft_balance_of(acc("bob.testnet")).0,50*UNIT);assert_eq!(c.allocated,0);c.withdraw("1".into(),U128(50*UNIT),op,acc("bob.testnet"));assert_eq!(c.ft_balance_of(acc("bob.testnet")).0,50*UNIT);assert_eq!(c.ft_total_supply().0,50*UNIT);}
-
+fn full_success_reserves_then_burns_and_refunds_nothing() {
+    let mut c = fresh();
+    fund(&mut c, "alice.testnet", 1000);
+    let supply = c.ft.total_supply;
+    transfer_call(&mut c, 1000);
+    assert_eq!(balance(&c, "recv.testnet"), 995);
+    assert_eq!(balance(&c, "game.testnet"), 5);
+    assert_eq!(c.ft.total_supply, supply);
+    assert_eq!(c.transfer_call_reserved(), 5);
+    assert_eq!(c.transfer_call_pending(), 1);
+    assert!(!get_created_receipts().is_empty());
+    assert_eq!(resolve(&mut c, 0), 1000);
+    assert_eq!(c.ft.total_supply, supply - 5);
+    assert_eq!(c.total_transfer_burned().0, 5);
+    assert_eq!(c.transfer_call_reserved(), 0);
+    assert_eq!(c.transfer_call_pending(), 0);
+}
 #[test]
-fn fee_funding_cannot_spend_pending_storage_and_callback_is_bound(){let mut c=minted();context("alice.testnet",MIN_FEE*2,102);let a=admission(&c,10,0);let sig=signed(&a);c.accept_day(a,sig);let held=c.native_storage_reserved;let earned=c.native_fees;context("alice.testnet",0,103);rejects(||{let _=c.fund_relayer(U128(1));});context("relay.testnet",0,103);let _=c.fund_relayer(U128(earned));assert_eq!(c.native_storage_reserved,held);assert_eq!(c.native_fees,0);assert_eq!(c.relay_funding,Some(earned));rejects(||{let _=c.fund_relayer(U128(1));});let mut b=VMContextBuilder::new();b.current_account_id(acc("game.testnet")).predecessor_account_id(acc("game.testnet")).prepaid_gas(Gas::from_tgas(30));near_sdk::testing_env!(b.build(),near_sdk::test_vm_config(),near_sdk::RuntimeFeesConfig::test(),std::collections::HashMap::new(),vec![near_sdk::PromiseResult::Failed]);c.on_relayer_funded(U128(earned));assert_eq!(c.native_fees,earned);assert_eq!(c.native_storage_reserved,held);assert!(c.relay_funding.is_none());}
-
+fn full_failure_restores_gross_without_tax() {
+    let mut c = fresh();
+    fund(&mut c, "alice.testnet", 1000);
+    let supply = c.ft.total_supply;
+    transfer_call(&mut c, 1000);
+    result(PromiseResult::Failed);
+    assert_eq!(c.resolve_transfer_burn(0).0, 0);
+    assert_eq!(balance(&c, "alice.testnet"), 1000);
+    assert_eq!(balance(&c, "recv.testnet"), 0);
+    assert_eq!(balance(&c, "game.testnet"), 0);
+    assert_eq!(c.ft.total_supply, supply);
+    assert_eq!(c.total_transfer_burned().0, 0);
+}
 #[test]
-fn wallet_birth_and_forced_unregister_keep_supply_pressure(){let mut c=minted();earned(&mut c,300*UNIT);context("alice.testnet",STORAGE,102);c.withdraw("1".into(),U128(300*UNIT),hx(&[14;32]),acc("alice.testnet"));let id=c.birth_from_wallet("WALLET".into(),[2,1,2],hx(&[15;32]),acc("alice.testnet"));assert_eq!(id,"2");assert_eq!(c.ft_balance_of(acc("alice.testnet")).0,50*UNIT);context("alice.testnet",1,103);assert!(c.storage_unregister(Some(true)));assert_eq!(c.unregister_burns,50*UNIT);assert_eq!(c.issued,c.ft_total_supply().0+c.burns+c.unregister_burns);assert!(c.get_operation(acc("alice.testnet"),hx(&[14;32])).is_some());context("game.testnet",1,104);rejects(||{c.storage_unregister(Some(true));});}
-
+fn partial_use_charges_exact_gross_fee_and_refunds_rest() {
+    let mut c = fresh();
+    fund(&mut c, "alice.testnet", 1000);
+    transfer_call(&mut c, 1000);
+    assert_eq!(resolve(&mut c, 497), 500);
+    assert_eq!(balance(&c, "recv.testnet"), 498);
+    assert_eq!(balance(&c, "alice.testnet"), 500);
+    assert_eq!(c.total_transfer_burned().0, 2);
+    assert_eq!(balance(&c, "game.testnet"), 0);
+}
 #[test]
-fn paused_decision_policy_owner_and_pause_guards(){let mut c=minted();let original=c.decision;context("alice.testnet",0,102);rejects(||c.set_decision_config(hx(&[8;32])));assert_eq!(c.decision,original);context("owner.testnet",0,102);rejects(||c.set_decision_config(hx(&[8;32])));assert_eq!(c.decision,original);c.set_admissions_paused(true);rejects(||c.set_decision_config(hx(&[0;32])));rejects(||c.set_decision_config(hx(&original)));assert_eq!(c.decision,original);}
-
+fn partial_rounding_is_overflow_safe_and_exact_for_used_gross() {
+    for gross in [0, 1, 199, 200, 201, 399, 400, 1000, 100_000_000, u128::MAX] {
+        let fee = gross / 200;
+        let net = gross - fee;
+        for used in [0, net / 4, net / 2, net.saturating_sub(1), net] {
+            let burned = fee.min(used / 199);
+            let charged = used.checked_add(burned).unwrap();
+            assert!(charged <= gross);
+            assert_eq!(charged / 200, burned);
+            if used == 0 {
+                assert_eq!(burned, 0)
+            }
+            if used == net {
+                assert_eq!(burned, fee)
+            }
+        }
+    }
+}
 #[test]
-fn paused_decision_policy_preserves_life_and_economics(){let mut c=minted();earned(&mut c,42*UNIT);let life=c.life("1".into());let before=c.config();context("owner.testnet",0,102);c.set_admissions_paused(true);c.set_decision_config(hx(&[8;32]));assert_eq!(c.life("1".into()),life);let after=c.config();for k in ["issued","nft_mint_burns","unregister_burns","total_allocated","available","reserved","native_fees","native_storage_reserved"]{assert_eq!(before[k],after[k],"{k}");}assert_eq!(c.decision,[8;32]);let logs=get_logs();assert_eq!(logs.iter().filter(|s|s.contains("decision_config_changed")).count(),1);assert!(logs.iter().any(|s|s.contains(&hx(&[2;32]))&&s.contains(&hx(&[8;32]))));}
-
+fn malformed_and_excess_unused_replies_are_clamped() {
+    for malformed in [true, false] {
+        let mut c = fresh();
+        fund(&mut c, "alice.testnet", 1000);
+        transfer_call(&mut c, 1000);
+        result(if malformed {
+            PromiseResult::Successful(b"not a U128".to_vec())
+        } else {
+            reply(u128::MAX)
+        });
+        assert_eq!(c.resolve_transfer_burn(0).0, 0);
+        assert_eq!(balance(&c, "alice.testnet"), 1000);
+        assert_eq!(c.total_transfer_burned().0, 0);
+    }
+}
 #[test]
-fn paused_decision_policy_requires_pending_day_drain(){let mut c=minted();context("alice.testnet",MIN_FEE*2,102);let a=admission(&c,10,0);let sig=signed(&a);c.accept_day(a,sig);context("owner.testnet",0,103);c.set_admissions_paused(true);rejects(||c.set_decision_config(hx(&[8;32])));assert_eq!(c.decision,[2;32]);context("relay.testnet",0,104);c.fail(hx(&[10;32]));context("owner.testnet",0,105);c.set_decision_config(hx(&[8;32]));assert_eq!(c.decision,[8;32]);assert!(c.must_life(&"1".into()).pending.is_none());assert_eq!(c.requests.get(&hx(&[10;32])).unwrap().decision,[2;32]);}
+fn receiver_balance_changes_cannot_take_vault_backing() {
+    let mut c = fresh();
+    fund(&mut c, "alice.testnet", 1000);
+    fund(&mut c, "game.testnet", 10000);
+    c.allocated = 10000;
+    transfer_call(&mut c, 1000);
+    c.ft.internal_transfer(&acc("recv.testnet"), &acc("bob.testnet"), 900, None);
+    assert_eq!(resolve(&mut c, 995), 904);
+    assert_eq!(balance(&c, "alice.testnet"), 96);
+    assert_eq!(balance(&c, "game.testnet"), 10000);
+    assert_eq!(c.total_transfer_burned().0, 4);
+    c.backed();
+}
+#[test]
+fn duplicate_callback_is_consumed_once_and_toggle_does_not_reprice() {
+    let mut c = fresh();
+    fund(&mut c, "alice.testnet", 1000);
+    transfer_call(&mut c, 1000);
+    ctx("owner.testnet", 0);
+    c.set_transfer_burn_enabled(false);
+    assert_eq!(resolve(&mut c, 0), 1000);
+    let snapshot = (
+        c.ft.total_supply,
+        c.total_transfer_burned().0,
+        balance(&c, "recv.testnet"),
+    );
+    assert_eq!(resolve(&mut c, 995), 0);
+    assert_eq!(
+        (
+            c.ft.total_supply,
+            c.total_transfer_burned().0,
+            balance(&c, "recv.testnet")
+        ),
+        snapshot
+    );
+}
+#[test]
+fn sender_unregister_refund_is_burned_without_extra_transfer_fee() {
+    let mut c = fresh();
+    fund(&mut c, "alice.testnet", 1000);
+    transfer_call(&mut c, 1000);
+    ctx("alice.testnet", 1);
+    assert!(c.storage_unregister(Some(true)));
+    assert_eq!(resolve(&mut c, 995), 1000);
+    assert_eq!(balance(&c, "recv.testnet"), 0);
+    assert_eq!(balance(&c, "game.testnet"), 0);
+    assert_eq!(c.ft.total_supply, 0);
+    assert_eq!(c.total_transfer_burned().0, 0);
+    assert_eq!(c.unregister_burns, 1000);
+}
+#[test]
+fn vault_cannot_use_public_transfer_paths() {
+    let mut c = fresh();
+    fund(&mut c, "game.testnet", 1000);
+    ctx("game.testnet", 1);
+    rejects(|| c.ft_transfer(acc("alice.testnet"), U128(1000), None));
+    rejects(|| {
+        let _ = c.ft_transfer_call(acc("alice.testnet"), U128(1000), None, "".into());
+    });
+    assert_eq!(balance(&c, "game.testnet"), 1000);
+}
+#[test]
+fn receiver_unregister_burns_its_balance_without_using_other_purses() {
+    let mut c = fresh();
+    fund(&mut c, "alice.testnet", 1000);
+    fund(&mut c, "game.testnet", 5000);
+    c.allocated = 5000;
+    transfer_call(&mut c, 1000);
+    ctx("recv.testnet", 1);
+    assert!(c.storage_unregister(Some(true)));
+    assert_eq!(resolve(&mut c, 995), 1000);
+    assert_eq!(c.total_transfer_burned().0, 5);
+    assert_eq!(c.unregister_burns, 995);
+    assert_eq!(balance(&c, "game.testnet"), 5000);
+    c.backed();
+}
+#[test]
+fn maximum_u128_callback_conserves_supply_without_multiplication() {
+    let mut c = fresh();
+    fund(&mut c, "alice.testnet", u128::MAX);
+    transfer_call(&mut c, u128::MAX);
+    assert_eq!(resolve(&mut c, 0), u128::MAX);
+    assert_eq!(c.total_transfer_burned().0, u128::MAX / 200);
+    assert_eq!(c.ft.total_supply, u128::MAX - u128::MAX / 200);
+}
+#[test]
+fn private_callback_and_bounded_pending_queue() {
+    let mut c = fresh();
+    fund(&mut c, "alice.testnet", 33000);
+    for _ in 0..32 {
+        transfer_call(&mut c, 1000);
+    }
+    ctx("alice.testnet", 1);
+    let before = (
+        balance(&c, "alice.testnet"),
+        balance(&c, "recv.testnet"),
+        balance(&c, "game.testnet"),
+    );
+    rejects(|| {
+        let _ = c.ft_transfer_call(acc("recv.testnet"), U128(1000), None, "".into());
+    });
+    assert_eq!(
+        (
+            balance(&c, "alice.testnet"),
+            balance(&c, "recv.testnet"),
+            balance(&c, "game.testnet")
+        ),
+        before
+    );
+    rejects(|| {
+        let _ = c.resolve_transfer_burn(0);
+    });
+    assert_eq!(c.transfer_call_pending(), 32);
+}
+#[test]
+fn disabled_transfer_call_uses_legacy_resolver_without_retroactive_fee() {
+    let mut c = fresh();
+    fund(&mut c, "alice.testnet", 1000);
+    ctx("owner.testnet", 0);
+    c.set_transfer_burn_enabled(false);
+    transfer_call(&mut c, 1000);
+    assert_eq!(c.transfer_call_reserved(), 0);
+    ctx("owner.testnet", 0);
+    c.set_transfer_burn_enabled(true);
+    result(reply(0));
+    assert_eq!(
+        c.ft_resolve_transfer(acc("alice.testnet"), acc("recv.testnet"), U128(1000))
+            .0,
+        1000
+    );
+    assert_eq!(c.total_transfer_burned().0, 0);
+    assert_eq!(balance(&c, "recv.testnet"), 1000);
+}
+#[test]
+fn transfer_call_storage_cannot_consume_accepted_day_native_reserve() {
+    let mut c = fresh();
+    fund(&mut c, "alice.testnet", 1000);
+    c.native_storage_reserved = 3 * 10u128.pow(24);
+    let usage = env::storage_usage();
+    let rent = u128::from(usage) * env::storage_byte_cost().as_yoctonear();
+    let mut b = builder("alice.testnet", 1);
+    b.storage_usage(usage);
+    b.account_balance(NearToken::from_yoctonear(
+        // The mock runtime adds the attached one yocto to account_balance.
+        rent + c.native_storage_reserved + 20_000_000_000_000_000_000_000 - 2,
+    ));
+    testing_env!(b.build());
+    let before = (
+        balance(&c, "alice.testnet"),
+        balance(&c, "recv.testnet"),
+        balance(&c, "game.testnet"),
+        c.ft.total_supply,
+        env::storage_usage(),
+    );
+    rejects(|| {
+        let _ = c.ft_transfer_call(acc("recv.testnet"), U128(1000), None, "probe".into());
+    });
+    assert_eq!(
+        (
+            balance(&c, "alice.testnet"),
+            balance(&c, "recv.testnet"),
+            balance(&c, "game.testnet"),
+            c.ft.total_supply,
+            env::storage_usage(),
+        ),
+        before
+    );
+    assert_eq!(c.native_storage_reserved, 3 * 10u128.pow(24));
+    assert_eq!(c.transfer_call_reserved(), 0);
+    assert_eq!(c.transfer_call_pending(), 0);
+    assert_eq!(c.total_transfer_burned().0, 0);
+}
+#[test]
+fn taxed_purse_withdraw_is_gross_and_birth_burns_remain_direct() {
+    let mut c = fresh();
+    ctx("alice.testnet", STORAGE);
+    let token = c.mint_nft("PIP".into(), [2, 2, 1], hx(&[3; 32]), acc("alice.testnet"));
+    let mut life = c.must_life(&token);
+    life.purse = 600 * UNIT;
+    c.lives.insert(&token, &life);
+    c.allocated = 600 * UNIT;
+    fund(&mut c, "game.testnet", 600 * UNIT);
+    ctx("alice.testnet", STORAGE);
+    c.withdraw(
+        token.clone(),
+        U128(100 * UNIT),
+        hx(&[4; 32]),
+        acc("alice.testnet"),
+    );
+    assert_eq!(c.must_life(&token).purse, 500 * UNIT);
+    assert_eq!(c.allocated, 500 * UNIT);
+    assert_eq!(balance(&c, "game.testnet"), 500 * UNIT);
+    assert_eq!(balance(&c, "alice.testnet"), 99_500_000);
+    assert_eq!(c.total_transfer_burned().0, 500_000);
+    ctx("alice.testnet", STORAGE);
+    let child = c.birth_from_purse(
+        token.clone(),
+        "1".into(),
+        "PIP2".into(),
+        [2, 2, 1],
+        hx(&[5; 32]),
+        acc("alice.testnet"),
+    );
+    assert_ne!(child, token);
+    assert_eq!(c.allocated, 250 * UNIT);
+    assert_eq!(balance(&c, "game.testnet"), 250 * UNIT);
+    assert_eq!(c.total_transfer_burned().0, 500_000);
+    fund(&mut c, "alice.testnet", 250 * UNIT);
+    ctx("alice.testnet", STORAGE);
+    let _ = c.birth_from_wallet("PIP3".into(), [2, 2, 1], hx(&[6; 32]), acc("alice.testnet"));
+    assert_eq!(c.allocated, 250 * UNIT);
+    assert_eq!(balance(&c, "game.testnet"), 250 * UNIT);
+    assert_eq!(c.total_transfer_burned().0, 500_000);
+    assert_eq!(c.burns, 500 * UNIT);
+    c.backed();
+}

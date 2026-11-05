@@ -1,8 +1,6 @@
-import { deployments } from '../chain/deployments';
 
-/** The public website enters the current game explicitly; legacy NFT URLs
- * retain their original version selector and need no redirect or rewrite. */
-export const OPEN_APP_HREF = '/app?v2=1';
+/** Public entry links open the current game. Historical world scope stays exact. */
+export const OPEN_APP_HREF = '/app?entry=app';
 
 export type EntrySurface = 'site' | 'game';
 
@@ -39,14 +37,13 @@ export function selectEntrySurface(pathname: string, query: URLSearchParams, has
   return hasAny(hashQuery, WALLET_RETURN_KEYS) || hasAny(hashQuery, GAME_QUERY_KEYS) ? 'game' : 'site';
 }
 
-/** Keep the shipped version-selection behavior for historical NFT metadata. */
-export function selectV2Entry(query: URLSearchParams, defaultV2: boolean): boolean {
-  if (query.get('v2') === '1') return true;
-  // Even malformed native-world links go to the current world's validator.
-  if (query.has('networkId')) return true;
-  const collection = query.get('collection'), chainId = query.get('chainId');
-  const legacy = collection && chainId && deployments[Number(chainId)]?.address.toLowerCase() === collection.toLowerCase();
-  // Bare token numbers emitted by earlier metadata still refer to that world.
-  if (legacy || query.has('rooster') && !collection && !chainId) return false;
-  return defaultV2 || query.has('collection');
+/** A number alone cannot identify a life across collections. Wallet returns
+ * keep their exact pending context; old bare NFT links open the public chooser. */
+export function needsLifeScope(query: URLSearchParams, hash = ''): boolean {
+  const fragment = hash.replace(/^#\??/, '');
+  const hashQuery = new URLSearchParams(fragment.includes('?') ? fragment.slice(fragment.indexOf('?') + 1) : fragment);
+  return (query.has('rooster') || query.has('id') || hashQuery.has('rooster') || hashQuery.has('id'))
+    && !['collection', 'chainId', 'networkId'].some(key => query.has(key) || hashQuery.has(key))
+    && !['pending', 'requestId', 'recovery', 'resume'].some(key => query.has(key) || hashQuery.has(key))
+    && !hasAny(query, WALLET_RETURN_KEYS) && !hasAny(hashQuery, WALLET_RETURN_KEYS);
 }

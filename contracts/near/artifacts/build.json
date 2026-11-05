@@ -1,16 +1,17 @@
 {
-    "bytes":  489972,
-    "rust":  "1.95.0",
-    "profile":  "release, lto, opt-level=z, strip=symbols",
-    "rustFlags":  "--cfg near",
-    "target":  "wasm32-unknown-unknown",
-    "sha256":  "d1fc9ae7ad38895ede3dca756100f1e56583b312fb45349aa963b18f9792f880",
-    "nearSdk":  "5.30.0",
-    "schemaVersion":  1,
-    "sources":  {
-                    "Cargo.toml":  "a02ca448aae9ff3cb7ef31aab3efd9bdd79501a117231ff493f499069f1a4d84",
-                    "src/kernel.rs":  "2bbc47bc5948af5c1001b3f42dc287610eb172fa3b5d74cbf74fe67a32c805e3",
-                    "src/lib.rs":  "3130b5de8279dcd642ba541ffc1cfc14da221250fdeecdf6d0324347f4623fce",
-                    "Cargo.lock":  "206398a65f2cd044bbddb167321089dcf97841a4e9627cb13e51afe7e2568799"
-                }
+  "nearSdk": "5.30.0",
+  "layout": "Unchanged Contract Borsh fields; burn extension under versioned 0xFF raw keys",
+  "bytes": 508063,
+  "target": "wasm32-unknown-unknown",
+  "schemaVersion": 1,
+  "sha256": "cd3d6e1b58739ea6a697c7a70c343b7e4d9e9f077a3eb7f55479ccddddd70070",
+  "rust": "1.95.0",
+  "rustFlags": "--cfg near",
+  "sources": {
+    "src/lib.rs": "4402279e035667049040d650afd0a9a87522f93da924deed41e83ee40c6b9b02",
+    "Cargo.toml": "f79ff4fee5e3ef08d0a743af23718ebf7b2d0dccbe64af643c89b33953a6652a",
+    "src/transfer_burn.rs": "6b7a0636c314256145b638d02ca02dfed1d6f44040732b11883f0e8932bbbe48",
+    "Cargo.lock": "d34a35d6128324cad5e847425cd15759aea4883aaf831df28caf51b90b469d0d",
+    "src/kernel.rs": "2bbc47bc5948af5c1001b3f42dc287610eb172fa3b5d74cbf74fe67a32c805e3"
+  }
 }

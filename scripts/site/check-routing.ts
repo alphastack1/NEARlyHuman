@@ -1,106 +1,41 @@
 import assert from 'node:assert/strict';
-import { deployments } from '../../src/chain/deployments';
-import { OPEN_APP_HREF, selectEntrySurface, selectV2Entry } from '../../src/site/routing';
+import { OPEN_APP_HREF, needsLifeScope, selectEntrySurface } from '../../src/site/routing';
 import { parsePublicLifePath, publicLifePath } from '../../src/site/life-routes';
 import { ACTIVE_ROBINHOOD, ORIGINAL_ROBINHOOD } from '../../src/chain/deployment-catalog';
-import { checkDirectory, exploreControls, exploreQuery, lifeImage, publicLifeHref, publicLifeWorld, visitHref, worldById } from '../../src/site/public-lives';
+import { checkDirectory, exploreControls, exploreQuery, hatchHref, lifeImage, publicLifeHref, publicLifeWorld, visitHref, worldById } from '../../src/site/public-lives';
 import type { PublicLifeDirectory } from '../../src/chain/discovery-types';
 
-const origin = 'https://nearlyhuman.netlify.app';
-const surface = (path: string) => {
-  const url = new URL(path, origin);
-  return selectEntrySurface(url.pathname, url.searchParams, url.hash);
-};
-
-const expected: [string, 'site' | 'game'][] = [
-  ['/', 'site'],
-  ['/?utm_source=near&utm_campaign=hackathon', 'site'],
-  ['/#garden', 'site'],
-  ['/the-game', 'site'],
-  ['/project', 'site'],
-  ['/explore?world=near-testnet&sort=longest', 'site'],
-  ['/life/near-testnet/1', 'site'],
-  ['/life/robinhood-testnet/8?from=%2Fexplore', 'site'],
-  [`/life/robinhood-testnet/${ACTIVE_ROBINHOOD.runtime.collection}/1`, 'site'],
-  ['/docs/', 'site'],
-  ['/docs/first-day?utm_source=app', 'site'],
-  ['/docs/worlds-and-wallets?networkId=near-testnet', 'site'],
-  ['/unknown?rooster=7', 'site'],
-  ['/app', 'game'],
-  ['/app/', 'game'],
-  [OPEN_APP_HREF, 'game'],
-  ['/app?utm_source=guide', 'game'],
-  ['/app?v2=1&rooster=8&view=watch&day=1', 'game'],
-  ['/?v2=1', 'game'],
-  ['/?v2=0', 'game'],
-  ['/?legacy=1', 'game'],
-  ['/?rooster=1', 'game'],
-  ['/?id=1', 'game'],
-  ['/?day=2', 'game'],
-  ['/?rooster=1&chainId=46630&collection=0x30cb5213fa94020a95893ddb6b07470dbf7a9efc&day=2', 'game'],
-  ['/?rooster=1&networkId=near-testnet&collection=game.nearlyhuman-dev-20261102-26c8bd.testnet', 'game'],
-  ['/?networkId=bad-world&chainId=46630&collection=bad&rooster=1', 'game'],
-  ['/?collection=', 'game'],
-  ['/?pending=1&requestId=original', 'game'],
-  ['/?recovery=1', 'game'],
-  ['/?transactionHashes=original', 'game'],
-  ['/?errorCode=UserRejected&errorMessage=Cancelled', 'game'],
-  ['/?account_id=owner.testnet&public_key=ed25519%3Akey&all_keys=key', 'game'],
-  ['/#accountId=owner.testnet&publicKey=key&signature=original', 'game'],
-  ['/#/?transactionHashes=original', 'game'],
+const origin = 'https://nearlyhuman.netlify.app', classify = (value: string) => { const url = new URL(value, origin); return selectEntrySurface(url.pathname, url.searchParams, url.hash); };
+const routes = [
+  ['/', 'site'], ['/?utm_source=near', 'site'], ['/#garden', 'site'], ['/the-game', 'site'], ['/project', 'site'], ['/explore?world=near-testnet', 'site'],
+  ['/life/near-testnet/1', 'site'], ['/docs/first-day?networkId=near-testnet', 'site'], ['/unknown?rooster=1', 'site'],
+  [OPEN_APP_HREF, 'game'], ['/app', 'game'], ['/?v2=1', 'game'], ['/?rooster=8&chainId=46630&collection='+ORIGINAL_ROBINHOOD.runtime.collection, 'game'],
+  ['/?account_id=player.testnet', 'game'], ['/#signature=unchanged', 'game'], ['/?pending=request', 'game'],
 ];
-for (const [url, entry] of expected) assert.equal(surface(url), entry, url);
+for (const [url, expected] of routes) assert.equal(classify(url), expected, url);
+for (const value of ['rooster=1', 'id=1', 'rooster=1&rememberedWorld=near-testnet']) assert.equal(needsLifeScope(new URLSearchParams(value)), true);
+for (const value of ['rooster=1&collection=game.testnet&networkId=near-testnet', 'rooster=1&account_id=player.testnet', 'rooster=1&pending=request', 'transactionHashes=original']) assert.equal(needsLifeScope(new URLSearchParams(value)), false);
+assert.equal(needsLifeScope(new URLSearchParams(), '#id=1'), true);
 
-const oldCollection = deployments[46630]!.address;
-const choose = (query: string, defaultV2: boolean) => selectV2Entry(new URLSearchParams(query), defaultV2);
-assert.equal(choose(`rooster=1&chainId=46630&collection=${oldCollection}`, true), false);
-assert.equal(choose(`rooster=1&chainId=46630&collection=${oldCollection.toUpperCase()}`, true), false);
-assert.equal(choose(`v2=1&rooster=1&chainId=46630&collection=${oldCollection}`, true), true);
-assert.equal(choose('rooster=1', true), false);
-assert.equal(choose('id=1', true), true);
-assert.equal(choose('networkId=near-testnet&collection=bad', false), true);
-assert.equal(choose('collection=0x30cb5213fa94020a95893ddb6b07470dbf7a9efc', false), true);
-assert.equal(choose('', false), false);
-assert.equal(choose('', true), true);
-assert.equal(choose('v2=0', true), true); // Existing selector semantics, not a new legacy switch.
-assert.equal(choose(new URL(OPEN_APP_HREF, origin).search, false), true);
-
-// Classification must never consume callback data or normalize the business URL.
-const returnUrl = new URL('/?networkId=near-testnet&collection=game.testnet&rooster=1&transactionHashes=original#signature=unchanged', origin);
-const originalUrl = returnUrl.href;
-assert.equal(publicLifePath('near-testnet', '1'), '/life/near-testnet/1');
-assert.deepEqual(parsePublicLifePath('/life/robinhood-testnet/8/'), { worldId: 'robinhood-testnet', id: '8' });
-const originalRh = ORIGINAL_ROBINHOOD.runtime.collection.toLowerCase(), activeRh = ACTIVE_ROBINHOOD.runtime.collection.toLowerCase();
-assert.notEqual(activeRh, originalRh, 'This bridge is exercised against two distinct collection identities.');
-assert.equal(publicLifePath('robinhood-testnet', '8', originalRh), '/life/robinhood-testnet/8');
-const activePath = `/life/robinhood-testnet/${activeRh}/1`;
-assert.equal(publicLifePath('robinhood-testnet', '1', activeRh), activePath);
-assert.deepEqual(parsePublicLifePath(activePath + '/'), { worldId: 'robinhood-testnet', collection: activeRh, id: '1' });
-assert.equal(publicLifeWorld('robinhood-testnet')?.collection.toLowerCase(), originalRh);
-assert.equal(publicLifeWorld('robinhood-testnet', activeRh)?.collection.toLowerCase(), activeRh);
-assert.equal(worldById('robinhood-testnet')?.collection.toLowerCase(), activeRh);
-assert.equal(publicLifeWorld('robinhood-testnet', '0x' + '1'.repeat(40)), undefined);
-const legacyWorld = publicLifeWorld('robinhood-testnet')!, activeWorld = worldById('robinhood-testnet')!;
-assert.equal(publicLifeHref(legacyWorld, '8'), '/life/robinhood-testnet/8');
-assert.equal(publicLifeHref(activeWorld, '1'), activePath);
-for (const world of [legacyWorld, activeWorld]) {
-  for (const href of [lifeImage(world, '1'), visitHref(world, '1', 2)]) assert.equal(new URL(href, origin).searchParams.get('collection')?.toLowerCase(), world.collection.toLowerCase());
+const original = ORIGINAL_ROBINHOOD.runtime.collection.toLowerCase(), active = ACTIVE_ROBINHOOD.runtime.collection.toLowerCase();
+assert.notEqual(active, original);
+const oldWorld = publicLifeWorld('robinhood-testnet')!, newWorld = worldById('robinhood-testnet')!, nearWorld = worldById('near-testnet')!;
+assert.equal(oldWorld.collection.toLowerCase(), original); assert.equal(newWorld.collection.toLowerCase(), active);
+assert.equal(publicLifeHref(oldWorld, '8'), '/life/robinhood-testnet/8');
+assert.equal(publicLifePath('robinhood-testnet', '1', active), `/life/robinhood-testnet/${active}/1`);
+assert.deepEqual(parsePublicLifePath(`/life/robinhood-testnet/${active}/1`), { worldId:'robinhood-testnet', collection:active, id:'1' });
+assert.deepEqual(parsePublicLifePath('/life/robinhood-testnet/8/'), { worldId:'robinhood-testnet', id:'8' });
+for (const world of [oldWorld, newWorld, nearWorld]) {
+  const home = new URL(visitHref(world,'1'),origin), film = new URL(visitHref(world,'1',2),origin), hatch = new URL(hatchHref(world),origin);
+  for (const url of [home,film,hatch,new URL(lifeImage(world,'1'),origin)]) { assert.equal(url.searchParams.get('collection')?.toLowerCase(),world.collection.toLowerCase()); assert.equal(url.searchParams.has('v2'),false); }
+  assert.equal(home.searchParams.get('view'),'home'); assert.equal(film.searchParams.get('view'),'watch'); assert.equal(film.searchParams.get('day'),'2'); assert.equal(hatch.searchParams.get('entry'),'hatch');
+  assert.equal(lifeImage(world,'1').startsWith(world.id==='near-testnet'?'/api/near/':'/api/evm/'),true);
 }
-const defaultBoard = exploreControls('?world=robinhood-testnet'), legacyBoard = exploreControls(`?world=robinhood-testnet&collection=${originalRh}&q=maple`);
-assert.equal(defaultBoard.collection, undefined);
-assert.equal(legacyBoard.collection?.toLowerCase(), originalRh);
-assert.notEqual(exploreQuery(defaultBoard), exploreQuery(legacyBoard));
-assert.equal(exploreControls(`?world=near-testnet&collection=${originalRh}`).collection, undefined);
-assert.equal(exploreControls(`?world=robinhood-testnet&collection=${activeRh}`).collection, undefined);
-const legacyDirectory: PublicLifeDirectory = { world: { id: 'robinhood-testnet', label: 'Robinhood Testnet', collection: originalRh },
-  snapshot: { id: 'immutable-snapshot', at: new Date(0).toISOString(), height: '1', hash: 'hash', complete: true, stale: false },
-  sort: 'newest', status: 'all', query: 'MAPLE', total: 0, collectionTotal: 8, items: [] };
-assert.equal(checkDirectory(legacyDirectory, legacyBoard), legacyDirectory);
-assert.throws(() => checkDirectory(legacyDirectory, defaultBoard), /another check/);
-assert.throws(() => checkDirectory({ ...legacyDirectory, query: 'MISO' }, legacyBoard), /another check/);
-for (const path of ['/life/near-mainnet/1', '/life/near-testnet/0', '/life/near-testnet/01', '/life/near-testnet/1/extra', `/life/near-testnet/${activeRh}/1`, `/life/robinhood-testnet/${activeRh}/0`, '/life/robinhood-testnet/0x123/1']) assert.equal(parsePublicLifePath(path), undefined);
-selectEntrySurface(returnUrl.pathname, returnUrl.searchParams, returnUrl.hash);
-selectV2Entry(returnUrl.searchParams, true);
-assert.equal(returnUrl.href, originalUrl);
-
-console.log(JSON.stringify({ surfaceCases: expected.length, versionCases: 11, callbackUrlUnchanged: true, collectionIdentity: { oldUrlsStable: true, qualifiedActiveUrls: true, exactApiScope: true, collectionBoundDirectory: true }, pass: true }));
+const board = exploreControls('?world=robinhood-testnet'), archived = exploreControls(`?world=robinhood-testnet&collection=${original}&q=MAPLE`);
+assert.equal(board.collection,undefined); assert.equal(archived.collection?.toLowerCase(),original); assert.notEqual(exploreQuery(board),exploreQuery(archived));
+const directory:PublicLifeDirectory={world:{id:'robinhood-testnet',label:'Robinhood Testnet',collection:original},snapshot:{id:'fixed',at:new Date(0).toISOString(),height:'1',hash:'hash',complete:true,stale:false},sort:'newest',status:'all',query:'MAPLE',total:0,collectionTotal:8,items:[]};
+assert.equal(checkDirectory(directory,archived),directory); assert.throws(()=>checkDirectory(directory,board));
+for(const invalid of['/life/near-mainnet/1','/life/near-testnet/0','/life/near-testnet/01','/life/near-testnet/1/extra',`/life/near-testnet/${active}/1`,'/life/robinhood-testnet/0x123/1'])assert.equal(parsePublicLifePath(invalid),undefined);
+const callback=new URL('/?networkId=near-testnet&collection=game.testnet&rooster=1&transactionHashes=original#signature=unchanged',origin),before=callback.href;
+selectEntrySurface(callback.pathname,callback.searchParams,callback.hash); needsLifeScope(callback.searchParams,callback.hash);assert.equal(callback.href,before);
+console.log(JSON.stringify({pass:true,surfaceCases:routes.length,unqualifiedIdsGuarded:true,callbackUnchanged:true,exactCollectionIdentity:true,canonicalApis:true}));

@@ -1,6 +1,6 @@
 import { NearError, type NearBlock, type NearRuntime, type NearContractConfig } from './types';
 import { base58Decode } from './encoding';
-import { v2DecisionConfig } from '../v2/preparation';
+import { decisionConfig } from '../evm/preparation';
 
 export const isNearAccount=(value:unknown):value is string=>typeof value==='string'&&value.length>=2&&value.length<=64&&/^[a-z0-9]+(?:[-_.][a-z0-9]+)*$/.test(value);
 export function checkNearAccount(value:unknown):string {if(!isNearAccount(value))throw new NearError('format','Choose your NEAR account.',400);return value;}
@@ -12,7 +12,7 @@ export function nearRuntime():NearRuntime {
       ||!local&&(!r.collection.endsWith('.testnet')||!r.relayer.endsWith('.testnet'))
       ||url.protocol!=='https:'&&!(local&&url.protocol==='http:'&&['127.0.0.1','localhost'].includes(url.hostname))
       ||url.username||url.password||!/^0x[0-9a-f]{64}$/.test(r.rulesHash)||!/^0x[0-9a-f]{64}$/.test(r.decisionConfig)
-      ||r.decisionConfig!==v2DecisionConfig(r.rulesHash))throw Error();
+      ||r.decisionConfig!==decisionConfig(r.rulesHash))throw Error();
     base58Decode(r.codeHash,32);if(Buffer.from(r.quoteSigner,'base64').length!==32||Buffer.from(r.quoteSigner,'base64').toString('base64')!==r.quoteSigner)throw Error();
     return {version:2,networkId:'near-testnet',network:'testnet',collection:r.collection,rpcUrl:r.rpcUrl,codeHash:r.codeHash,rulesHash:r.rulesHash,decisionConfig:r.decisionConfig,relayer:r.relayer,quoteSigner:r.quoteSigner};
   }catch{throw new NearError('connection','This NEAR home is resting. Try again shortly.',503);}

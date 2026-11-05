@@ -1,9 +1,8 @@
-import type { GameState, Plot } from '../domain/types';
-import { canvasArt, COLORS as C, outline, plantArt, woodPanel, type Paint } from './pixels';
+import { canvasArt, COLORS as C, outline, plantArt, woodPanel } from './pixels';
 
-export type FixtureArt='fridge'|'pantry'|'stove'|'prep'|'sink'|'bed'|'bedCover'|'cupboard'|'baseSeat'|'chair'|'table'|'window'|'plant'|'painting'|'mailbox'|'shelf'|'bedside'|'plot'|'umbrella'|'shelter';
-export interface ArtOptions { damaged?:boolean; patched?:boolean; braced?:boolean; open?:boolean; parcel?:boolean; plot?:Plot; variant?:number }
-export const FIXTURE_SIZES:Record<FixtureArt,[number,number]>={fridge:[30,44],pantry:[34,28],stove:[32,34],prep:[34,28],sink:[32,30],bed:[44,66],bedCover:[44,66],cupboard:[28,44],baseSeat:[24,28],chair:[18,25],table:[52,36],window:[36,32],plant:[26,31],painting:[20,18],mailbox:[23,28],shelf:[36,20],bedside:[26,35],plot:[28,25],umbrella:[40,48],shelter:[92,66]};
+export type FixtureArt='fridge'|'pantry'|'stove'|'prep'|'sink'|'bed'|'bedCover'|'cupboard'|'baseSeat'|'chair'|'table'|'window'|'plant'|'painting'|'mailbox'|'shelf'|'bedside'|'umbrella'|'shelter';
+export interface ArtOptions { damaged?:boolean; patched?:boolean; braced?:boolean; open?:boolean; parcel?:boolean; variant?:number }
+export const FIXTURE_SIZES:Record<FixtureArt,[number,number]>={fridge:[30,44],pantry:[34,28],stove:[32,34],prep:[34,28],sink:[32,30],bed:[44,66],bedCover:[44,66],cupboard:[28,44],baseSeat:[24,28],chair:[18,25],table:[52,36],window:[36,32],plant:[26,31],painting:[20,18],mailbox:[23,28],shelf:[36,20],bedside:[26,35],umbrella:[40,48],shelter:[92,66]};
 
 export function fixtureCanvas(kind:FixtureArt,opts:ArtOptions={}):HTMLCanvasElement {
   const [w,h]=FIXTURE_SIZES[kind];
@@ -86,7 +85,6 @@ export function fixtureCanvas(kind:FixtureArt,opts:ArtOptions={}):HTMLCanvasElem
       p('#555a50',7,2,13,8);p('#c3bd98',6,3,15,7);p('#e8ddb5',7,2,13,6);p('#f5e9c5',9,2,8,1);p('#d1c79f',7,8,13,2);p('#ada782',6,10,15,1);
       if(opts.variant===1){p('#c4bd98',10,3,1,5);p('#c4bd98',16,3,1,5);}if(opts.variant===2)p('#b7b894',7,7,13,1);
     }
-    if(kind==='plot')drawPlot(p,opts.plot);
     if(kind==='umbrella'){
       p('#353b34',20,12,2,35);p('#b59152',20,39,3,8);p('#2b526d',5,9,30,12);p('#235b93',2,13,36,8);p('#387eb4',5,9,30,11);p('#4e9bcf',10,5,20,12);p('#8ec5dc',16,3,9,13);p('#c3ddd9',19,3,2,14);p('#246695',3,19,34,2);p('#32433c',19,0,3,4);
     }
@@ -96,31 +94,4 @@ export function fixtureCanvas(kind:FixtureArt,opts:ArtOptions={}):HTMLCanvasElem
       p('#5e422b',1,27,90,4);p('#bc8a51',2,27,88,1);p('#756044',3,62,11,4);p('#756044',79,62,11,4);
     }
   });
-}
-
-function drawPlot(p:Paint,plot?:Plot):void {
-  p('#5d4b31',2,3,24,21);p('#8b7048',1,5,26,16);p('#ac905d',3,3,22,2);p('#ac905d',1,6,2,14);p('#6e5637',24,5,3,17);
-  const soil=plot?.moisture?'#66503a':'#8c6b43';p(soil,4,6,20,15);p(plot?.moisture?'#584734':'#a07b4e',5,7,18,1);
-  for(const [x,y]of [[7,9],[15,8],[21,13],[9,17],[17,19],[5,14]])p(plot?.moisture?'#806645':'#b18b55',x,y,2,1);
-  if(plot?.pendingBonus){for(const[x,y]of [[7,11],[17,15],[12,18]]){p('#4b5030',x,y,2,1);p('#84a25d',x,y-1,1,1);}}
-  if(plot?.moisture===2){p('#5b8891',6,13,2,1);p('#5c8790',19,17,2,1);}
-  if(plot?.soilBlocked){for(const [x,y]of [[6,15],[18,9],[14,17]]){p('#514b3b',x-1,y+1,6,4);p('#8b8c79',x,y,5,3);p('#c0b99b',x+1,y,3,1);}}
-  if(!plot?.plant)return;
-  const g=plot.growth;
-  if(g===0){p('#493c2b',11,13,5,3);p('#a7854e',11,12,5,2);p('#d0b275',12,12,2,1);return;}
-  p('#365c36',13,10,2,10);p('#679e4e',13,10,1,8);
-  p('#365f38',8,10,6,5);p('#73ac57',9,10,4,3);p('#486f39',14,7,7,6);p('#8ab860',15,7,4,3);
-  if(plot.plant==='rose'&&g>=2){p('#842e58',9,1,11,9);p('#bb3b75',8,3,12,6);p('#df6594',10,1,7,6);p('#f39db7',12,2,4,2);p('#9f3867',12,6,6,3);}
-  if(plot.plant==='apple'&&g>=2){p('#345c35',5,5,19,9);p('#568c44',6,4,17,8);p('#75a753',8,4,6,4);p('#6b9e49',17,5,5,4);if(g>=3){p('#9c3234',7,9,5,5);p('#e24a3f',8,9,4,3);p('#f88257',9,9,1,1);p('#9c3234',17,9,5,5);p('#d8453a',17,9,4,3);}}
-  if(plot.dryDays>0&&g< (plot.plant==='rose'?2:3)){p('#b09a53',8,12,5,2);p('#a28d48',17,12,4,2);}
-}
-
-export function fixtureTextureKey(kind:FixtureArt,opts:ArtOptions={}):string {
-  const q=opts.plot;return `${kind}-${opts.damaged?1:0}${opts.patched?1:0}${opts.braced?1:0}${opts.open?1:0}${opts.parcel?1:0}-v${opts.variant||0}${q?`-${q.plant}-${q.growth}-${q.moisture}-${q.dryDays}-${q.soilBlocked?1:0}-${q.pendingBonus?1:0}`:''}`;
-}
-
-export function houseArtOptions(state:GameState,kind:FixtureArt):ArtOptions {
-  if(kind==='stove')return {damaged:state.house.damage.stove,patched:state.house.stovePatch>0};
-  if(kind==='window')return {damaged:state.house.damage.window,patched:state.house.windowPatch>0,braced:state.house.windowBrace};
-  if(kind==='chair')return {damaged:state.house.damage.chair,braced:state.house.chairBrace};return {};
 }

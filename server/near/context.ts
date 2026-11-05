@@ -1,6 +1,6 @@
 import {keccak256,toHex,type Hex} from 'viem';
-import {decodeState,kitItems} from '../../src/v2';
-import {v2DecisionConfig} from '../v2/preparation';
+import {decodeState,kitItems} from '../../src/domain';
+import {decisionConfig} from '../evm/preparation';
 import {base58Decode} from './encoding';
 import {checkNearAccount,nearView,verifyNearRuntime,nearRuntime} from './rpc';
 import {NearError,type NearFrozenInput,type NearRequest,type NearLife,type NearRuntime,type NearBlock} from './types';
@@ -10,7 +10,7 @@ const hex32=(value:unknown):value is Hex=>typeof value==='string'&&/^0x[0-9a-f]{
 export const nearInputHash=(value:NearFrozenInput):Hex=>keccak256(toHex(JSON.stringify(value)));
 export function validateNearFrozenInput(value:NearFrozenInput):NearFrozenInput{
   const input=structuredClone(value),r=input.runtime;
-  if(input.version!==2||r.networkId!=='near-testnet'||r.network!=='testnet'||!hex32(r.rulesHash)||!hex32(r.decisionConfig)||r.decisionConfig!==v2DecisionConfig(r.rulesHash)||!hex32(input.requestId)||!hex32(input.daySeed)||!hex32(input.baseHash)||!Number.isInteger(input.baseRevision)||input.baseRevision<0||input.baseRevision>0xffffffff||!Number.isInteger(input.day)||input.day<1||input.day>0xffffffff||typeof input.shipping!=='boolean')throw new NearError('context','The accepted NEAR day needs another check.');
+  if(input.version!==2||r.networkId!=='near-testnet'||r.network!=='testnet'||!hex32(r.rulesHash)||!hex32(r.decisionConfig)||r.decisionConfig!==decisionConfig(r.rulesHash)||!hex32(input.requestId)||!hex32(input.daySeed)||!hex32(input.baseHash)||!Number.isInteger(input.baseRevision)||input.baseRevision<0||input.baseRevision>0xffffffff||!Number.isInteger(input.day)||input.day<1||input.day>0xffffffff||typeof input.shipping!=='boolean')throw new NearError('context','The accepted NEAR day needs another check.');
   checkNearAccount(r.collection);checkNearAccount(r.relayer);checkNearAccount(input.player);base58Decode(r.codeHash,32);base58Decode(input.acceptedBlockHash,32);
   if(uint(input.tokenId,64)===0n||uint(input.deadline,64)!==uint(input.acceptedAt,64)+900n||uint(input.reservedReward,128)>136000000n||!input.shipping&&BigInt(input.reservedReward)!==0n)throw new NearError('context','The accepted NEAR day needs another check.');
   uint(input.pressure,128);uint(input.acceptedBlock,64);kitItems(uint(input.kitMask,64));

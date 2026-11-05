@@ -1,0 +1,70 @@
+{
+  "schemaVersion": 1,
+  "evm": {
+    "compiler": "0.8.38+commit.1835d247.Emscripten.clang",
+    "openZeppelin": "5.6.1",
+    "settings": {
+      "optimizer": {
+        "enabled": true,
+        "runs": 1
+      },
+      "viaIR": true,
+      "evmVersion": "cancun"
+    },
+    "units": {
+      "contracts/v3/NEARlyHumanV3.sol": "contracts/evm/Game.sol",
+      "contracts/v3/test/TransferBurnGameHarness.sol": "contracts/evm/test/GameHarness.sol",
+      "contracts/v2/IV2LifeVerifier.sol": "contracts/evm/rules/ILifeVerifier.sol",
+      "contracts/v2/V2Types.sol": "contracts/evm/rules/Types.sol",
+      "contracts/v2/V2LifeVerifier.sol": "contracts/evm/rules/LifeVerifier.sol",
+      "contracts/v2/V2ActionModule.sol": "contracts/evm/rules/ActionModule.sol",
+      "contracts/token/NHCTransferBurn.sol": "contracts/token/NHCTransferBurn.sol"
+    },
+    "sourceHashes": {
+      "contracts/evm/Game.sol": "c2a2c84175fea23d1af2294860f0425b85526eb192a296a678dbdd2485c521d0",
+      "contracts/evm/test/GameHarness.sol": "947983d31e4a085a1d644c8a670d470e522fa0f3186ce757448774485a9696fe",
+      "contracts/evm/rules/ILifeVerifier.sol": "95c62fc8d50f62a3f5b1fd7c4dd386ab02d79315ff0da54d964e41153f47de0a",
+      "contracts/evm/rules/Types.sol": "0815013cf87b24e3f8d1e41ea37c952932e8abf28a33fcbb8a0f61d3cc7ce80d",
+      "contracts/evm/rules/LifeVerifier.sol": "27c1f90f4b929fd7ba142b465797b12822a39f9a17847866b432cbc29e202347",
+      "contracts/evm/rules/ActionModule.sol": "cd114d3a7ae857f8115f1ff708eb928060437837149a8842c029227d9686c787",
+      "contracts/token/NHCTransferBurn.sol": "83a10898a2148b32b8eaad8fa7b032825261f5a10093d2f1cd217dc101169b83"
+    },
+    "gameEntries": [
+      "contracts/v3/NEARlyHumanV3.sol",
+      "contracts/token/NHCTransferBurn.sol",
+      "contracts/v3/test/TransferBurnGameHarness.sol"
+    ],
+    "ruleEntries": [
+      "contracts/v2/IV2LifeVerifier.sol",
+      "contracts/v2/V2ActionModule.sol",
+      "contracts/v2/V2LifeVerifier.sol",
+      "contracts/v2/V2Types.sol"
+    ],
+    "artifacts": {
+      "game": "contracts/evm/artifacts/game.json",
+      "token": "contracts/evm/artifacts/token.json",
+      "verifier": "contracts/evm/artifacts/verifier.json",
+      "actionModule": "contracts/evm/artifacts/action-module.json"
+    }
+  },
+  "near": {
+    "sourceRoot": "contracts/near",
+    "artifact": "contracts/near/artifacts/game.wasm",
+    "build": "contracts/near/artifacts/build.json",
+    "sha256": "cd3d6e1b58739ea6a697c7a70c343b7e4d9e9f077a3eb7f55479ccddddd70070"
+  },
+  "archives": [
+    {
+      "file": "contracts/releases/original-contracts.zip",
+      "sha256": "96eb30080976baf50f386e131e338ad69d8575c410210fa55fe2cfeb85e83053",
+      "publicBase": "/source",
+      "download": "/source/contracts.zip"
+    },
+    {
+      "file": "contracts/releases/transfer-burn-contracts.zip",
+      "sha256": "7f72160809256d287370762f9750be607b14ef3f632449e37d1616b80c5acbd3",
+      "publicBase": "/source/v3",
+      "download": "/source/v3/contracts.zip"
+    }
+  ]
+}

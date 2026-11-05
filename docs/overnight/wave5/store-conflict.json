@@ -1,8 +1,0 @@
-{
-  "scope": "Controlled synthetic accepted-input fixture and actual preparation helper; no RPC/provider/credentials/financial-ledger changes.",
-  "question": "Does transient durable CAS contention requeue an accepted day?",
-  "errorName": "StoreConflict",
-  "actualPhase": "queued",
-  "expectedPhase": "queued",
-  "pass": true
-}

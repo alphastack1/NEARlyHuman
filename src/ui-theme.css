@@ -13,23 +13,23 @@
   --nh-apricot-shade: #c98a49;
 }
 
-.v2-journey, .v2-stage {
-  --v2-panel: var(--nh-teal);
-  --v2-text: var(--nh-cream);
-  --v2-muted: #c4d4be;
-  --v2-control: #244f48;
-  --v2-control-hover: #356246;
-  --v2-selected: #416b46;
-  --v2-edge: #a8bf91;
-  --v2-soft-line: #527566;
-  --v2-shadow: #102e28;
-  --v2-highlight: #6a8b70;
-  --v2-emphasis: var(--nh-apricot);
-  --v2-focus: var(--nh-apricot);
-  --v2-warning: #f8cd9d;
-  --v2-warning-surface: #5b3f31;
-  --v2-navy: var(--v2-panel);
-  --v2-cream: var(--v2-text);
-  --v2-line: var(--v2-edge);
-  --v2-gold: var(--nh-apricot);
+.life-journey, .life-stage {
+  --life-panel: var(--nh-teal);
+  --life-text: var(--nh-cream);
+  --life-muted: #c4d4be;
+  --life-control: #244f48;
+  --life-control-hover: #356246;
+  --life-selected: #416b46;
+  --life-edge: #a8bf91;
+  --life-soft-line: #527566;
+  --life-shadow: #102e28;
+  --life-highlight: #6a8b70;
+  --life-emphasis: var(--nh-apricot);
+  --life-focus: var(--nh-apricot);
+  --life-warning: #f8cd9d;
+  --life-warning-surface: #5b3f31;
+  --life-navy: var(--life-panel);
+  --life-cream: var(--life-text);
+  --life-line: var(--life-edge);
+  --life-gold: var(--nh-apricot);
 }

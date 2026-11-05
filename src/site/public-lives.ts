@@ -38,7 +38,10 @@ export function publicLifeHref(world: PublicWorld, id: string, from?: string): s
 }
 export function worldQuery(world: PublicWorld): URLSearchParams {
   const params = new URLSearchParams(new URL(world.appHref, 'https://nearlyhuman.netlify.app').search);
-  params.delete('v2'); return params;
+  params.delete('v2'); params.delete('entry'); return params;
+}
+export function hatchHref(world: PublicWorld): string {
+  const url = new URL(world.appHref, PROJECT.siteUrl); url.searchParams.set('entry', 'hatch'); return url.pathname + url.search;
 }
 export function visitHref(world: PublicWorld, id: string, day?: number): string {
   const url = new URL(world.appHref, 'https://nearlyhuman.netlify.app');
@@ -46,7 +49,7 @@ export function visitHref(world: PublicWorld, id: string, day?: number): string 
   if (day !== undefined) url.searchParams.set('day', String(day));
   return url.pathname + url.search;
 }
-export const lifeImage = (world: PublicWorld, id: string) => `${world.id === 'near-testnet' ? '/api/near/v2' : '/api/v2'}/nft/${id}/image.svg?${worldQuery(world)}`;
+export const lifeImage = (world: PublicWorld, id: string) => `${world.id === 'near-testnet' ? '/api/near' : '/api/evm'}/nft/${id}/image.svg?${worldQuery(world)}`;
 export const lifeExplorer = (world: PublicWorld, id: string) => world.id === 'near-testnet'
   ? `https://testnet.nearblocks.io/nft-tokens/${encodeURIComponent(world.collection)}/tokens/${id}`
   : `https://explorer.testnet.chain.robinhood.com/token/${world.collection}/instance/${id}`;
@@ -83,14 +86,14 @@ export async function readDirectory(controls: ExploreControls, cursor?: string, 
   return checkDirectory(await read<PublicLifeDirectory>('/api/explore/lives?' + params, signal), controls);
 }
 export async function readLife(world: PublicWorld, id: string, signal?: AbortSignal): Promise<GamePublicLife> {
-  const result = await read<{ life: GamePublicLife }>(`${world.id === 'near-testnet' ? '/api/near/v2' : '/api/v2'}/rooster/${id}?${worldQuery(world)}`, signal), life = result?.life;
+  const result = await read<{ life: GamePublicLife }>(`${world.id === 'near-testnet' ? '/api/near' : '/api/evm'}/rooster/${id}?${worldQuery(world)}`, signal), life = result?.life;
   if (!life || life.id !== id || life.collection.toLowerCase() !== world.collection.toLowerCase() || (world.id === 'near-testnet' ? !('networkId' in life) || life.networkId !== 'near-testnet' : !('chainId' in life) || life.chainId !== 46630)
     || !Array.isArray(life.state?.plots) || life.state.plots.length !== 4 || !Array.isArray(life.state.inventory) || life.state.inventory.length !== 34 || !Array.isArray(life.state.stats) || life.state.stats.length !== 3 || !/^\d+$/.test(life.purseMicro)) throw new PublicReadError('This life needs another check. Try again.');
   return life;
 }
 export async function readDays(world: PublicWorld, id: string, before?: number, signal?: AbortSignal): Promise<GameDaysPage> {
   const params = worldQuery(world); if (before !== undefined) params.set('before', String(before));
-  const value = await read<GameDaysPage>(`${world.id === 'near-testnet' ? '/api/near/v2' : '/api/v2'}/days/${id}?${params}`, signal);
+  const value = await read<GameDaysPage>(`${world.id === 'near-testnet' ? '/api/near' : '/api/evm'}/days/${id}?${params}`, signal);
   if (!Array.isArray(value.days) || value.days.some(day => !Number.isSafeInteger(day.day) || day.day < 1)) throw new PublicReadError('These saved days need another check. Try again.');
   return value;
 }

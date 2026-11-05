@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState, type PointerEvent as ReactPointerEvent } from 'react';
 import { Icon } from '../app/Icons';
-import { v2ItemImage } from '../art/v2-items';
-import { PLANTS } from '../v2/catalog';
-import { ITEMS, type State } from '../v2/types';
+import { itemImage } from '../art/items';
+import { PLANTS } from '../domain/catalog';
+import { ITEMS, type State } from '../domain/types';
 import { loadOpenHouseReplay, type HouseFocus, type HouseInspect, type HousePhase } from './open-house-data';
 import type { OpenHouseWorld } from './open-house-world';
 import './home-preview.css';
@@ -126,7 +126,7 @@ export default function HomePreview({ className = '' }: { className?: string }) 
     {!active && <picture className="hp-poster" style={{ transform: `translate(${shift.x}px,${shift.y}px) scale(${shift.x || shift.y ? 1.05 : 1})` }}><source media="(max-width: 720px)" srcSet="/site/open-house-phone.webp"/><img src="/site/open-house-desktop.webp" alt="MAPLE’s saved pixel home" width="1440" height="900" fetchPriority="high"/></picture>}
     {(!active || holding) && <button type="button" className="hp-world-hit" aria-label="Look around the saved home" onPointerDown={startPan} onPointerMove={movePan} onPointerUp={endPan} onPointerCancel={endPan} onClick={() => { interacted.current = true; void enter().catch(() => {}); }}/>}
     <div className="hp-chrome" ref={chrome}><span className="hp-badge"><i aria-hidden="true"/>Saved gameplay <b aria-hidden="true">·</b> MAPLE</span><div className="hp-places" role="group" aria-label="Preview locations">{([['home', 'house', 'House'], ['garden', 'leaf', 'Garden'], ['workshop', 'gear', 'Workshop']] as const).map(([value, icon, label]) => <button type="button" key={value} aria-pressed={focus === value} onClick={() => void look(value)}><Icon name={icon} size={12}/><span>{label}</span></button>)}</div></div>
-    {detail && <aside className="hp-inspect" aria-label={detail.title}><header><strong>{detail.title}</strong><button type="button" aria-label="Close preview details" onClick={() => setSelection(undefined)}><Icon name="close" size={12}/></button></header><p>{detail.line}</p>{detail.items.length > 0 && <div className="hp-items">{detail.items.map(index => <span key={index}><img src={v2ItemImage(index)} width="23" height="23" alt={(ITEMS[index] || '').replaceAll('_', ' ')}/><b>×{selection!.state.inventory[index]}</b></span>)}</div>}</aside>}
+    {detail && <aside className="hp-inspect" aria-label={detail.title}><header><strong>{detail.title}</strong><button type="button" aria-label="Close preview details" onClick={() => setSelection(undefined)}><Icon name="close" size={12}/></button></header><p>{detail.line}</p>{detail.items.length > 0 && <div className="hp-items">{detail.items.map(index => <span key={index}><img src={itemImage(index)} width="23" height="23" alt={(ITEMS[index] || '').replaceAll('_', ' ')}/><b>×{selection!.state.inventory[index]}</b></span>)}</div>}</aside>}
     <div className="hp-controls" ref={controls}><div className="hp-transport"><button type="button" onClick={() => void play()} aria-label={`${playbackLabel} saved gameplay`}><Icon name={phase === 'playing' ? 'pause' : 'play'} size={12}/>{playbackLabel}</button><button type="button" className="hp-restart" onClick={() => void play(true)} aria-label="Restart saved preview"><span aria-hidden="true">↻</span>Restart</button></div>{error ? <button type="button" className="hp-retry" onClick={() => void play(true)}>Try preview again</button> : <span className="hp-drag-hint">Drag to look around</span>}</div>
     <span className="hp-screen-reader" aria-live="off">{caption}</span>
   </section>;
