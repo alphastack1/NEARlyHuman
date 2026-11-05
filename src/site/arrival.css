@@ -29,9 +29,9 @@
 
 .arrival-hero { display: grid; grid-template-columns: minmax(310px, .82fr) minmax(0, 1.18fr); grid-template-areas: 'intro preview' 'actions preview'; grid-template-rows: 1fr auto; align-items: center; gap: 0 58px; min-height: 644px; padding: 36px 0 39px; }
 .arrival-intro { grid-area: intro; align-self: end; padding-bottom: 31px; }
-.arrival-intro .site-eyebrow { display: inline-flex; align-items: center; gap: 11px; margin-bottom: 24px; color: #456e4d; font: 600 10px/1.8 'Press Start 2P', monospace; letter-spacing: -.04em; }
+.arrival-intro .site-eyebrow { display: inline-flex; align-items: center; gap: 11px; margin-bottom: 24px; color: #456e4d; font: 750 12px/1.6 var(--arrival-body); letter-spacing: .09em; }
 .arrival-intro .site-eyebrow::before { content: ''; width: 7px; height: 7px; flex: none; background: #e8aa56; box-shadow: 2px 2px 0 #7c9457; }
-.arrival-intro h1 { color: var(--arrival-ink); font: 700 clamp(60px, 6vw, 86px)/.98 var(--arrival-display); letter-spacing: -.047em; text-shadow: 0 2px 0 #fffbed, 2px 3px 0 #c4d0a24a; }
+.arrival-intro h1 { color: var(--arrival-ink); font: 850 clamp(54px, 5.6vw, 78px)/1.06 var(--arrival-body); letter-spacing: -.045em; text-shadow: none; }
 .arrival-intro h1 > br { display: initial; }
 .arrival-intro h1 > span { color: var(--arrival-leaf); }
 .arrival-intro h1 > span::before { content: none; }
@@ -42,7 +42,7 @@
 .arrival-pot::before { content: ''; position: absolute; left: 9px; right: 1px; bottom: -3px; height: 5px; background: #536b4230; box-shadow: 4px 2px 0 #536b4212; }
 .arrival-pot > img { position: relative; display: block; width: 52px; height: 62px; image-rendering: pixelated; }
 .arrival-actions { grid-area: actions; align-self: start; display: flex; align-items: center; flex-wrap: wrap; gap: 25px; padding-bottom: 32px; }
-.arrival-actions .site-button { position: relative; min-height: 56px; padding: 13px 25px; gap: 31px; border: 0; background: linear-gradient(#ffd38c 0 3px, #f5b364 3px calc(100% - 4px), #e69a48 calc(100% - 4px)); box-shadow: -3px 0 0 var(--arrival-ink), 3px 0 0 var(--arrival-ink), 0 -3px 0 var(--arrival-ink), 0 3px 0 var(--arrival-ink), 3px 3px 0 #966339, 0 6px 0 #966339; color: var(--arrival-ink); font: 700 25px/1 var(--arrival-display); letter-spacing: -.02em; transition: transform .12s, box-shadow .12s, background .12s; }
+.arrival-actions .site-button { position: relative; min-height: 56px; padding: 13px 25px; gap: 31px; border: 0; background: linear-gradient(#ffd38c 0 3px, #f5b364 3px calc(100% - 4px), #e69a48 calc(100% - 4px)); box-shadow: -3px 0 0 var(--arrival-ink), 3px 0 0 var(--arrival-ink), 0 -3px 0 var(--arrival-ink), 0 3px 0 var(--arrival-ink), 3px 3px 0 #966339, 0 6px 0 #966339; color: var(--arrival-ink); font: 750 20px/1.2 var(--arrival-body); letter-spacing: -.015em; transition: transform .12s, box-shadow .12s, background .12s; }
 .arrival-actions .site-button:hover { transform: translateY(-2px); background: linear-gradient(#ffdfa5 0 3px, #ffc078 3px calc(100% - 4px), #eba24e calc(100% - 4px)); box-shadow: -3px 0 0 var(--arrival-ink), 3px 0 0 var(--arrival-ink), 0 -3px 0 var(--arrival-ink), 0 3px 0 var(--arrival-ink), 3px 5px 0 #966339, 0 8px 0 #966339; }
 .arrival-actions .site-button:active { transform: translateY(3px); box-shadow: -3px 0 0 var(--arrival-ink), 3px 0 0 var(--arrival-ink), 0 -3px 0 var(--arrival-ink), 0 3px 0 var(--arrival-ink); }
 .arrival-actions > .site-text-link { font-size: 15px; font-weight: 650; gap: 10px; }
@@ -72,15 +72,15 @@
 
 @media (min-width: 1600px) {
   .arrival-hero { min-height: 700px; padding-block: 55px; gap: 0 74px; }
-  .arrival-intro h1 { font-size: 86px; }
+  .arrival-intro h1 { font-size: 82px; }
 }
 @media (max-width: 1100px) {
   .arrival-hero { grid-template-columns: minmax(275px, .82fr) minmax(0, 1.18fr); min-height: 596px; gap: 0 31px; }
-  .arrival-intro h1 { font-size: clamp(46px, 6vw, 68px); }
-  .arrival-intro .site-eyebrow { font-size: 8px; }
+  .arrival-intro h1 { font-size: clamp(46px, 5.5vw, 66px); }
+  .arrival-intro .site-eyebrow { font-size: 12px; }
   .arrival-intro > p { font-size: 18px; }
   .arrival-actions { gap: 18px; }
-  .arrival-actions .site-button { font-size: 23px; padding: 13px 20px; }
+  .arrival-actions .site-button { font-size: 19px; padding: 13px 20px; }
   .arrival-actions > .site-text-link { font-size: 13px; }
   .arrival-loop > a { padding-inline: 14px; gap: 11px; }
   .arrival-loop strong { font-size: 14px; }
@@ -98,14 +98,14 @@
   .arrival-header > .arrival-menu { top: 60px; }
   .arrival-hero { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto auto auto; grid-template-areas: 'intro' 'preview' 'actions'; min-height: 0; padding: 26px 0 24px; gap: 0; }
   .arrival-intro { align-self: auto; padding-bottom: 23px; }
-  .arrival-intro .site-eyebrow { margin-bottom: 14px; gap: 8px; font-size: 7px; line-height: 1.7; letter-spacing: -.04em; }
+  .arrival-intro .site-eyebrow { margin-bottom: 14px; gap: 8px; font-size: 11px; line-height: 1.5; letter-spacing: .07em; }
   .arrival-intro .site-eyebrow::before { width: 5px; height: 5px; box-shadow: 1px 1px 0 #7c9457; }
-  .arrival-intro h1 { font-size: 50px; line-height: .98; letter-spacing: -.04em; }
+  .arrival-intro h1 { font-size: 44px; line-height: 1.06; letter-spacing: -.04em; }
   .arrival-intro > p { max-width: none; margin-top: 14px; font-size: 16px; line-height: 1.45; letter-spacing: -.018em; }
   .arrival-intro > p > br { display: none; }
   .arrival-preview::before { inset: 20px -5px -7px 14px; box-shadow: inset 1px 1px 0 #f2f5d8, 2px 2px 0 #afc193; }
   .arrival-actions { gap: 20px; padding: 23px 0 0; }
-  .arrival-actions .site-button { min-height: 51px; padding: 11px 22px; gap: 28px; font-size: 22px; }
+  .arrival-actions .site-button { min-height: 51px; padding: 11px 22px; gap: 28px; font-size: 18px; }
   .arrival-actions > .site-text-link { min-height: 44px; font-size: 13px; }
   .arrival-actions > p { margin-top: 3px; font-size: 11px; }
   .arrival-loop { grid-template-columns: 1fr 1fr 1fr; padding: 16px 0; row-gap: 17px; }
@@ -132,21 +132,21 @@
   .arrival-header { gap: 8px; }
   .arrival-header > nav { gap: 8px; font-size: 11px; }
   .arrival-header > nav > button { width: 35px; }
-  .arrival-intro h1 { font-size: 44px; }
+  .arrival-intro h1 { font-size: 39px; }
   .arrival-intro > p { font-size: 15px; }
   .arrival-actions { gap: 14px; }
-  .arrival-actions .site-button { padding-inline: 16px; gap: 20px; font-size: 20px; }
+  .arrival-actions .site-button { padding-inline: 16px; gap: 20px; font-size: 17px; }
   .arrival-actions > .site-text-link { font-size: 11px; }
 }
 @media (max-width: 760px) and (max-height: 650px) {
   .arrival-header { height: 57px; }
   .arrival-hero { padding-top: 17px; }
   .arrival-intro { padding-bottom: 18px; }
-  .arrival-intro .site-eyebrow { margin-bottom: 10px; font-size: 6px; }
-  .arrival-intro h1 { font-size: 44px; line-height: .94; }
+  .arrival-intro .site-eyebrow { margin-bottom: 10px; font-size: 10px; }
+  .arrival-intro h1 { font-size: 38px; line-height: 1.04; }
   .arrival-intro > p { margin-top: 10px; font-size: 13px; line-height: 1.45; }
   .arrival-preview { --home-preview-height: 220px; }
   .arrival-actions { padding-top: 20px; }
-  .arrival-actions .site-button { min-height: 46px; padding-block: 9px; font-size: 20px; }
+  .arrival-actions .site-button { min-height: 46px; padding-block: 9px; font-size: 17px; }
   .arrival-actions > p { font-size: 10px; }
 }

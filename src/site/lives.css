@@ -11,12 +11,13 @@
 .lives-view-tabs>button[aria-pressed=true]{background:var(--mint);border-color:var(--green);box-shadow:inset 0 -2px 0 #a0b77e}
 .lives-view-tabs>button:not([aria-pressed=true]):hover{background:#eaf0d1}
 .lives-find{display:flex;position:relative;gap:9px;align-items:stretch;min-width:0;width:min(100%,420px)}
-.lives-find>label{display:flex;align-items:center;gap:12px;background:var(--paper);border:1px solid #acbc93;padding:0 13px;min-width:0;flex:1}
-.lives-find input{min-width:0;width:100%;height:44px;background:none;border:0;outline:0;font-size:14px;padding:9px 23px 9px 0;box-shadow:none;border-radius:0}
-.lives-find>label:focus-within{border-color:var(--ink);box-shadow:inset 0 -2px var(--mint)}
+.lives-search{display:flex;position:relative;min-width:0;flex:1}
+.lives-search>label{display:flex;align-items:center;gap:12px;background:var(--paper);border:1px solid #acbc93;padding:0 10px 0 13px;min-width:0;flex:1}
+.lives-find input{min-width:0;width:100%;height:44px;background:none;border:0;outline:0;font-size:14px;padding:9px 31px 9px 0;box-shadow:none;border-radius:0}
+.lives-search>label:focus-within{border-color:var(--ink);box-shadow:inset 0 -2px var(--mint)}
 .lives-find input:focus-visible{outline:0}
 .lives-find input::-webkit-search-cancel-button{display:none}
-.lives-clear{position:absolute;top:0;right:99px;min-width:34px;min-height:44px;display:grid;place-items:center;background:none;border:0;padding:10px}
+.lives-clear{position:absolute;top:1px;right:2px;min-width:34px;min-height:44px;display:grid;place-items:center;background:none;border:0;padding:10px}
 .lives-filter{position:relative;flex:none}
 .lives-filter summary{list-style:none;display:flex;align-items:center;justify-content:center;gap:8px;min-width:88px;min-height:46px;padding:10px;border:1px solid #acbc93;background:var(--paper);font-size:13px;cursor:pointer}
 .lives-filter summary::-webkit-details-marker{display:none}
@@ -67,9 +68,6 @@
 .life-portrait-window{background:#dce7b9;border:2px solid var(--ink);box-shadow:4px 4px 0 #aabd91;min-width:0}
 .life-portrait-window .site-titlebar{font-size:8px}
 .life-portrait-window>img{display:block;width:100%;height:auto;aspect-ratio:1;object-fit:contain;image-rendering:pixelated}
-.life-window-marks{display:flex;align-items:center;gap:5px;margin-left:auto}
-.life-window-marks>i{display:block;width:5px;height:5px;background:#d5dfb8}
-.life-window-marks>i:first-child{height:2px;align-self:flex-end}
 .life-identity{min-width:0;padding:10px 0}
 .life-name-row{display:flex;align-items:flex-start;justify-content:space-between;gap:13px}
 .life-name-row>div{min-width:0}
@@ -192,3 +190,67 @@
  .lives-singleton .lives-card-copy{padding:16px 16px 12px}
  .lives-singleton .lives-card-name h2{font-size:28px}
 }
+/* NFT pages share the website's paper, ink and readable UI face. */
+.lives-page,.life-page{--life-ink:#153f37;--life-teal:#164a40;--life-line:#c6ceb0;color:var(--life-ink)}
+.lives-intro h1{font-weight:800;letter-spacing:-.045em}
+.lives-world select{font-family:inherit;border-color:#8ea27d;background:#fffbef;box-shadow:inset 1px 1px #fffef8,2px 2px 0 #d4ddbd}
+.lives-browser{border-top-color:#98ac86}
+.lives-view-tabs>button{border:1px solid #c2ceaa;background:#f3f3df;font-weight:700;box-shadow:inset 1px 1px #fffdf2}
+.lives-view-tabs>button[aria-pressed=true]{color:#fff9e8;background:var(--life-teal);border-color:var(--life-ink);box-shadow:inset 0 2px #376650,0 2px #b0c595}
+.lives-view-tabs>button:not([aria-pressed=true]):hover{background:#e5edc6;border-color:#94a67c}
+.lives-search>label,.lives-filter summary{border-color:#a9b996;background:#fffbee;box-shadow:inset 1px 1px #fffef8}
+.lives-filter summary{font-weight:650}
+.lives-filter>div{background:#fff9e8;box-shadow:inset 1px 1px #fffdf4,3px 3px 0 #a7b98a}
+.lives-card{background:#fffbef;box-shadow:inset 1px 1px #fffef6,3px 3px 0 #aabf91,4px 4px 0 #66855c40}
+.lives-card-art{border-bottom:2px solid var(--life-ink)}
+.lives-card-name h2{font-weight:800;letter-spacing:-.035em}
+.lives-card-visit>strong{font-weight:750}
+.lives-empty{border:1px solid #becaa7;background:linear-gradient(140deg,#fffbed,#ecf0d8);box-shadow:inset 1px 1px #fffef6;gap:20px}
+.lives-empty h2{font-size:26px;font-weight:750;letter-spacing:-.035em}
+.lives-empty>.pixel-icon{padding:13px;box-sizing:content-box;background:#e6edcc;border:1px solid #b6c59b;box-shadow:inset 1px 1px #f9f9e5,2px 2px #d2deba}
+.life-portrait-window{border-color:var(--life-ink);box-shadow:inset 1px 1px #fff9e5,4px 4px 0 #a1b88a,5px 5px 0 #6f905a50}
+.life-portrait-window .site-titlebar{color:#fff8e7;font:650 13px/1.4 'Figtree Variable','Trebuchet MS',sans-serif;box-shadow:inset 0 2px #376650;min-height:42px}
+.life-name-row h1{font-weight:800;letter-spacing:-.04em;line-height:1.07}
+.life-name-row .site-eyebrow{font:700 10px/1.5 'Figtree Variable','Trebuchet MS',sans-serif;letter-spacing:.07em;color:#65834d}
+.life-name-row h1 small{font-size:15px;margin-left:10px}
+.site .life-share{min-width:106px;min-height:44px;border-color:#b5c3a0;background:#fffbef;box-shadow:inset 1px 1px #fffef6,2px 2px 0 #d2ddbb;font-size:13px;font-weight:650;gap:8px}
+.life-share>svg{width:16px;height:16px;flex:none}
+.life-summary,.life-summary .life-status{font-size:14px}
+.life-actions>.life-visit,.life-visit-dock>.life-visit{font-weight:750;box-shadow:inset 0 2px #ffe0a5,inset 0 -3px #dc9346,3px 3px 0 #153f37}
+.life-watch{font-weight:650;border-color:#acbe92;box-shadow:inset 1px 1px #fffef6,0 2px #d9e3c2}
+.life-owner{border-color:#cbd3b3}
+.life-strengths{border-color:#bdcba5;background:linear-gradient(125deg,#edf1d8,#f5f4df);box-shadow:inset 1px 1px #fffdee;padding:10px 14px 13px}
+.life-strengths>div{font-size:12px;font-weight:600;min-height:25px}
+.life-strengths>div>a{min-width:36px;min-height:32px}
+.life-strengths dl{margin-top:7px;gap:15px}
+.life-strengths dt{font-size:13px;color:#58734c}
+.life-strengths dd{font:750 20px/1.25 'Figtree Variable','Trebuchet MS',sans-serif;color:#254e3d;font-variant-numeric:tabular-nums}
+.life-quiet-links>a{font-weight:550;color:#546f49}
+.life-section{background:#fffbed;border-color:var(--life-ink);box-shadow:inset 1px 1px #fffef6,3px 3px 0 #aabd94,4px 4px 0 #77916340}
+.life-section .site-titlebar{min-height:43px;box-shadow:inset 0 2px #38684f;background:var(--life-teal);font-family:'Figtree Variable','Trebuchet MS',sans-serif}
+.life-section .site-titlebar h2{font:700 16px/1.35 'Figtree Variable','Trebuchet MS',sans-serif;letter-spacing:-.01em}
+.life-section-caption{font-size:13px}
+.life-plot-soil{aspect-ratio:1.12;background:linear-gradient(#edf2dc,#e3eacb);border:1px solid #c8d3ad;box-shadow:inset 1px 1px #fffdf0;overflow:hidden;align-items:end}
+.life-plot-art{display:block;width:112px;height:154px;max-width:100%;max-height:100%;object-fit:contain;image-rendering:pixelated;object-position:center bottom;transform:translateY(-7px)}
+.life-plot strong{font-size:14px;font-weight:700}
+.life-plot small{font-size:12px}
+.life-plot:not(.is-planted) strong{color:#758167}
+.life-purse-balance>strong{font-weight:750}
+.life-purse .life-section-body{min-height:218px}
+.life-stock>div{background:linear-gradient(135deg,#f5f6e5,#edf1d8);border-color:#c1cdaa;box-shadow:inset 1px 1px #fffef5}
+.life-stock span{font-weight:550}
+.life-days-list>a{background:#f3f5df;border-color:#b5c69d;box-shadow:inset 1px 1px #fffef5,0 2px 0 #ccd9b3;transition:background .13s,transform .13s}
+.life-days-list>a:hover{transform:translateY(-1px)}
+.life-days-list strong{font-weight:750}
+.life-onchain{background:#f2f2dc;border-color:#bac7a2;box-shadow:inset 1px 1px #fffdee}
+@media(max-width:640px){
+ .lives-intro{margin-bottom:18px}.lives-intro h1{margin-top:10px;margin-bottom:11px;font-size:35px}.lives-intro p{font-size:15px;line-height:1.5}.lives-world{margin-top:15px;padding-top:12px}.lives-world>span{font-size:12px}.lives-world select{min-height:44px;font-size:14px}
+ .lives-browser-bar{gap:12px}.lives-results-heading{font-size:11px}.lives-singleton .lives-card-name h2{font-size:29px}
+ .life-hero{display:grid;grid-template-columns:minmax(0,1fr);gap:0;align-items:start;margin-bottom:26px}.life-identity{display:contents}.life-name-row{grid-row:1;align-items:center;gap:12px;margin:0 0 9px}.life-summary{grid-row:2;min-height:27px;margin-bottom:19px}.life-portrait-window{grid-row:3;margin-bottom:19px}.life-actions{grid-row:4;margin-top:0;gap:10px}
+ .life-name-row h1{font-size:37px;margin:4px 0 2px}.life-name-row .site-eyebrow{font-size:10px}.life-name-row h1 small{font-size:13px;vertical-align:middle;margin-left:8px}.site .life-share{min-width:102px;font-size:12px;min-height:44px;padding:8px 10px}
+ .life-portrait-window .site-titlebar{font-size:12px;min-height:39px;padding:8px 11px}.life-summary,.life-summary .life-status{font-size:13px}.life-quiet-links{margin-top:0;margin-bottom:0}
+ .life-owner{margin:15px 0 17px;padding-top:11px}.life-strengths{margin:0 0 14px;padding:9px 13px 12px}.life-strengths dl{margin-top:4px}.life-strengths dd{font-size:20px}.life-strengths dt{font-size:13px}
+ .life-section .site-titlebar{min-height:42px;padding:9px 12px}.life-section .site-titlebar h2{font-size:15px}.life-section-caption{font-size:12px}.life-plots{gap:16px 13px}.life-plot-soil{aspect-ratio:1.2}.life-plot-art{width:96px;height:132px}.life-plot strong{font-size:13px}.life-plot small{font-size:11px}
+ .life-purse .life-section-body{min-height:0}.life-visit-dock{background:#fff7e6;box-shadow:0 -3px #8da67528;padding-bottom:calc(12px + env(safe-area-inset-bottom))}.life-visit-dock>.life-visit{font-size:17px}
+}
+@media(max-width:360px){.lives-intro h1{font-size:30px}.lives-world select{font-size:13px}.life-name-row h1{font-size:32px}.site .life-share{min-width:96px;font-size:11px;gap:6px;padding-inline:8px}.life-name-row{gap:8px}.life-name-row .site-eyebrow{font-size:9px}.life-plot-art{width:80px;height:110px}.life-strengths dl{gap:10px}.life-strengths dt{font-size:12px}.life-strengths dd{font-size:19px}}

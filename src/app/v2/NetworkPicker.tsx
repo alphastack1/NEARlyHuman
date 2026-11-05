@@ -21,7 +21,7 @@ export function NetworkPicker({ networks, currentId, disabled = false, loading =
     <div className="v2-network-options" aria-label="Game networks">
       {networks.map(network => <button key={network.id} type="button" className="v2-network-option" aria-pressed={network.id === currentId} disabled={disabled} onClick={() => onSelect(network)}>
         <NetworkMark/>
-        <strong className="v2-network-brand">{network.ecosystem === 'near' ? 'NEAR' : 'Robinhood'}</strong>
+        <span className="v2-network-identity"><strong className="v2-network-brand">{network.ecosystem === 'near' ? 'NEAR' : 'Robinhood'}</strong><small>{network.ecosystem === 'near' ? 'Meteor & NEAR wallets' : 'Rabby / MetaMask'}</small></span>
         <span className="v2-network-environment" data-network={network.environment}>{network.environment === 'testnet' ? 'Testnet' : 'Mainnet'}</span>
         <span className="v2-network-selection" aria-hidden="true">{network.id === currentId ? <Icon name="check" size={16}/> : <i className="v2-network-chevron"/>}</span>
       </button>)}

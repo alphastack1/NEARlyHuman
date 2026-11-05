@@ -20,6 +20,7 @@ import V2Player from './V2Player';
 import { LifeSoundButton, LifeSoundToggle } from './LifeSound';
 import { BirthReveal, ThoughtActivity, DayFlow, ProcessGraphic } from './JourneyVisuals';
 import { NetworkMark, NetworkPicker } from './NetworkPicker';
+import '@fontsource-variable/figtree';
 import '../v2Journey.css';
 
 type Provider = EIP1193Provider & { on?: (name: string, listener: (...a: any[]) => void) => void; removeListener?: (name: string, listener: (...a: any[]) => void) => void };
@@ -938,7 +939,7 @@ function JourneyWorld({ selectedWorld, availableWorlds, snapshot, onWorldSwitch,
       key={`${stageLife ? worldKey(stageLife) : ''}:${stageLife?.id}:${stagePacket?.requestId || stageLife?.revision}:${example ? 'example' : 'home'}`}
       packet={stagePacket} life={stageLife} example={example} onEndExample={example ? endExample : undefined}
       autoPlay={!example && !!playRequest && playRequest === stagePacket?.requestId}
-      homeFirst={!example && !!owner && !historical && readingDay === undefined && (!freshDay || freshDay !== stagePacket?.requestId)}
+      homeFirst={!example && (!!owner || query.get('view') === 'home') && !historical && readingDay === undefined && (!freshDay || freshDay !== stagePacket?.requestId)}
       suspended={overlayOpen || opening !== 'closed'} opening={opening}
       onMenu={example ? undefined : () => overlay('menu')} onProfile={example ? undefined : () => overlay('profile')}
       onExit={example ? endExample : historyControls ? () => void showHistory() : exactId ? () => overlay('profile') : undefined}
