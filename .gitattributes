@@ -6,7 +6,7 @@ public/assets/preview/*.json -text
 
 # Content-addressed contract inputs preserve their reviewed exact byte streams,
 # including the original native sources' recorded CRLF line endings.
-contracts/** -text
+contracts/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
 # Canonical artwork was recorded with LF endings.
 src/art/rooster.ts text eol=lf
 src/art/rooster-data.ts text eol=lf
