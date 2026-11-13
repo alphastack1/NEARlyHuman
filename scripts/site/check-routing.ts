@@ -4,15 +4,19 @@ import { parsePublicLifePath, publicLifePath } from '../../src/site/life-routes'
 import { ACTIVE_ROBINHOOD, ORIGINAL_ROBINHOOD } from '../../src/chain/deployment-catalog';
 import { checkDirectory, exploreControls, exploreQuery, hatchHref, lifeImage, publicLifeHref, publicLifeWorld, visitHref, worldById } from '../../src/site/public-lives';
 import type { PublicLifeDirectory } from '../../src/chain/discovery-types';
+import { BLOG_PATH, JEV_POST, isBlogPath } from '../../src/site/blog-catalog';
 
 const origin = 'https://nearlyhuman.netlify.app', classify = (value: string) => { const url = new URL(value, origin); return selectEntrySurface(url.pathname, url.searchParams, url.hash); };
 const routes = [
   ['/', 'site'], ['/?utm_source=near', 'site'], ['/#garden', 'site'], ['/the-game', 'site'], ['/project', 'site'], ['/explore?world=near-testnet', 'site'],
   ['/life/near-testnet/1', 'site'], ['/docs/first-day?networkId=near-testnet', 'site'], ['/unknown?rooster=1', 'site'],
+  [BLOG_PATH, 'site'], [`${JEV_POST.pathname}/?rooster=1#exchange`, 'site'],
   [OPEN_APP_HREF, 'game'], ['/app', 'game'], ['/?v2=1', 'game'], ['/?rooster=8&chainId=46630&collection='+ORIGINAL_ROBINHOOD.runtime.collection, 'game'],
   ['/?account_id=player.testnet', 'game'], ['/#signature=unchanged', 'game'], ['/?pending=request', 'game'],
 ];
 for (const [url, expected] of routes) assert.equal(classify(url), expected, url);
+assert.ok(isBlogPath(JEV_POST.pathname));
+assert.equal(isBlogPath('/blogging'), false);
 for (const value of ['rooster=1', 'id=1', 'rooster=1&rememberedWorld=near-testnet']) assert.equal(needsLifeScope(new URLSearchParams(value)), true);
 for (const value of ['rooster=1&collection=game.testnet&networkId=near-testnet', 'rooster=1&account_id=player.testnet', 'rooster=1&pending=request', 'transactionHashes=original']) assert.equal(needsLifeScope(new URLSearchParams(value)), false);
 assert.equal(needsLifeScope(new URLSearchParams(), '#id=1'), true);

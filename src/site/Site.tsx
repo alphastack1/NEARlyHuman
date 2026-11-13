@@ -8,13 +8,19 @@ import { ARTICLES, GUIDE_GROUPS, getArticle, type GuideArticle } from './content
 import { PROJECT, SITE_IMAGES } from './project';
 import { searchArticles } from './search';
 import { parsePublicLifePath, publicLifePath } from './life-routes';
+import { BLOG_DESCRIPTION, BLOG_PATH, JEV_POST, isBlogPath } from './blog-catalog';
+import { normalisePath } from './routing';
 import './site.css';
 import HomePreview from './HomePreview';
 import './arrival.css';
+import './blog-navigation.css';
 
 const ExplorePage = lazy(() => import('./Lives').then(module => ({ default: module.ExplorePage })));
 const PublicLifePage = lazy(() => import('./Lives').then(module => ({ default: module.PublicLifePage })));
+const BlogIndex = lazy(() => import('./BlogIndex'));
+const JevArticle = lazy(() => import('./blog/JevArticle'));
 const OpeningLives = () => <div className="site-lives-opening" role="status"><Icon name="leaf" size={24}/><span>Opening lives…</span></div>;
+const OpeningBlog = () => <div className="site-lives-opening" role="status"><Icon name="book" size={24}/><span>Opening blog…</span></div>;
 
 const bird = (seed: string, pose: 'idle' | 'breathe' | 'peek' = 'idle') => `data:image/svg+xml;charset=utf-8,${encodeURIComponent(roosterSvg(seed, 96, pose))}`;
 const BIRDS = ['BOK', 'FERN', 'SAGE', 'MISO'];
@@ -55,15 +61,16 @@ function Header({ path, onSearch }: { path: string; onSearch: () => void }) {
   const openSearch = () => { setMenu(false); onSearch(); };
   return <header className="site-header">
     <div className="site-brandbar"><a href="/" className="site-brand" aria-label="NEARlyHuman home"><span className="site-brand-icon"><BrandMark/></span><span>NEARlyHuman</span></a>
-      <a href="/docs/worlds-wallets" className="site-worlds"><span className="site-world-names">NEAR + Robinhood · </span>Testnet</a>
+      <a href="/docs/worlds-wallets" className="site-worlds">{path === JEV_POST.pathname ? 'NEAR Testnet' : <><span className="site-world-names">NEAR + Robinhood · </span>Testnet</>}</a>
       <button ref={menuTrigger} className="site-more" type="button" aria-label="More pages" aria-expanded={menu} aria-controls="site-more-pages" onClick={() => setMenu(!menu)}><Icon name={menu ? 'close' : 'menu'} size={18}/></button>
     </div>
-    {menu && <nav ref={menuPanel} id="site-more-pages" className="site-more-menu" aria-label="More pages"><a href="/explore" aria-current={path === '/explore' || path.startsWith('/life/') ? 'page' : undefined}>Explore lives<Arrow/></a><a href="/project" aria-current={path === '/project' ? 'page' : undefined}>About the project<Arrow/></a><a href="/docs/contracts" aria-current={path === '/docs/contracts' ? 'page' : undefined}>Contracts & source<Arrow/></a><button type="button" onClick={openSearch}>Search the guide<span className="site-search-glass"/></button></nav>}
+    {menu && <nav ref={menuPanel} id="site-more-pages" className="site-more-menu" aria-label="More pages"><a href="/explore" aria-current={path === '/explore' || path.startsWith('/life/') ? 'page' : undefined}>Explore lives<Arrow/></a><a href={BLOG_PATH} aria-current={isBlogPath(path) ? 'page' : undefined}>Blog<Arrow/></a><a href="/project" aria-current={path === '/project' ? 'page' : undefined}>About the project<Arrow/></a><a href="/docs/contracts" aria-current={path === '/docs/contracts' ? 'page' : undefined}>Contracts & source<Arrow/></a><button type="button" onClick={openSearch}>Search the guide<span className="site-search-glass"/></button></nav>}
     <div className="site-navrow"><nav aria-label="Main navigation">
       <a href="/" className={`site-tab site-home-tab ${path === '/' ? 'is-current' : ''}`} aria-current={path === '/' ? 'page' : undefined}>Home</a>
       <a href="/the-game" className={`site-tab ${path === '/the-game' ? 'is-current' : ''}`} aria-current={path === '/the-game' ? 'page' : undefined}>The game</a>
       <a href="/explore" className={`site-tab site-explore-tab ${path === '/explore' || path.startsWith('/life/') ? 'is-current' : ''}`} aria-current={path === '/explore' || path.startsWith('/life/') ? 'page' : undefined}>Explore</a>
       <a href="/docs" className={`site-tab ${path.startsWith('/docs') ? 'is-current' : ''}`} aria-current={path.startsWith('/docs') ? 'page' : undefined}>Guide</a>
+      <a href={BLOG_PATH} className={`site-tab site-blog-tab ${isBlogPath(path) ? 'is-current' : ''}`} aria-current={isBlogPath(path) ? 'page' : undefined}>Blog</a>
       <a href="/project" className={`site-tab site-project-tab ${path === '/project' ? 'is-current' : ''}`} aria-current={path === '/project' ? 'page' : undefined}>Project</a>
     </nav><div className="site-nav-actions"><button type="button" className="site-search-toggle" onClick={openSearch} aria-label="Search the guide"><span className="site-search-glass"/><span className="site-search-label">Search</span><kbd>Ctrl K</kbd></button><AppLink/></div></div>
   </header>;
@@ -112,10 +119,10 @@ function Home({ onSearch }: { onSearch(): void }) {
   }, [menu]);
   const appHref = '/app?entry=app&entry=app';
   return <div className="site arrival-site"><a className="site-skip-link" href="#home-title">Skip to content</a><div className="arrival-shell">
-    <header className="arrival-header"><a href="/" className="arrival-brand" aria-label="NEARlyHuman home"><BrandMark/><span>NEARlyHuman</span></a><nav aria-label="Website"><a href="/explore">Explore</a><a href="/docs">Guide</a><button ref={menuTrigger} type="button" aria-label="More pages" aria-expanded={menu} aria-controls="arrival-menu" onClick={() => setMenu(value => !value)}><Icon name={menu ? 'close' : 'menu'} size={20}/></button></nav>{menu && <nav ref={menuPanel} id="arrival-menu" className="arrival-menu" aria-label="More pages"><a href="/the-game">The game <Arrow/></a><a href="/project">The project <Arrow/></a><a href="/docs/contracts">Contracts & source <Arrow/></a><button type="button" onClick={() => { setMenu(false); onSearch(); }}>Search the guide <Icon name="book" size={17}/></button></nav>}</header>
+    <header className="arrival-header"><a href="/" className="arrival-brand" aria-label="NEARlyHuman home"><BrandMark/><span>NEARlyHuman</span></a><nav aria-label="Website"><a href="/explore" className="arrival-explore-tab">Explore</a><a href="/docs">Guide</a><a href={BLOG_PATH}>Blog</a><button ref={menuTrigger} type="button" aria-label="More pages" aria-expanded={menu} aria-controls="arrival-menu" onClick={() => setMenu(value => !value)}><Icon name={menu ? 'close' : 'menu'} size={20}/></button></nav>{menu && <nav ref={menuPanel} id="arrival-menu" className="arrival-menu" aria-label="More pages"><a href="/the-game">The game <Arrow/></a><a href="/explore" className="arrival-explore-menu">Explore lives <Arrow/></a><a href="/project">The project <Arrow/></a><a href="/docs/contracts">Contracts & source <Arrow/></a><button type="button" onClick={() => { setMenu(false); onSearch(); }}>Search the guide <Icon name="book" size={17}/></button></nav>}</header>
     <main><section className="arrival-hero" aria-labelledby="home-title"><div className="arrival-intro"><span className="site-eyebrow">An AI-led NFT life game</span><h1 id="home-title">You prepare.<br/> <span>They decide.</span></h1><p>Hatch a rooster. Bring the supplies.<br/> Watch a life of its own unfold.</p></div><div className="arrival-preview"><HomePreview/><span className="arrival-pot" aria-hidden="true"><img src="/assets/game/props/plant.png" width="52" height="62" alt=""/></span></div><div className="arrival-actions"><AppLink href={appHref}>Open App</AppLink><SectionLink href="/the-game">Meet the game</SectionLink><p><Icon name="leaf" size={15}/>Nothing ages while you’re away.</p></div></section>
     <section className="arrival-loop" aria-label="How it plays"><a href="/the-game#hatch"><PixelEgg/><span><small>01</small><strong>Hatch a life</strong></span></a><a href="/the-game#pack"><ParcelArt/><span><small>02</small><strong>Bring supplies</strong></span></a><a href="/the-game#watch"><FilmArt/><span><small>03</small><strong>See what happens</strong></span></a><a className="arrival-explore" href="/explore"><span>Every life has a story.</span><strong>Explore the roosters <Arrow/></strong></a></section></main>
-    <footer className="arrival-footer"><span>NEARlyHuman</span><nav aria-label="Footer"><a href="/project">The project</a><a href="/docs/contracts">Contracts</a><a href="/docs/privacy-data">Privacy</a><a href="/docs/worlds-wallets">NEAR + Robinhood testnets</a></nav></footer>
+    <footer className="arrival-footer"><span>NEARlyHuman</span><nav aria-label="Footer"><a href={BLOG_PATH}>Blog</a><a href="/project">The project</a><a href="/docs/contracts">Contracts</a><a href="/docs/privacy-data">Privacy</a><a href="/docs/worlds-wallets">NEAR + Robinhood testnets</a></nav></footer>
   </div></div>;
 }
 function GamePage() {
@@ -203,6 +210,7 @@ function DocsArticle({ article, onSearch }: { article: GuideArticle; onSearch: (
       {article.slug === 'contracts' && <Contracts/>}
       {article.slug === 'nft-purse' && <div className="site-ownership-diagram"><Rooster seed="SAGE"/><span>One life</span><i aria-hidden="true"/><Icon name="house" size={32}/><i aria-hidden="true"/><Icon name="book" size={30}/><i aria-hidden="true"/><Icon name="wallet" size={30}/></div>}
       {article.sections.map(section => <section key={section.id} id={section.id} className="site-article-section"><h2><a href={`#${section.id}`}>{section.title}<span aria-hidden="true">#</span></a></h2>{section.paragraphs?.map((text, i) => <p key={i}>{text}</p>)}{section.bullets && <ul>{section.bullets.map((text, i) => <li key={i}>{text}</li>)}</ul>}{section.table && <div className="site-table-wrap" tabIndex={0} aria-label={`${section.title} table`}><table><thead><tr>{section.table.headers.map((heading, i) => <th key={i} scope="col">{heading}</th>)}</tr></thead><tbody>{section.table.rows.map((row, i) => <tr key={i}>{row.map((cell, j) => j === 0 ? <th scope="row" key={j}>{cell}</th> : <td key={j}>{cell}</td>)}</tr>)}</tbody></table></div>}{section.links && <div className="site-article-links">{section.links.map(link => /^https?:/.test(link.href) ? <External href={link.href} key={link.href}>{link.label}</External> : <SectionLink href={link.href} key={link.href}>{link.label}</SectionLink>)}</div>}</section>)}
+      {article.slug === 'jev-saving' && <div className="site-article-links"><SectionLink href={JEV_POST.pathname}>Read the interactive Jev walkthrough</SectionLink></div>}
       {related.length > 0 && <nav className="site-read-next" aria-label="Related articles"><span className="site-eyebrow">Related guides</span>{related.map(a => <a href={`/docs/${a.slug}`} key={a.slug}><Icon name={GROUP_ICONS[a.group] || 'book'} size={18}/><span>{a.title}</span><span aria-hidden="true">→</span></a>)}</nav>}
     </article><aside className="site-page-contents"><strong>On this page</strong><nav aria-label="Article sections">{article.sections.map(s => <a href={`#${s.id}`} key={s.id} className={s.id === activeSection ? 'is-current' : ''} aria-current={s.id === activeSection ? 'location' : undefined}>{s.title}</a>)}</nav><button type="button" className="site-contents-stamp" onClick={onSearch}><Icon name="book" size={18}/><span>Search the guide</span></button><a href={appEntryHref(PROJECT.appHref)} className="site-text-link">Open App<Arrow/></a></aside>
   </div>;
@@ -216,29 +224,32 @@ function ProjectPage() {
     <section className="site-source-panel"><div><h2>Code & contracts.</h2><p>Review the contract sources, build settings and verification records.</p><div className="site-inline-links"><a className="site-text-link" href={PROJECT.sourceArchive} download><span className="site-link-label">Download contracts</span><span aria-hidden="true">↓</span></a><External href={PROJECT.sourceUrl}>Browse GitHub</External><SectionLink href="/docs/contracts">Contracts & trust</SectionLink></div></div><div><span className="site-eyebrow">NEAR hackathon</span><strong>NFTs That Do Something</strong><p>A changing asset with continuing behavior, possessions and purse rights.</p></div></section>
   </div>;
 }
-function NotFound({ article = false }: { article?: boolean }) {
-  return <section className="site-not-found"><span className="site-eyebrow">404 / Page not found</span><div className="site-lost-mail" aria-hidden="true"><Icon name="mail" size={76}/><Icon name="leaf" size={32}/></div><h1>{article ? 'Guide page not found.' : 'Page not found.'}</h1><p>{article ? 'Browse the guide to find the article you need.' : 'This page isn’t here. Return home or open the app.'}</p><div className="site-hero-actions"><a className="site-button site-primary" href={article ? '/docs' : '/'}>{article ? 'Browse the guide' : 'Back home'}<span aria-hidden="true">→</span></a><SectionLink href={appEntryHref(PROJECT.appHref)}>Open App</SectionLink></div></section>;
+function NotFound({ section }: { section?: 'guide' | 'blog' }) {
+  const back = section === 'blog' ? { href: BLOG_PATH, label: 'Back to the blog' } : section === 'guide' ? { href: '/docs', label: 'Browse the guide' } : { href: '/', label: 'Back home' };
+  return <section className="site-not-found"><span className="site-eyebrow">404 / Page not found</span><div className="site-lost-mail" aria-hidden="true"><Icon name="mail" size={76}/><Icon name="leaf" size={32}/></div><h1>{section === 'blog' ? 'Blog post not found.' : section === 'guide' ? 'Guide page not found.' : 'Page not found.'}</h1><p>{section === 'blog' ? 'Browse the blog for notes from NEARlyHuman.' : section === 'guide' ? 'Browse the guide to find the article you need.' : 'This page isn’t here. Return home or open the app.'}</p><div className="site-hero-actions"><a className="site-button site-primary" href={back.href}>{back.label}<span aria-hidden="true">→</span></a><SectionLink href={appEntryHref(PROJECT.appHref)}>Open App</SectionLink></div></section>;
 }
 function Footer() {
-  return <footer className="site-footer"><a href="/" className="site-footer-tag"><Icon name="leaf" size={17}/>NEARlyHuman · An AI-led life game</a><nav aria-label="Footer"><a href="/explore">Explore lives</a><a href="/project">The project</a><a href="/docs/contracts">Contracts & source</a><a href="/docs/privacy-data">Data & privacy</a></nav></footer>;
+  return <footer className="site-footer"><a href="/" className="site-footer-tag"><Icon name="leaf" size={17}/>NEARlyHuman · An AI-led life game</a><nav aria-label="Footer"><a href={BLOG_PATH}>Blog</a><a href="/explore">Explore lives</a><a href="/project">The project</a><a href="/docs/contracts">Contracts & source</a><a href="/docs/privacy-data">Data & privacy</a></nav></footer>;
 }
 
 export default function Site() {
-  const path = location.pathname.replace(/\/+$/, '') || '/';
+  const path = normalisePath(location.pathname);
   const slug = path.startsWith('/docs/') ? path.slice(6) : undefined;
   const article = slug ? getArticle(slug) : undefined;
   const publicLife = parsePublicLifePath(path);
   const [search, setSearch] = useState(false);
   const [searchQuery, setSearchQuery] = useState(() => path === '/docs' ? new URLSearchParams(location.search).get('q')?.slice(0, 160) || '' : '');
-  const title = path === '/' ? 'A little life. A mind of its own.' : path === '/the-game' ? 'The game' : path === '/explore' ? 'Explore lives' : publicLife ? `Rooster #${publicLife.id}` : path === '/docs' ? 'The player handbook' : path === '/project' ? 'The project' : article?.title || 'Page not found';
+  const blog = path === BLOG_PATH;
+  const jevPost = path === JEV_POST.pathname;
+  const title = blog ? 'Blog' : jevPost ? JEV_POST.title : path === '/' ? 'A little life. A mind of its own.' : path === '/the-game' ? 'The game' : path === '/explore' ? 'Explore lives' : publicLife ? `Rooster #${publicLife.id}` : path === '/docs' ? 'The player handbook' : path === '/project' ? 'The project' : article?.title || 'Page not found';
+  const description = blog ? BLOG_DESCRIPTION : jevPost ? JEV_POST.description : article?.summary || 'Hatch a rooster. Leave a few supplies. See what it makes of the day. A retro AI-led life game, saved onchain.';
   useEffect(() => {
     document.title = path === '/' ? `NEARlyHuman — ${title}` : `${title} · NEARlyHuman`;
-    const description = article?.summary || 'Hatch a rooster. Leave a few supplies. See what it makes of the day. A retro AI-led life game, saved onchain.';
     const meta = document.querySelector<HTMLMetaElement>('meta[name="description"]'); if (meta) meta.content = description;
     const theme = document.querySelector<HTMLMetaElement>('meta[name="theme-color"]'); if (theme) theme.content = '#f7efd8';
     const key = (e: KeyboardEvent) => { if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); setSearch(v => !v); } };
     window.addEventListener('keydown', key); return () => window.removeEventListener('keydown', key);
-  }, [title, path, article]);
+  }, [title, path, description]);
   if (path === '/') return <><Home onSearch={() => setSearch(true)}/>{search && <Search query={searchQuery} onQueryChange={setSearchQuery} onClose={() => setSearch(false)}/>}</>;
-  return <div className="site"><a className="site-skip-link" href="#site-main">Skip to content</a><div className={`site-window ${path.startsWith('/docs/') && article ? 'site-reading-window' : ''}`}><Header path={path} onSearch={() => setSearch(true)}/><main id="site-main">{path === '/the-game' ? <GamePage/> : path === '/explore' ? <Suspense fallback={<OpeningLives/>}><ExplorePage/></Suspense> : publicLife ? <Suspense fallback={<OpeningLives/>}><PublicLifePage worldId={publicLife.worldId} id={publicLife.id} collection={publicLife.collection}/></Suspense> : path === '/docs' ? <DocsIndex query={searchQuery} onQueryChange={setSearchQuery}/> : article ? <DocsArticle article={article} onSearch={() => setSearch(true)}/> : path === '/project' ? <ProjectPage/> : <NotFound article={!!slug}/>}</main><Footer/></div>{search && <Search query={searchQuery} onQueryChange={setSearchQuery} onClose={() => setSearch(false)}/>}</div>;
+  return <div className="site"><a className="site-skip-link" href="#site-main">Skip to content</a><div className={`site-window ${path.startsWith('/docs/') && article ? 'site-reading-window' : ''}`}><Header path={path} onSearch={() => setSearch(true)}/><main id="site-main">{blog ? <Suspense fallback={<OpeningBlog/>}><BlogIndex/></Suspense> : jevPost ? <Suspense fallback={<OpeningBlog/>}><JevArticle/></Suspense> : path === '/the-game' ? <GamePage/> : path === '/explore' ? <Suspense fallback={<OpeningLives/>}><ExplorePage/></Suspense> : publicLife ? <Suspense fallback={<OpeningLives/>}><PublicLifePage worldId={publicLife.worldId} id={publicLife.id} collection={publicLife.collection}/></Suspense> : path === '/docs' ? <DocsIndex query={searchQuery} onQueryChange={setSearchQuery}/> : article ? <DocsArticle article={article} onSearch={() => setSearch(true)}/> : path === '/project' ? <ProjectPage/> : <NotFound section={isBlogPath(path) ? 'blog' : slug ? 'guide' : undefined}/>}</main><Footer/></div>{search && <Search query={searchQuery} onQueryChange={setSearchQuery} onClose={() => setSearch(false)}/>}</div>;
 }

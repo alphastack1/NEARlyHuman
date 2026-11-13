@@ -10,4 +10,6 @@ The rooster is the project owner's original procedural artwork. Its seeded shape
 
 The website house and handbook environment illustrations were created with OpenAI image generation for this project. Their original source images are in [`assets/source/website/`](../../assets/source/website/); optimized web derivatives ship in [`public/site/`](../../public/site/).
 
+The [Jev article](https://nearlyhuman.netlify.app/blog/how-nearlyhuman-uses-jev) uses an ImageGen journal illustration and two frames captured from Fern’s saved second day on NEAR Testnet. The frames show the garden watering and breakfast steps. The article reconstructs the requests from the recorded state and keeps the recorded replies separate from the two later test calls.
+
 Figtree, Pixelify Sans and Press Start 2P are distributed under the SIL Open Font License. Their license texts are included in [`public/licenses/`](../../public/licenses/).

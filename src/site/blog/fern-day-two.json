@@ -1,0 +1,1456 @@
+{
+  "revision": "4e5dfbb77a18e640389a5ceb18de08c76a0ed569",
+  "proofs": {
+    "replayUrl": "https://nearlyhuman.netlify.app/api/near/replay/1?day=2&networkId=near-testnet&collection=game.nearlyhuman-dev-20261102-26c8bd.testnet",
+    "acceptanceUrl": "https://testnet.nearblocks.io/txns/E3TtAyfXGyRtyUqtgRcdKGmZKALNYHL5BRWXbMGc8uRx",
+    "settlementUrl": "https://testnet.nearblocks.io/txns/EmqTXgnHFg4Z5vz4WCfQHVPhMtWpYi5LgjHVNiYG5azy"
+  },
+  "calls": [
+    {
+      "slot": 21,
+      "asset": "fern-day2-21.png",
+      "request": {
+        "model": "typesafe/jev-1.13",
+        "state": {
+          "policy": "v2-mind-observed-episodes-8",
+          "role": "A nearly-human rooster with one continuous domestic day, one useful project and a few small ordinary moments. Tastes are soft preferences, never new rules or benefits.",
+          "name": "FERN",
+          "day": 2,
+          "slot": 21,
+          "phase": "Midday",
+          "individuality": {
+            "version": "v2-personality-1",
+            "interest": "comfort",
+            "secondaryInterest": "making",
+            "mealStyle": "simple",
+            "rhythm": "early",
+            "signature": "perk",
+            "tempo": "unhurried",
+            "curiosity": "inquisitive",
+            "resourceStyle": "experiment",
+            "craftStyle": "patient-projects",
+            "today": {
+              "interest": "making",
+              "pace": "begin useful care early"
+            }
+          },
+          "needs": {
+            "health": 100,
+            "nutrition": 85,
+            "hydration": 80,
+            "energy": 100,
+            "morale": 66.48
+          },
+          "traits": {
+            "body": 2,
+            "wits": 2,
+            "spirit": 1
+          },
+          "stock": {
+            "water": 3,
+            "bread": 3,
+            "sapling": 1
+          },
+          "conditions": [],
+          "garden": [
+            {
+              "bed": 1,
+              "plant": "Daisy",
+              "ready": false,
+              "wet_bedtimes_remaining": 2,
+              "remaining_pickups": 1,
+              "moisture": 1,
+              "blocked_soil": false
+            },
+            {
+              "bed": 2,
+              "plant": null,
+              "ready": false,
+              "wet_bedtimes_remaining": 0,
+              "remaining_pickups": 0,
+              "moisture": 0,
+              "blocked_soil": false
+            },
+            {
+              "bed": 3,
+              "plant": null,
+              "ready": false,
+              "wet_bedtimes_remaining": 0,
+              "remaining_pickups": 0,
+              "moisture": 0,
+              "blocked_soil": false
+            },
+            {
+              "bed": 4,
+              "plant": null,
+              "ready": false,
+              "wet_bedtimes_remaining": 0,
+              "remaining_pickups": 0,
+              "moisture": 0,
+              "blocked_soil": false
+            }
+          ],
+          "house": {
+            "mess": 0,
+            "damage": 0,
+            "chairLife": 0,
+            "chairAnchor": 0,
+            "shelterLife": 0,
+            "umbrellaLife": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "stovePatch": 0,
+            "windowPatch": 0,
+            "chairBrace": false,
+            "windowBrace": false,
+            "dripDiverted": false,
+            "backupHeat": false,
+            "powerOut": false,
+            "fire": 0
+          },
+          "intention": {
+            "id": 0,
+            "label": "No long project for now",
+            "wood_saved": 0,
+            "review_on_day": 0,
+            "review_is_not_a_completion_deadline": true
+          },
+          "previous_days": {
+            "source": "Canonical bounded executed attempts from completed days. Success is unknown unless explicitly included; not a full biography.",
+            "days": [
+              {
+                "day": 1,
+                "actions": [
+                  {
+                    "slot": 1,
+                    "op": 0,
+                    "arg": 0,
+                    "variant": 0,
+                    "goods": [
+                      0,
+                      0,
+                      0,
+                      0
+                    ]
+                  },
+                  {
+                    "slot": 21,
+                    "op": 2,
+                    "arg": 2,
+                    "variant": 0,
+                    "goods": [
+                      0,
+                      0,
+                      0,
+                      0
+                    ]
+                  },
+                  {
+                    "slot": 31,
+                    "op": 7,
+                    "arg": 0,
+                    "variant": 0,
+                    "goods": [
+                      0,
+                      0,
+                      0,
+                      0
+                    ]
+                  },
+                  {
+                    "slot": 36,
+                    "op": 18,
+                    "arg": 0,
+                    "variant": 1,
+                    "goods": [
+                      0,
+                      0,
+                      0,
+                      0
+                    ]
+                  },
+                  {
+                    "slot": 41,
+                    "op": 8,
+                    "arg": 0,
+                    "variant": 0,
+                    "goods": [
+                      0,
+                      0,
+                      0,
+                      0
+                    ]
+                  },
+                  {
+                    "slot": 51,
+                    "op": 2,
+                    "arg": 2,
+                    "variant": 0,
+                    "goods": [
+                      0,
+                      0,
+                      0,
+                      0
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          "economy": {
+            "currency": "NHC",
+            "earns_by": "An actual shipment of finished home-grown or handmade goods credits this NFT purse; crafting alone does not mint tokens.",
+            "owner_controls": "The current NFT owner can explicitly withdraw NHC or burn 250 NHC to hatch another NFT life. Purse funds survive death.",
+            "token_hatch_price_micro": "250000000",
+            "ai_may_withdraw_or_spend": false,
+            "cash_redemption_promised": false,
+            "choice": "Keeping, enjoying, eating or shipping actual goods are different valid choices when offered. The purse reward is a real option, not a requirement to maximize profit."
+          },
+          "rhythm": {
+            "remaining_phase_losses": 4,
+            "food_loss_per_phase": 5,
+            "water_loss_by_phase": [
+              7,
+              6,
+              7,
+              7,
+              6,
+              7
+            ],
+            "morale_loss_per_phase": 2.94,
+            "energy_loss_per_phase": 0,
+            "living_bedtime_energy": 35,
+            "rest_uses_per_day": 2,
+            "leisure_uses_per_day": 2
+          },
+          "care_timing": {
+            "phase_boundaries_left": 4,
+            "food_after_remaining_phase_losses": 65,
+            "water_after_remaining_phase_losses": 53,
+            "morale_after_remaining_phase_losses": 54.72,
+            "energy_after_remaining_phase_losses": 100,
+            "note": "Nominal phase losses only, if the life continues: no future actions, project recovery or new events. Existing condition damage and death are excluded. Living bedtime energy gain is separate."
+          },
+          "rule": "One main undertaking and five ordinary opportunities. Supplies wait outside until pickup. No offline aging. Safe care may repeat. No automatic wealth spending; shipping consumes actual finished items. Use only an offered choice and never invent growth, materials or a benefit.",
+          "decision_kind": "routine",
+          "earlier_today": [
+            {
+              "slot": 1,
+              "op": 0,
+              "arg": 0,
+              "variant": 0,
+              "goods": [
+                0,
+                0,
+                0,
+                0
+              ]
+            }
+          ],
+          "observed_events": [],
+          "opportunities": {
+            "ordinary_uses_left": 4,
+            "ordinary_opportunities_left": 4,
+            "routine_phases_left": [
+              2,
+              3,
+              4,
+              5
+            ],
+            "main_uses_left": 1,
+            "acute_response_uses_left": 2
+          },
+          "opportunity_note": "Explicit quiet moments spend an ordinary opportunity too. Breakfast or milk may combine care within one opportunity; this is an available tradeoff, not an instruction to choose it. Acute uses need an actual eligible episode.",
+          "main_undertaking": {
+            "key": "18:1:9:0,0,0,0",
+            "label": "Plant Wood tree",
+            "status": "planned",
+            "inputs": {
+              "sapling": 1
+            },
+            "recovery": [
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "chanceBps": 10000,
+            "nominal_recovery": {
+              "health": 0,
+              "nutrition": 0,
+              "hydration": 0,
+              "energy": 0,
+              "morale": 0
+            },
+            "clipped_recovery_if_done_now": {
+              "health": 0,
+              "nutrition": 0,
+              "hydration": 0,
+              "energy": 0,
+              "morale": 0
+            },
+            "intended_slot": 36,
+            "success_not_guaranteed": false
+          }
+        },
+        "questions": {
+          "next_action": {
+            "type": "choice",
+            "instructions": "Choose one small moment around the day's project. Due treatment and serious needs come first. Current observed events describe real targets and boundary consequences; compare an available response with care before that boundary. Otherwise compare useful care with a quiet ordinary moment. Do not top every need to100 reflexively; whole items are spent and energy does not decay each phase. Familiar care can repeat; optional habits may vary. Keep real long-term materials when a modest or free option suffices.",
+            "criteria": {
+              "2:2:0:0,0,0,0": {
+                "action": "Have breakfast",
+                "role": "routine",
+                "family": "food",
+                "interest": "cooking",
+                "use": {
+                  "water": 1,
+                  "bread": 1
+                },
+                "ordinary_opportunity_cost": 1,
+                "energy_cost": 2,
+                "success_chance": 1,
+                "effect": "1 water + 1 bread",
+                "clipped_gain_on_success": {
+                  "health": 0,
+                  "nutrition": 15,
+                  "hydration": 20,
+                  "energy": 0,
+                  "morale": 0
+                },
+                "familiarity": {
+                  "exact_today": 0,
+                  "family_today": 0,
+                  "prior_attempts": 2,
+                  "prior_known_successes": 0
+                }
+              },
+              "4:0:0:0,0,0,0": {
+                "action": "Have a drink water",
+                "role": "routine",
+                "family": "drink",
+                "interest": "cooking",
+                "use": {
+                  "water": 1
+                },
+                "ordinary_opportunity_cost": 1,
+                "energy_cost": 1,
+                "success_chance": 1,
+                "effect": "1 water",
+                "clipped_gain_on_success": {
+                  "health": 0,
+                  "nutrition": 0,
+                  "hydration": 20,
+                  "energy": 0,
+                  "morale": 0
+                },
+                "familiarity": {
+                  "exact_today": 0,
+                  "family_today": 0,
+                  "prior_attempts": 0,
+                  "prior_known_successes": 0
+                }
+              },
+              "8:0:0:0,0,0,0": {
+                "action": "Enjoy a little quiet",
+                "role": "routine",
+                "family": "comfort",
+                "interest": "comfort",
+                "use": {},
+                "ordinary_opportunity_cost": 1,
+                "energy_cost": 1,
+                "success_chance": 1,
+                "effect": "No supplies",
+                "clipped_gain_on_success": {
+                  "health": 0,
+                  "nutrition": 0,
+                  "hydration": 0,
+                  "energy": 0,
+                  "morale": 10
+                },
+                "familiarity": {
+                  "exact_today": 0,
+                  "family_today": 0,
+                  "prior_attempts": 1,
+                  "prior_known_successes": 0
+                }
+              },
+              "0:0:0:0,0,0,0": {
+                "action": "Take a quiet moment",
+                "role": "routine",
+                "family": "mundane",
+                "interest": "exploring",
+                "use": {},
+                "ordinary_opportunity_cost": 1,
+                "energy_cost": 0,
+                "success_chance": 1,
+                "effect": "No supplies",
+                "does": "Ordinary quiet time with no recovery, resources or new reward",
+                "familiarity": {
+                  "exact_today": 1,
+                  "family_today": 1,
+                  "prior_attempts": 1,
+                  "prior_known_successes": 0
+                }
+              },
+              "9:0:0:0,0,0,0": {
+                "action": "Water the garden",
+                "role": "routine",
+                "family": "garden-care",
+                "interest": "gardening",
+                "use": {},
+                "ordinary_opportunity_cost": 1,
+                "energy_cost": 1,
+                "success_chance": 1,
+                "effect": "No supplies",
+                "target": "all occupied beds",
+                "does": "Set moisture to 2 without drinking bottles; no instant growth",
+                "familiarity": {
+                  "exact_today": 0,
+                  "family_today": 0,
+                  "prior_attempts": 0,
+                  "prior_known_successes": 0
+                }
+              }
+            }
+          }
+        }
+      },
+      "answer": {
+        "model": "typesafe/jev-1.13-20260917",
+        "answers": {
+          "next_action": {
+            "type": "choice",
+            "choice": "9:0:0:0,0,0,0",
+            "probabilities": {
+              "2:2:0:0,0,0,0": 0.35,
+              "4:0:0:0,0,0,0": 0.16,
+              "8:0:0:0,0,0,0": 0.03,
+              "0:0:0:0,0,0,0": 0.01,
+              "9:0:0:0,0,0,0": 0.45
+            }
+          }
+        }
+      },
+      "receipt": {
+        "before": {
+          "needs": {
+            "health": 100,
+            "nutrition": 85,
+            "hydration": 80,
+            "energy": 100,
+            "morale": 66.48
+          },
+          "stock": {
+            "water": 3,
+            "bread": 3,
+            "sapling": 1
+          },
+          "beds": [
+            {
+              "bed": 1,
+              "moisture": 1,
+              "wetBedtimesLeft": 2
+            }
+          ]
+        },
+        "after": {
+          "needs": {
+            "health": 100,
+            "nutrition": 85,
+            "hydration": 80,
+            "energy": 99,
+            "morale": 66.48
+          },
+          "stock": {
+            "water": 3,
+            "bread": 3,
+            "sapling": 1
+          },
+          "beds": [
+            {
+              "bed": 1,
+              "moisture": 2,
+              "wetBedtimesLeft": 2
+            }
+          ]
+        },
+        "success": true
+      },
+      "actions": [
+        {
+          "key": "9:0:0:0,0,0,0",
+          "name": "Water the garden"
+        },
+        {
+          "key": "2:2:0:0,0,0,0",
+          "name": "Breakfast"
+        },
+        {
+          "key": "4:0:0:0,0,0,0",
+          "name": "Drink water"
+        },
+        {
+          "key": "8:0:0:0,0,0,0",
+          "name": "Leisure"
+        },
+        {
+          "key": "0:0:0:0,0,0,0",
+          "name": "Quiet moment"
+        }
+      ]
+    },
+    {
+      "slot": 31,
+      "asset": "fern-day2-31.png",
+      "request": {
+        "model": "typesafe/jev-1.13",
+        "state": {
+          "policy": "v2-mind-observed-episodes-8",
+          "role": "A nearly-human rooster with one continuous domestic day, one useful project and a few small ordinary moments. Tastes are soft preferences, never new rules or benefits.",
+          "name": "FERN",
+          "day": 2,
+          "slot": 31,
+          "phase": "Afternoon",
+          "individuality": {
+            "version": "v2-personality-1",
+            "interest": "comfort",
+            "secondaryInterest": "making",
+            "mealStyle": "simple",
+            "rhythm": "early",
+            "signature": "perk",
+            "tempo": "unhurried",
+            "curiosity": "inquisitive",
+            "resourceStyle": "experiment",
+            "craftStyle": "patient-projects",
+            "today": {
+              "interest": "making",
+              "pace": "begin useful care early"
+            }
+          },
+          "needs": {
+            "health": 100,
+            "nutrition": 80,
+            "hydration": 73,
+            "energy": 99,
+            "morale": 63.54
+          },
+          "traits": {
+            "body": 2,
+            "wits": 2,
+            "spirit": 1
+          },
+          "stock": {
+            "water": 3,
+            "bread": 3,
+            "sapling": 1
+          },
+          "conditions": [],
+          "garden": [
+            {
+              "bed": 1,
+              "plant": "Daisy",
+              "ready": false,
+              "wet_bedtimes_remaining": 2,
+              "remaining_pickups": 1,
+              "moisture": 2,
+              "blocked_soil": false
+            },
+            {
+              "bed": 2,
+              "plant": null,
+              "ready": false,
+              "wet_bedtimes_remaining": 0,
+              "remaining_pickups": 0,
+              "moisture": 0,
+              "blocked_soil": false
+            },
+            {
+              "bed": 3,
+              "plant": null,
+              "ready": false,
+              "wet_bedtimes_remaining": 0,
+              "remaining_pickups": 0,
+              "moisture": 0,
+              "blocked_soil": false
+            },
+            {
+              "bed": 4,
+              "plant": null,
+              "ready": false,
+              "wet_bedtimes_remaining": 0,
+              "remaining_pickups": 0,
+              "moisture": 0,
+              "blocked_soil": false
+            }
+          ],
+          "house": {
+            "mess": 0,
+            "damage": 0,
+            "chairLife": 0,
+            "chairAnchor": 0,
+            "shelterLife": 0,
+            "umbrellaLife": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "stovePatch": 0,
+            "windowPatch": 0,
+            "chairBrace": false,
+            "windowBrace": false,
+            "dripDiverted": false,
+            "backupHeat": false,
+            "powerOut": false,
+            "fire": 0
+          },
+          "intention": {
+            "id": 0,
+            "label": "No long project for now",
+            "wood_saved": 0,
+            "review_on_day": 0,
+            "review_is_not_a_completion_deadline": true
+          },
+          "previous_days": {
+            "source": "Canonical bounded executed attempts from completed days. Success is unknown unless explicitly included; not a full biography.",
+            "days": [
+              {
+                "day": 1,
+                "actions": [
+                  {
+                    "slot": 1,
+                    "op": 0,
+                    "arg": 0,
+                    "variant": 0,
+                    "goods": [
+                      0,
+                      0,
+                      0,
+                      0
+                    ]
+                  },
+                  {
+                    "slot": 21,
+                    "op": 2,
+                    "arg": 2,
+                    "variant": 0,
+                    "goods": [
+                      0,
+                      0,
+                      0,
+                      0
+                    ]
+                  },
+                  {
+                    "slot": 31,
+                    "op": 7,
+                    "arg": 0,
+                    "variant": 0,
+                    "goods": [
+                      0,
+                      0,
+                      0,
+                      0
+                    ]
+                  },
+                  {
+                    "slot": 36,
+                    "op": 18,
+                    "arg": 0,
+                    "variant": 1,
+                    "goods": [
+                      0,
+                      0,
+                      0,
+                      0
+                    ]
+                  },
+                  {
+                    "slot": 41,
+                    "op": 8,
+                    "arg": 0,
+                    "variant": 0,
+                    "goods": [
+                      0,
+                      0,
+                      0,
+                      0
+                    ]
+                  },
+                  {
+                    "slot": 51,
+                    "op": 2,
+                    "arg": 2,
+                    "variant": 0,
+                    "goods": [
+                      0,
+                      0,
+                      0,
+                      0
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          "economy": {
+            "currency": "NHC",
+            "earns_by": "An actual shipment of finished home-grown or handmade goods credits this NFT purse; crafting alone does not mint tokens.",
+            "owner_controls": "The current NFT owner can explicitly withdraw NHC or burn 250 NHC to hatch another NFT life. Purse funds survive death.",
+            "token_hatch_price_micro": "250000000",
+            "ai_may_withdraw_or_spend": false,
+            "cash_redemption_promised": false,
+            "choice": "Keeping, enjoying, eating or shipping actual goods are different valid choices when offered. The purse reward is a real option, not a requirement to maximize profit."
+          },
+          "rhythm": {
+            "remaining_phase_losses": 3,
+            "food_loss_per_phase": 5,
+            "water_loss_by_phase": [
+              7,
+              6,
+              7,
+              7,
+              6,
+              7
+            ],
+            "morale_loss_per_phase": 2.94,
+            "energy_loss_per_phase": 0,
+            "living_bedtime_energy": 35,
+            "rest_uses_per_day": 2,
+            "leisure_uses_per_day": 2
+          },
+          "care_timing": {
+            "phase_boundaries_left": 3,
+            "food_after_remaining_phase_losses": 65,
+            "water_after_remaining_phase_losses": 53,
+            "morale_after_remaining_phase_losses": 54.72,
+            "energy_after_remaining_phase_losses": 99,
+            "note": "Nominal phase losses only, if the life continues: no future actions, project recovery or new events. Existing condition damage and death are excluded. Living bedtime energy gain is separate."
+          },
+          "rule": "One main undertaking and five ordinary opportunities. Supplies wait outside until pickup. No offline aging. Safe care may repeat. No automatic wealth spending; shipping consumes actual finished items. Use only an offered choice and never invent growth, materials or a benefit.",
+          "decision_kind": "routine",
+          "earlier_today": [
+            {
+              "slot": 1,
+              "op": 0,
+              "arg": 0,
+              "variant": 0,
+              "goods": [
+                0,
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "slot": 21,
+              "op": 9,
+              "arg": 0,
+              "variant": 0,
+              "goods": [
+                0,
+                0,
+                0,
+                0
+              ]
+            }
+          ],
+          "observed_events": [],
+          "opportunities": {
+            "ordinary_uses_left": 3,
+            "ordinary_opportunities_left": 3,
+            "routine_phases_left": [
+              3,
+              4,
+              5
+            ],
+            "main_uses_left": 1,
+            "acute_response_uses_left": 2
+          },
+          "opportunity_note": "Explicit quiet moments spend an ordinary opportunity too. Breakfast or milk may combine care within one opportunity; this is an available tradeoff, not an instruction to choose it. Acute uses need an actual eligible episode.",
+          "main_undertaking": {
+            "key": "18:1:9:0,0,0,0",
+            "label": "Plant Wood tree",
+            "status": "planned",
+            "inputs": {
+              "sapling": 1
+            },
+            "recovery": [
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "chanceBps": 10000,
+            "nominal_recovery": {
+              "health": 0,
+              "nutrition": 0,
+              "hydration": 0,
+              "energy": 0,
+              "morale": 0
+            },
+            "clipped_recovery_if_done_now": {
+              "health": 0,
+              "nutrition": 0,
+              "hydration": 0,
+              "energy": 0,
+              "morale": 0
+            },
+            "intended_slot": 36,
+            "success_not_guaranteed": false
+          }
+        },
+        "questions": {
+          "next_action": {
+            "type": "choice",
+            "instructions": "Choose one small moment around the day's project. Due treatment and serious needs come first. Current observed events describe real targets and boundary consequences; compare an available response with care before that boundary. Otherwise compare useful care with a quiet ordinary moment. Do not top every need to100 reflexively; whole items are spent and energy does not decay each phase. Familiar care can repeat; optional habits may vary. Keep real long-term materials when a modest or free option suffices.",
+            "criteria": {
+              "2:2:0:0,0,0,0": {
+                "action": "Have breakfast",
+                "role": "routine",
+                "family": "food",
+                "interest": "cooking",
+                "use": {
+                  "water": 1,
+                  "bread": 1
+                },
+                "ordinary_opportunity_cost": 1,
+                "energy_cost": 2,
+                "success_chance": 1,
+                "effect": "1 water + 1 bread",
+                "clipped_gain_on_success": {
+                  "health": 0,
+                  "nutrition": 20,
+                  "hydration": 27,
+                  "energy": 0,
+                  "morale": 0
+                },
+                "familiarity": {
+                  "exact_today": 0,
+                  "family_today": 0,
+                  "prior_attempts": 2,
+                  "prior_known_successes": 0
+                }
+              },
+              "4:0:0:0,0,0,0": {
+                "action": "Have a drink water",
+                "role": "routine",
+                "family": "drink",
+                "interest": "cooking",
+                "use": {
+                  "water": 1
+                },
+                "ordinary_opportunity_cost": 1,
+                "energy_cost": 1,
+                "success_chance": 1,
+                "effect": "1 water",
+                "clipped_gain_on_success": {
+                  "health": 0,
+                  "nutrition": 0,
+                  "hydration": 27,
+                  "energy": 0,
+                  "morale": 0
+                },
+                "familiarity": {
+                  "exact_today": 0,
+                  "family_today": 0,
+                  "prior_attempts": 0,
+                  "prior_known_successes": 0
+                }
+              },
+              "8:0:0:0,0,0,0": {
+                "action": "Enjoy a little quiet",
+                "role": "routine",
+                "family": "comfort",
+                "interest": "comfort",
+                "use": {},
+                "ordinary_opportunity_cost": 1,
+                "energy_cost": 1,
+                "success_chance": 1,
+                "effect": "No supplies",
+                "clipped_gain_on_success": {
+                  "health": 0,
+                  "nutrition": 0,
+                  "hydration": 0,
+                  "energy": 0,
+                  "morale": 10
+                },
+                "familiarity": {
+                  "exact_today": 0,
+                  "family_today": 0,
+                  "prior_attempts": 1,
+                  "prior_known_successes": 0
+                }
+              },
+              "7:0:0:0,0,0,0": {
+                "action": "Take a nap",
+                "role": "routine",
+                "family": "rest",
+                "interest": "comfort",
+                "use": {},
+                "ordinary_opportunity_cost": 1,
+                "energy_cost": 0,
+                "success_chance": 1,
+                "effect": "No supplies",
+                "clipped_gain_on_success": {
+                  "health": 0,
+                  "nutrition": 0,
+                  "hydration": 0,
+                  "energy": 1,
+                  "morale": 0
+                },
+                "familiarity": {
+                  "exact_today": 0,
+                  "family_today": 0,
+                  "prior_attempts": 1,
+                  "prior_known_successes": 0
+                }
+              },
+              "0:0:0:0,0,0,0": {
+                "action": "Take a quiet moment",
+                "role": "routine",
+                "family": "mundane",
+                "interest": "exploring",
+                "use": {},
+                "ordinary_opportunity_cost": 1,
+                "energy_cost": 0,
+                "success_chance": 1,
+                "effect": "No supplies",
+                "does": "Ordinary quiet time with no recovery, resources or new reward",
+                "familiarity": {
+                  "exact_today": 1,
+                  "family_today": 1,
+                  "prior_attempts": 1,
+                  "prior_known_successes": 0
+                }
+              }
+            }
+          }
+        }
+      },
+      "answer": {
+        "model": "typesafe/jev-1.13-20260917",
+        "answers": {
+          "next_action": {
+            "type": "choice",
+            "choice": "2:2:0:0,0,0,0",
+            "probabilities": {
+              "2:2:0:0,0,0,0": 0.51,
+              "4:0:0:0,0,0,0": 0.31,
+              "8:0:0:0,0,0,0": 0.14,
+              "7:0:0:0,0,0,0": 0.02,
+              "0:0:0:0,0,0,0": 0.02
+            }
+          }
+        }
+      },
+      "receipt": {
+        "before": {
+          "needs": {
+            "health": 100,
+            "nutrition": 80,
+            "hydration": 73,
+            "energy": 99,
+            "morale": 63.54
+          },
+          "stock": {
+            "water": 3,
+            "bread": 3,
+            "sapling": 1
+          },
+          "beds": [
+            {
+              "bed": 1,
+              "moisture": 2,
+              "wetBedtimesLeft": 2
+            }
+          ]
+        },
+        "after": {
+          "needs": {
+            "health": 100,
+            "nutrition": 100,
+            "hydration": 100,
+            "energy": 97,
+            "morale": 63.54
+          },
+          "stock": {
+            "water": 2,
+            "bread": 2,
+            "sapling": 1
+          },
+          "beds": [
+            {
+              "bed": 1,
+              "moisture": 2,
+              "wetBedtimesLeft": 2
+            }
+          ]
+        },
+        "success": true
+      },
+      "actions": [
+        {
+          "key": "2:2:0:0,0,0,0",
+          "name": "Breakfast"
+        },
+        {
+          "key": "4:0:0:0,0,0,0",
+          "name": "Drink water"
+        },
+        {
+          "key": "8:0:0:0,0,0,0",
+          "name": "Leisure"
+        },
+        {
+          "key": "7:0:0:0,0,0,0",
+          "name": "Nap"
+        },
+        {
+          "key": "0:0:0:0,0,0,0",
+          "name": "Quiet moment"
+        }
+      ]
+    }
+  ],
+  "dawnRequest": {
+    "model": "typesafe/jev-1.13",
+    "state": {
+      "policy": "v2-mind-observed-episodes-8",
+      "role": "A nearly-human rooster with one continuous domestic day, one useful project and a few small ordinary moments. Tastes are soft preferences, never new rules or benefits.",
+      "name": "FERN",
+      "day": 2,
+      "slot": 0,
+      "phase": "Dawn",
+      "individuality": {
+        "version": "v2-personality-1",
+        "interest": "comfort",
+        "secondaryInterest": "making",
+        "mealStyle": "simple",
+        "rhythm": "early",
+        "signature": "perk",
+        "tempo": "unhurried",
+        "curiosity": "inquisitive",
+        "resourceStyle": "experiment",
+        "craftStyle": "patient-projects",
+        "today": {
+          "interest": "making",
+          "pace": "begin useful care early"
+        }
+      },
+      "needs": {
+        "health": 100,
+        "nutrition": 95,
+        "hydration": 93,
+        "energy": 100,
+        "morale": 72.36
+      },
+      "traits": {
+        "body": 2,
+        "wits": 2,
+        "spirit": 1
+      },
+      "stock": {
+        "water": 2,
+        "bread": 2
+      },
+      "conditions": [],
+      "garden": [
+        {
+          "bed": 1,
+          "plant": "Daisy",
+          "ready": false,
+          "wet_bedtimes_remaining": 2,
+          "remaining_pickups": 1,
+          "moisture": 1,
+          "blocked_soil": false
+        },
+        {
+          "bed": 2,
+          "plant": null,
+          "ready": false,
+          "wet_bedtimes_remaining": 0,
+          "remaining_pickups": 0,
+          "moisture": 0,
+          "blocked_soil": false
+        },
+        {
+          "bed": 3,
+          "plant": null,
+          "ready": false,
+          "wet_bedtimes_remaining": 0,
+          "remaining_pickups": 0,
+          "moisture": 0,
+          "blocked_soil": false
+        },
+        {
+          "bed": 4,
+          "plant": null,
+          "ready": false,
+          "wet_bedtimes_remaining": 0,
+          "remaining_pickups": 0,
+          "moisture": 0,
+          "blocked_soil": false
+        }
+      ],
+      "house": {
+        "mess": 0,
+        "damage": 0,
+        "chairLife": 0,
+        "chairAnchor": 0,
+        "shelterLife": 0,
+        "umbrellaLife": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "stovePatch": 0,
+        "windowPatch": 0,
+        "chairBrace": false,
+        "windowBrace": false,
+        "dripDiverted": false,
+        "backupHeat": false,
+        "powerOut": false,
+        "fire": 0
+      },
+      "intention": {
+        "id": 0,
+        "label": "No long project for now",
+        "wood_saved": 0,
+        "review_on_day": 0,
+        "review_is_not_a_completion_deadline": true
+      },
+      "previous_days": {
+        "source": "Canonical bounded executed attempts from completed days. Success is unknown unless explicitly included; not a full biography.",
+        "days": [
+          {
+            "day": 1,
+            "actions": [
+              {
+                "slot": 1,
+                "op": 0,
+                "arg": 0,
+                "variant": 0,
+                "goods": [
+                  0,
+                  0,
+                  0,
+                  0
+                ]
+              },
+              {
+                "slot": 21,
+                "op": 2,
+                "arg": 2,
+                "variant": 0,
+                "goods": [
+                  0,
+                  0,
+                  0,
+                  0
+                ]
+              },
+              {
+                "slot": 31,
+                "op": 7,
+                "arg": 0,
+                "variant": 0,
+                "goods": [
+                  0,
+                  0,
+                  0,
+                  0
+                ]
+              },
+              {
+                "slot": 36,
+                "op": 18,
+                "arg": 0,
+                "variant": 1,
+                "goods": [
+                  0,
+                  0,
+                  0,
+                  0
+                ]
+              },
+              {
+                "slot": 41,
+                "op": 8,
+                "arg": 0,
+                "variant": 0,
+                "goods": [
+                  0,
+                  0,
+                  0,
+                  0
+                ]
+              },
+              {
+                "slot": 51,
+                "op": 2,
+                "arg": 2,
+                "variant": 0,
+                "goods": [
+                  0,
+                  0,
+                  0,
+                  0
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "economy": {
+        "currency": "NHC",
+        "earns_by": "An actual shipment of finished home-grown or handmade goods credits this NFT purse; crafting alone does not mint tokens.",
+        "owner_controls": "The current NFT owner can explicitly withdraw NHC or burn 250 NHC to hatch another NFT life. Purse funds survive death.",
+        "token_hatch_price_micro": "250000000",
+        "ai_may_withdraw_or_spend": false,
+        "cash_redemption_promised": false,
+        "choice": "Keeping, enjoying, eating or shipping actual goods are different valid choices when offered. The purse reward is a real option, not a requirement to maximize profit."
+      },
+      "rhythm": {
+        "remaining_phase_losses": 6,
+        "food_loss_per_phase": 5,
+        "water_loss_by_phase": [
+          7,
+          6,
+          7,
+          7,
+          6,
+          7
+        ],
+        "morale_loss_per_phase": 2.94,
+        "energy_loss_per_phase": 0,
+        "living_bedtime_energy": 35,
+        "rest_uses_per_day": 2,
+        "leisure_uses_per_day": 2
+      },
+      "care_timing": {
+        "phase_boundaries_left": 6,
+        "food_after_remaining_phase_losses": 65,
+        "water_after_remaining_phase_losses": 53,
+        "morale_after_remaining_phase_losses": 54.72,
+        "energy_after_remaining_phase_losses": 100,
+        "note": "Nominal phase losses only, if the life continues: no future actions, project recovery or new events. Existing condition damage and death are excluded. Living bedtime energy gain is separate."
+      },
+      "rule": "One main undertaking and five ordinary opportunities. Supplies wait outside until pickup. No offline aging. Safe care may repeat. No automatic wealth spending; shipping consumes actual finished items. Use only an offered choice and never invent growth, materials or a benefit.",
+      "decision_kind": "dawn_plan",
+      "opportunities": {
+        "ordinary_uses_left": 5,
+        "ordinary_opportunities_left": 5,
+        "routine_phases_left": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "main_uses_left": 1,
+        "acute_response_uses_left": 2
+      },
+      "delivery_waiting_outside": [
+        "water",
+        "bread",
+        "sapling"
+      ],
+      "project_stock_after_collection": {
+        "water": 3,
+        "bread": 3,
+        "sapling": 1
+      }
+    },
+    "questions": {
+      "main_undertaking": {
+        "type": "choice",
+        "instructions": "Choose ONE afternoon undertaking from feasible materials after parcel collection. Prefer meaningful progress and this individual's tastes over automatically repeating yesterday. A useful harvest, repair or meal may repeat. This is an intention, not immediate work; urgent care can prevent it. Do not invent ripe plants, growth or another project.",
+        "criteria": {
+          "18:1:9:0,0,0,0": {
+            "action": "Plant Wood tree",
+            "role": "main",
+            "family": "planting",
+            "interest": "gardening",
+            "use": {
+              "sapling": 1
+            },
+            "ordinary_opportunity_cost": 0,
+            "energy_cost": 3,
+            "success_chance": 1,
+            "effect": "1 sapling",
+            "bed": 2,
+            "grows": "Wood tree",
+            "wet_bedtimes_until_ready": 6,
+            "familiarity": {
+              "exact_today": 0,
+              "family_today": 0,
+              "prior_attempts": 0,
+              "prior_known_successes": 0
+            }
+          },
+          "27:0:0:0,0,0,0": {
+            "action": "Clear a planting",
+            "role": "main",
+            "family": "garden-care",
+            "interest": "gardening",
+            "use": {},
+            "ordinary_opportunity_cost": 0,
+            "energy_cost": 3,
+            "success_chance": 1,
+            "effect": "No supplies",
+            "bed": 1,
+            "does": "Remove the plant with no salvage/reward; blocked soil remains",
+            "familiarity": {
+              "exact_today": 0,
+              "family_today": 0,
+              "prior_attempts": 0,
+              "prior_known_successes": 0
+            }
+          },
+          "30:0:0:0,0,0,0": {
+            "action": "Have an unhurried afternoon",
+            "role": "main",
+            "family": "mundane",
+            "interest": "exploring",
+            "use": {},
+            "ordinary_opportunity_cost": 0,
+            "energy_cost": 0,
+            "success_chance": 1,
+            "effect": "No supplies",
+            "does": "Ordinary quiet time with no recovery, resources or new reward",
+            "familiarity": {
+              "exact_today": 0,
+              "family_today": 0,
+              "prior_attempts": 0,
+              "prior_known_successes": 0
+            }
+          }
+        }
+      },
+      "morning_order": {
+        "type": "choice",
+        "instructions": "Choose a natural morning. Before-pickup activities use EXISTING pantry stock and consume one ordinary opportunity, including a quiet look. They share the Morning phase rather than adding a sixth opportunity. Compare useful ritual, simple care and a quiet look against the remaining day. Collection follows, and urgent care can change this order.",
+        "criteria": {
+          "collect-first": {
+            "no_before_pickup_action": true,
+            "action": "Collect the parcel first",
+            "ordinary_opportunity_cost": 0,
+            "ordinary_opportunities_left_after_this_morning": 5
+          },
+          "look-first": {
+            "action": "Take a quiet look, then collect",
+            "role": "routine",
+            "family": "mundane",
+            "interest": "exploring",
+            "use": {},
+            "ordinary_opportunity_cost": 1,
+            "energy_cost": 0,
+            "success_chance": 1,
+            "effect": "No supplies",
+            "does": "Ordinary quiet time with no recovery, resources or new reward",
+            "familiarity": {
+              "exact_today": 0,
+              "family_today": 0,
+              "prior_attempts": 1,
+              "prior_known_successes": 0
+            },
+            "ordinary_opportunities_left_after_this_morning": 4
+          }
+        }
+      },
+      "long_intention": {
+        "type": "choice",
+        "instructions": "Choose or review one modest long-term intention. Keeping it is valid. Progress uses actual wood/plants/stock; reviewing after three days is not a completion deadline. Care still comes first, and this intention never authorizes spending or creates anything.",
+        "criteria": {
+          "0": {
+            "intention": "No long project for now"
+          },
+          "1": {
+            "intention": "Enjoy a home-grown flower"
+          },
+          "2": {
+            "intention": "Tend the garden"
+          },
+          "3": {
+            "intention": "Save for a spoon",
+            "wood_target": 3,
+            "actual_wood": 0
+          },
+          "4": {
+            "intention": "Save for a toy boat",
+            "wood_target": 6,
+            "actual_wood": 0
+          },
+          "5": {
+            "intention": "Save for a birdhouse",
+            "wood_target": 8,
+            "actual_wood": 0
+          },
+          "6": {
+            "intention": "Save for a large chest",
+            "wood_target": 10,
+            "actual_wood": 0
+          }
+        }
+      }
+    }
+  },
+  "plan": [
+    {
+      "question": "main_undertaking",
+      "label": "Plant Wood tree"
+    },
+    {
+      "question": "morning_order",
+      "label": "Take a quiet look, then collect"
+    },
+    {
+      "question": "long_intention",
+      "label": "No long project for now"
+    }
+  ],
+  "freshReplies": [
+    {
+      "slot": 21,
+      "model": "typesafe/jev-1.13-20260917",
+      "answers": {
+        "next_action": {
+          "type": "choice",
+          "choice": "9:0:0:0,0,0,0",
+          "probabilities": {
+            "2:2:0:0,0,0,0": 0.29,
+            "4:0:0:0,0,0,0": 0.19,
+            "8:0:0:0,0,0,0": 0.02,
+            "0:0:0:0,0,0,0": 0.01,
+            "9:0:0:0,0,0,0": 0.49
+          }
+        }
+      }
+    },
+    {
+      "slot": 31,
+      "model": "typesafe/jev-1.13-20260917",
+      "answers": {
+        "next_action": {
+          "type": "choice",
+          "choice": "2:2:0:0,0,0,0",
+          "probabilities": {
+            "2:2:0:0,0,0,0": 0.54,
+            "4:0:0:0,0,0,0": 0.35,
+            "8:0:0:0,0,0,0": 0.08,
+            "7:0:0:0,0,0,0": 0.01,
+            "0:0:0:0,0,0,0": 0.02
+          }
+        }
+      }
+    }
+  ]
+}

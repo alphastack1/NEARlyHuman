@@ -2,11 +2,18 @@ import { mkdir, readFile, readdir, stat, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { ARTICLES } from '../../src/site/content';
+import { BLOG_DESCRIPTION, BLOG_PATH, JEV_POST } from '../../src/site/blog-catalog';
 import { PROJECT } from '../../src/site/project';
 import knownLifeHeads from '../../src/site/known-life-heads.json';
 import { publicLifePath, validLifeId, validLifeWorld } from '../../src/site/life-routes';
 
-export interface PublicPageMetadata { pathname: string; title: string; description: string }
+export interface PublicPageMetadata {
+  pathname: string;
+  title: string;
+  description: string;
+  type?: 'article';
+  image?: { href: string; width: number; height: number; alt: string };
+}
 export interface PublicImagePreload { href: string; srcSet?: string; sizes?: string; media?: string; type: 'image/avif' | 'image/webp' }
 export interface PublicPerformanceHints { siteModule: string; siteStylesheets: string[]; hero?: readonly PublicImagePreload[]; fonts?: readonly string[] }
 /** These media conditions match HomePreview's picture; only one poster is fetched. */
@@ -31,6 +38,8 @@ export const PUBLIC_PAGES: readonly PublicPageMetadata[] = [
   { pathname: '/project', title: 'The project · NEARlyHuman', description: 'Explore NEARlyHuman, its NEAR AI-powered days, testnet worlds, source and onchain ownership. Inspect the actual contracts and trust boundaries.' },
   { pathname: '/explore', title: 'Explore lives · NEARlyHuman', description: 'Meet the roosters, explore their saved homes and watch a day. Discover the longest lives on NEAR and Robinhood testnets.' },
   { pathname: '/docs', title: 'The player handbook · NEARlyHuman', description: 'Guides to the first day, care, garden, workshop, NFT ownership, wallets, NHC and how Jev and saving work.' },
+  { pathname: BLOG_PATH, title: 'Blog · NEARlyHuman', description: BLOG_DESCRIPTION },
+  { pathname: JEV_POST.pathname, title: `${JEV_POST.title} · NEARlyHuman`, description: JEV_POST.description, type: 'article', image: { ...JEV_POST.image, href: JEV_POST.socialImage } },
   ...ARTICLES.map(article => ({ pathname: `/docs/${article.slug}`, title: `${article.title} · NEARlyHuman`, description: article.summary })),
   ...lifePages,
 ];
@@ -99,19 +108,22 @@ export function pageHtml(template: string, page: PublicPageMetadata, origin: str
     .replace(/<meta\b[^>]*>\s*/gi, tag => MANAGED_META.has((attribute(tag, 'name') || attribute(tag, 'property') || '').toLowerCase()) ? '' : tag)
     .replace(/<link\b[^>]*>\s*/gi, tag => (attribute(tag, 'rel') || '').toLowerCase().split(/\s+/).includes('canonical') ? '' : tag);
   const canonical = new URL(page.pathname, origin).href;
+  const image = socialImage && socialImage === page.image?.href ? page.image : undefined;
   const meta = (key: string, value: string, property = false) => `    <meta ${property ? 'property' : 'name'}="${key}" content="${escapeMarkup(value)}" />`;
   const metadata = [
     `    <title>${escapeMarkup(page.title)}</title>`,
     meta('description', page.description),
     `    <link rel="canonical" href="${escapeMarkup(canonical)}" />`,
-    meta('og:type', 'website', true), meta('og:site_name', PROJECT.name, true),
+    meta('og:type', page.type || 'website', true), meta('og:site_name', PROJECT.name, true),
     meta('og:title', page.title, true), meta('og:description', page.description, true), meta('og:url', canonical, true),
     meta('twitter:card', socialImage ? 'summary_large_image' : 'summary'),
     meta('twitter:title', page.title), meta('twitter:description', page.description),
   ];
   if (socialImage) {
     const imageUrl = new URL(socialImage, origin).href;
-    metadata.push(meta('og:image', imageUrl, true), meta('og:image:alt', 'NEARlyHuman — a domestic pixel art home and garden.', true), meta('twitter:image', imageUrl));
+    const alt = image?.alt || 'NEARlyHuman — a domestic pixel art home and garden.';
+    metadata.push(meta('og:image', imageUrl, true), meta('og:image:alt', alt, true), meta('twitter:image', imageUrl), meta('twitter:image:alt', alt));
+    if (image) metadata.push(meta('og:image:width', String(image.width), true), meta('og:image:height', String(image.height), true));
   }
   const hints = performanceHead(page, performanceHints);
   if (hints) metadata.push(hints);
@@ -140,7 +152,7 @@ export async function buildPublicPages(outDir = path.resolve('dist'), heroPreloa
   if (!origin.startsWith('https://')) throw Error('The public website origin must use HTTPS.');
   const unique = new Set<string>();
   for (const page of PUBLIC_PAGES) {
-    if (!/^\/(?:the-game|project|explore|life\/(?:near-testnet\/[1-9]\d{0,77}|robinhood-testnet\/(?:0x[\da-f]{40}\/)?[1-9]\d{0,77})|docs(?:\/[a-z0-9]+(?:-[a-z0-9]+)*)?)?$/.test(page.pathname) || unique.has(page.pathname)) throw Error(`Invalid or duplicate public page: ${page.pathname}`);
+    if (!/^\/(?:the-game|project|explore|life\/(?:near-testnet\/[1-9]\d{0,77}|robinhood-testnet\/(?:0x[\da-f]{40}\/)?[1-9]\d{0,77})|(?:docs|blog)(?:\/[a-z0-9]+(?:-[a-z0-9]+)*)?)?$/.test(page.pathname) || unique.has(page.pathname)) throw Error(`Invalid or duplicate public page: ${page.pathname}`);
     unique.add(page.pathname);
   }
   const template = await readFile(path.join(directory, 'index.html'), 'utf8');
@@ -156,8 +168,9 @@ export async function buildPublicPages(outDir = path.resolve('dist'), heroPreloa
   const performanceHints = await discoverPublicHints(directory, heroPreload);
   for (const page of PUBLIC_PAGES) {
     const target = path.join(directory, page.pathname.slice(1), 'index.html');
+    const image = page.image && await stat(path.join(directory, page.image.href.slice(1))).then(info => info.isFile() && info.size > 0).catch(() => false) ? page.image.href : socialImage;
     await mkdir(path.dirname(target), { recursive: true });
-    await writeFile(target, pageHtml(template, page, origin, socialImage, performanceHints));
+    await writeFile(target, pageHtml(template, page, origin, image, performanceHints));
   }
   // Future lives remain browseable without a deployment per mint. Their HTTP
   // fallback has accurate generic sharing text, never the homepage canonical.

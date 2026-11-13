@@ -1,0 +1,16 @@
+@media(min-width:851px) and (max-width:1040px){
+  .site .site-navrow>nav{gap:3px}
+  .site .site-navrow .site-tab{padding-inline:11px}
+  .site .site-nav-actions{gap:10px}
+  .site .site-search-toggle kbd{display:none}
+}
+@media(max-width:850px){.site .site-blog-tab{display:none}}
+@media(max-width:850px){.site .site-navrow:has(.site-blog-tab.is-current) .site-blog-tab{display:flex}.site .site-navrow:has(.site-blog-tab.is-current) .site-explore-tab{display:none}}
+.site-brandbar>.site-worlds{white-space:nowrap}
+@media (max-width:360px){
+  .site .site-brandbar{gap:7px;padding-inline:8px}
+  .site .site-brandbar>.site-brand{font-size:17px;gap:6px}
+  .site .site-brandbar>.site-worlds{font-size:10px}
+}
+@media(min-width:451px){.arrival-header .arrival-menu>.arrival-explore-menu{display:none}}
+@media(max-width:450px){.arrival-header>nav>.arrival-explore-tab{display:none}}
