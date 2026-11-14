@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { Fragment, useRef, useState } from 'react';
 import { JEV_POST } from '../blog-catalog';
 import JevChoiceLens from './JevChoiceLens';
 import JevDaySequence from './JevDaySequence';
@@ -10,6 +10,24 @@ const source = 'https://github.com/alphastack1/NEARlyHuman/blob/' + record.revis
 const wateringRequest = JSON.stringify(sequence.calls.find(call => call.slot === 21)!.request, null, 2);
 const menuCode = 'criteria: Object.fromEntries(\n  offered.map(action => [\n    action.key,\n    facts(action, decision.state, memory, today),\n  ]),\n)';
 const validateCode = "const answer = result.answers?.[name];\nif (answer?.type !== 'choice' || !keys.includes(answer.choice)) {\n  throw new InferenceError('invalid_choice', true);\n}";
+const plantingId = sequence.calls[0].answer.answers.main_undertaking!.choice;
+const plantingFields = [
+  ['op', 'Plant'],
+  ['arg', 'Bed 2 · zero-based index'],
+  ['variant', 'Wood tree'],
+  ['goods', 'Empty shipment slots'],
+] as const;
+
+function PlantingId() {
+  const values = plantingId.split(':');
+  return <figure className="jev-key-figure" aria-labelledby="jev-key-title">
+    <figcaption id="jev-key-title"><strong>Plant the sapling in bed 2</strong><code className="jev-key-signature">{plantingFields.map(([field], index) => <Fragment key={field}>{index > 0 && ':'}<span>{values[index]}</span></Fragment>)}</code></figcaption>
+    <dl>{plantingFields.map(([field, meaning], index) => <div key={field}>
+      <dt><code className="jev-key-value">{values[index]}</code> <code>{field}</code></dt>
+      <dd>{meaning}</dd>
+    </div>)}</dl>
+  </figure>;
+}
 
 const nodeExample = [
   "import { readFile } from 'node:fs/promises';",
@@ -88,7 +106,7 @@ export default function JevArticle() {
         <p className="jev-lede">The game sends Jev a snapshot of Fern’s world and a menu of options. TypeSafe’s model returns one option ID per question. The game checks the IDs and applies its own rules.</p>
         <a href="#whole-day" className="jev-primary">Follow Fern’s day <span aria-hidden="true">↓</span></a>
       </div>
-      <img src={JEV_POST.image.href} width={JEV_POST.image.width} height={JEV_POST.image.height} decoding="async" fetchPriority="high" alt={JEV_POST.image.alt}/>
+      <div className="jev-hero-art"><img src={JEV_POST.image.href} width={JEV_POST.image.width} height={JEV_POST.image.height} decoding="async" fetchPriority="high" alt={JEV_POST.image.alt}/></div>
     </header>
 
     <JevDaySequence />
@@ -100,7 +118,8 @@ export default function JevArticle() {
       <details className="jev-disclosure" id="execution">
         <summary>How the game checks the returned ID</summary>
         <div className="jev-detail">
-          <p>The game sends each option’s costs and effects under its ID. The server only accepts IDs from that question’s menu.</p>
+          <p>NEARlyHuman makes the IDs. Jev returns one from the menu it received.</p>
+          <PlantingId />
           <div className="jev-payload-columns">
             <div className="jev-code-block"><div className="jev-code-title"><a href={source + '/server/evm/choices.ts#L245-L263'}>Build the menu · choices.ts ↗</a></div><pre tabIndex={0} aria-label="Candidate map snippet"><code>{menuCode}</code></pre></div>
             <div className="jev-code-block"><div className="jev-code-title"><a href={source + '/server/evm/jev.ts#L33-L43'}>Validate the key · jev.ts ↗</a></div><pre tabIndex={0} aria-label="Choice validation snippet"><code>{validateCode}</code></pre></div>

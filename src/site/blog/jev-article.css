@@ -18,16 +18,21 @@
 .jev-article code { overflow-wrap: anywhere; font-size: .88em; }
 .jev-article [hidden] { display: none !important; }
 .jev-wrap { width: min(1100px, calc(100% - clamp(26px, 9vw, 124px))); margin-inline: auto; }
-.jev-hero { display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr); align-items: center; gap: clamp(16px, 3.1vw, 42px); }
+.jev-hero { display: grid; grid-template-columns: minmax(0, 1.92fr) minmax(0, 1fr); align-items: center; gap: clamp(16px, 2.8vw, 36px); }
 .jev-breadcrumb { display: flex; gap: .5rem; align-items: center; color: #365e45; font-weight: 750; font-size: .85rem; }
 .jev-breadcrumb a { text-decoration: underline; text-underline-offset: .2em; }
-.site .jev-hero h1 { margin: .42rem 0 .65rem; font-size: clamp(2.1rem, 5vw, 4.05rem); line-height: 1.02; letter-spacing: -.055em; text-wrap: balance; }
+.site .jev-hero h1 { margin: .42rem 0 .65rem; font-size: clamp(2.1rem, 3.65vw, 3.15rem); line-height: 1.03; letter-spacing: -.051em; text-wrap: balance; }
 .site .jev-hero .jev-lede { max-width: 56ch; color: var(--jev-muted); font-size: clamp(.98rem, 1.43vw, 1.19rem); }
-.jev-hero>img { width: 100%; height: auto; aspect-ratio: 1200 / 675; border: 1px solid #637650; border-radius: 4px; box-shadow: 2px 3px #cbbd8b; }
+.jev-hero-art { min-width:0; }
+.jev-hero-art img { display:block;width:100%;height:auto;aspect-ratio:1200 / 675; }
+@media(min-width:721px) {
+  .jev-hero-art { filter:drop-shadow(1px 5px 2px #91653f76); }
+  .jev-hero-art img { clip-path:polygon(1.5% 31%, 3% 28%, 18% 26%, 28% 23%, 39% 23%, 50% 22%, 61% 18%, 75% 16%, 85% 14%, 93.6% 13%, 95% 14.5%, 99.3% 69%, 99% 72%, 93% 74%, 81% 77%, 69% 78%, 57% 79%, 46% 81%, 34% 84%, 29% 83%, 28% 92%, 23% 95%, 22% 83%, 12% 84.4%, 4% 84.6%, 2% 82%); }
+}
 .jev-primary { display: inline-flex; align-items: center; gap: .6rem; margin-top: .7rem; padding: .42rem .72rem; min-height: 44px; background: #f5b56c; border: 2px solid #2b543d; box-shadow: 2px 3px #38604a; font-size: .87rem; font-weight: 800; }
 .jev-primary:hover { background: #ffd191; }
 .jev-section { margin-top: clamp(26px, 4.7vw, 58px); scroll-margin-top: 20px; }
-.jev-day.jev-section { margin-top: clamp(27px, 3.5vw, 47px); }
+.jev-day.jev-section { margin-top: clamp(25px, 3vw, 37px); }
 .jev-section-title { display: flex; align-items: baseline; gap: .6rem; margin-bottom: .54rem; }
 .jev-section-title>span { display: grid; place-items: center; flex: none; width: 1.51rem; height: 1.51rem; background: var(--jev-ink); color: #fff8e8; box-shadow: 2px 2px #b2c098; font: 750 .84rem var(--jev-mono); }
 .site .jev-section-title h2 { font-size: clamp(1.54rem, 3.1vw, 2.65rem); line-height: 1.1; letter-spacing: -.045em; text-wrap: balance; }
@@ -47,6 +52,19 @@
 .jev-detail { padding:0 .69rem .64rem; }
 .site .jev-detail p { color:var(--jev-muted);font-size:.87rem;margin:.32rem 0 .55rem;max-width:76ch; }
 .jev-detail p a,.jev-references a { text-decoration:underline;text-underline-offset:.18em; }
+.jev-article .jev-key-figure {
+  margin:.62rem 0 .8rem;padding:.66rem .74rem;background:#f4edda;
+  border:1px solid #cfbf9b;border-radius:6px;
+}
+.jev-key-figure figcaption { display:flex;align-items:baseline;flex-wrap:wrap;gap:.24rem .59rem;margin-bottom:.58rem; }
+.jev-key-figure figcaption strong { font-size:.94rem; }
+.jev-article .jev-key-signature { color:#6a5336;font-size:.84rem; }
+.jev-key-signature span { color:#57401f;font-weight:780; }
+.jev-key-figure dl { display:grid;grid-template-columns:repeat(3,minmax(0,1fr)) minmax(0,1.2fr);gap:.34rem; }
+.jev-key-figure dl>div { display:grid;align-content:start;gap:.14rem;padding:.32rem .47rem;min-width:0;background:#fffaeb;border-top:2px solid #9baa84; }
+.jev-key-figure dt { display:flex;align-items:baseline;flex-wrap:wrap;gap:.29rem;color:#52644c;font-size:.78rem; }
+.jev-key-figure dd { font-size:.78rem;line-height:1.3; }
+.jev-article .jev-key-figure .jev-key-value { background:#f6dfa6;color:#5a3e1f;padding:.14rem .24rem;border-radius:3px;font-size:.87rem;font-weight:800; }
 .jev-payload-columns { display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.43rem; }
 .jev-references { margin-top:clamp(15px,2vw,24px);display:flex;gap:.25rem .72rem;align-items:baseline;flex-wrap:wrap;font-size:.8rem; }
 .jev-article .jev-build code { font-size:.84em; }
@@ -56,11 +74,12 @@
 .site .jev-instructions a { color:var(--jev-ink);text-decoration:underline;text-underline-offset:.18em;font-weight:750; }
 @media(max-width:720px) {
   .jev-hero { grid-template-columns:minmax(0,1fr);gap:.78rem; }
-  .jev-hero>img { aspect-ratio:2.9;object-fit:cover;object-position:50% 53%; }
+  .jev-hero-art img { aspect-ratio:2.9;object-fit:cover;object-position:50% 53%;border:1px solid #637650;border-radius:6px;box-shadow:0 2px #cbbd8b; }
 }
 @media(max-width:620px) {
   .jev-wrap { width:calc(100% - 26px); }
   .site .jev-section-copy { font-size:.95rem; }
   .jev-payload-columns { grid-template-columns:minmax(0,1fr); }
+  .jev-key-figure dl { grid-template-columns:repeat(2,minmax(0,1fr)); }
   .jev-article .jev-code-block pre { font-size:.77rem; }
 }

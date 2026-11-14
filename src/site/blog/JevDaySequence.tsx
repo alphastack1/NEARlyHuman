@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type KeyboardEvent } from 'react';
+import { useEffect, useId, useRef, useState, type KeyboardEvent } from 'react';
 import { Icon, type IconName } from '../../app/Icons';
 import { itemImage } from '../../art/items';
 import day from './fern-day-sequence.json';
@@ -84,6 +84,29 @@ function optionTradeoff(facts: OptionFacts) {
   return [...recovery, ...supplies, ...energy].join(' · ');
 }
 
+const straight = ['M 0 90 H 120', 'M 120 90 H 237'];
+const dawnPaths = [
+  ['M 0 30 H 37 Q 60 30 60 51 V 54 Q 60 67 77 67 H 120', 'M 120 67 H 160 Q 177 67 177 54 V 47 Q 177 30 197 30 H 237'],
+  straight,
+  ['M 0 150 H 37 Q 60 150 60 129 V 126 Q 60 113 77 113 H 120', 'M 120 113 H 160 Q 177 113 177 126 V 133 Q 177 150 197 150 H 237'],
+];
+
+function CircuitPaths({ dawn, playback }: { dawn: boolean; playback: number }) {
+  const marker = useId();
+  const routes = dawn ? dawnPaths : [straight];
+  return <svg className="jev-picture-wire" viewBox={dawn ? '0 0 240 180' : '0 66 240 48'} preserveAspectRatio="none" aria-hidden="true">
+    <defs><marker id={marker} viewBox="0 0 8 8" refX="7" refY="4" markerWidth="4" markerHeight="4" orient="auto">
+      <path d="m 1 1 5 3 -5 3" fill="none" stroke="#ae7435" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+    </marker></defs>
+    {routes.map(([input, output], index)=><g key={input}>
+      <path className="jev-wire-in" d={input}/>
+      <path className="jev-wire-out" d={output} markerEnd={`url(#${marker})`}/>
+      {index === Math.floor(routes.length/2) && <path className="jev-input-packet" key={`in-${playback}`} d={input} pathLength="100"/>}
+      <path className="jev-reply-packet" key={`out-${playback}`} d={output} pathLength="100"/>
+    </g>)}
+  </svg>;
+}
+
 function CallPicture({ call, playback, paused }: { call: SavedCall; playback: number; paused: boolean }) {
   const dawn = call.slot===0;
   const later = laterCalls[call.slot];
@@ -93,6 +116,7 @@ function CallPicture({ call, playback, paused }: { call: SavedCall; playback: nu
   const [hovered,setHovered] = useState<string>();
   const [focused,setFocused] = useState<string>();
   const circuitRef = useRef<HTMLDivElement>(null);
+  const optionsRef = useRef<HTMLDetailsElement>(null);
   const [visible,setVisible] = useState(false);
   const active = questions.find(question => question.key===activeQuestion)!;
   const offered = call.request.questions[active.key]!;
@@ -116,6 +140,7 @@ function CallPicture({ call, playback, paused }: { call: SavedCall; playback: nu
     setPinned(undefined);
     setHovered(undefined);
     setFocused(undefined);
+    if (optionsRef.current) optionsRef.current.open = true;
   }
 
   return <div className="jev-picture" data-flow-running={visible && !paused && !hovered && !focused || undefined}>
@@ -133,19 +158,16 @@ function CallPicture({ call, playback, paused }: { call: SavedCall; playback: nu
       <span><strong>Reply</strong><small>{dawn ? '3 selected IDs' : '1 selected ID'}</small></span>
     </div>
     <div className="jev-picture-circuit" ref={circuitRef} data-question-count={questions.length}>
-      <div className="jev-picture-model"><Icon name="brain" size={21}/><strong>Jev</strong><i className="jev-model-glow" key={playback} aria-hidden="true"/></div>
-      {questions.map(({key,title,icon}, index)=>{
+      <CircuitPaths dawn={dawn} playback={playback}/>
+      <div className="jev-picture-model"><Icon name="brain" size={30}/><strong>Jev</strong><i className="jev-model-glow" key={playback} aria-hidden="true"/></div>
+      {questions.map(({key,title,icon})=>{
         const menu = call.request.questions[key]!;
         const answer = call.answer.answers[key]!;
         const selected = optionLabel(menu.criteria[answer.choice]!);
-        const route = <><span className="jev-picture-in"><Icon name={icon} size={15}/><span><strong>{title}</strong><small>{Object.keys(menu.criteria).length} options</small></span></span>
-          <span aria-hidden="true" className="jev-picture-wire">
-            <span className="jev-wire-in">{index===Math.floor(questions.length/2) && <i className="jev-input-packet" key={playback}/>}</span>
-            <span className="jev-wire-out"><i className="jev-reply-packet" key={playback}/></span>
-          </span>
-          <span className="jev-picture-out"><strong>{selected}</strong>
-            <code data-returned-id={answer.choice} data-id-match={(key===active.key && inspected===answer.choice) || undefined}>{answer.choice}<i className="jev-id-glow" key={playback} aria-hidden="true"/></code>
-          </span></>;
+        const route = <><span className="jev-picture-in"><Icon name={icon} size={17}/><span><strong>{title}</strong><small>{Object.keys(menu.criteria).length} options</small></span></span>
+          <span className="jev-picture-out"><Icon name={key==='morning_order'?'check':icon} size={17}/><span><strong>{selected}</strong>
+            <code title="Game-defined option ID" data-returned-id={answer.choice} data-id-match={(key===active.key && inspected===answer.choice) || undefined}>{answer.choice}<i className="jev-id-glow" key={playback} aria-hidden="true"/></code>
+          </span></span></>;
         return dawn ? <button type="button" className="jev-picture-route" key={key} data-question-route={key}
           aria-pressed={key===active.key} aria-controls="jev-question-trace" onClick={()=>selectQuestion(key)}>{route}</button>
           : <div className="jev-picture-route" key={key} data-question-route={key}>{route}</div>;
@@ -160,9 +182,11 @@ function CallPicture({ call, playback, paused }: { call: SavedCall; playback: nu
       </div>
     </div>
 
-    <div className="jev-picture-trace" id="jev-question-trace">
+    <details className="jev-picture-inspector" ref={optionsRef} id="jev-question-trace">
+      <summary>{dawn ? `${active.title} options` : 'Offered options'} <span>{options.length}</span></summary>
+      <div className="jev-picture-trace">
       <div className="jev-picture-options">
-        <div className="jev-picture-caption"><strong>{dawn ? `${active.title} options` : 'Offered options'}</strong>{reply.probabilities && <small>Jev’s scores</small>}</div>
+        {reply.probabilities && <div className="jev-picture-caption"><small>Jev’s scores</small></div>}
         <ul aria-label="Options in this question">{options.map(([key,facts])=>{
           const value = reply.probabilities?.[key];
           const chosen = key===reply.choice;
@@ -180,7 +204,8 @@ function CallPicture({ call, playback, paused }: { call: SavedCall; playback: nu
         <div className="jev-inspected-id"><code>criteria</code><code data-offered-id={inspected}>{inspected}</code>{tradeoff && <span>{tradeoff}</span>}</div>
         {reply.probabilities && <p className="jev-picture-legend">Scores rank options. Game rules decide success.</p>}
       </div>
-    </div>
+      </div>
+    </details>
   </div>;
 }
 
