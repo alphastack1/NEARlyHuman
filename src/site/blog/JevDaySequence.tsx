@@ -32,30 +32,29 @@ type SavedCall = {
 const calls: readonly SavedCall[] = day.calls;
 const callTabs: Record<number, { title: string; icon: IconName }> = {
   0: { title: 'Dawn', icon: 'mail' },
-  21: { title: 'Garden', icon: 'water' },
-  31: { title: 'Breakfast', icon: 'food' },
-  41: { title: 'Break', icon: 'morale' },
-  51: { title: 'Nap', icon: 'energy' },
+  21: { title: 'Midday', icon: 'water' },
+  31: { title: 'Afternoon', icon: 'food' },
+  41: { title: 'Evening', icon: 'morale' },
+  51: { title: 'Bedtime', icon: 'energy' },
 };
 
 const dawnQuestions = [
   {
     key: 'morning_order',
-    title: 'How should the morning start?',
+    title: 'Morning routine',
     criteria: 'Balance a morning routine with the time left for small actions.',
-    outcome: 'Fern looked around at step 1 and collected the parcel at step 2. That left four small actions for later.',
+    outcome: 'Fern looked around at step 1 and collected the parcel at step 2.',
   },
   {
     key: 'main_undertaking',
-    title: 'What should the main task be?',
+    title: 'Main task',
     criteria: 'Use materials that will be available after pickup. Prefer useful progress and consider Fern’s tastes.',
-    outcome: 'Planting took one sapling from the parcel and used the empty second bed at step 36.',
+    outcome: 'Fern planted the parcel’s sapling in bed 2 at step 36.',
   },
   {
     key: 'long_intention',
-    title: 'What should Fern work toward?',
+    title: 'Long-term goal',
     criteria: 'Choose a modest goal using real supplies, or leave the goal unset.',
-    outcome: 'The saved day kept Fern’s long-term goal unset.',
   },
 ] as const;
 
@@ -75,7 +74,7 @@ const laterCalls: Record<number, { context: string; effect: string; then?: strin
   },
   51: {
     context: 'Food and water are still high enough to leave meals and drinks off the menu. A nap can refill the seven missing energy points.',
-    effect: 'Jev returned the nap key. Fern’s energy went from 93 to 100.',
+    effect: 'Fern’s energy went from 93 to 100.',
     then: 'The game ran its bedtime rules and saved the day.',
   },
 };
@@ -107,45 +106,61 @@ function optionTradeoff(facts: OptionFacts) {
   return [...recovery, ...supplies, ...energy].join(' · ');
 }
 
-function QuestionCard({ field, question, answer, title, prompt, outcome }: {
-  field: string; question: ChoiceQuestion; answer: ChoiceReply; title: string; prompt: string; outcome?: string;
-}) {
+function OptionList({ question, answer }: { question: ChoiceQuestion; answer: ChoiceReply }) {
   const choices = Object.entries(question.criteria).filter((entry): entry is [string, OptionFacts] => entry[1] !== undefined);
   const scores = answer.probabilities;
-  const chosenScore = scores?.[answer.choice];
-  const tied = chosenScore !== undefined && choices.filter(([key]) => scores?.[key] === chosenScore).length > 1;
   if (scores) choices.sort(([a], [b]) => (scores[b] ?? 0) - (scores[a] ?? 0) || Number(b === answer.choice) - Number(a === answer.choice));
+  return <ul className="jev-day-options" aria-label="Offered options and Jev’s choice">
+    {choices.map(([key, facts]) => {
+      const chosen = key === answer.choice;
+      const score = scores?.[key];
+      const tradeoff = optionTradeoff(facts);
+      return <li key={key} data-picked={chosen || undefined}>
+        <div>
+          <strong>{optionLabel(facts)}</strong>
+          {tradeoff && <small>{tradeoff}</small>}
+        </div>
+        <div className="jev-day-option-result">
+          {chosen && <span className="jev-day-picked"><Icon name="check" size={10}/> Chosen</span>}
+          {score !== undefined && <span className="jev-day-score">
+            <b>{percent(score)}</b>
+            <span aria-hidden="true"><i style={{ width: percent(score) }}/></span>
+          </span>}
+        </div>
+      </li>;
+    })}
+  </ul>;
+}
+
+function DawnQuestion({ field, question, answer, title, prompt, outcome }: {
+  field: string; question: ChoiceQuestion; answer: ChoiceReply; title: string; prompt: string; outcome?: string;
+}) {
+  const optionCount = Object.keys(question.criteria).length;
+  return <section className="jev-day-dawn-card">
+    <header>
+      <h4>{title}</h4>
+      <div><Icon name="check" size={12}/><strong>{optionLabel(question.criteria[answer.choice]!)}</strong></div>
+      {outcome && <p>{outcome}</p>}
+    </header>
+    <details>
+      <summary aria-label={`${optionCount} options for ${title.toLowerCase()}`}>{optionCount} options</summary>
+      <p className="jev-day-dawn-task"><strong>Task</strong> {prompt}</p>
+      <OptionList question={question} answer={answer}/>
+      <div className="jev-day-key"><code>answers.{field}.choice</code><code>{JSON.stringify(answer.choice)}</code></div>
+    </details>
+  </section>;
+}
+
+function RoutineQuestion({ question, answer }: { question: ChoiceQuestion; answer: ChoiceReply }) {
+  const chosenScore = answer.probabilities?.[answer.choice];
+  const tied = chosenScore !== undefined && Object.values(answer.probabilities ?? {}).filter(score => score === chosenScore).length > 1;
   return <section className="jev-day-question">
     <header className="jev-day-question-title">
-      <div><h4>{title}</h4>{scores && <span>Jev’s scores</span>}</div>
-      <p><strong>Task</strong> {prompt}</p>
+      <div><h4>What should Fern do next?</h4><span>Jev’s scores</span></div>
+      <p>Choose one small action around the main task. Put urgent care first and weigh the cost of supplies.</p>
     </header>
-    <ul className="jev-day-options" aria-label="Offered options and Jev’s choice">
-      {choices.map(([key, facts]) => {
-        const chosen = key === answer.choice;
-        const score = scores?.[key];
-        const tradeoff = optionTradeoff(facts);
-        return <li key={key} data-picked={chosen || undefined}>
-          <div>
-            <strong>{optionLabel(facts)}</strong>
-            {tradeoff && <small>{tradeoff}</small>}
-          </div>
-          <div className="jev-day-option-result">
-            {chosen && <span className="jev-day-picked"><Icon name="check" size={10}/> Chosen</span>}
-            {score !== undefined && <span className="jev-day-score">
-              <b>{percent(score)}</b>
-              <span aria-hidden="true"><i style={{ width: percent(score) }}/></span>
-            </span>}
-          </div>
-        </li>;
-      })}
-    </ul>
-    <div className="jev-day-key">
-      <span><code>{field}.criteria</code> <b aria-hidden="true">→</b> <code>{field}.choice</code></span>
-      <code>{JSON.stringify(answer.choice)}</code>
-    </div>
-    {tied && <p className="jev-day-tie"><strong>{percent(chosenScore!)} each.</strong> The reply named the nap. It gave no tie-break explanation.</p>}
-    {outcome && <p className="jev-day-outcome">{outcome}</p>}
+    <OptionList question={question} answer={answer}/>
+    {tied && <p className="jev-day-tie"><strong>{percent(chosenScore)} each.</strong> Jev returned the nap key. The reply gives no reason for the tie-break.</p>}
   </section>;
 }
 
@@ -234,6 +249,8 @@ export default function JevDaySequence({ number = 2 }: { number?: number }) {
   const call = calls[current];
   const isDawn = call.slot === 0;
   const later = laterCalls[call.slot];
+  const routineQuestion = call.request.questions.next_action;
+  const routineAnswer = call.answer.answers.next_action;
   const chosenKeys = new Set(Object.values(call.answer.answers).map(reply => reply!.choice));
   function jumpTo(next: number) {
     setCurrent(next);
@@ -280,18 +297,20 @@ export default function JevDaySequence({ number = 2 }: { number?: number }) {
         <div className="jev-day-call-body">
           <StateStrip call={call}/>
           {isDawn ? <>
-            <p className="jev-day-context">The saved plan preserves which option Jev chose for each question. It doesn’t include dawn scores.</p>
+            <div className="jev-day-reply-label"><h4>Jev returned three choices</h4><p>The replay saved these choices without scores.</p></div>
             <div className="jev-day-dawn">
-              {dawnQuestions.map(({ key, title, criteria, outcome }) => <QuestionCard
+              {dawnQuestions.map(({ key, title, criteria, ...details }) => <DawnQuestion
                 key={key} field={key} question={call.request.questions[key]!} answer={call.answer.answers[key]!}
-                title={title} prompt={criteria} outcome={outcome}
+                title={title} prompt={criteria} {...details}
               />)}
             </div>
-          </> : <>
+          </> : routineQuestion && routineAnswer && <>
+            <div className="jev-day-routine-reply">
+              <div><span><Icon name="check" size={12}/> Jev returned</span><strong>{optionLabel(routineQuestion.criteria[routineAnswer.choice]!)}</strong></div>
+              <p><strong>Game result</strong> {later.effect}</p><code aria-label="Returned action ID">{JSON.stringify(routineAnswer.choice)}</code>
+            </div>
             <p className="jev-day-context">{later.context}</p>
-            <QuestionCard field="next_action" question={call.request.questions.next_action!} answer={call.answer.answers.next_action!}
-              title="What should Fern do next?" prompt="Choose one small action around the main task. Put urgent care first and weigh the cost of using supplies."/>
-            <p className="jev-day-effect"><Icon name="check" size={16}/><strong>What happened</strong><span>{later.effect}</span></p>
+            <RoutineQuestion question={routineQuestion} answer={routineAnswer}/>
             {call.slot === 31 && later.then && <GameStep step={36} icon="leaf">{later.then}</GameStep>}
             {call.slot === 51 && later.then && <GameStep step={60} icon="house">{later.then}</GameStep>}
           </>}
@@ -305,7 +324,7 @@ export default function JevDaySequence({ number = 2 }: { number?: number }) {
               </div>
             </div>
           </details>
-          {(call.slot === 21 || call.slot === 31) && <a href="#exchange" className="jev-day-closeup">Compare the watering and breakfast calls ↓</a>}
+          {(call.slot === 21 || call.slot === 31) && <a href="#exchange" className="jev-day-closeup">Compare the watering and breakfast calls ↑</a>}
           <nav className="jev-day-step-controls" aria-label="Read the previous or next call">
             {current > 0 && <button type="button" onClick={() => jumpTo(current - 1)}>← {callTabs[calls[current - 1].slot].title}</button>}
             {current < calls.length - 1 && <button type="button" data-next onClick={() => jumpTo(current + 1)}>{callTabs[calls[current + 1].slot].title} →</button>}
