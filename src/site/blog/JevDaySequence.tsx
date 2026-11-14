@@ -1,5 +1,7 @@
 import { useRef, useState, type KeyboardEvent } from 'react';
 import { Icon, type IconName } from '../../app/Icons';
+import { itemImage } from '../../art/items';
+import JevDawnJson from './JevDawnJson';
 import day from './fern-day-sequence.json';
 import './jev-day-sequence.css';
 
@@ -30,52 +32,50 @@ type SavedCall = {
 };
 
 const calls: readonly SavedCall[] = day.calls;
-const callTabs: Record<number, { title: string; icon: IconName }> = {
-  0: { title: 'Dawn', icon: 'mail' },
-  21: { title: 'Midday', icon: 'water' },
-  31: { title: 'Afternoon', icon: 'food' },
-  41: { title: 'Evening', icon: 'morale' },
-  51: { title: 'Bedtime', icon: 'energy' },
+const callTabs: Record<number, { title: string; action: string; icon: IconName }> = {
+  0: { title: 'Dawn', action: '3 choices', icon: 'mail' },
+  21: { title: 'Midday', action: 'Water', icon: 'water' },
+  31: { title: 'Afternoon', action: 'Eat', icon: 'food' },
+  41: { title: 'Evening', action: 'Break', icon: 'morale' },
+  51: { title: 'Bedtime', action: 'Nap', icon: 'energy' },
 };
 
 const dawnQuestions = [
   {
     key: 'morning_order',
-    title: 'Morning routine',
-    criteria: 'Balance a morning routine with the time left for small actions.',
-    outcome: 'Fern looked around at step 1 and collected the parcel at step 2.',
+    title: 'How should Fern start?',
+    criteria: 'Decide whether a quiet look is worth using one of the day’s small actions before pickup.',
   },
   {
     key: 'main_undertaking',
-    title: 'Main task',
-    criteria: 'Use materials that will be available after pickup. Prefer useful progress and consider Fern’s tastes.',
-    outcome: 'Fern planted the parcel’s sapling in bed 2 at step 36.',
+    title: 'What should Fern work on?',
+    criteria: 'Choose a main task from the materials Fern will have after pickup.',
   },
   {
     key: 'long_intention',
-    title: 'Long-term goal',
-    criteria: 'Choose a modest goal using real supplies, or leave the goal unset.',
+    title: 'What should Fern work toward?',
+    criteria: 'Choose a goal to work toward over several days, or leave it open.',
   },
 ] as const;
 
 const laterCalls: Record<number, { context: string; effect: string; then?: string }> = {
   21: {
-    context: 'The daisy bed is at 1/2, so watering is available. Energy is full, so the menu has no nap.',
-    effect: 'The well filled the daisy bed from 1/2 to 2/2. Fern kept all three bottles.',
+    context: 'The daisy bed has room for water. Fern is fully rested, so the game leaves naps off the menu.',
+    effect: 'The well filled the daisy bed. Fern kept all three bottles of drinking water.',
   },
   31: {
-    context: 'The bed is now full. Watering drops out, a nap becomes possible at 99/100 energy, and breakfast can refill both food and water.',
-    effect: 'One bread and one bottle brought food and water to 100.',
-    then: 'Fern planted the sapling using the main task chosen at dawn.',
+    context: 'Watering filled the bed and used one energy. The game removes watering and adds a nap. Breakfast is still available.',
+    effect: 'One bread and one bottle brought food and hydration to 100.',
+    then: 'The game plants the sapling using the dawn answer.',
   },
   41: {
-    context: 'At 95 food and 93 water, eating or drinking would add less than 15 points. The game leaves those options out of this routine menu.',
+    context: 'Fern is still well fed. Eating or drinking could restore less than 15 points, so the game leaves those options out of this menu.',
     effect: 'Taking a break raised morale from 60.6 to 70.6 and used one energy.',
   },
   51: {
-    context: 'Food and water are still high enough to leave meals and drinks off the menu. A nap can refill the seven missing energy points.',
-    effect: 'Fern’s energy went from 93 to 100.',
-    then: 'The game ran its bedtime rules and saved the day.',
+    context: 'The game offers the same three options as in the evening. This time, a nap can restore seven energy.',
+    effect: 'Fern took a nap. Energy went from 93 to 100.',
+    then: 'The game applies its bedtime rules and saves the day.',
   },
 };
 
@@ -132,21 +132,19 @@ function OptionList({ question, answer }: { question: ChoiceQuestion; answer: Ch
   </ul>;
 }
 
-function DawnQuestion({ field, question, answer, title, prompt, outcome }: {
-  field: string; question: ChoiceQuestion; answer: ChoiceReply; title: string; prompt: string; outcome?: string;
+function DawnQuestion({ question, answer, title, prompt }: {
+  question: ChoiceQuestion; answer: ChoiceReply; title: string; prompt: string;
 }) {
   const optionCount = Object.keys(question.criteria).length;
   return <section className="jev-day-dawn-card">
     <header>
       <h4>{title}</h4>
       <div><Icon name="check" size={12}/><strong>{optionLabel(question.criteria[answer.choice]!)}</strong></div>
-      {outcome && <p>{outcome}</p>}
     </header>
     <details>
-      <summary aria-label={`${optionCount} options for ${title.toLowerCase()}`}>{optionCount} options</summary>
-      <p className="jev-day-dawn-task"><strong>Task</strong> {prompt}</p>
+      <summary aria-label={`${title} Show ${optionCount} options`}>Show {optionCount} options</summary>
+      <p className="jev-day-dawn-task">{prompt}</p>
       <OptionList question={question} answer={answer}/>
-      <div className="jev-day-key"><code>answers.{field}.choice</code><code>{JSON.stringify(answer.choice)}</code></div>
     </details>
   </section>;
 }
@@ -156,38 +154,44 @@ function RoutineQuestion({ question, answer }: { question: ChoiceQuestion; answe
   const tied = chosenScore !== undefined && Object.values(answer.probabilities ?? {}).filter(score => score === chosenScore).length > 1;
   return <section className="jev-day-question">
     <header className="jev-day-question-title">
-      <div><h4>What should Fern do next?</h4><span>Jev’s scores</span></div>
-      <p>Choose one small action around the main task. Put urgent care first and weigh the cost of supplies.</p>
+      <div><h4>Options sent to Jev</h4><span>Jev’s scores</span></div>
     </header>
     <OptionList question={question} answer={answer}/>
-    {tied && <p className="jev-day-tie"><strong>{percent(chosenScore)} each.</strong> Jev returned the nap key. The reply gives no reason for the tie-break.</p>}
+    {tied && <p className="jev-day-tie"><strong>Nap and Break both scored {percent(chosenScore)}.</strong> Jev returned Nap’s ID, which the game used. The reply gives no reason for the tie-break.</p>}
   </section>;
 }
 
-function StateStrip({ call }: { call: SavedCall }) {
-  const { needs, stock, garden, project_stock_after_collection: afterPickup } = call.request.state;
-  const stats: { label: string; value: number; icon: IconName; max: number }[] = [
-    { label: 'Food', value: needs.nutrition, icon: 'food', max: 100 },
-    { label: 'Hydration', value: needs.hydration, icon: 'water', max: 100 },
-    { label: 'Energy', value: needs.energy, icon: 'energy', max: 100 },
-    { label: 'Morale', value: needs.morale, icon: 'morale', max: 100 },
-    { label: 'Daisy bed', value: garden[0].moisture, icon: 'leaf', max: 2 },
-  ];
-  return <div className="jev-day-state">
-    <h4>{call.slot === 0 ? 'One state shared by three questions' : 'State at this call'}</h4>
-    <dl className="jev-day-stats">
-      {stats.map(({ label, value, icon, max }) => <div key={label} data-meter={icon}>
-        <dt><Icon name={icon} size={12}/> {label}</dt>
-        <dd><strong>{value}</strong><small>/{max}</small>
-          <span aria-hidden="true"><i style={{ width: percent(value / max) }}/></span>
-        </dd>
-      </div>)}
-      <div className="jev-day-pantry">
-        <dt><Icon name="house" size={12}/> Pantry</dt>
-        <dd>{stock.bread ?? 0} bread · {stock.water ?? 0} bottles{stock.sapling ? ` · ${stock.sapling} sapling` : ''}</dd>
-      </div>
-    </dl>
-    {afterPickup && <p className="jev-day-parcel"><Icon name="mail" size={16}/><span><strong>In the parcel</strong> {afterPickup.bread - (stock.bread ?? 0)} bread · {afterPickup.water - (stock.water ?? 0)} bottle · {afterPickup.sapling} sapling. After pickup, the pantry has {afterPickup.bread} bread and {afterPickup.water} bottles, plus the sapling.</span></p>}
+function DawnHandoff({ state }: { state: SavedCall['request']['state'] }) {
+  const { stock, project_stock_after_collection: afterPickup } = state;
+  if(!afterPickup) return null;
+  return <div className="jev-day-handoff">
+    <div className="jev-dawn-parcel">
+      <div aria-hidden="true">{[2,0,21].map(item=><img key={item} src={itemImage(item)} width={25} height={25} alt=""/>)}</div>
+      <span><strong>Parcel outside</strong><small>One bread, one bottle, one sapling</small></span>
+    </div>
+    <span className="jev-dawn-handoff-arrow" aria-hidden="true">→</span>
+    <div className="jev-dawn-packet">
+      <Icon name="mail" size={24}/><span><strong>One request to Jev</strong><small>One shared <code>state</code> · three questions</small></span>
+    </div>
+    <p>The pantry has {stock.bread} bread and {stock.water} bottles. The game includes the parcel supplies when it offers tasks for later.</p>
+  </div>;
+}
+
+function RoutineState({ call }: { call: SavedCall }) {
+  const { needs, garden } = call.request.state;
+  const meters = {
+    nutrition: {label:'Food', value:needs.nutrition, max:100, icon:'food'},
+    hydration: {label:'Hydration', value:needs.hydration, max:100, icon:'water'},
+    energy: {label:'Energy', value:needs.energy, max:100, icon:'energy'},
+    morale: {label:'Morale', value:needs.morale, max:100, icon:'morale'},
+    bed: {label:'Daisy bed', value:garden[0].moisture, max:2, icon:'leaf'},
+  } satisfies Record<string, {label:string; value:number; max:number; icon:IconName}>;
+  const relevant = call.slot === 21 ? [meters.bed,meters.energy] : call.slot === 31 ? [meters.bed,meters.energy,meters.nutrition,meters.hydration] : call.slot === 41 ? [meters.nutrition,meters.hydration,meters.morale] : [meters.energy,meters.morale];
+  return <div className="jev-routine-state">
+    <p>{laterCalls[call.slot].context}</p>
+    <dl aria-label="State fields relevant to this call">{relevant.map(({label,value,max,icon})=><div key={label}>
+      <dt><Icon name={icon} size={13}/> {label}</dt><dd>{value}<small>/{max}</small></dd>
+    </div>)}</dl>
   </div>;
 }
 
@@ -243,7 +247,7 @@ function GameStep({ step, icon, children }: { step: number; icon: IconName; chil
   return <p className="jev-day-game-step"><Icon name={icon} size={15}/><strong>Game only · Step {step}</strong><span>{children}</span></p>;
 }
 
-export default function JevDaySequence({ number = 2 }: { number?: number }) {
+export default function JevDaySequence() {
   const [current, setCurrent] = useState(0);
   const buttons = useRef<(HTMLButtonElement | null)[]>([]);
   const call = calls[current];
@@ -252,6 +256,16 @@ export default function JevDaySequence({ number = 2 }: { number?: number }) {
   const routineQuestion = call.request.questions.next_action;
   const routineAnswer = call.answer.answers.next_action;
   const chosenKeys = new Set(Object.values(call.answer.answers).map(reply => reply!.choice));
+  const fullPayload = <details key={call.slot} className="jev-day-json">
+    <summary>Open the full request and saved reply</summary>
+    <div className="jev-day-json-body">
+      <p>Reconstructed request and saved reply fields.{isDawn && ' The replay did not store dawn scores.'}</p>
+      <div className="jev-payload-columns">
+        <Payload id={`jev-call-${call.slot}-request`} title="Reconstructed request" data={call.request} keys={chosenKeys} showQuestions/>
+        <Payload id={`jev-call-${call.slot}-answer`} title="Recorded reply fields" data={call.answer} keys={chosenKeys}/>
+      </div>
+    </div>
+  </details>;
   function jumpTo(next: number) {
     setCurrent(next);
     buttons.current[next]?.focus({ preventScroll: true });
@@ -267,8 +281,7 @@ export default function JevDaySequence({ number = 2 }: { number?: number }) {
     jumpTo(next);
   }
   return <section className="jev-wrap jev-section jev-day" id="whole-day" aria-labelledby="day-title">
-    <div className="jev-section-title"><span aria-hidden="true">{number}</span><h2 id="day-title">Follow all five calls</h2></div>
-    <p className="jev-section-copy">At dawn, Jev answers three questions in one request. Later, it answers one at a time using Fern’s updated state. Each step number marks a point in the game’s timeline.</p>
+    <div className="jev-section-title"><span aria-hidden="true">1</span><h2 id="day-title">A plan at dawn, then four fresh choices</h2></div>
     <div className="jev-day-explorer">
       <div className="jev-day-banner"><strong>Fern · Day 2</strong><span>NEAR Testnet</span></div>
       <div className="jev-day-tabs" role="tablist" aria-label="Jev calls in order">
@@ -286,45 +299,40 @@ export default function JevDaySequence({ number = 2 }: { number?: number }) {
         >
           <Icon name={callTabs[slot].icon} size={16}/>
           <strong>{callTabs[slot].title}</strong>
-          <small>Step {slot}</small>
+          <small>{callTabs[slot].action}</small>
         </button>)}
       </div>
       <div role="tabpanel" id="jev-day-call" aria-labelledby={`jev-day-tab-${call.slot}`} tabIndex={0}>
         <div className="jev-day-call-heading">
           <h3>Call {current + 1} · {call.request.state.phase}</h3>
-          <span>{isDawn ? '3 questions' : '1 question'} <b aria-hidden="true">→</b> {isDawn ? '3 choices' : '1 choice'}</span>
+          <span>Step {call.slot}{!isDawn && ' · 1 question'}</span>
         </div>
         <div className="jev-day-call-body">
-          <StateStrip call={call}/>
           {isDawn ? <>
-            <div className="jev-day-reply-label"><h4>Jev returned three choices</h4><p>The replay saved these choices without scores.</p></div>
+            <DawnHandoff state={call.request.state}/>
+            <h4 className="jev-day-reply-label">Jev picks one option per question</h4>
             <div className="jev-day-dawn">
-              {dawnQuestions.map(({ key, title, criteria, ...details }) => <DawnQuestion
-                key={key} field={key} question={call.request.questions[key]!} answer={call.answer.answers[key]!}
-                title={title} prompt={criteria} {...details}
+              {dawnQuestions.map(({ key, title, criteria }) => <DawnQuestion
+                key={key} question={call.request.questions[key]!} answer={call.answer.answers[key]!}
+                title={title} prompt={criteria}
               />)}
             </div>
-          </> : routineQuestion && routineAnswer && <>
-            <div className="jev-day-routine-reply">
-              <div><span><Icon name="check" size={12}/> Jev returned</span><strong>{optionLabel(routineQuestion.criteria[routineAnswer.choice]!)}</strong></div>
-              <p><strong>Game result</strong> {later.effect}</p><code aria-label="Returned action ID">{JSON.stringify(routineAnswer.choice)}</code>
+            <div className="jev-dawn-match">
+              <span><strong>Offered ID</strong> <code>{call.answer.answers.morning_order?.choice}</code></span>
+              <span aria-hidden="true">→</span>
+              <span><strong>Jev returns</strong> <code>{call.answer.answers.morning_order?.choice}</code></span>
+              <span aria-hidden="true">→</span>
+              <span><strong>Game runs</strong> Look, then collect</span>
             </div>
-            <p className="jev-day-context">{later.context}</p>
+            <JevDawnJson>{fullPayload}</JevDawnJson>
+          </> : routineQuestion && routineAnswer && <>
+            <RoutineState call={call}/>
             <RoutineQuestion question={routineQuestion} answer={routineAnswer}/>
+            <p className="jev-day-game-result"><Icon name="check" size={14}/><span><strong>Game result</strong> {later.effect}</span></p>
             {call.slot === 31 && later.then && <GameStep step={36} icon="leaf">{later.then}</GameStep>}
             {call.slot === 51 && later.then && <GameStep step={60} icon="house">{later.then}</GameStep>}
           </>}
-          <details key={call.slot} className="jev-day-json">
-            <summary>Inspect request and reply JSON</summary>
-            <div className="jev-day-json-body">
-              <p>The reconstructed request includes the full prompts. The reply shows the fields the game kept.</p>
-              <div className="jev-payload-columns">
-                <Payload id={`jev-call-${call.slot}-request`} title="Reconstructed request" data={call.request} keys={chosenKeys} showQuestions/>
-                <Payload id={`jev-call-${call.slot}-answer`} title="Recorded reply fields" data={call.answer} keys={chosenKeys}/>
-              </div>
-            </div>
-          </details>
-          {(call.slot === 21 || call.slot === 31) && <a href="#exchange" className="jev-day-closeup">Compare the watering and breakfast calls ↑</a>}
+          {!isDawn && fullPayload}
           <nav className="jev-day-step-controls" aria-label="Read the previous or next call">
             {current > 0 && <button type="button" onClick={() => jumpTo(current - 1)}>← {callTabs[calls[current - 1].slot].title}</button>}
             {current < calls.length - 1 && <button type="button" data-next onClick={() => jumpTo(current + 1)}>{callTabs[calls[current + 1].slot].title} →</button>}
@@ -332,5 +340,6 @@ export default function JevDaySequence({ number = 2 }: { number?: number }) {
         </div>
       </div>
     </div>
+    <p className="jev-day-bridge"><Icon name="leaf" size={17}/><span><strong>Step 36 · Plant the sapling</strong> The game uses the dawn answer here.</span></p>
   </section>;
 }

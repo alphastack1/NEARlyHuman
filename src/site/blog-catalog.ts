@@ -4,7 +4,7 @@ export const BLOG_DESCRIPTION = 'Notes on how we build NEARlyHuman, with interac
 export const JEV_POST = {
   pathname: '/blog/how-nearlyhuman-uses-jev',
   title: 'How NEARlyHuman uses Jev',
-  description: 'Follow one action ID from a real Jev request to the result in Fern’s garden, then explore all five calls from her day on NEAR Testnet.',
+  description: 'Follow Fern’s day from three questions at dawn to the last choice at bedtime. See what the game sent Jev, what came back, and how the answers shaped the day.',
   image: {
     href: '/site/blog/jev/fern-order-journal.webp',
     width: 1200,

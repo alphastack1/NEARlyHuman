@@ -4,6 +4,133 @@
   box-shadow: 4px 4px #abbc8d;
 }
 
+.jev-lens-snapshots {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(.52rem, 2vw, 1.55rem);
+  padding: clamp(.48rem, 2vw, 1rem);
+  background: #e8efd6;
+}
+
+.jev-lens-snapshots::after {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: grid;
+  place-items: center;
+  width: 1.6rem;
+  height: 1.6rem;
+  transform: translate(-50%, -50%);
+  border: 1px solid #98ae83;
+  background: #eef1dc;
+  color: #3a684d;
+  content: '→';
+  font-weight: 800;
+  pointer-events: none;
+}
+
+.jev-lens-snapshot {
+  display: grid;
+  grid-template: auto auto auto 1fr auto auto / minmax(0, 1fr);
+  min-width: 0;
+  align-items: start;
+  gap: .53rem;
+  padding: .66rem .76rem;
+  border: 1px solid #acba91;
+  background: #fcf6e4;
+}
+
+.jev-lens-snapshot header { display: grid; gap: .15rem; }
+.jev-lens-snapshot header span { color: var(--jev-muted); font-size: .76rem; }
+.jev-lens-snapshot + .jev-lens-snapshot { background: #f2f6e6; }
+.site .jev-lens-snapshot h3 { font-size: clamp(.94rem, 2vw, 1.22rem); }
+.jev-lens-bed {
+  display: flex;
+  align-items: center;
+  justify-self: start;
+  gap: .2rem;
+  padding: .04rem .28rem;
+  border: 3px solid #bf925a;
+  background: repeating-linear-gradient(#8d6545 0 4px, #765235 4px 6px);
+  box-shadow: inset 0 0 0 1px #614630;
+}
+
+.jev-lens-bed img { image-rendering: pixelated; }
+.jev-lens-snapshot-facts { display: grid; gap: .12rem; }
+.jev-lens-snapshot-facts div {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: .1rem .4rem;
+  font-size: .81rem;
+  line-height: 1.3;
+}
+.jev-lens-snapshot-facts dt { color: var(--jev-muted); }
+.jev-lens-snapshot-facts dd { font: 730 .8rem var(--jev-mono); }
+.jev-lens-delta { display: grid; gap: .18rem; list-style: none; padding: 0; }
+.jev-lens-delta li { font-size: .81rem; line-height: 1.28; }
+.jev-lens-delta span {
+  display: inline-grid;
+  place-items: center;
+  width: 1rem;
+  height: 1rem;
+  margin-inline-end: .14rem;
+  background: #dfebd3;
+  color: #285c43;
+  font-weight: 800;
+}
+.jev-lens-delta .is-out span { background: #f2e0cc; color: #7c4d35; }
+.jev-lens-snapshot-choice {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: .12rem .35rem;
+  align-items: baseline;
+  padding: .38rem .48rem;
+  border: 1px solid #cfaa72;
+  background: #f8e5b9;
+  color: #483723;
+  line-height: 1.19;
+}
+.jev-lens-snapshot-choice small { grid-column: 1 / -1; font-size: .69rem; }
+.jev-lens-snapshot-choice strong { font-size: .87rem; }
+.jev-lens-snapshot-choice b { font: 760 .8rem var(--jev-mono); }
+.site .jev-lens-inspect-button {
+  display: inline-flex;
+  justify-self: start;
+  align-items: center;
+  gap: .3rem;
+  min-height: 44px;
+  padding: 0 .12rem;
+  border: 0;
+  background: transparent;
+  font-size: .77rem;
+  font-weight: 750;
+  text-align: left;
+  text-decoration: underline;
+  text-underline-offset: .17em;
+}
+
+.jev-lens-inspector { border-top: 1px solid var(--jev-line); }
+.jev-lens-inspector summary {
+  min-height: 44px;
+  padding: .69rem .78rem;
+  background: #f0f1d9;
+  font-size: .9rem;
+  font-weight: 780;
+}
+.jev-lens-inspector summary:hover { background: #e6edcf; }
+
+@media (min-width: 850px) {
+  .jev-lens-snapshot { grid-template: auto auto 1fr auto auto / minmax(0, 1fr) auto; }
+  .jev-lens-snapshot header { grid-area: 1 / 1; }
+  .jev-lens-bed { grid-area: 1 / 2 / 3 / 3; align-self: center; padding: .35rem .5rem; gap: .26rem; }
+  .jev-lens-bed img { width: 34px; height: 34px; }
+  .jev-lens-bed svg { width: 21px; height: 21px; }
+  .jev-lens-snapshot-facts { grid-area: 2 / 1; }
+  .jev-lens-delta, .jev-lens-snapshot-choice, .site .jev-lens-inspect-button { grid-column: 1 / -1; }
+}
+
 .jev-lens-switch {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -38,10 +165,13 @@
   line-height: 1.2;
 }
 
+.jev-lens-switch span { font-size: .9rem; font-weight: 750; }
+
 .jev-lens-switch small {
   margin-top: .21rem;
   color: var(--jev-muted);
   font-size: .74rem;
+  font-weight: 400;
 }
 
 .jev-lens-state-heading {
@@ -60,64 +190,14 @@
   white-space: nowrap;
 }
 
-.jev-lens-state {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: .23rem;
-  padding: 0 .78rem .46rem;
-  background: #edf1da;
-}
-
-.jev-lens-state > div {
-  display: grid;
-  align-content: start;
-  gap: .14rem;
-  min-width: 0;
-  padding: .3rem .48rem;
-  border: 1px solid var(--jev-line);
-  background: #fbf9e9;
-}
-
-.jev-lens-state dt {
-  display: flex;
-  align-items: center;
-  gap: .25rem;
-  color: var(--jev-muted);
-  font-size: .79rem;
-}
-
-.jev-lens-state dt svg { color: #537956; }
-.jev-lens-state dd { font: 750 .85rem / 1.2 var(--jev-mono); }
-
-.site .jev-lens-change {
-  display: flex;
-  min-height: 2.15rem;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: .14rem 1rem;
-  padding: .34rem .78rem;
-  border-block: 1px solid #afa579;
-  background: #f8e8c5;
-  color: #493b2b;
-  font-size: .8rem;
-  line-height: 1.35;
-}
-
-.jev-lens-change span:first-child strong { color: #723f29; }
-.jev-lens-change span + span strong { color: #315b39; }
-
 .jev-lens-choice {
   display: grid;
   grid-template-columns: minmax(0, .92fr) minmax(0, 1.08fr);
-  grid-template-areas: 'menu trace' 'result trace';
   gap: .75rem;
   padding: .72rem .78rem;
 }
 
 .jev-lens-choice > * { min-width: 0; }
-.jev-lens-menu { grid-area: menu; }
-.jev-lens-trace { grid-area: trace; }
-.jev-lens-result { grid-area: result; }
 
 .jev-lens-menu-heading,
 .jev-lens-trace-heading {
@@ -197,8 +277,7 @@
 .site .jev-lens-menu > .jev-lens-note,
 .site .jev-lens-trace > .jev-lens-note { padding: .39rem .08rem 0; }
 
-.site .jev-lens-code-jump,
-.site .jev-lens-next-request {
+.site .jev-lens-code-jump {
   display: inline-flex;
   align-items: center;
   gap: .31rem;
@@ -210,27 +289,21 @@
   text-underline-offset: .17em;
 }
 
-.site .jev-lens-next-request {
-  border: 0;
-  background: transparent;
-  text-align: left;
-}
-
 .jev-lens-switch button,
 #jev-lens-json { scroll-margin-top: 1rem; }
 
 .jev-lens-result {
   display: grid;
-  grid-template-columns: minmax(72px, 26%) minmax(0, 1fr);
+  grid-template-columns: clamp(72px, 22%, 136px) minmax(0, 1fr);
   align-items: center;
   min-height: 78px;
-  border: 1px solid #98b293;
-  background: #e4efdc;
+  border-top: 1px solid #98b293;
+  background: #e9f0df;
 }
 
-.jev-lens-result a { display: flex; height: 100%; }
-.jev-lens-result img { width: 100%; height: 100%; object-fit: cover; aspect-ratio: 4 / 3; image-rendering: pixelated; }
-.jev-lens-result figcaption { min-width: 0; padding: .39rem .52rem; }
+.jev-lens-result a { display: flex; min-height: 100%; }
+.jev-lens-result img { width: 100%; height: 100%; object-fit: cover; object-position: 55% 47%; aspect-ratio: 4 / 3; image-rendering: pixelated; }
+.jev-lens-result figcaption { min-width: 0; padding: .54rem .62rem; }
 .jev-lens-result figcaption strong { font-size: .88rem; }
 .site .jev-lens-result figcaption p { margin-top: .13rem; color: #425a45; font-size: .79rem; line-height: 1.34; }
 
@@ -277,46 +350,27 @@
 .jev-lens-json mark { padding: 0 .05rem; background: #cce7af; color: #19372b; }
 .jev-lens-json mark.jev-lens-picked-key { background: #ffdb99; color: #4c3018; }
 
-.jev-lens-footer {
-  border-top: 1px solid var(--jev-line);
-  background: #edf1d8;
-  font-weight: 750;
-}
-
-.jev-lens-footer a {
-  display: inline-flex;
-  min-height: 44px;
-  align-items: center;
-  gap: .35rem;
-  padding: .29rem .78rem;
-  font-size: .84rem;
-  text-decoration: underline;
-  text-underline-offset: .18em;
-}
-
 @media (max-width: 850px) {
-  .jev-lens-choice {
-    grid-template-columns: minmax(0, 1fr);
-    grid-template-areas: 'menu' 'result' 'trace';
-  }
+  .jev-lens-choice { grid-template-columns: minmax(0, 1fr); }
 }
 
 @media (max-width: 500px) {
+  .jev-lens-snapshots::after { display: none; }
+  .jev-lens-snapshot { padding: .45rem; gap: .41rem; }
+  .jev-lens-snapshot header span { font-size: .67rem; }
+  .jev-lens-snapshot-facts div,
+  .jev-lens-delta li { font-size: .74rem; }
+  .jev-lens-snapshot-facts dd { font-size: .71rem; }
+  .jev-lens-snapshot-choice { grid-template-columns: minmax(0, 1fr); padding: .34rem; }
+  .jev-lens-snapshot-choice strong { font-size: .8rem; }
+  .jev-lens-snapshot-choice b { font-size: .74rem; }
   .jev-lens-choice { padding: .54rem .51rem; gap: .53rem; }
   .jev-lens-switch button { padding-inline: .53rem; }
   .jev-lens-switch strong { font-size: .83rem; }
-  .jev-lens-state-heading,
-  .jev-lens-state,
-  .site .jev-lens-change { padding-inline: .51rem; }
-  .jev-lens-state { grid-template-columns: minmax(0, 1fr) minmax(0, .78fr) minmax(0, 1.34fr); }
-  .jev-lens-state > div { padding-inline: .27rem; }
-  .jev-lens-state dt { font-size: .69rem; }
-  .jev-lens-state dt svg { width: 11px; height: 11px; }
-  .jev-lens-state dd { font-size: .73rem; overflow-wrap: anywhere; }
+  .jev-lens-state-heading { flex-wrap: wrap; padding-inline: .51rem; }
   .jev-lens-state-heading code { font-size: .66rem; }
   .jev-lens-options button { min-height: 44px; }
-  .site .jev-lens-code-jump,
-  .site .jev-lens-next-request { min-height: 44px; }
+  .site .jev-lens-code-jump { min-height: 44px; }
   .jev-lens-trace-heading { grid-template-columns: 1fr; gap: .16rem; }
   .site .jev-lens-trace-heading .jev-lens-note { text-align: left; }
   .jev-lens-json { grid-template-columns: minmax(0, 1fr); }

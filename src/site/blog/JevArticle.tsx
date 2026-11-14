@@ -85,23 +85,23 @@ export default function JevArticle() {
       <div>
         <nav className="jev-breadcrumb" aria-label="Breadcrumb"><a href="/blog">Blog</a><span aria-hidden="true"> / </span><span>Jev</span></nav>
         <h1>How NEARlyHuman uses Jev</h1>
-        <p className="jev-lede">Fern is a rooster with a home, a garden, and a day to fill. We send Jev a snapshot of her world and a menu of actions. TypeSafe’s AI model sends back the ID of the action to take.</p>
-        <a href="#exchange" className="jev-primary">Trace a Jev call <span aria-hidden="true">↓</span></a>
+        <p className="jev-lede">What should Fern do with the day ahead? The game works out what the rooster can do. Jev, TypeSafe’s AI model, picks from those options.</p>
+        <a href="#whole-day" className="jev-primary">Start at dawn <span aria-hidden="true">↓</span></a>
       </div>
       <img src={JEV_POST.image.href} width={JEV_POST.image.width} height={JEV_POST.image.height} decoding="async" fetchPriority="high" alt={JEV_POST.image.alt}/>
     </header>
 
-    <JevChoiceLens />
     <JevDaySequence />
+    <JevChoiceLens />
 
     <section className="jev-wrap jev-section jev-build" aria-labelledby="build-title">
-      <div className="jev-section-title"><span aria-hidden="true">3</span><h2 id="build-title">Try the request</h2></div>
-      <p className="jev-section-copy">Send the same menu using <code>POST /v1/systemone</code> on NEAR AI Cloud. Read <code>answers.next_action.choice</code> and look it up in the options you sent.</p>
+      <div className="jev-section-title"><span aria-hidden="true">3</span><h2 id="build-title">Try a Jev request</h2></div>
+      <p className="jev-section-copy">Give Jev the facts that matter, a question, and a short list of options. Check the returned ID before your code acts on it.</p>
       <RunnableExample />
       <details className="jev-disclosure" id="execution">
         <summary>See how the game checks the answer</summary>
         <div className="jev-detail">
-          <p>The game supplies the candidate IDs with their costs and effects. The server accepts a choice only if the answer type is <code>choice</code> and its ID was offered for that question.</p>
+          <p>The game maps each option’s ID to its costs and effects. For each question, the server validates the answer type and checks the selected ID against the options it sent.</p>
           <div className="jev-payload-columns">
             <div className="jev-code-block"><div className="jev-code-title"><a href={source + '/server/evm/choices.ts#L245-L263'}>Build the menu · choices.ts ↗</a></div><pre tabIndex={0} aria-label="Candidate map snippet"><code>{menuCode}</code></pre></div>
             <div className="jev-code-block"><div className="jev-code-title"><a href={source + '/server/evm/jev.ts#L33-L43'}>Validate the key · jev.ts ↗</a></div><pre tabIndex={0} aria-label="Choice validation snippet"><code>{validateCode}</code></pre></div>
