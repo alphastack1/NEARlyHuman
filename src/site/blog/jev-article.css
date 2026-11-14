@@ -7,7 +7,7 @@
   --jev-sage: #eef1d7;
   --jev-gold: #f7ddaa;
   --jev-mono: ui-monospace, Consolas, monospace;
-  padding: clamp(26px, 5vw, 64px) 0 34px;
+  padding: clamp(23px, 4.3vw, 56px) 0 34px;
   color: var(--jev-ink);
   background: linear-gradient(150deg, #fff8e8, #fbf7e7 67%, #f3f2d9);
 }
@@ -18,15 +18,16 @@
 .jev-article code { overflow-wrap: anywhere; font-size: .88em; }
 .jev-article [hidden] { display: none !important; }
 .jev-wrap { width: min(1100px, calc(100% - clamp(26px, 9vw, 124px))); margin-inline: auto; }
-.jev-hero { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); align-items: center; gap: clamp(16px, 4vw, 50px); }
+.jev-hero { display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr); align-items: center; gap: clamp(16px, 3.1vw, 42px); }
 .jev-breadcrumb { display: flex; gap: .5rem; align-items: center; color: #365e45; font-weight: 750; font-size: .85rem; }
 .jev-breadcrumb a { text-decoration: underline; text-underline-offset: .2em; }
-.site .jev-hero h1 { margin: .42rem 0 .65rem; font-size: clamp(2.15rem, 5.1vw, 4.5rem); line-height: 1.01; letter-spacing: -.06em; text-wrap: balance; }
+.site .jev-hero h1 { margin: .42rem 0 .65rem; font-size: clamp(2.1rem, 5vw, 4.05rem); line-height: 1.02; letter-spacing: -.055em; text-wrap: balance; }
 .site .jev-hero .jev-lede { max-width: 56ch; color: var(--jev-muted); font-size: clamp(.98rem, 1.43vw, 1.19rem); }
-.jev-hero>img { width: 100%; height: auto; aspect-ratio: 1200 / 675; border: 2px solid #2b543d; box-shadow: 4px 4px #bfb17c; }
+.jev-hero>img { width: 100%; height: auto; aspect-ratio: 1200 / 675; border: 1px solid #637650; border-radius: 4px; box-shadow: 2px 3px #cbbd8b; }
 .jev-primary { display: inline-flex; align-items: center; gap: .6rem; margin-top: .7rem; padding: .42rem .72rem; min-height: 44px; background: #f5b56c; border: 2px solid #2b543d; box-shadow: 2px 3px #38604a; font-size: .87rem; font-weight: 800; }
 .jev-primary:hover { background: #ffd191; }
 .jev-section { margin-top: clamp(26px, 4.7vw, 58px); scroll-margin-top: 20px; }
+.jev-day.jev-section { margin-top: clamp(27px, 3.5vw, 47px); }
 .jev-section-title { display: flex; align-items: baseline; gap: .6rem; margin-bottom: .54rem; }
 .jev-section-title>span { display: grid; place-items: center; flex: none; width: 1.51rem; height: 1.51rem; background: var(--jev-ink); color: #fff8e8; box-shadow: 2px 2px #b2c098; font: 750 .84rem var(--jev-mono); }
 .site .jev-section-title h2 { font-size: clamp(1.54rem, 3.1vw, 2.65rem); line-height: 1.1; letter-spacing: -.045em; text-wrap: balance; }
@@ -40,13 +41,14 @@
 .jev-code-block pre code { font:inherit; }
 .jev-code-block .key { color:#cde5aa; }.jev-code-block .val{color:#a6dce7;}.jev-code-block .str{color:#ffd79b; }
 .jev-code-block .selected-key { color:#ffca7b;text-decoration:underline;text-underline-offset:.16em;font-weight:780; }
-.jev-disclosure { margin-top:.64rem;background:#f4f1da;border:1px solid #b6c49c;scroll-margin-top:16px; }
+.jev-build { padding-block-end:.35rem;border-bottom:1px solid var(--jev-line); }
+.jev-disclosure { border-top:1px solid var(--jev-line);scroll-margin-top:16px; }
 .jev-disclosure summary { min-height:44px;padding:.58rem .69rem;font-size:.91rem;font-weight:760;line-height:1.34; }
 .jev-detail { padding:0 .69rem .64rem; }
 .site .jev-detail p { color:var(--jev-muted);font-size:.87rem;margin:.32rem 0 .55rem;max-width:76ch; }
 .jev-detail p a,.jev-references a { text-decoration:underline;text-underline-offset:.18em; }
 .jev-payload-columns { display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.43rem; }
-.jev-references { margin-top:clamp(22px,4vw,40px);padding-top:.65rem;border-top:1px solid var(--jev-line);display:flex;gap:.25rem .72rem;align-items:baseline;flex-wrap:wrap;font-size:.8rem; }
+.jev-references { margin-top:clamp(15px,2vw,24px);display:flex;gap:.25rem .72rem;align-items:baseline;flex-wrap:wrap;font-size:.8rem; }
 .jev-article .jev-build code { font-size:.84em; }
 .jev-article .jev-build pre code { font-size:inherit; }
 .jev-article .jev-instructions { padding-inline-start:1.2rem;margin:.12rem 0 .82rem;color:var(--jev-muted);font-size:.9rem;line-height:1.5; }

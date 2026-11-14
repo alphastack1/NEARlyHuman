@@ -64,12 +64,12 @@ function RunnableExample() {
   }
 
   return <details className="jev-disclosure" id="run-example">
-    <summary>Run the garden request with Node.js</summary>
+    <summary>Run the midday request with Node.js</summary>
     <div className="jev-detail">
       <ol className="jev-instructions">
-        <li><a href={requestUrl} download="choice.json">Download choice.json ↓</a> with the reconstructed Step 21 request.</li>
-        <li>Save the script as <code>choice.mjs</code> beside it. Set <code>NEAR_AI_API_KEY</code> to a NEAR AI Cloud key with Jev access.</li>
-        <li>Run <code>node choice.mjs</code> with Node.js 20 or newer. It prints the returned key and its action name.</li>
+        <li><a href={requestUrl} download="choice.json">Download choice.json ↓</a> and save the script as <code>choice.mjs</code> beside it.</li>
+        <li>Set <code>NEAR_AI_API_KEY</code> to a NEAR AI Cloud key with Jev access.</li>
+        <li>Run <code>node choice.mjs</code> on Node.js 20 or newer to print the returned ID and action.</li>
       </ol>
       <div className="jev-code-block">
         <div className="jev-code-title"><strong>choice.mjs</strong><button type="button" onClick={copyScript}>{notice || 'Copy script'}</button></div>
@@ -85,8 +85,8 @@ export default function JevArticle() {
       <div>
         <nav className="jev-breadcrumb" aria-label="Breadcrumb"><a href="/blog">Blog</a><span aria-hidden="true"> / </span><span>Jev</span></nav>
         <h1>How NEARlyHuman uses Jev</h1>
-        <p className="jev-lede">What should Fern do with the day ahead? The game works out what the rooster can do. Jev, TypeSafe’s AI model, picks from those options.</p>
-        <a href="#whole-day" className="jev-primary">Start at dawn <span aria-hidden="true">↓</span></a>
+        <p className="jev-lede">The game sends Jev a snapshot of Fern’s world and a menu of options. TypeSafe’s model returns one option ID per question. The game checks the IDs and applies its own rules.</p>
+        <a href="#whole-day" className="jev-primary">Follow Fern’s day <span aria-hidden="true">↓</span></a>
       </div>
       <img src={JEV_POST.image.href} width={JEV_POST.image.width} height={JEV_POST.image.height} decoding="async" fetchPriority="high" alt={JEV_POST.image.alt}/>
     </header>
@@ -96,12 +96,11 @@ export default function JevArticle() {
 
     <section className="jev-wrap jev-section jev-build" aria-labelledby="build-title">
       <div className="jev-section-title"><span aria-hidden="true">3</span><h2 id="build-title">Try a Jev request</h2></div>
-      <p className="jev-section-copy">Give Jev the facts that matter, a question, and a short list of options. Check the returned ID before your code acts on it.</p>
       <RunnableExample />
       <details className="jev-disclosure" id="execution">
-        <summary>See how the game checks the answer</summary>
+        <summary>How the game checks the returned ID</summary>
         <div className="jev-detail">
-          <p>The game maps each option’s ID to its costs and effects. For each question, the server validates the answer type and checks the selected ID against the options it sent.</p>
+          <p>The game sends each option’s costs and effects under its ID. The server only accepts IDs from that question’s menu.</p>
           <div className="jev-payload-columns">
             <div className="jev-code-block"><div className="jev-code-title"><a href={source + '/server/evm/choices.ts#L245-L263'}>Build the menu · choices.ts ↗</a></div><pre tabIndex={0} aria-label="Candidate map snippet"><code>{menuCode}</code></pre></div>
             <div className="jev-code-block"><div className="jev-code-title"><a href={source + '/server/evm/jev.ts#L33-L43'}>Validate the key · jev.ts ↗</a></div><pre tabIndex={0} aria-label="Choice validation snippet"><code>{validateCode}</code></pre></div>
